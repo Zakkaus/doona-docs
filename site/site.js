@@ -26,7 +26,12 @@ if (navigator.clipboard && status) {
     let timer;
     button.hidden = false;
     button.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(button.previousElementSibling.textContent.replace(/\n$/, ''));
+      try {
+        await navigator.clipboard.writeText(button.previousElementSibling.textContent.replace(/\n$/, ''));
+      } catch {
+        // The browser can refuse the write, as when clipboard permission is denied; the button then stays as it was.
+        return;
+      }
       button.dataset.copied = '';
       status.textContent = status.dataset.copied;
       clearTimeout(timer);

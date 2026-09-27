@@ -444,6 +444,10 @@ pre {
   color: var(--rp-subtle);
   cursor: pointer;
 }
+/* The grid above outranks the browser's [hidden] rule; site.js unhides the button where the clipboard can be written. */
+.copy[hidden] {
+  display: none;
+}
 .copy[data-copied] {
   color: var(--rp-positive-text);
 }

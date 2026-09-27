@@ -137,6 +137,7 @@ for (const file of readdirSync(join(root, 'src'), {recursive: true}).filter(name
 
 // The generated site, for github.io and for a domain of its own: every internal href and src names a file the build
 // writes, every #fragment an id on that page, and no page repeats an id.
+const hiddenClasses = new Set();
 for (const base of ['/doona-docs/', '/']) {
   let site;
   try {
@@ -153,6 +154,7 @@ for (const base of ['/doona-docs/', '/']) {
     for (const id of new Set(ids.filter((id, index) => ids.indexOf(id) !== index))) failures.push(`site (${base}) ${path}: id ${id} repeats`);
     if (!/^<!doctype html>\n<html lang="[^"]+">/.test(text) || !/<title>[^<]+<\/title>/.test(text)) failures.push(`site (${base}) ${path}: no lang or title`);
     html.set(path, {text, ids: new Set(ids)});
+    for (const match of text.matchAll(/<[a-z]+\s[^>]*\bclass="([^"]+)"[^>]*\shidden[\s>]/g)) for (const name of match[1].split(' ')) hiddenClasses.add(name);
   }
   for (const [path, {text}] of html) {
     const urls = [...text.matchAll(/\s(?:href|src|srcset)="([^"]+)"/g)].map(match => match[1]);
@@ -173,6 +175,16 @@ for (const base of ['/doona-docs/', '/']) {
       else if (fragment !== undefined && !html.get(file)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${file}`);
     }
   }
+}
+
+// An element the build writes hidden stays hidden until site.js shows it. A display the stylesheet gives its class
+// outranks the browser's own [hidden] rule, so the stylesheet has to hide it again.
+const css = readFileSync(join(root, 'site/site.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({selectors: match[1].split(',').map(selector => selector.trim()), body: match[2]}));
+for (const name of hiddenClasses) {
+  const shown = rules.some(rule => rule.selectors.some(selector => selector.endsWith(`.${name}`)) && /(^|;)\s*display:\s*(?!none)/.test(rule.body));
+  const hidden = rules.some(rule => rule.selectors.includes(`.${name}[hidden]`) && /(^|;)\s*display:\s*none/.test(rule.body));
+  if (shown && !hidden) failures.push(`site/site.css: .${name} sets a display, so .${name}[hidden] needs display: none`);
 }
 
 if (failures.length) {
