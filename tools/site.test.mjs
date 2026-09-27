@@ -98,10 +98,11 @@ describe('icons', () => {
 
 // The site script over a sidebar and phone menu that each hold the install and guides sections, with storage holding
 // `stored`, or throwing it when it is an Error.
-function navSections(stored) {
+function navSections(stored, current) {
   const details = ['install', 'guides', 'install', 'guides'].map(group => ({
     dataset: {group},
     open: true,
+    querySelector: selector => (selector === '[aria-current="page"]' && group === current ? {} : null),
     addEventListener(type, listener) {
       this.ontoggle = listener;
     }
@@ -167,6 +168,12 @@ describe('navigation', () => {
     expect(JSON.parse(saved.at(-1))).toEqual(['guides', 'install']);
     open.toggle('guides', true);
     expect(JSON.parse(saved.at(-1))).toEqual(['install']);
+  });
+
+  it('opens the section holding the current page even when it was closed', () => {
+    const {sections: open, saved} = navSections(JSON.stringify(['install', 'guides']), 'guides');
+    expect(open()).toEqual({install: false, guides: true});
+    expect(saved).toEqual([]);
   });
 
   it('leaves every section open when storage throws', () => {
