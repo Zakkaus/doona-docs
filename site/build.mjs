@@ -60,7 +60,8 @@ const icons = {
 };
 
 // site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
-// own src/ui/styles/palettes.css in place of the /* palette */ line.
+// own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii and type sizes the sheet uses written
+// in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
 function stylesheet() {
   const palettes = readFileSync(join(root, 'src/ui/styles/palettes.css'), 'utf8');
   const colours = selector => {
@@ -75,7 +76,17 @@ function stylesheet() {
   const css = readFileSync(join(root, 'site/site.css'), 'utf8');
   const marker = '  /* palette */\n';
   if (!css.includes(marker)) throw new Error('site/site.css: no /* palette */ line');
-  return css.replace(marker, [...light].map(([name, value]) => `  ${name}: light-dark(${value}, ${dark.get(name)});\n`).join(''));
+  const sizesMarker = '  /* sizes */\n';
+  if (!css.includes(sizesMarker)) throw new Error('site/site.css: no /* sizes */ line');
+  const motion = readFileSync(join(root, 'src/ui/styles/motion.css'), 'utf8');
+  const scale = new Map([...motion.matchAll(/(--rp-(?:r|text)-[\w-]+):\s*(\d+px);/g)].map(match => [match[1], match[2]]));
+  const used = new Set([...css.matchAll(/var\((--rp-(?:r|text)-[\w-]+)\)/g)].map(match => match[1]));
+  const missing = [...used].filter(name => !scale.has(name));
+  if (missing.length) throw new Error(`src/ui/styles/motion.css: no ${missing.join(', ')}`);
+  const sizes = [...scale].filter(([name]) => used.has(name));
+  return css
+    .replace(marker, [...light].map(([name, value]) => `  ${name}: light-dark(${value}, ${dark.get(name)});\n`).join(''))
+    .replace(sizesMarker, sizes.map(([name, value]) => `  ${name}: ${value};\n`).join(''));
 }
 
 // Heading text without Markdown, for titles, navigation and the table of contents.

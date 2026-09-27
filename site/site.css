@@ -1,8 +1,8 @@
-/* The docs site's one stylesheet. The colour, radius and type tokens are doona's: Rosé Pine Dawn and Moon, its default
-   palette (DEFAULT_PALETTE in src/shell/palettes.ts), which site/build.mjs writes in from src/ui/styles/palettes.css,
-   and the role tokens copied from src/ui/styles/motion.css. Each colour is a light-dark() pair, so the scheme alone
-   picks the palette: the system's by default, or the one the theme button stores, which the page head applies as
-   data-theme before the first paint. */
+/* The docs site's one stylesheet. The colour, radius and type tokens are doona's. site/build.mjs writes in Rosé Pine
+   Dawn and Moon, its default palette (DEFAULT_PALETTE in src/shell/palettes.ts), from src/ui/styles/palettes.css, and
+   the radii and type sizes this sheet uses from src/ui/styles/motion.css; the role tokens are copied from motion.css.
+   Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by default, or the one the
+   theme button stores, which the page head applies as data-theme before the first paint. */
 :root {
   color-scheme: light dark;
   /* palette */
@@ -21,17 +21,7 @@
   --rp-info-text: light-dark(var(--rp-info), var(--rp-text));
   --rp-line: var(--rp-hl-med);
   --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
-  --rp-r-md: 8px;
-  --rp-r-lg: 10px;
-  --rp-r-xl: 16px;
-  --rp-text-xs: 12px;
-  --rp-text-sm: 13px;
-  --rp-text-md: 14px;
-  --rp-text-lg: 16px;
-  --rp-text-xl: 18px;
-  --rp-text-2xl: 20px;
-  --rp-text-4xl: 24px;
-  --rp-text-5xl: 28px;
+  /* sizes */
   /* The docs' own reading sizes, above the app's scale. */
   --docs-h1: 40px;
   --docs-h1-phone: 32px;
