@@ -364,6 +364,13 @@ describe('page actions', () => {
       expect(aside).toContain(`data-src="/${locale}/configuration.md"`);
     });
   }
+
+  it('writes the press timing from the app motion tokens', () => {
+    const css = site.get('site.css').text;
+    expect(css).toMatch(/--rp-duration: \d+ms;/);
+    expect(css).toMatch(/--rp-ease: cubic-bezier\(/);
+    expect(css).not.toContain('/* sizes */');
+  });
 });
 
 describe('documentation search', () => {
