@@ -614,8 +614,11 @@ table {
   font-size: var(--rp-text-md);
   line-height: 1.6;
 }
+/* A column keeps room for a few words; a table wider than the column scrolls in its box instead of squeezing the
+   text into a word a line. */
 th,
 td {
+  min-width: 8em;
   padding: 8px 12px;
   border-bottom: 1px solid var(--rp-line);
   text-align: start;
