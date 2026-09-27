@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      lightningcss:
+        specifier: ^1.33.0
+        version: 1.33.0
       markdown-it:
         specifier: ^15.0.2
         version: 15.0.2

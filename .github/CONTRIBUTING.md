@@ -55,7 +55,7 @@ Link other pages by their relative path, such as `install.md#install`. A link to
 | `site/build/assets.mjs`    | Joins the stylesheet and script, versions them by content hash, and copies fonts, logo and licences |
 | `site/build/icons.mjs`     | The icons, read from doona's components, and the logo                                               |
 | `site/build/common.mjs`    | HTML escaping and the URL of a page and of its Markdown                                             |
-| `site/styles/*.css`        | The stylesheet, one file per component or layer, joined into `site.css`                             |
+| `site/styles/*.css`        | The stylesheet, one file per component or layer, joined into `site.css` and lowered by lightningcss |
 | `site/scripts/*.js`        | The browser script, one file per feature, joined into `site.js`                                     |
 | `tools/check-docs.mjs`     | `pnpm docs:check`: links, anchors and locale parity in `docs/` and in the built site                |
 | `tools/links.mjs`          | The link and anchor checks `docs:check` runs on each Markdown file                                  |
