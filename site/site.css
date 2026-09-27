@@ -389,6 +389,9 @@ details[open] > summary .icon:last-child {
     background: var(--rp-hl-med);
     color: var(--rp-text);
   }
+  .tablist > [role='tab']:hover {
+    color: var(--rp-text);
+  }
   .md-copy:hover,
   .md-menu > summary:hover,
   .md-menu li a:hover {
@@ -665,6 +668,60 @@ pre code {
 .t-punctuation,
 .t-operator {
   color: var(--docs-code-punctuation);
+}
+/* Tabs over alternative forms of one code block, drawn as Spectrum's tabs: plain labels over a divider, the selected
+   one in the text colour with a bar under it, as the page lists mark theirs. Without site.js every block shows under
+   its .tab-label. */
+.tabs {
+  margin: 32px 0;
+}
+.tabs .code {
+  margin: 0;
+}
+.tab-panel + .tab-panel {
+  margin-top: 16px;
+}
+.tabs:has(> .tablist) > .tab-panel {
+  margin-top: 0;
+}
+main .tab-label {
+  margin: 0 0 8px;
+  color: var(--rp-subtle-text);
+  font-size: var(--rp-text-md);
+  line-height: 18px;
+}
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rp-line);
+}
+.tablist > [role='tab'] {
+  position: relative;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--rp-r-sm);
+  background: none;
+  color: var(--rp-subtle-text);
+  font: 500 var(--rp-text-md)/18px var(--docs-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tablist > [role='tab']::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 1px;
+}
+.tablist > [role='tab'][aria-selected='true'] {
+  color: var(--rp-text);
+}
+.tablist > [role='tab'][aria-selected='true']::after {
+  background: currentColor;
 }
 .table {
   margin: 32px 0;
@@ -1030,6 +1087,9 @@ body:has(#docs-search[open]) { overflow: hidden; }
       transform var(--rp-duration) var(--rp-ease),
       background-color var(--rp-duration) var(--rp-ease);
   }
+  .tablist > [role='tab'] {
+    transition: color var(--rp-duration) var(--rp-ease);
+  }
   :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close):active {
     transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);
   }
@@ -1076,51 +1136,4 @@ body:has(#docs-search[open]) { overflow: hidden; }
   }
   .mobile-sections a { display: block; padding: 10px 16px; border-radius: 8px; font-size: 1rem; line-height: 20px; text-decoration: none; }
   .mobile-sections a[aria-current] { background: var(--rp-selected); }
-}
-/* Tabs over alternative forms of one code block. Without site.js every block shows under its .tab-label. */
-.tabs {
-  margin: 0 0 16px;
-}
-.tabs .code {
-  margin: 0;
-}
-.tab-panel + .tab-panel {
-  margin-top: 12px;
-}
-.tabs:has(> .tablist) > .tab-panel {
-  margin-top: 0;
-}
-.tab-label {
-  margin: 0 0 4px;
-  color: var(--rp-subtle);
-  font-size: var(--rp-text-sm);
-}
-.tablist {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 8px;
-}
-.tablist > [role='tab'] {
-  min-height: 32px;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: var(--rp-r-md);
-  background: none;
-  color: var(--rp-subtle);
-  font: inherit;
-  font-size: var(--rp-text-sm);
-  cursor: pointer;
-}
-.tablist > [role='tab']:hover {
-  color: var(--rp-text);
-}
-.tablist > [role='tab'][aria-selected='true'] {
-  border-color: var(--rp-line);
-  background: var(--rp-selected);
-  color: var(--rp-accent-text);
-  font-weight: 600;
-}
-.tab-panel[hidden] {
-  display: none;
 }

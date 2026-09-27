@@ -90,7 +90,8 @@ document.addEventListener('keydown', event => {
 
 // A .tabs box holds adjacent code blocks, each under its label, such as the sudo and root forms of one command. Here the
 // labels become tabs with the arrow keys, Home and End of the WAI-ARIA tabs pattern. Picking a label picks it in every
-// box on the page that has it, and the choice is kept for later pages.
+// box on the page that has it, and the choice is kept for later pages. A panel takes no tab stop of its own: its code
+// block already has one.
 const boxes = [...document.querySelectorAll('.tabs')].map((box, boxIndex) => {
   const panels = [...box.children].filter(child => child.classList.contains('tab-panel'));
   const list = document.createElement('div');
@@ -105,7 +106,6 @@ const boxes = [...document.querySelectorAll('.tabs')].map((box, boxIndex) => {
     tab.setAttribute('aria-controls', (panel.id = `tabpanel-${boxIndex}-${index}`));
     panel.setAttribute('role', 'tabpanel');
     panel.setAttribute('aria-labelledby', tab.id);
-    panel.tabIndex = 0;
     panel.querySelector('.tab-label').hidden = true;
     tab.addEventListener('click', () => pickTab(panel.dataset.tab));
     tab.addEventListener('keydown', event => {
