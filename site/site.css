@@ -279,6 +279,9 @@ details[open] > summary .icon:last-child {
 .foot {
   grid-column: 1;
   grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
   margin-top: 64px;
   padding-top: 16px;
   border-top: 1px solid var(--rp-line);

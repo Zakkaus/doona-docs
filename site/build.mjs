@@ -267,7 +267,7 @@ function page(base, locale, parsed, current) {
 </details>
 <main id="content">
 ${body}</main>
-<footer class="foot"><a href="${base}NOTICE.txt">${text.notice}</a></footer>
+<footer class="foot"><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
 ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-title">${text.onThisPage}</h2>\n<ul>${toc.join('')}</ul>\n</aside>` : ''}
 </div>
 </div>
@@ -338,9 +338,11 @@ ${missing.join('\n')}
   files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
   files.set('logo.svg', {from: join(root, 'public/logo.svg')});
-  // The icons above are Adobe Spectrum artwork: the notice and licence travel with them, as in the release archives.
+  // The icons above are Adobe Spectrum artwork and the GitHub mark: their notice and terms travel with them, as in the
+  // release archives.
   files.set('NOTICE.txt', {from: join(root, 'NOTICE')});
   files.set('LICENSES/Apache-2.0.txt', {from: join(root, 'LICENSES/Apache-2.0.txt')});
+  files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(root, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
   // GitHub Pages would otherwise run Jekyll over the files.
   files.set('.nojekyll', {text: ''});
   return files;
