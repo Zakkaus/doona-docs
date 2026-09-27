@@ -52,109 +52,107 @@ const icons = {
 const plain = inline =>
   inline.children.map(child => (child.type === 'text' || child.type === 'code_inline' ? child.content : child.type === 'softbreak' ? ' ' : '')).join('');
 
-export function render({base = '/doona-docs/'} = {}) {
-  if (!/^\/(.+\/)?$/.test(base)) throw new Error(`DOCS_BASE must start and end with a slash: ${base}`);
-  const files = new Map();
-  const pageUrl = (locale, name) => `${base}${locale}/${name === 'index' ? '' : `${name}.html`}`;
+const pageUrl = (base, locale, name) => `${base}${locale}/${name === 'index' ? '' : `${name}.html`}`;
 
-  // A link as the site serves it: pages and images in docs/ under the base, other repository files on GitHub.
-  function rewrite(target, file) {
-    if (/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(target)) return target;
-    const [path, ...hash] = target.split('#');
-    const suffix = hash.length ? `#${hash.join('#')}` : '';
-    const absolute = resolve(dirname(file), decodeURIComponent(path));
-    const inDocs = relative(docs, absolute);
-    if (inDocs.startsWith('..') || isAbsolute(inDocs)) {
-      const inRepo = relative(root, absolute);
-      if (inRepo.startsWith('..') || isAbsolute(inRepo)) throw new Error(`${file}: ${target} is outside the repository`);
-      const kind = existsSync(absolute) && statSync(absolute).isDirectory() ? 'tree' : 'blob';
-      return `${repository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
-    }
-    const parts = inDocs.split(sep);
-    if (inDocs.endsWith('.md')) {
-      const [locale, name] = parts;
-      if (parts.length !== 2 || !locales.includes(locale)) throw new Error(`${file}: ${target} is not a docs page`);
-      return pageUrl(locale, name.slice(0, -3)) + suffix;
-    }
-    // Only files that exist are published; a missing one leaves the link dangling for the checker to report.
-    if (existsSync(absolute)) files.set(parts.join('/'), {from: absolute});
-    return base + encodeURI(parts.join('/')) + suffix;
+// A link as the site serves it: pages and images in docs/ under the base, other repository files on GitHub. An image it
+// links is added to files, the map render() writes.
+function rewrite(base, files, target, file) {
+  if (/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(target)) return target;
+  const [path, ...hash] = target.split('#');
+  const suffix = hash.length ? `#${hash.join('#')}` : '';
+  const absolute = resolve(dirname(file), decodeURIComponent(path));
+  const inDocs = relative(docs, absolute);
+  if (inDocs.startsWith('..') || isAbsolute(inDocs)) {
+    const inRepo = relative(root, absolute);
+    if (inRepo.startsWith('..') || isAbsolute(inRepo)) throw new Error(`${file}: ${target} is outside the repository`);
+    const kind = existsSync(absolute) && statSync(absolute).isDirectory() ? 'tree' : 'blob';
+    return `${repository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
   }
+  const parts = inDocs.split(sep);
+  if (inDocs.endsWith('.md')) {
+    const [locale, name] = parts;
+    if (parts.length !== 2 || !locales.includes(locale)) throw new Error(`${file}: ${target} is not a docs page`);
+    return pageUrl(base, locale, name.slice(0, -3)) + suffix;
+  }
+  // Only files that exist are published; a missing one leaves the link dangling for the checker to report.
+  if (existsSync(absolute)) files.set(parts.join('/'), {from: absolute});
+  return base + encodeURI(parts.join('/')) + suffix;
+}
 
-  function parse(locale, name) {
-    const file = join(docs, locale, `${name}.md`);
-    const tokens = md.parse(readFileSync(file, 'utf8'), {});
+function parse(base, files, locale, name) {
+  const file = join(docs, locale, `${name}.md`);
+  const tokens = md.parse(readFileSync(file, 'utf8'), {});
 
-    // The first paragraph links the page in the other languages for readers on GitHub; the top bar does that here.
-    const others = locales.filter(other => other !== locale).map(other => `../${other}/${name}.md`);
-    const first = tokens[1]?.children?.filter(child => child.type === 'link_open').map(child => child.attrGet('href'));
-    if (tokens[0]?.type !== 'paragraph_open' || first?.join() !== others.join())
-      throw new Error(`${file}: the page must open with the language line linking ${others.join(', ')}`);
-    tokens.splice(0, 3);
+  // The first paragraph links the page in the other languages for readers on GitHub; the top bar does that here.
+  const others = locales.filter(other => other !== locale).map(other => `../${other}/${name}.md`);
+  const first = tokens[1]?.children?.filter(child => child.type === 'link_open').map(child => child.attrGet('href'));
+  if (tokens[0]?.type !== 'paragraph_open' || first?.join() !== others.join())
+    throw new Error(`${file}: the page must open with the language line linking ${others.join(', ')}`);
+  tokens.splice(0, 3);
 
-    const slug = slugger();
-    const toc = [];
-    let title;
-    let anchor;
-    for (let index = 0; index < tokens.length; index++) {
-      const token = tokens[index];
-      // <a name="x"></a> alone in a paragraph gives the next heading its id, the same in every language.
-      const name = token.type === 'inline' && /^<a name="([^"]+)"><\/a>$/.exec(token.content.trim())?.[1];
-      if (name) {
-        if (tokens[index + 2]?.type !== 'heading_open') throw new Error(`${file}: <a name="${name}"> is not right before a heading`);
-        anchor = name;
-        tokens.splice(index - 1, 3);
-        index -= 2;
-        continue;
+  const slug = slugger();
+  const toc = [];
+  let title;
+  let anchor;
+  for (let index = 0; index < tokens.length; index++) {
+    const token = tokens[index];
+    // <a name="x"></a> alone in a paragraph gives the next heading its id, the same in every language.
+    const name = token.type === 'inline' && /^<a name="([^"]+)"><\/a>$/.exec(token.content.trim())?.[1];
+    if (name) {
+      if (tokens[index + 2]?.type !== 'heading_open') throw new Error(`${file}: <a name="${name}"> is not right before a heading`);
+      anchor = name;
+      tokens.splice(index - 1, 3);
+      index -= 2;
+      continue;
+    }
+    if (token.type === 'fence' && !languages.includes(token.info.trim()))
+      throw new Error(`${file}: a code block needs one of ${languages.join(', ')} after its fence, not "${token.info.trim()}"`);
+    if (token.type === 'heading_open') {
+      const inline = tokens[index + 1];
+      // Every heading counts toward GitHub's numbering of repeated slugs, the h1 included. The h1 keeps only an
+      // anchor placed before it: its slug is often the same word as an anchor further down.
+      const generated = slug(inline.content);
+      const id = anchor ?? (token.tag === 'h1' ? undefined : generated);
+      anchor = undefined;
+      if (id) token.attrSet('id', id);
+      const text = plain(inline);
+      if (token.tag === 'h1') {
+        if (title) throw new Error(`${file}: more than one h1`);
+        title = text;
+      } else if (token.tag === 'h2' || token.tag === 'h3') {
+        toc.push({id, text, level: token.tag});
       }
-      if (token.type === 'fence' && !languages.includes(token.info.trim()))
-        throw new Error(`${file}: a code block needs one of ${languages.join(', ')} after its fence, not "${token.info.trim()}"`);
-      if (token.type === 'heading_open') {
-        const inline = tokens[index + 1];
-        // Every heading counts toward GitHub's numbering of repeated slugs, the h1 included. The h1 keeps only an
-        // anchor placed before it: its slug is often the same word as an anchor further down.
-        const generated = slug(inline.content);
-        const id = anchor ?? (token.tag === 'h1' ? undefined : generated);
-        anchor = undefined;
-        if (id) token.attrSet('id', id);
-        const text = plain(inline);
-        if (token.tag === 'h1') {
-          if (title) throw new Error(`${file}: more than one h1`);
-          title = text;
-        } else if (token.tag === 'h2' || token.tag === 'h3') {
-          toc.push({id, text, level: token.tag});
-        }
-      }
-      if (token.type === 'inline') {
-        for (const child of token.children) {
-          if (child.type === 'link_open') child.attrSet('href', rewrite(child.attrGet('href'), file));
-          if (child.type === 'image') {
-            child.attrSet('src', rewrite(child.attrGet('src'), file));
-            child.attrSet('loading', 'lazy');
-          }
-        }
-      }
-      // GitHub's alert syntax, `> [!NOTE]` on the quote's first line, becomes a titled callout.
-      if (token.type === 'blockquote_open') {
-        const inline = tokens[index + 2];
-        const marker = inline?.type === 'inline' && /^\[!(\w+)\]\s*/.exec(inline.content);
-        const alert = marker && marker[1].toLowerCase();
-        token.attrSet('class', `callout${alert ? ` ${alert}` : ''}`);
-        if (marker) {
-          if (!alerts.includes(alert)) throw new Error(`${file}: unknown alert [!${marker[1]}]`);
-          token.meta = {alert};
-          const [text, next] = inline.children;
-          text.content = text.content.slice(marker[0].length);
-          if (!text.content) inline.children.splice(0, next?.type === 'softbreak' ? 2 : 1);
+    }
+    if (token.type === 'inline') {
+      for (const child of token.children) {
+        if (child.type === 'link_open') child.attrSet('href', rewrite(base, files, child.attrGet('href'), file));
+        if (child.type === 'image') {
+          child.attrSet('src', rewrite(base, files, child.attrGet('src'), file));
+          child.attrSet('loading', 'lazy');
         }
       }
     }
-    if (!title) throw new Error(`${file}: no h1`);
-    return {name, title, toc, tokens};
+    // GitHub's alert syntax, `> [!NOTE]` on the quote's first line, becomes a titled callout.
+    if (token.type === 'blockquote_open') {
+      const inline = tokens[index + 2];
+      const marker = inline?.type === 'inline' && /^\[!(\w+)\]\s*/.exec(inline.content);
+      const alert = marker && marker[1].toLowerCase();
+      token.attrSet('class', `callout${alert ? ` ${alert}` : ''}`);
+      if (marker) {
+        if (!alerts.includes(alert)) throw new Error(`${file}: unknown alert [!${marker[1]}]`);
+        token.meta = {alert};
+        const [text, next] = inline.children;
+        text.content = text.content.slice(marker[0].length);
+        if (!text.content) inline.children.splice(0, next?.type === 'softbreak' ? 2 : 1);
+      }
+    }
   }
+  if (!title) throw new Error(`${file}: no h1`);
+  return {name, title, toc, tokens};
+}
 
-  function head(lang, title) {
-    return `<!doctype html>
+function head(base, lang, title) {
+  return `<!doctype html>
 <html lang="${lang}">
 <head>
 <meta charset="utf-8">
@@ -170,41 +168,41 @@ try {
 } catch {}
 </script>
 <script type="module" src="${base}site.js"></script>`;
-  }
+}
 
-  // Both logos are in the page and the stylesheet shows the one for the scheme, which the theme button can override.
-  const logo = ['light', 'dark'].map(scheme => `<img class="logo-${scheme}" src="${base}logo-${scheme}.svg" alt="" width="28" height="28">`).join('');
+// Both logos are in the page and the stylesheet shows the one for the scheme, which the theme button can override.
+const logo = base => ['light', 'dark'].map(scheme => `<img class="logo-${scheme}" src="${base}logo-${scheme}.svg" alt="" width="28" height="28">`).join('');
 
-  function navList(locale, parsed, current) {
-    const items = parsed.map(page => {
-      const here = page.name === current ? ' aria-current="page"' : '';
-      return `<li><a href="${pageUrl(locale, page.name)}"${here}>${escape(page.title)}</a></li>`;
-    });
-    return `<ul>${items.join('')}</ul>`;
-  }
+function navList(base, locale, parsed, current) {
+  const items = parsed.map(page => {
+    const here = page.name === current ? ' aria-current="page"' : '';
+    return `<li><a href="${pageUrl(base, locale, page.name)}"${here}>${escape(page.title)}</a></li>`;
+  });
+  return `<ul>${items.join('')}</ul>`;
+}
 
-  // The language and page menus share a details name, so opening one closes the other.
-  function page(locale, parsed, current) {
-    const text = strings[locale];
-    const home = parsed[0];
-    const title = current.name === 'index' ? home.title : `${current.title} | ${home.title}`;
-    const languages = locales.map(other => {
-      const here = other === locale ? ' aria-current="true"' : '';
-      return `<li><a href="${pageUrl(other, current.name)}" lang="${other}" hreflang="${other}"${here}>${strings[other].language}</a></li>`;
-    });
-    const toc = current.toc.map(entry => `<li class="${entry.level}"><a href="#${entry.id}">${escape(entry.text)}</a></li>`);
-    const body = md.renderer.render(current.tokens, md.options, {locale});
-    // The theme button toggles as the app's does: a system scheme to its opposite, an override back to the system.
-    const themeLabels = Object.fromEntries(['system', 'light', 'dark'].map(scheme => [scheme, text.theme.replace('{theme}', text[scheme])]));
-    const themeData = Object.entries(themeLabels)
-      .map(([scheme, label]) => `data-${scheme}="${label}"`)
-      .join(' ');
-    return `${head(locale, title)}
+// The language and page menus share a details name, so opening one closes the other.
+function page(base, locale, parsed, current) {
+  const text = strings[locale];
+  const home = parsed[0];
+  const title = current.name === 'index' ? home.title : `${current.title} | ${home.title}`;
+  const languages = locales.map(other => {
+    const here = other === locale ? ' aria-current="true"' : '';
+    return `<li><a href="${pageUrl(base, other, current.name)}" lang="${other}" hreflang="${other}"${here}>${strings[other].language}</a></li>`;
+  });
+  const toc = current.toc.map(entry => `<li class="${entry.level}"><a href="#${entry.id}">${escape(entry.text)}</a></li>`);
+  const body = md.renderer.render(current.tokens, md.options, {locale});
+  // The theme button toggles as the app's does: a system scheme to its opposite, an override back to the system.
+  const themeLabels = Object.fromEntries(['system', 'light', 'dark'].map(scheme => [scheme, text.theme.replace('{theme}', text[scheme])]));
+  const themeData = Object.entries(themeLabels)
+    .map(([scheme, label]) => `data-${scheme}="${label}"`)
+    .join(' ');
+  return `${head(base, locale, title)}
 </head>
 <body>
 <a class="skip" href="#content">${text.skip}</a>
 <header class="top">
-<a class="brand" href="${pageUrl(locale, 'index')}">${logo}<span>doona</span></a>
+<a class="brand" href="${pageUrl(base, locale, 'index')}">${logo(base)}<span>doona</span></a>
 <div class="actions">
 <details class="language" name="docs-menu">
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
@@ -215,11 +213,11 @@ try {
 </div>
 </header>
 <div class="layout">
-<nav class="sidebar" aria-label="${text.pages}">${navList(locale, parsed, current.name)}</nav>
+<nav class="sidebar" aria-label="${text.pages}">${navList(base, locale, parsed, current.name)}</nav>
 <div class="panel">
 <details class="menu" name="docs-menu">
 <summary>${icons.pages}<span>${escape(current.title)}</span>${icons.chevron}</summary>
-<nav aria-label="${text.pages}">${navList(locale, parsed, current.name)}</nav>
+<nav aria-label="${text.pages}">${navList(base, locale, parsed, current.name)}</nav>
 </details>
 <main id="content">
 ${body}</main>
@@ -231,17 +229,23 @@ ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-tit
 </body>
 </html>
 `;
-  }
+}
+
+export function render({base = '/doona-docs/'} = {}) {
+  if (!/^\/(.+\/)?$/.test(base)) throw new Error(`DOCS_BASE must start and end with a slash: ${base}`);
+  const files = new Map();
 
   for (const locale of locales) {
-    const parsed = pages.map(name => parse(locale, name));
-    for (const current of parsed) files.set(`${locale}/${current.name}.html`, {text: page(locale, parsed, current)});
+    const parsed = pages.map(name => parse(base, files, locale, name));
+    for (const current of parsed) files.set(`${locale}/${current.name}.html`, {text: page(base, locale, parsed, current)});
   }
 
-  const home = locales.map(locale => `<li><a href="${pageUrl(locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`);
+  const home = locales.map(
+    locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`
+  );
   // Traditional Chinese for Taiwan, Hong Kong, Macau and the Hant script, Simplified for other Chinese, else English.
   files.set('index.html', {
-    text: `${head('en', 'doona')}
+    text: `${head(base, 'en', 'doona')}
 <script>
 (function () {
   var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
@@ -260,7 +264,7 @@ ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-tit
 </head>
 <body>
 <main id="content" class="choose">
-<a class="brand" href="${base}">${logo}<span>doona</span></a>
+<a class="brand" href="${base}">${logo(base)}<span>doona</span></a>
 <ul>${home.join('')}</ul>
 </main>
 </body>
@@ -270,14 +274,14 @@ ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-tit
 
   const missing = locales.map(
     locale =>
-      `<section lang="${locale}">\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
+      `<section lang="${locale}">\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
   );
   files.set('404.html', {
-    text: `${head('en', strings.en.notFound)}
+    text: `${head(base, 'en', strings.en.notFound)}
 </head>
 <body>
 <main id="content" class="choose">
-<a class="brand" href="${base}">${logo}<span>doona</span></a>
+<a class="brand" href="${base}">${logo(base)}<span>doona</span></a>
 ${missing.join('\n')}
 </main>
 </body>
