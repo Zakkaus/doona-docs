@@ -60,4 +60,4 @@ Run `honk-core --version` to check the installed binary. To check the running ve
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Backend   | An engine implementing the native API contract pinned in [SOURCE.md](../../contract/api-standardize/SOURCE.md), with its API listener enabled       |
 | Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Automated tests use Chromium |
-| Build     | Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives          |
+| Build     | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives          |

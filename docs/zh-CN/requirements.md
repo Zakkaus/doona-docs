@@ -60,4 +60,4 @@ mountpoint /sys/fs/bpf
 | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
 | 后端   | 实现 [SOURCE.md](../../contract/api-standardize/SOURCE.md) 所钉契约并启用 API 监听的引擎                                      |
 | 浏览器 | Chrome 或 Edge 120、Firefox 121、Safari 17 及以后。这些是 CSS 构建目标；JavaScript 构建目标是 ES2022。自动化测试只用 Chromium |
-| 构建   | 仅从源码构建 doona 时需要 Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` 与 pnpm 11.15.1；打包需要 GNU tar、gzip 与 sha256sum     |
+| 构建   | 仅从源码构建 doona 时需要 Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` 与 pnpm 11.15.1；打包需要 GNU tar、gzip 与 sha256sum     |
