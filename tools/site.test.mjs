@@ -223,6 +223,7 @@ function tabBoxes(labels, stored) {
   const saved = [];
   const boxes = labels.map(set => {
     const box = element('div', {className: 'tabs'});
+    box.dataset.label = 'Code variants';
     for (const label of set) {
       const caption = element('p', {className: 'tab-label'});
       const panel = element('div', {className: 'tab-panel', querySelector: () => caption});
@@ -258,7 +259,7 @@ function tabBoxes(labels, stored) {
 describe('code tabs', () => {
   it('renders adjacent labelled fences as one box, each block under its label', () => {
     const page = render().get('en/install-debian.html').text;
-    const box = /<div class="tabs">\n([^]*?)<\/div>\n<\/div>\n(?!<div class="tab-panel")/.exec(page)[1];
+    const box = /<div class="tabs" data-label="Code variants">\n([^]*?)<\/div>\n<\/div>\n(?!<div class="tab-panel")/.exec(page)[1];
     expect([...box.matchAll(/<div class="tab-panel" data-tab="([^"]+)"><p class="tab-label">([^<]+)<\/p>/g)].map(match => [match[1], match[2]])).toEqual([
       ['sudo', 'sudo'],
       ['root', 'root']
@@ -270,6 +271,7 @@ describe('code tabs', () => {
     const {boxes} = tabBoxes([['sudo', 'root']], null);
     const [{list, tabs, panels, shown}] = boxes;
     expect(list.attributes.role).toBe('tablist');
+    expect(list.attributes['aria-label']).toBe('Code variants');
     expect(tabs.map(tab => tab.textContent)).toEqual(['sudo', 'root']);
     expect(shown).toEqual(['sudo']);
     expect(tabs.map(tab => [tab.attributes['aria-selected'], tab.tabIndex])).toEqual([['true', 0], ['false', -1]]);
