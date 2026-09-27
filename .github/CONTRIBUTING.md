@@ -24,6 +24,7 @@ python3 -m http.server 4197 --bind 127.0.0.1 -d dist-docs
 Edit `docs/<locale>/<name>.md` and make the same change in the other two locales. A page follows these rules, which the build enforces:
 
 - The first paragraph is the language line, which links the page in the other two locales in the order `en`, `zh-CN`, `zh-TW`. The site replaces it with its language menu.
+- A page may open with front matter holding one line, `keywords: word, word`, before the language line. Search ranks a keyword match below the title and the section headings and above the text.
 - The page has exactly one `#` heading, its title. The paragraph right under it introduces the page, and its first sentence is the page's description in search and in `llms.txt`.
 - Every fenced code block names its language: `dae`, `sh`, `bash`, `shell`, `ini` or `text`. Two or more adjacent blocks with `tab="label"` after the language, such as `sh tab="sudo"` and `sh tab="root"`, become one box with tabs.
 - A quote that starts with `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]` becomes a callout, as on GitHub.

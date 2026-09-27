@@ -5,13 +5,13 @@ import {join} from 'node:path';
 import {docs} from '../docs.mjs';
 import strings from '../strings.mjs';
 import {markdownUrl, pageUrl} from './common.mjs';
-import {plain, rewrite} from './markdown.mjs';
+import {frontMatter, plain, rewrite} from './markdown.mjs';
 
 // The page's Markdown as docs/ holds it, less the language line that parse() has checked, with each link rewritten as
 // the site serves it, by full URL when there is an origin. Code spans and fenced blocks are left as they are.
 export function markdown(base, origin, files, locale, name) {
   const file = join(docs, locale, `${name}.md`);
-  const source = readFileSync(file, 'utf8');
+  const source = frontMatter(readFileSync(file, 'utf8')).body;
   // A link to a heading on this page names the page too, so it still leads there from a chat.
   const link = target => (target.startsWith('#') ? origin + markdownUrl(base, locale, name) + target : rewrite(base, files, target, file, origin));
   let fenced = false;
@@ -29,13 +29,15 @@ export function markdown(base, origin, files, locale, name) {
     .join('\n');
 }
 
-// The search index of one locale: each page's title, description, URL and plain text, which site.js fetches on the
-// first query.
+// The search index of one locale: each page's title, description, URL, section headings, keywords and plain text,
+// which site.js fetches on the first query.
 export function searchIndex(base, locale, parsed) {
   return JSON.stringify(parsed.map(entry => ({
     title: entry.title,
     description: entry.description,
     url: pageUrl(base, locale, entry.name),
+    headings: entry.toc.map(heading => heading.text),
+    keywords: entry.keywords,
     text: entry.tokens.filter(token => token.type === 'inline').map(plain).join(' ')
   })));
 }
