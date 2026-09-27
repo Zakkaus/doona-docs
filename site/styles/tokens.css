@@ -21,6 +21,8 @@
   --rp-notice-text: light-dark(var(--rp-text), var(--rp-notice));
   --rp-positive-text: light-dark(var(--rp-text), var(--rp-positive));
   --rp-info-text: light-dark(var(--rp-info), var(--rp-text));
+  /* Rosé Pine's subtle grey is under 4.5:1 as text, so doona's palette maps subtle text to the text colour. */
+  --rp-subtle-text: var(--rp-text);
   --rp-line: var(--rp-hl-med);
   --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
   /* sizes */
