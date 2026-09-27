@@ -178,7 +178,7 @@ function head(base, lang, title) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>${escape(title)}</title>
-<link rel="icon" href="${base}logo-light.svg" type="image/svg+xml">
+<link rel="icon" href="${base}logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${base}site.css">
 <script>
 try {
@@ -189,8 +189,8 @@ try {
 <script type="module" src="${base}site.js"></script>`;
 }
 
-// Both logos are in the page and the stylesheet shows the one for the scheme, which the theme button can override.
-const logo = base => ['light', 'dark'].map(scheme => `<img class="logo-${scheme}" src="${base}logo-${scheme}.svg" alt="" width="28" height="28">`).join('');
+// The app's logo, the same file in both schemes.
+const logo = base => `<img src="${base}logo.svg" alt="" width="28" height="28">`;
 
 function navList(base, locale, parsed, current) {
   const items = parsed.map(page => {
@@ -310,7 +310,7 @@ ${missing.join('\n')}
 
   files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
-  for (const logoFile of ['logo-light.svg', 'logo-dark.svg']) files.set(logoFile, {from: join(docs, logoFile)});
+  files.set('logo.svg', {from: join(root, 'public/logo.svg')});
   // The icons above are Adobe Spectrum artwork: the notice and licence travel with them, as in the release archives.
   files.set('NOTICE.txt', {from: join(root, 'NOTICE')});
   files.set('LICENSES/Apache-2.0.txt', {from: join(root, 'LICENSES/Apache-2.0.txt')});

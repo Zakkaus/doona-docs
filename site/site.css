@@ -135,24 +135,22 @@ details[open] > summary .icon:last-child {
   font-weight: 700;
   text-decoration: none;
 }
-/* The logo and the theme icon for the scheme in use: the system's, unless data-theme overrides it. The images are flex
-   items and so already blocks; a display rule on every .brand img would outrank .logo-dark and show both. */
-.logo-dark,
+/* The theme icon for the scheme in use: the system's, unless data-theme overrides it. */
 .scheme .icon:last-child {
   display: none;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) :is(.logo-light, .scheme .icon:first-child) {
+  :root:not([data-theme='light']) .scheme .icon:first-child {
     display: none;
   }
-  :root:not([data-theme='light']) :is(.logo-dark, .scheme .icon:last-child) {
+  :root:not([data-theme='light']) .scheme .icon:last-child {
     display: block;
   }
 }
-:root[data-theme='dark'] :is(.logo-light, .scheme .icon:first-child) {
+:root[data-theme='dark'] .scheme .icon:first-child {
   display: none;
 }
-:root[data-theme='dark'] :is(.logo-dark, .scheme .icon:last-child) {
+:root[data-theme='dark'] .scheme .icon:last-child {
   display: block;
 }
 .actions {
