@@ -24,8 +24,10 @@
     margin-inline-end: 0;
   }
   .top .language { display: none; }
-  .top .demo,
+  /* The demo keeps its icon and drops its label, as the language menu does in the phone menu. */
   .top .github { display: none; }
+  .top .demo { margin-inline-end: 0; }
+  .top .demo span { display: none; }
   .top .search-trigger { display: none; }
   .layout {
     display: block;

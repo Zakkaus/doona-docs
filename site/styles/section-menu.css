@@ -5,7 +5,10 @@
 @media (max-width: 1023px) {
   .search-brand .language { display: block; position: absolute; top: 12px; inset-inline-end: 56px; }
   .search-brand .language > summary > span { display: none; }
-  :root[data-scrolled] .top > .brand span { display: none; }
+  /* Once scrolled, the section menu takes the middle of the bar: the brand drops its name, and the demo leaves until the
+     visitor is back at the top, so the menu keeps the room it has without it. */
+  :root[data-scrolled] .top > .brand span,
+  :root[data-scrolled] .top .demo { display: none; }
   :root[data-scrolled] .mobile-sections {
     display: block;
     position: absolute;

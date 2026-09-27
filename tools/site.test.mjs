@@ -79,6 +79,20 @@ describe('icons', () => {
     const summary = /<details class="menu"[^]*?<summary>(<svg[^]*?<\/svg>)/.exec(page)[1];
     expect(summary.match(/<circle /g)).toHaveLength(3);
   });
+
+  it('draws a picture on every search card and hides it from assistive technology', () => {
+    const page = render().get('en/index.html').text;
+    const cards = [...page.matchAll(/<a class="search-card" href="[^"]*\/(?:([\w-]+)\.html)?"[^]*?<span class="card-art">([^]*?)<\/span><span class="card-text">/g)];
+    expect(cards.map(([, name]) => name ?? 'index')).toEqual(pages);
+    for (const [, name, art] of cards) {
+      expect(art, name).toMatch(/^(<svg class="icon[^"]*" viewBox="[^"]+" aria-hidden="true" focusable="false"><path fill="currentColor" d="[^"]+"\/>(<path[^>]+\/>)*<\/svg>)+$/);
+    }
+  });
+
+  it('puts the play icon before the demo label', () => {
+    const page = render().get('en/index.html').text;
+    expect(page).toMatch(/<a class="demo" href="[^"]+" aria-label="doona demo with sample data"><svg class="icon" [^>]*aria-hidden="true"[^]*?<\/svg><span>Demo<\/span><\/a>/);
+  });
 });
 
 // The site script over a sidebar and phone menu that each hold the install and guides sections, with storage holding
