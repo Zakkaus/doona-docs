@@ -41,6 +41,10 @@ doona keeps no screenshots in git. Before the build, a push to `main` or a manua
 
 A page keeps the paths it had in doona: a link to `../screenshots/` or `../../src/` names doona's file, which the site copies or links on GitHub.
 
+## Acknowledgements
+
+The site's design follows the documentation of Adobe's React Spectrum and Spectrum 2. The Spectrum icons are copyright Adobe and licensed under the Apache License 2.0. Source Sans 3 and Source Code Pro are copyright Adobe and licensed under the SIL Open Font License 1.1. [NOTICE](NOTICE) carries the full notices.
+
 ## License
 
 The pages in `docs/` are licensed under [CC BY 4.0](LICENSES/CC-BY-4.0.txt); the site build and the checker under GPL-3.0-only, as doona. The published site also carries doona's `NOTICE` for its icons, and this repository's for the Spectrum icons and distribution logos in `site/icons/`; see [NOTICE](NOTICE).

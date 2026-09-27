@@ -5,7 +5,8 @@ import strings from '../strings.mjs';
 import {escape, pageUrl} from './common.mjs';
 import {icons, logo, pageIcons} from './icons.mjs';
 
-// Spectrum Chevron UI icon (Apache-2.0), as the reference docs draw it beside a collapsible section.
+// The Spectrum Chevron UI icon (S2_ChevronSize100 in @react-spectrum/s2 1.7.1), as the React Spectrum docs draw it
+// beside a collapsible section. Copyright 2024 Adobe, Apache License 2.0 (LICENSES/Apache-2.0.txt); see NOTICE.
 const sectionChevron = '<svg class="icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7.965 5.178C7.978 5.118 8 5.061 8 5s-.021-.118-.034-.178c-.01-.05-.01-.102-.03-.15-.023-.058-.068-.107-.104-.16-.03-.042-.047-.09-.084-.127l-.004-.003-.003-.004L3.615.303a.875.875 0 1 0-1.23 1.244L5.88 5 2.385 8.453a.875.875 0 1 0 1.23 1.244L7.74 5.622l.003-.004.004-.003c.037-.038.055-.085.084-.127.036-.053.08-.102.104-.16.02-.048.02-.1.03-.15"/></svg>';
 
 // The pages under their section headings. As in the reference docs, the first section is a plain label with its pages
