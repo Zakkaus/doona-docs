@@ -1,8 +1,8 @@
 [English](../en/install.md) · [简体中文](../zh-CN/install.md) · 繁體中文
 
-# 安裝
+# 安裝詳解
 
-先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。開始前請確認[系統需求](requirements.md#requirements)。
+先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。開始前請確認[系統需求](requirements.md#requirements)。「入門」各頁按系統逐步介紹同樣的安裝過程，從 [Debian 或 Ubuntu](install-debian.md) 開始。
 
 <a name="install"></a>
 

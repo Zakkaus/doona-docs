@@ -1,8 +1,8 @@
 English · [简体中文](../zh-CN/install.md) · [繁體中文](../zh-TW/install.md)
 
-# Install
+# Installation details
 
-Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first.
+Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first. The Getting started pages walk through the same installation one system at a time, starting with [Debian or Ubuntu](install-debian.md).
 
 <a name="install"></a>
 
