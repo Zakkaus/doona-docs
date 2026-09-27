@@ -1,7 +1,7 @@
-import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
+import {script as siteScript} from '../site/build/assets.mjs';
 import {awaitsScreenshots, groups, locales, pages, slugger} from '../site/docs.mjs';
 
 describe('slugger', () => {
@@ -16,7 +16,7 @@ describe('slugger', () => {
   });
 });
 
-// site/site.js with one code block's copy button, and the clipboard write it is given.
+// The site script with one code block's copy button, and the clipboard write it is given.
 function copyButton(writeText) {
   const button = {
     hidden: true,
@@ -33,7 +33,7 @@ function copyButton(writeText) {
     querySelector: selector => (selector === '[role="status"][data-copied]' ? status : null),
     querySelectorAll: selector => (selector === '.code > .copy' ? [button] : [])
   };
-  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  const script = siteScript();
   runInNewContext(script, {document, navigator: {clipboard: {writeText}}, setTimeout: () => 0, clearTimeout: () => {}});
   return {button, status};
 }
@@ -81,7 +81,7 @@ describe('icons', () => {
   });
 });
 
-// site/site.js over a sidebar and phone menu that each hold the install and guides sections, with storage holding
+// The site script over a sidebar and phone menu that each hold the install and guides sections, with storage holding
 // `stored`, or throwing it when it is an Error.
 function navSections(stored) {
   const details = ['install', 'guides', 'install', 'guides'].map(group => ({
@@ -105,7 +105,7 @@ function navSections(stored) {
     querySelector: () => null,
     querySelectorAll: selector => (selector === '.nav-group[data-group]' ? details : [])
   };
-  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  const script = siteScript();
   runInNewContext(script, {document, localStorage, navigator: {}, setTimeout: () => 0, clearTimeout: () => {}});
   // Each section's state, after checking that the sidebar and the phone menu agree.
   const sections = () => {
@@ -170,7 +170,7 @@ describe('navigation', () => {
   });
 });
 
-// site/site.js over two .tabs boxes as site/build/markdown.mjs renders them, with storage holding `stored`.
+// The site script over two .tabs boxes as site/build/markdown.mjs renders them, with storage holding `stored`.
 function tabBoxes(labels, stored) {
   const element = (tag, props = {}) => ({
     tag,
@@ -217,7 +217,7 @@ function tabBoxes(labels, stored) {
     querySelectorAll: selector => (selector === '.tabs' ? boxes : [])
   };
   const localStorage = {getItem: () => stored, setItem: (key, value) => saved.push([key, value])};
-  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  const script = siteScript();
   runInNewContext(script, {document, localStorage, navigator: {}, setTimeout: () => 0, clearTimeout: () => {}});
   const view = box => {
     const [list, ...panels] = box.children;
@@ -285,7 +285,7 @@ describe('code tabs', () => {
   });
 });
 
-// site/site.js with the page's Copy as Markdown button, the fetch that serves its Markdown, and the clipboard.
+// The site script with the page's Copy as Markdown button, the fetch that serves its Markdown, and the clipboard.
 function markdownButton(clipboard) {
   const button = {
     hidden: true,
@@ -306,7 +306,7 @@ function markdownButton(clipboard) {
     fetched.push(url);
     return {ok: true, text: async () => '# Install\n'};
   };
-  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  const script = siteScript();
   runInNewContext(script, {document, navigator: {clipboard}, fetch, setTimeout: () => 0, clearTimeout: () => {}});
   return {button, status, fetched};
 }

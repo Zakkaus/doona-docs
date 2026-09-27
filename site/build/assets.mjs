@@ -62,8 +62,12 @@ function stylesheet() {
     .replace(sizesMarker, sizes.map(([name, value]) => `  ${name}: ${value};\n`).join(''));
 }
 
-// The published site.js.
-export const script = () => readFileSync(join(root, 'site/site.js'), 'utf8');
+// The published site.js is the files in site/scripts/ joined in this order, one feature each. They run as one module,
+// so they share one scope: a top-level name is declared in one file only, and a file uses only the names of files
+// before it. Joining them keeps one request and one ?v= hash; served as separate modules, every import would need a
+// hash of its own.
+const scriptFiles = ['theme', 'language', 'nav', 'copy', 'menus', 'tabs', 'page-actions', 'press', 'search', 'outline'];
+export const script = () => scriptFiles.map(name => readFileSync(join(root, `site/scripts/${name}.js`), 'utf8')).join('\n');
 
 // Pages link the stylesheet and script with a hash of their content, so a browser holding the previous ones in its
 // cache (GitHub Pages sends max-age=600) fetches the new ones with the new pages instead of mixing the two.
