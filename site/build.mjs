@@ -15,11 +15,11 @@ import strings from './strings.mjs';
 const alerts = ['note', 'tip', 'important', 'warning', 'caution'];
 
 const md = new MarkdownIt({html: true});
-md.renderer.rules.table_open = () => '<div class="table"><table>\n';
+md.renderer.rules.table_open = (tokens, index, options, env) => `<div class="table" role="region" aria-label="${strings[env.locale].table}" tabindex="0"><table>\n`;
 md.renderer.rules.table_close = () => '</table></div>\n';
 md.renderer.rules.blockquote_open = (tokens, index, options, env, self) => {
   const alert = tokens[index].meta?.alert;
-  const title = alert ? `<p class="callout-title">${strings[env.locale][alert]}</p>\n` : '';
+  const title = alert ? `${icons[alert === 'warning' || alert === 'caution' ? 'alert' : 'info']}<p class="callout-title">${strings[env.locale][alert]}</p>\n` : '';
   return self.renderToken(tokens, index, options) + title;
 };
 // A fence's info is its language, optionally followed by tab="label".
@@ -32,7 +32,7 @@ md.renderer.rules.fence = (tokens, index, options, env) => {
   const token = tokens[index];
   const [language, tab] = fenceInfo(token.info);
   const copy = `<button type="button" class="copy" aria-label="${strings[env.locale].copy}" hidden>${icons.copy}${icons.copied}</button>`;
-  const code = `<div class="code"><pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
+  const code = `<div class="code"><pre tabindex="0"><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
   if (!tab) return code;
   const panel = `<div class="tab-panel" data-tab="${escape(tab)}"><p class="tab-label">${escape(tab)}</p>\n${code}</div>\n`;
   return `${token.meta.first ? '<div class="tabs">\n' : ''}${panel}${token.meta.last ? '</div>\n' : ''}`;
@@ -68,7 +68,13 @@ const icons = {
   copied: icon('Checkmark'),
   moon: icon('Contrast'),
   sun: icon('Lighten'),
-  more: icon('MoreVertical')
+  more: icon('MoreVertical'),
+  search: icon('Search'),
+  close: icon('Close'),
+  menu: icon('TextAlignLeft'),
+  document: icon('FileText'),
+  info: icon('InfoCircle'),
+  alert: icon('AlertTriangle')
 };
 
 // site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
@@ -274,7 +280,7 @@ function navList(base, locale, parsed, current) {
       const here = name === current ? ' aria-current="page"' : '';
       return `<li><a href="${pageUrl(base, locale, name)}"${here}>${escape(titles.get(name))}</a></li>`;
     });
-    return `<li><span class="group">${strings[locale].groups[group]}</span><ul>${items.join('')}</ul></li>`;
+    return `<li><details class="nav-group" open><summary class="group"><span>${strings[locale].groups[group]}</span>${icons.chevron}</summary><ul>${items.join('')}</ul></details></li>`;
   });
   return `<ul class="pages">${sections.join('')}</ul>`;
 }
@@ -302,6 +308,29 @@ function pageActions(base, origin, locale, name) {
 </div>`;
 }
 
+function searchDialog(base, locale, parsed, current, languages) {
+  const text = strings[locale];
+  const groupFor = name => Object.keys(groups).find(group => groups[group].includes(name));
+  const selected = groupFor(current.name);
+  const all = `<button type="button" data-group="" aria-pressed="false" hidden>${text.all}</button>`;
+  const filters = Object.keys(groups).map(group => `<button type="button" data-group="${group}" aria-pressed="${group === selected}">${text.groups[group]}</button>`);
+  const cards = parsed.map(entry => `<a class="search-card" href="${pageUrl(base, locale, entry.name)}" data-group="${groupFor(entry.name)}"${entry.name === current.name ? ' aria-current="page"' : ''}>
+<span class="card-art">${icons.document}</span><span class="card-text"><strong>${escape(entry.title)}</strong><span>${escape(entry.description)}</span></span></a>`);
+  return `<dialog id="docs-search" aria-label="${text.search}" data-search-src="${base}${locale}/search.json">
+<div class="search-layout">
+<div class="search-brand"><a class="brand" href="${pageUrl(base, locale, 'index')}">${logo(base)}<span>doona</span></a><p>${escape(parsed[0].title)}</p>
+<details class="language" name="docs-menu"><summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary><ul>${languages.join('')}</ul></details></div>
+<div class="search-content">
+<div class="search-field">${icons.search}<input type="search" aria-label="${text.search}" placeholder="${text.search}" autocomplete="off" aria-controls="search-results"></div>
+<div class="search-filters" aria-label="${text.pages}">${all}${filters.join('')}</div>
+<nav class="search-cards" id="search-results" aria-label="${text.pages}">${cards.join('')}</nav>
+<p class="search-status" role="status" data-loading="${text.searchLoading}" data-empty="${text.noResults}" data-failed="${text.searchFailed}" hidden></p>
+</div>
+<button class="search-close" type="button" aria-label="${text.close}">${icons.close}</button>
+</div>
+</dialog>`;
+}
+
 // The language, page and Markdown menus share a details name, so opening one closes the others.
 function page(base, origin, locale, parsed, current) {
   const text = strings[locale];
@@ -324,6 +353,11 @@ function page(base, origin, locale, parsed, current) {
 <a class="skip" href="#content">${text.skip}</a>
 <header class="top">
 <a class="brand" href="${pageUrl(base, locale, 'index')}">${logo(base)}<span>doona</span></a>
+<button class="search-trigger" type="button" aria-haspopup="dialog" aria-controls="docs-search" hidden>${icons.search}<span>${text.search}</span><kbd>Ctrl K</kbd></button>
+<details class="mobile-sections" name="docs-menu">
+<summary aria-label="${text.onThisPage}"><span>${escape(current.title)}</span>${icons.chevron}</summary>
+<ul><li><a href="#content">${escape(current.title)}</a></li>${toc.join('')}</ul>
+</details>
 <div class="actions">
 <details class="language" name="docs-menu">
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
@@ -332,6 +366,7 @@ function page(base, origin, locale, parsed, current) {
 <button type="button" class="theme" aria-label="${themeLabels.system}" ${themeData}><span class="scheme">${icons.moon}${icons.sun}</span></button>
 <a class="github" href="${repository}" aria-label="${text.github}">${icons.github}</a>
 </div>
+<button class="nav-trigger" type="button" aria-label="${text.navigation}" aria-haspopup="dialog" aria-controls="docs-search" hidden>${icons.menu}</button>
 </header>
 <div class="layout">
 <nav class="sidebar" aria-label="${text.pages}">${navList(base, locale, parsed, current.name)}</nav>
@@ -350,6 +385,7 @@ ${pageActions(base, origin, locale, current.name)}
 </aside>
 </div>
 </div>
+${searchDialog(base, locale, parsed, current, languages)}
 <p class="visually-hidden" role="status" data-copied="${text.copied}" data-copy-failed="${text.copyFailed}"></p>
 </body>
 </html>
@@ -382,6 +418,12 @@ export function render({base = '/doona-docs/', origin = ''} = {}) {
   const llms = [];
   for (const locale of locales) {
     const parsed = pages.map(name => parse(base, files, locale, name));
+    files.set(`${locale}/search.json`, {text: JSON.stringify(parsed.map(entry => ({
+      title: entry.title,
+      description: entry.description,
+      url: pageUrl(base, locale, entry.name),
+      text: entry.tokens.filter(token => token.type === 'inline').map(plain).join(' ')
+    })))});
     for (const current of parsed) {
       files.set(`${locale}/${current.name}.html`, {text: page(base, origin, locale, parsed, current)});
       files.set(`${locale}/${current.name}.md`, {text: markdown(base, origin, files, locale, current.name)});

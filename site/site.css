@@ -14,7 +14,7 @@
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-/* The docs site's one stylesheet. The colour, radius and type tokens are doona's. site/build.mjs writes in Rosé Pine
+/* The docs site's palette comes from doona; document geometry follows the Spectrum docs. site/build.mjs writes in Rosé Pine
    Dawn and Moon, its default palette (DEFAULT_PALETTE in src/shell/palettes.ts), from src/ui/styles/palettes.css, and
    the radii and type sizes this sheet uses from src/ui/styles/motion.css; the role tokens are copied from motion.css.
    Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by default, or the one the
@@ -39,9 +39,9 @@
   --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
   /* sizes */
   /* The docs' own reading sizes, above the app's scale. */
-  --docs-h1: 40px;
-  --docs-h1-phone: 32px;
-  --docs-top: 56px;
+  --docs-h1: 3.625rem;
+  --docs-h1-phone: 3.4375rem;
+  --docs-top: 72px;
   /* Code sits one step off the page surface. The dark overlay leans further into violet than the surface, so dark
      code lightens the surface itself instead. */
   --docs-code: light-dark(var(--rp-overlay), color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface)));
@@ -67,11 +67,10 @@
   --docs-sans: 'Source Sans 3', 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
 }
 
-/* The app's thin scrollbars (doona's foundations.css), on the root, the sidebar and every scroll container. A classic
-   scrollbar, so a code line wider than its column shows that it scrolls even where scrollbars overlay. */
+/* Native scrollbars retain doona's thumb colour in every scroll container. */
 * {
   box-sizing: border-box;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: var(--rp-hl-high) transparent;
 }
 body {
@@ -79,9 +78,13 @@ body {
   background: var(--rp-base);
   color: var(--rp-text);
   font-family: var(--docs-sans);
-  font-size: var(--rp-text-lg);
-  line-height: 1.75;
+  font-size: 1.125rem;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+body:has(.layout) {
+  height: 100dvh;
+  overflow: hidden;
 }
 a {
   color: inherit;
@@ -136,13 +139,18 @@ details[open] > summary .icon:last-child {
   justify-content: space-between;
   gap: 16px;
   height: var(--docs-top);
-  padding: 0 24px;
+  position: relative;
+  padding: 12px;
 }
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: var(--rp-text-xl);
+  gap: 10px;
+  min-height: 48px;
+  margin-inline-start: 26px;
+  padding-inline: 12px;
+  border-radius: 10px;
+  font-size: 1.25rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -178,9 +186,9 @@ details[open] > summary .icon:last-child {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: var(--rp-r-md);
+  min-height: 32px;
+  padding: 0 6px;
+  border-radius: 10px;
   font-size: var(--rp-text-md);
   text-decoration: none;
 }
@@ -219,16 +227,16 @@ details[open] > summary .icon:last-child {
 /* Three columns: pages, the page itself, its sections. */
 .layout {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  padding-inline-end: 12px;
+  grid-template-columns: 224px minmax(0, 1fr);
+  height: calc(100dvh - var(--docs-top));
+  padding-inline: 12px;
 }
 .sidebar {
   position: sticky;
   top: 0;
-  align-self: start;
-  max-height: 100vh;
+  height: 100%;
   overflow-y: auto;
-  padding: 8px 16px 24px 24px;
+  padding: 0 12px 24px;
 }
 /* The page lists (sidebar, phone menu, "On this page") follow the Spectrum 2 docs: rows carry no fill, a bar at the
    start marks one instead, light on hover and in the text colour with bold text on the current page, and the gaps
@@ -237,14 +245,18 @@ details[open] > summary .icon:last-child {
   margin-top: 24px;
 }
 .group {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 8px;
-  padding-inline-start: 6px;
+  padding-inline-start: 12px;
   color: var(--rp-subtle-text);
-  font-size: var(--rp-text-xs);
-  font-weight: 500;
-  line-height: 16px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 20px;
 }
+.nav-group > .group .icon { transform: rotate(-90deg); }
+.nav-group[open] > .group .icon { transform: none; }
 .pages ul {
   display: grid;
   gap: 6px;
@@ -254,7 +266,7 @@ details[open] > summary .icon:last-child {
   position: relative;
   display: block;
   padding: 7px 12px;
-  border-radius: var(--rp-r-md);
+  border-radius: 4px;
   font-size: var(--rp-text-md);
   line-height: 18px;
   text-decoration: none;
@@ -281,20 +293,24 @@ details[open] > summary .icon:last-child {
 }
 .panel {
   display: grid;
-  grid-template-columns: minmax(0, 768px) 200px;
+  grid-template-columns: minmax(0, 1fr) 180px;
   grid-template-rows: 1fr auto;
-  justify-content: center;
-  column-gap: 64px;
-  min-height: calc(100vh - var(--docs-top));
-  padding: 40px 40px 96px;
-  border-radius: var(--rp-r-xl) var(--rp-r-xl) 0 0;
+  column-gap: 40px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px;
+  border-radius: 16px 16px 0 0;
+  box-shadow: var(--rp-elevated);
   background: var(--rp-surface);
 }
 .panel > main {
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
-  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 768px;
+  justify-self: center;
+  overflow-wrap: anywhere;
 }
 .foot {
   grid-column: 1;
@@ -462,20 +478,22 @@ details[open] > summary .icon:last-child {
   height: 12px;
 }
 main h1 {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: var(--docs-h1);
-  line-height: 1.2;
+  line-height: 66px;
   font-weight: 800;
 }
 main h2 {
-  margin: 48px 0 16px;
-  font-size: var(--rp-text-5xl);
-  line-height: 1.3;
+  margin: 48px 0 24px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 32px;
 }
 main h3 {
-  margin: 32px 0 12px;
-  font-size: var(--rp-text-2xl);
-  line-height: 1.4;
+  margin: 32px 0 16px;
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 26px;
 }
 main :is(h2, h3) {
   scroll-margin-top: 24px;
@@ -483,7 +501,12 @@ main :is(h2, h3) {
 main p,
 main ul,
 main ol {
-  margin: 0 0 16px;
+  margin: 27px 0;
+}
+main h1 + p {
+  margin: 8px 0 0;
+  font-size: 1.25rem;
+  line-height: 30px;
 }
 main ul {
   padding-inline-start: 24px;
@@ -508,33 +531,33 @@ main img {
 }
 code {
   padding: 1px 4px;
+  border: 1px solid var(--rp-line);
   border-radius: 4px;
   background: var(--docs-code);
   font-family: var(--docs-mono);
-  font-size: 0.875em;
+  font-size: 0.875rem;
 }
-/* The type is the editor's, 13px without ligatures, with more leading for reading. The block draws the frame so that
-   the pre, which scrolls, can fade its own edge without fading the frame. */
+/* Standalone snippets follow the reference's 14/21 reading scale; wide lines scroll within the block. */
 .code {
   position: relative;
-  margin: 0 0 16px;
-  border: 1px solid var(--rp-line);
-  border-radius: var(--rp-r-lg);
+  margin: 32px 0;
+  border: 0;
+  border-radius: 16px;
   background: var(--docs-code);
 }
 pre {
   margin: 0;
-  padding: 16px 20px;
+  padding: 32px;
   overflow-x: auto;
-  border-radius: calc(var(--rp-r-lg) - 1px);
-  font-size: var(--rp-text-sm);
-  line-height: 22px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  line-height: 21px;
   font-variant-ligatures: none;
   overflow-wrap: normal;
 }
-/* The copy button gets a row of its own above the first line, so no line scrolls under it. */
+/* Reserve the action at the end of the line without adding a blank row above the code. */
 .code:has(> .copy:not([hidden])) > pre {
-  padding-top: 40px;
+  padding-inline-end: 52px;
 }
 /* The lines fade out at the right edge while there is more to scroll to, since an overlay scrollbar is invisible at
    rest. The bottom 12px, where a scrollbar sits, is left unmasked. Without scroll-driven animations there is no fade. */
@@ -566,17 +589,18 @@ pre {
 }
 .copy {
   position: absolute;
-  top: 6px;
-  inset-inline-end: 6px;
+  top: 8px;
+  inset-inline-end: 8px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border: 1px solid var(--rp-line);
-  border-radius: var(--rp-r-md);
-  background: color-mix(in srgb, var(--rp-text) 4%, var(--docs-code));
-  color: var(--rp-subtle);
+  border: 0;
+  border-radius: 7px;
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+  color: var(--rp-text);
   cursor: pointer;
 }
 /* The grid above outranks the browser's [hidden] rule; site.js unhides the button where the clipboard can be written. */
@@ -601,8 +625,13 @@ pre {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+.copy .icon {
+  width: 16px;
+  height: 16px;
+}
 pre code {
   padding: 0;
+  border: 0;
   background: none;
   font-size: inherit;
 }
@@ -615,7 +644,7 @@ pre code {
 }
 .t-keyword {
   color: var(--docs-code-keyword);
-  font-weight: 700;
+  font-weight: 400;
 }
 .t-number {
   color: var(--docs-code-number);
@@ -628,42 +657,56 @@ pre code {
   color: var(--docs-code-punctuation);
 }
 .table {
-  margin: 0 0 16px;
+  margin: 32px 0;
   overflow-x: auto;
+  border: 1px solid var(--rp-line);
+  border-radius: 8px;
 }
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--rp-text-md);
-  line-height: 1.6;
+  font-size: 0.875rem;
+  line-height: 18px;
 }
 /* A column keeps room for a few words; a table wider than the column scrolls in its box instead of squeezing the
    text into a word a line. */
 th,
 td {
   min-width: 8em;
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--rp-line);
   text-align: start;
   vertical-align: top;
 }
 th {
+  padding-block: 7px;
   font-weight: 700;
+  background: var(--rp-overlay);
 }
+tr:last-child td { border-bottom: 0; }
 .callout {
   --tone: var(--rp-hl-high);
   --tone-text: var(--rp-text);
 
-  margin: 0 0 16px;
-  padding: 12px 16px;
-  border-inline-start: 4px solid var(--tone);
-  border-radius: var(--rp-r-md);
-  background: color-mix(in srgb, var(--tone) 10%, var(--rp-surface));
+  position: relative;
+  margin: 32px 0;
+  padding: 24px;
+  border: 2px solid var(--tone);
+  border-radius: 10px;
+  background: var(--rp-surface);
+  font-size: 1.125rem;
+  line-height: 27px;
 }
-.callout > :last-child {
-  margin-bottom: 0;
+.callout > .icon {
+  position: absolute;
+  top: 24px;
+  inset-inline-end: 24px;
+  color: var(--tone-text);
 }
 .callout-title {
+  margin: 0 32px 14px 0;
+  font-size: 0.875rem;
+  line-height: 18px;
   color: var(--tone-text);
   font-weight: 700;
 }
@@ -708,56 +751,307 @@ th {
 }
 
 @media (max-width: 1023px) {
-  .panel {
-    grid-template-columns: minmax(0, 768px);
+  :root { --docs-top: 56px; }
+  body:has(.layout) {
+    height: auto;
+    overflow: auto;
   }
-  .toc {
-    display: none;
-  }
-}
-/* Phones: the pages move into a menu above the content, and the panel runs edge to edge. */
-@media (max-width: 767px) {
   .top {
-    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    background: var(--rp-surface);
+    height: 56px;
+    gap: 12px;
+    padding: 12px;
   }
+  .brand {
+    min-height: 32px;
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+  }
+  .brand img { width: 20px; height: 20px; }
+  .top .actions {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+  }
+  .top .language { display: none; }
+  .top .github { display: none; }
+  .top .search-trigger { display: none; }
   .layout {
-    grid-template-columns: minmax(0, 1fr);
-    padding-inline-end: 0;
+    display: block;
+    height: auto;
+    padding: 0;
   }
-  .sidebar {
-    display: none;
-  }
+  .sidebar,
+  .toc { display: none; }
   .panel {
     display: block;
-    padding: 16px 16px 64px;
+    height: auto;
+    overflow: visible;
+    padding: 12px;
     border-radius: 0;
+    box-shadow: none;
+  }
+  .panel > main {
+    margin-inline: auto;
   }
   .menu {
     display: block;
     margin-bottom: 24px;
   }
+  :root[data-enhanced] .menu { display: none; }
   .menu > summary {
     display: flex;
     align-items: center;
     gap: 8px;
     min-height: 40px;
     padding: 0 12px;
-    border-radius: var(--rp-r-md);
+    border-radius: 8px;
     background: var(--rp-overlay);
-    font-size: var(--rp-text-md);
+    font-size: 0.875rem;
   }
-  .menu > summary span {
-    flex: 1;
-  }
-  .menu nav {
-    padding-top: 16px;
-  }
+  .menu > summary span { flex: 1; }
+  .menu nav { padding-top: 16px; }
   main h1 {
     font-size: var(--docs-h1-phone);
+    line-height: 64px;
   }
-  main h2 {
-    font-size: var(--rp-text-4xl);
+  pre { padding: 12px; font-size: 0.75rem; line-height: 18px; }
+  main :is(h2, h3) { scroll-margin-top: 80px; }
+}
+
+/* Search and phone navigation share one native modal and the same page catalogue. */
+[hidden] { display: none !important; }
+.search-trigger[hidden],
+.nav-trigger[hidden] { display: none; }
+.search-trigger {
+  position: absolute;
+  inset-inline-start: min(50%, calc(100% - 560px));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 500px;
+  min-height: 40px;
+  padding: 1px 8px 1px 20px;
+  border: 2px solid var(--rp-line);
+  border-radius: 9999px;
+  background: var(--rp-surface);
+  color: var(--rp-subtle-text);
+  font: 400 1rem/24px var(--docs-sans);
+  text-align: start;
+  cursor: pointer;
+}
+.search-trigger span { flex: 1; }
+kbd {
+  padding: 0 8px;
+  border: 1px solid var(--rp-line);
+  border-radius: 9999px;
+  font: 400 0.875rem/22px var(--docs-sans);
+  white-space: nowrap;
+}
+.nav-trigger,
+.search-close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.nav-trigger { display: none; }
+#docs-search {
+  width: min(1312px, calc(95% + 32px));
+  max-width: calc(100% - 16px);
+  height: calc(90dvh + 16px);
+  max-height: calc(100dvh - 16px);
+  margin: 8px auto;
+  padding: 20px 32px 0 16px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
+  background: var(--rp-base);
+  color: var(--rp-text);
+  box-shadow: var(--rp-elevated);
+}
+#docs-search::backdrop {
+  background: color-mix(in srgb, var(--rp-text) 48%, transparent);
+}
+body:has(#docs-search[open]) { overflow: hidden; }
+.search-layout {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 24px;
+}
+.search-content { position: relative; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.search-brand {
+  align-self: start;
+  padding-inline-start: 12px;
+  border-inline-start: 2px solid var(--rp-text);
+}
+.search-brand .brand { margin: 0; padding: 0; min-height: 28px; }
+.search-brand p { margin: 0 16px 0 36px; font-size: 0.875rem; line-height: 18px; }
+.search-field {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(500px, calc(100% - 40px));
+  min-height: 40px;
+  padding: 0 16px;
+  border: 2px solid var(--rp-text);
+  border-radius: 9999px;
+  background: var(--rp-surface);
+}
+.search-field:focus-within { border-color: var(--rp-accent); }
+.search-field input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--rp-text);
+  font: 400 1rem/24px var(--docs-sans);
+}
+.search-field input::placeholder { color: var(--rp-subtle-text); opacity: 1; }
+.search-close { position: absolute; top: 16px; inset-inline-end: 24px; }
+.search-filters {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-block: 20px 12px;
+  overflow-x: auto;
+}
+.search-filters button {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--rp-overlay);
+  color: inherit;
+  font: 400 0.875rem/18px var(--docs-sans);
+  cursor: pointer;
+}
+.search-filters button[aria-pressed='true'] { background: var(--rp-text); color: var(--rp-base); }
+.search-cards { flex: 1; min-height: 0; margin: 0 -16px; padding: 16px; overflow-y: auto; display: grid; align-content: start; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.search-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.search-card[aria-current] { outline: 2px solid var(--rp-text); outline-offset: -2px; }
+.card-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.6;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(125deg, var(--rp-iris), var(--rp-pine));
+  color: var(--rp-base);
+}
+.card-art .icon { width: 64px; height: 64px; }
+.card-text { display: grid; align-content: start; gap: 4px; padding: 12px; font-size: 0.8125rem; line-height: 18px; }
+.card-text strong { font-weight: 600; }
+.search-status { position: absolute; top: 120px; inset-inline-start: 0; margin: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .search-trigger:hover { border-color: var(--rp-hl-high); }
+  .nav-trigger:hover,
+  .search-close:hover { background: var(--rp-overlay); }
+  .search-card:hover { outline: 2px solid var(--rp-hl-high); outline-offset: -2px; }
+}
+.search-card:focus-visible { outline: 2px solid var(--rp-accent); outline-offset: 2px; }
+:is(.theme, .github, .language > summary, .nav-trigger, .search-close, .copy):active {
+  background: var(--rp-hl-med);
+}
+@media (max-width: 1199px) {
+  .search-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .nav-trigger { display: grid; }
+  #docs-search {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 12px;
+    border-radius: 0;
   }
+  .search-layout { display: flex; flex-direction: column; gap: 0; }
+  .search-content { flex: 1; }
+  .search-brand { flex-shrink: 0; display: flex; width: fit-content; padding: 0 0 4px; border: 0; border-bottom: 2px solid var(--rp-text); }
+  .search-brand p { display: none; }
+  .search-brand .brand { min-height: 26px; line-height: 20px; padding-inline: 8px; }
+  .search-close { top: 10px; inset-inline-end: 12px; }
+  .search-field { width: calc(100% - 8px); min-height: 32px; margin: 16px 4px 0; padding-inline: 12px; }
+  .search-field input { font-size: 0.875rem; }
+  .search-filters { margin: 12px -4px 12px; padding: 0; }
+  .search-status { top: 116px; }
+  .search-cards { margin: 0 -12px -12px; padding: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .search-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  pre { animation: none; }
+}
+
+.pages a { padding-inline-start: 28px; }
+.pages a::before { inset-inline-start: 20px; }
+.toc-sections a[aria-current] { font-weight: 700; }
+.toc-sections a[aria-current]::before { background: currentColor; }
+.mobile-sections,
+.search-brand .language { display: none; }
+@media (max-width: 1023px) {
+  .search-brand .language { display: block; position: absolute; top: 12px; inset-inline-end: 56px; }
+  .search-brand .language > summary > span { display: none; }
+  :root[data-scrolled] .top > .brand span { display: none; }
+  :root[data-scrolled] .mobile-sections {
+    display: block;
+    position: absolute;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 192px);
+  }
+  .mobile-sections > summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    border-radius: 9px;
+    font-size: 1rem;
+    line-height: 20px;
+  }
+  .mobile-sections > summary span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mobile-sections ul {
+    position: absolute;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 4px);
+    width: 192px;
+    max-height: calc(100dvh - 72px);
+    overflow: auto;
+    padding: 8px;
+    border-radius: 10px;
+    background: var(--rp-surface);
+    box-shadow: var(--rp-elevated);
+  }
+  .mobile-sections a { display: block; padding: 10px 16px; border-radius: 8px; font-size: 1rem; line-height: 20px; text-decoration: none; }
+  .mobile-sections a[aria-current] { background: var(--rp-selected); }
 }
 /* Tabs over alternative forms of one code block. Without site.js every block shows under its .tab-label. */
 .tabs {
