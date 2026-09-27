@@ -51,8 +51,12 @@
   --docs-sans: 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
 }
 
+/* The app's thin scrollbars (doona's foundations.css), on the root, the sidebar and every scroll container. A classic
+   scrollbar, so a code line wider than its column shows that it scrolls even where scrollbars overlay. */
 * {
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rp-hl-high) transparent;
 }
 body {
   margin: 0;
@@ -501,9 +505,6 @@ pre {
   padding: 16px 20px;
   overflow-x: auto;
   border-radius: calc(var(--rp-r-lg) - 1px);
-  /* A classic scrollbar, so a line wider than the column shows that it scrolls even where scrollbars overlay. */
-  scrollbar-width: thin;
-  scrollbar-color: var(--rp-hl-high) transparent;
   font-size: var(--rp-text-sm);
   line-height: 22px;
   font-variant-ligatures: none;
