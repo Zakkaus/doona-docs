@@ -161,3 +161,46 @@ describe('Markdown pages', () => {
     expect(listed).toEqual(locales.flatMap(locale => pages.map(name => `${origin}${base}${locale}/${name}.md`)));
   });
 });
+
+// Where the inline script of the root or 404 page sends a visitor, given a stored language and the browser's languages.
+function redirect(stored, languages, page = 'index.html', pathname = '/doona-docs/', hash = '') {
+  const scripts = [
+    ...render()
+      .get(page)
+      .text.matchAll(/<script>\n([^]*?)<\/script>/g)
+  ].map(match => match[1]);
+  const script = scripts.find(text => text.includes('location.replace'));
+  let target;
+  const localStorage = {getItem: key => (key === 'doona-docs-locale' ? stored : null)};
+  runInNewContext(script, {localStorage, navigator: {languages}, location: {pathname, hash, replace: url => (target = url)}});
+  return target;
+}
+const rootLocale = (stored, languages) => redirect(stored, languages);
+
+describe('root page', () => {
+  it('follows the browser language', () => {
+    expect(rootLocale(null, ['zh-HK', 'en'])).toBe('/doona-docs/zh-TW/');
+    expect(rootLocale(null, ['zh-Hans-SG'])).toBe('/doona-docs/zh-CN/');
+    expect(rootLocale(null, ['fr-FR'])).toBe('/doona-docs/en/');
+  });
+
+  it('prefers the language chosen from the menu', () => {
+    expect(rootLocale('zh-CN', ['en-US'])).toBe('/doona-docs/zh-CN/');
+    expect(rootLocale('xx', ['en-US'])).toBe('/doona-docs/en/');
+  });
+});
+
+describe('404 page', () => {
+  it('sends a page path without a language to that page in the visitor language', () => {
+    expect(redirect(null, ['zh-TW'], '404.html', '/doona-docs/troubleshooting.html', '#no-native-api')).toBe(
+      '/doona-docs/zh-TW/troubleshooting.html#no-native-api'
+    );
+    expect(redirect('zh-CN', ['en'], '404.html', '/doona-docs/features.md')).toBe('/doona-docs/zh-CN/features.md');
+    expect(redirect(null, ['en'], '404.html', '/doona-docs/index')).toBe('/doona-docs/en/');
+  });
+
+  it('leaves a missing page in a language as not found', () => {
+    expect(redirect(null, ['en'], '404.html', '/doona-docs/zh-TW/missing.html')).toBeUndefined();
+    expect(redirect(null, ['en'], '404.html', '/doona-docs/missing.html')).toBeUndefined();
+  });
+});

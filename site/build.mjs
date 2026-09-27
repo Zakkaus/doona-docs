@@ -336,6 +336,23 @@ ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-tit
 `;
 }
 
+// Where a visitor whose path names no language belongs: the language last chosen from a language menu, which site.js
+// stores, else the first of the browser's languages the docs have. Traditional Chinese for Taiwan, Hong Kong, Macau and
+// the Hant script, Simplified for other Chinese, else English.
+const chooseLocale = `function () {
+  try {
+    var chosen = localStorage.getItem('doona-docs-locale');
+    if (${JSON.stringify(locales)}.indexOf(chosen) >= 0) return chosen;
+  } catch (e) {}
+  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+  for (var i = 0; i < tags.length; i++) {
+    var tag = String(tags[i]).toLowerCase();
+    if (/^zh(-|$)/.test(tag)) return /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
+    if (/^en(-|$)/.test(tag)) break;
+  }
+  return 'en';
+}`;
+
 export function render({base = '/doona-docs/', origin = ''} = {}) {
   if (!/^\/(.+\/)?$/.test(base)) throw new Error(`DOCS_BASE must start and end with a slash: ${base}`);
   if (!/^(https?:\/\/[^/]+)?$/.test(origin)) throw new Error(`DOCS_ORIGIN must be a scheme and host with no path: ${origin}`);
@@ -360,23 +377,11 @@ export function render({base = '/doona-docs/', origin = ''} = {}) {
   const home = locales.map(
     locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`
   );
-  // Traditional Chinese for Taiwan, Hong Kong, Macau and the Hant script, Simplified for other Chinese, else English.
+  // Without script the root lists the languages.
   files.set('index.html', {
     text: `${head(base, 'en', 'doona')}
 <script>
-(function () {
-  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
-  var locale = 'en';
-  for (var i = 0; i < tags.length; i++) {
-    var tag = String(tags[i]).toLowerCase();
-    if (/^zh(-|$)/.test(tag)) {
-      locale = /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
-      break;
-    }
-    if (/^en(-|$)/.test(tag)) break;
-  }
-  location.replace(${JSON.stringify(base)} + locale + '/');
-})();
+location.replace(${JSON.stringify(base)} + (${chooseLocale})() + '/');
 </script>
 </head>
 <body>
@@ -393,8 +398,21 @@ export function render({base = '/doona-docs/', origin = ''} = {}) {
     locale =>
       `<section lang="${locale}">\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
   );
+  // A page path with no language, such as features.html, goes to that page in the visitor's language; any other path,
+  // a page in a language included, is not found.
   files.set('404.html', {
     text: `${head(base, 'en', strings.en.notFound)}
+<script>
+(function () {
+  var base = ${JSON.stringify(base)};
+  var path = location.pathname;
+  var page = path.indexOf(base) === 0 && /^([a-z-]+)(\\.html|\\.md)?$/.exec(path.slice(base.length));
+  if (!page || ${JSON.stringify(pages)}.indexOf(page[1]) < 0) return;
+  var locale = (${chooseLocale})();
+  var file = page[2] === '.md' ? page[1] + '.md' : page[1] === 'index' ? '' : page[1] + '.html';
+  location.replace(base + locale + '/' + file + location.hash);
+})();
+</script>
 </head>
 <body>
 <main id="content" class="choose">

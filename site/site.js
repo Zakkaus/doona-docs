@@ -1,6 +1,6 @@
-// The docs site's one script: the theme button, the copy buttons on code blocks and the page's Copy as Markdown, and
-// Escape on the menus. The page head has already applied a stored theme as data-theme; without one the page follows
-// the system.
+// The docs site's one script: the theme button, the copy buttons on code blocks and the page's Copy as Markdown, the
+// language the visitor picks, and Escape on the menus. The page head has already applied a stored theme as data-theme;
+// without one the page follows the system.
 const root = document.documentElement;
 const theme = document.querySelector('.theme');
 if (theme) {
@@ -18,6 +18,17 @@ if (theme) {
       // Storage can be blocked; the choice then lasts for this page only.
     }
     label();
+  });
+}
+
+// A language picked from a menu wins over the browser's languages the next time a path names none.
+for (const link of document.querySelectorAll('a[hreflang]')) {
+  link.addEventListener('click', () => {
+    try {
+      localStorage.setItem('doona-docs-locale', link.hreflang);
+    } catch {
+      // Blocked storage leaves the browser's languages to decide.
+    }
   });
 }
 
