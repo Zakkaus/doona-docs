@@ -1,0 +1,75 @@
+name: Docs
+
+# Builds and checks the site against a doona checkout, which supplies the app's palette, sizes, icons, logo and
+# screenshots. Pull requests stop there; main publishes the site to this repository's gh-pages branch, which GitHub
+# Pages serves. The daily run picks up changes in doona and fails when doona moves an anchor the pages rely on.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      doona-ref:
+        description: Branch, tag or commit of Zakkaus/doona to build against
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      DOONA_DIR: doona
+    steps:
+      - uses: actions/checkout@v4
+      # A release pins a tag through the DOONA_REF repository variable; otherwise doona's main.
+      - uses: actions/checkout@v4
+        with:
+          repository: Zakkaus/doona
+          ref: ${{ inputs.doona-ref || vars.DOONA_REF || 'main' }}
+          path: doona
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm docs:build
+      - run: pnpm docs:check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist-docs
+          include-hidden-files: true
+
+  publish:
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
+      # One commit, force-pushed: the branch holds the current site and no history.
+      - name: Push the site to gh-pages
+        working-directory: site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -q -m "Publish the docs from ${GITHUB_SHA}"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
