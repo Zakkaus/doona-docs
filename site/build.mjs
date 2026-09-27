@@ -19,11 +19,12 @@ md.renderer.rules.blockquote_open = (tokens, index, options, env, self) => {
   const title = alert ? `<p class="callout-title">${strings[env.locale][alert]}</p>\n` : '';
   return self.renderToken(tokens, index, options) + title;
 };
-// parse() has checked the fence's language.
-md.renderer.rules.fence = (tokens, index) => {
+// parse() has checked the fence's language. site.js shows the copy button where the clipboard can be written.
+md.renderer.rules.fence = (tokens, index, options, env) => {
   const token = tokens[index];
   const language = token.info.trim();
-  return `<pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>\n`;
+  const copy = `<button type="button" class="copy" aria-label="${strings[env.locale].copy}" hidden>${icons.copy}${icons.copied}</button>`;
+  return `<div class="code"><pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
 };
 
 const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[char]);
@@ -36,7 +37,14 @@ function icon(name) {
   if (!viewBox || !paths.length) throw new Error(`src/ui/icons/${name}.tsx: no viewBox or path`);
   return `<svg class="icon" viewBox="${viewBox}" aria-hidden="true" focusable="false">${paths.join('')}</svg>`;
 }
-const icons = {github: icon('GitHub'), language: icon('Translate'), chevron: icon('ChevronDown'), pages: icon('ListBulleted')};
+const icons = {
+  github: icon('GitHub'),
+  language: icon('Translate'),
+  chevron: icon('ChevronDown'),
+  pages: icon('ListBulleted'),
+  copy: icon('Copy'),
+  copied: icon('Checkmark')
+};
 
 // Heading text without Markdown, for titles, navigation and the table of contents.
 const plain = inline =>
@@ -152,7 +160,8 @@ export function render({base = '/doona-docs/'} = {}) {
 <meta name="color-scheme" content="light dark">
 <title>${escape(title)}</title>
 <link rel="icon" href="${base}logo-light.svg" type="image/svg+xml">
-<link rel="stylesheet" href="${base}site.css">`;
+<link rel="stylesheet" href="${base}site.css">
+<script src="${base}site.js" defer></script>`;
   }
 
   const logo = `<picture><source media="(prefers-color-scheme: dark)" srcset="${base}logo-dark.svg"><img src="${base}logo-light.svg" alt="" width="28" height="28"></picture>`;
@@ -203,6 +212,7 @@ ${body}</main>
 ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-title">${text.onThisPage}</h2>\n<ul>${toc.join('')}</ul>\n</aside>` : ''}
 </div>
 </div>
+<p class="visually-hidden" role="status" data-copied="${text.copied}"></p>
 </body>
 </html>
 `;
@@ -261,6 +271,7 @@ ${missing.join('\n')}
   });
 
   files.set('site.css', {from: join(root, 'site/site.css')});
+  files.set('site.js', {from: join(root, 'site/site.js')});
   for (const logoFile of ['logo-light.svg', 'logo-dark.svg']) files.set(logoFile, {from: join(docs, logoFile)});
   // The icons above are Adobe Spectrum artwork: the notice and licence travel with them, as in the release archives.
   files.set('NOTICE.txt', {from: join(root, 'NOTICE')});
