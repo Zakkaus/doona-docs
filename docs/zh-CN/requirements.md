@@ -58,6 +58,6 @@ mountpoint /sys/fs/bpf
 
 | 组件   | 要求                                                                                                                                          |
 | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 后端   | 实现 [SOURCE.md](../../contract/api-standardize/SOURCE.md) 所钉契约并启用 API 监听的引擎                                                      |
+| 后端   | 实现 [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) 所钉契约并启用 API 监听的引擎                                                      |
 | 浏览器 | Chrome 或 Edge 120、Firefox 121、Safari 17 及以后。这些是 CSS 构建目标；JavaScript 构建目标是 ES2022。自动化测试使用 Chromium，CI 另加 WebKit |
 | 构建   | 仅从源码构建 doona 时需要 Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` 与 pnpm 11.15.1；打包需要 GNU tar、gzip 与 sha256sum                     |

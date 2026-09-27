@@ -1,6 +1,6 @@
 // What the docs build and the docs checker share: the locales, the page order and GitHub's heading ids.
 import {existsSync, readFileSync} from 'node:fs';
-import {dirname, join, relative, resolve, sep} from 'node:path';
+import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
 
 export const root = resolve(dirname(new URL(import.meta.url).pathname), '..');
 export const docs = join(root, 'docs');
@@ -17,16 +17,18 @@ const repositoryOf = dir => JSON.parse(readFileSync(join(dir, 'package.json'), '
 export const repository = repositoryOf(doona);
 export const ownRepository = repositoryOf(root);
 
-// A path a page links, on disk. The pages keep the paths they had in doona, so a file this repository does not hold,
-// such as ../screenshots/ or ../../src/, is the same path in doona's checkout.
-export function locate(absolute) {
-  return existsSync(absolute) ? absolute : join(doona, relative(root, absolute));
-}
-
 // doona keeps no screenshots in git: CI renders them into its docs/screenshots before the build, which publishes all
 // of them under screenshots/ (.github/workflows/docs.yml). Without that directory, a link into screenshots/, a path
 // relative to docs/, is left for the deploy to fill and the checks skip it.
 export const screenshots = join(doona, 'docs/screenshots');
+
+// A path a page links, on disk. A link into ../screenshots/ names doona's docs/screenshots; every other relative link
+// names a file in this repository, since a relative path into doona's source would be broken on GitHub. The pages link
+// doona's files by their GitHub URL instead (tools/links.mjs).
+export function locate(absolute) {
+  const inScreenshots = relative(join(docs, 'screenshots'), absolute);
+  return inScreenshots.startsWith('..') || isAbsolute(inScreenshots) ? absolute : join(screenshots, inScreenshots);
+}
 export const awaitsScreenshots = path => !existsSync(screenshots) && path.split(sep).join('/').startsWith('screenshots/');
 
 // In the order of the language line at the top of every page.

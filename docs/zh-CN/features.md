@@ -74,13 +74,13 @@
 | 日志 | 日志流，可按级别与模块筛选、暂停、导出                                                                     | `logs`                              |
 | 设置 | 后端、运行时设置与后端操作、语言、外观与配色                                                               | —                                   |
 
-所有页面都保留在导航栏中。只有 [registry.ts](../../src/shell/registry.ts) 为页面列出的资源全部不可用时，页面才会标为不可用；打开后会显示不可用提示。任何页面按 `Ctrl K`（macOS 为 `⌘ K`）可搜索页面、连接、节点、组、订阅、规则与来源。
+所有页面都保留在导航栏中。只有 [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) 为页面列出的资源全部不可用时，页面才会标为不可用；打开后会显示不可用提示。任何页面按 `Ctrl K`（macOS 为 `⌘ K`）可搜索页面、连接、节点、组、订阅、规则与来源。
 
 ![规则页](../screenshots/zh-CN/rules-light.webp)
 
 ## 浏览器中保存的设置
 
-doona 没有用于存储自身界面设置的服务器端存储。配置与运行时变更通过引擎写入；doona 的界面设置存储在浏览器中，范围限于该网站来源的 `localStorage`。下表列出主要的键，完整列表见 [storage.ts](../../src/api/storage.ts)。
+doona 没有用于存储自身界面设置的服务器端存储。配置与运行时变更通过引擎写入；doona 的界面设置存储在浏览器中，范围限于该网站来源的 `localStorage`。下表列出主要的键，完整列表见 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
 
 | 设置         | 键               | 值                                                                                                                                                                                                                                                                                                                    |
 | ------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,11 +88,11 @@ doona 没有用于存储自身界面设置的服务器端存储。配置与运�
 | 使用中的后端 | `doona-profile`  | 所选后端的 `id`                                                                                                                                                                                                                                                                                                       |
 | 语言         | `doona-lang`     | `zh-TW`、`zh-CN`、`en`；未设置时按浏览器语言                                                                                                                                                                                                                                                                          |
 | 配色方案     | `doona-scheme`   | `system`（默认）、`light`、`dark`                                                                                                                                                                                                                                                                                     |
-| 配色         | `doona-palette`  | `rose-pine/moon`（默认）；其他值见 [palettes.ts](../../src/shell/palettes.ts) 的 `PaletteId`                                                                                                                                                                                                                          |
+| 配色         | `doona-palette`  | `rose-pine/moon`（默认）；其他值见 [palettes.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/palettes.ts) 的 `PaletteId`                                                                                                                                                                                                                          |
 | 字标         | `doona-wordmark` | `gradient`（默认）、`plain`                                                                                                                                                                                                                                                                                           |
 
 保存的主题与语言在第一帧之前就应用，重新加载不会闪出默认外观。
 
-在 HTTPS 或 localhost 下，service worker 预先缓存应用外壳，并缓存字体与图标，离线也能打开页面，网站可安装为应用。API 响应一律不缓存。安全问题的报告方式见 [SECURITY.md](../../.github/SECURITY.md)。
+在 HTTPS 或 localhost 下，service worker 预先缓存应用外壳，并缓存字体与图标，离线也能打开页面，网站可安装为应用。API 响应一律不缓存。安全问题的报告方式见 [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md)。
 
 ![深色模式的活动页](../screenshots/zh-CN/activity-dark.webp)

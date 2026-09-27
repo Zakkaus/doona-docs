@@ -2,7 +2,7 @@
 
 # 开发
 
-提交 pull request 前先读 [CONTRIBUTING.md](../../CONTRIBUTING.md)。修正翻译或提议新增语言，见其中的 [Translations](../../CONTRIBUTING.md#translations) 一节。
+提交 pull request 前先读 [CONTRIBUTING.md](https://github.com/Zakkaus/doona/blob/main/CONTRIBUTING.md)。修正翻译或提议新增语言，见其中的 [Translations](https://github.com/Zakkaus/doona/blob/main/CONTRIBUTING.md#translations) 一节。
 
 本文档及其站点的源码在 [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs)。
 
@@ -49,6 +49,6 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 
 ## 契约
 
-[SOURCE.md](../../contract/api-standardize/SOURCE.md) 记录 [openapi.yaml](../../contract/api-standardize/openapi.yaml) 的钉点。移动钉点后执行 `pnpm gen:api` 重新生成 [src/api/types.ts](../../src/api/types.ts)。`node tools/conformance.mjs http://router:9527 --token …` 按契约检查线上后端的发现端点、能力与只读响应，不发送任何修改。
+[SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) 记录 [openapi.yaml](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/openapi.yaml) 的钉点。移动钉点后执行 `pnpm gen:api` 重新生成 [src/api/types.ts](https://github.com/Zakkaus/doona/blob/main/src/api/types.ts)。`node tools/conformance.mjs http://router:9527 --token …` 按契约检查线上后端的发现端点、能力与只读响应，不发送任何修改。
 
-版本变更见 [CHANGELOG.md](../../CHANGELOG.md)。
+版本变更见 [CHANGELOG.md](https://github.com/Zakkaus/doona/blob/main/CHANGELOG.md)。

@@ -153,7 +153,7 @@ A reverse proxy keeps doona and honk on one origin. Forward the exact `/api` dis
 
 ### Distribution packages
 
-No distribution repository carries doona yet. Each release attaches architecture-independent `deb`, `rpm`, `ipk` and Arch packages built by [nfpm](../../install/nfpm) from the prebuilt program and font archives; `doona-fonts` is a separate optional package. The recipes in [install/](../../install/README.md) for OpenWrt, Alpine, Gentoo and Nix are unpublished templates that install the same archives. The AUR `doona-bin` recipe lives in a separate repository. Use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts` when packaging a local build.
+No distribution repository carries doona yet. Each release attaches architecture-independent `deb`, `rpm`, `ipk` and Arch packages built by [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) from the prebuilt program and font archives; `doona-fonts` is a separate optional package. The recipes in [install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) for OpenWrt, Alpine, Gentoo and Nix are unpublished templates that install the same archives. The AUR `doona-bin` recipe lives in a separate repository. Use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts` when packaging a local build.
 
 <a name="operation"></a>
 

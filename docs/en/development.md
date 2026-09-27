@@ -2,7 +2,7 @@ English / [简体中文](../zh-CN/development.md) / [繁體中文](../zh-TW/deve
 
 # Development
 
-Read [CONTRIBUTING.md](../../CONTRIBUTING.md) before opening a pull request. Its [Translations](../../CONTRIBUTING.md#translations) section covers correcting a translation and proposing a language.
+Read [CONTRIBUTING.md](https://github.com/Zakkaus/doona/blob/main/CONTRIBUTING.md) before opening a pull request. Its [Translations](https://github.com/Zakkaus/doona/blob/main/CONTRIBUTING.md#translations) section covers correcting a translation and proposing a language.
 
 This documentation and the site built from it are in [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs).
 
@@ -49,6 +49,6 @@ For a read-only pass against a live backend, run `DOONA_API=http://router:9527 D
 
 ## Contract
 
-[SOURCE.md](../../contract/api-standardize/SOURCE.md) records the pin of [openapi.yaml](../../contract/api-standardize/openapi.yaml). After moving the pin, run `pnpm gen:api` to regenerate [src/api/types.ts](../../src/api/types.ts). `node tools/conformance.mjs http://router:9527 --token …` checks a live backend's discovery, capabilities and read-only responses against the contract without sending a mutation.
+[SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) records the pin of [openapi.yaml](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/openapi.yaml). After moving the pin, run `pnpm gen:api` to regenerate [src/api/types.ts](https://github.com/Zakkaus/doona/blob/main/src/api/types.ts). `node tools/conformance.mjs http://router:9527 --token …` checks a live backend's discovery, capabilities and read-only responses against the contract without sending a mutation.
 
-See [CHANGELOG.md](../../CHANGELOG.md) for release notes.
+See [CHANGELOG.md](https://github.com/Zakkaus/doona/blob/main/CHANGELOG.md) for release notes.

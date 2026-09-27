@@ -3,7 +3,9 @@ import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
 import {frontMatter} from '../site/build/markdown.mjs';
 import {script as siteScript} from '../site/build/assets.mjs';
-import {awaitsScreenshots, groups, locales, pages, slugger} from '../site/docs.mjs';
+import {join} from 'node:path';
+import {awaitsScreenshots, docs, groups, locales, pages, repository, slugger} from '../site/docs.mjs';
+import {linkFailures} from './links.mjs';
 
 describe('slugger', () => {
   it('numbers repeated headings as GitHub does', () => {
@@ -38,6 +40,31 @@ function copyButton(writeText) {
   runInNewContext(script, {document, navigator: {clipboard: {writeText}}, setTimeout: () => 0, clearTimeout: () => {}});
   return {button, status};
 }
+
+describe('link check', () => {
+  const file = join(docs, 'en', 'link-test.md');
+  const failures = text => linkFailures(file, text);
+
+  it('reports a relative link into doona, which GitHub cannot resolve', () => {
+    expect(failures('[x](../../src/api/types.ts)')).toEqual([
+      `line 1: ../../src/api/types.ts is doona's file, which GitHub cannot resolve from here: link ${repository}/blob/main/src/api/types.ts`
+    ]);
+    expect(failures('[x](../../src/x.ts)')).toEqual(['line 1: ../../src/x.ts does not resolve']);
+  });
+
+  it('checks links to doona on GitHub against its checkout', () => {
+    expect(failures(`[a](${repository}/blob/main/CONTRIBUTING.md#translations) [b](${repository}/tree/main/install/nfpm)`)).toEqual([]);
+    expect(failures(`[a](${repository}/blob/main/src/x.ts) [b](${repository}/blob/main/install/nfpm) [c](${repository}/blob/main/CONTRIBUTING.md#nowhere)`)).toEqual([
+      `line 1: ${repository}/blob/main/src/x.ts names no file in doona's checkout`,
+      `line 1: ${repository}/blob/main/install/nfpm names a directory: use /tree/`,
+      `line 1: ${repository}/blob/main/CONTRIBUTING.md#nowhere names no anchor or heading on doona CONTRIBUTING.md`
+    ]);
+  });
+
+  it('accepts a page, a file of this repository and a link elsewhere', () => {
+    expect(failures('[a](install.md#doona) [b](../../LICENSE) [c](https://example.org/x)')).toEqual([]);
+  });
+});
 
 describe('copy button', () => {
   it('shows and marks the button once the text is copied', async () => {

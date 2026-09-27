@@ -153,7 +153,7 @@ doona 由其他伺服器提供時，瀏覽器會送出跨網域請求，honk 只
 
 ### 發行版套件
 
-目前尚無發行版套件庫收錄 doona。每個發布版本附有 [nfpm](../../install/nfpm) 以預先建置的程式封存檔與字型封存檔產生的 `deb`、`rpm`、`ipk` 與 Arch 套件，全部與架構無關；`doona-fonts` 是獨立的選用套件。[install/](../../install/README.md) 中 OpenWrt、Alpine、Gentoo 與 Nix 的打包設定是尚未提交的範本，安裝的也是同一批封存檔。AUR 的 `doona-bin` 位於獨立倉庫。封裝本機建置結果時，可使用 `make install DESTDIR=… PREFIX=/usr` 與 `make install-fonts`。
+目前尚無發行版套件庫收錄 doona。每個發布版本附有 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 以預先建置的程式封存檔與字型封存檔產生的 `deb`、`rpm`、`ipk` 與 Arch 套件，全部與架構無關；`doona-fonts` 是獨立的選用套件。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 與 Nix 的打包設定是尚未提交的範本，安裝的也是同一批封存檔。AUR 的 `doona-bin` 位於獨立倉庫。封裝本機建置結果時，可使用 `make install DESTDIR=… PREFIX=/usr` 與 `make install-fonts`。
 
 <a name="operation"></a>
 

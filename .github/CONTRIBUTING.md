@@ -30,7 +30,7 @@ Edit `docs/<locale>/<name>.md` and make the same change in the other two locales
 - A quote that starts with `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]` becomes a callout, as on GitHub.
 - A stable anchor is `<a name="anchor"></a>`, alone in a paragraph right before a heading. It gives the heading the same id in every locale, and doona's in-app links use it. `docs/anchors.json` lists each one.
 
-Link other pages by their relative path, such as `install.md#install`. A link to `../screenshots/` or `../../src/` keeps the path it has in doona: the build publishes doona's screenshots and links doona's source on GitHub.
+Link other pages by their relative path, such as `install.md#install`. A link to `../screenshots/` keeps the path it has in doona, and the build publishes doona's screenshots. Link doona's other files by their GitHub URL, `https://github.com/Zakkaus/doona/blob/main/<path>` (`/tree/main/` for a directory): a relative path such as `../../src/` would be broken on GitHub, so `pnpm docs:check` rejects it.
 
 ## Add a page
 
@@ -58,6 +58,7 @@ Link other pages by their relative path, such as `install.md#install`. A link to
 | `site/styles/*.css`        | The stylesheet, one file per component or layer, joined into `site.css`                             |
 | `site/scripts/*.js`        | The browser script, one file per feature, joined into `site.js`                                     |
 | `tools/check-docs.mjs`     | `pnpm docs:check`: links, anchors and locale parity in `docs/` and in the built site                |
+| `tools/links.mjs`          | The link and anchor checks `docs:check` runs on each Markdown file                                  |
 | `tools/site.test.mjs`      | `pnpm test`: the browser script, the heading ids, and the rendered pages                            |
 
 Each file under `site/styles/` and `site/scripts/` opens with a comment that says what it owns.
@@ -94,7 +95,7 @@ DOONA_DIR=../doona pnpm test
 
 `pnpm docs:check` fails when:
 
-- a relative link or image in `docs/` or a README resolves to no file, or its `#anchor` names no anchor or heading on the target page;
+- a relative link or image in `docs/` or a README resolves to no file in this repository, a link to doona's files on GitHub names no file in doona's checkout, or either one's `#anchor` names no anchor or heading on the target page;
 - a locale lacks a page another has, or the pages differ from `groups` in `site/docs.mjs`;
 - a page's anchors or heading levels differ from the English page;
 - an anchor sits on more than one page, or `docs/anchors.json` does not map it to its page;

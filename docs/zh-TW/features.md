@@ -74,13 +74,13 @@
 | 日誌 | 日誌串流，可依等級與模組篩選、暫停、匯出                                                                   | `logs`                              |
 | 設定 | 後端、執行期設定與後端操作、語言、外觀與配色                                                               | —                                   |
 
-所有頁面都保留在導覽列中。只有 [registry.ts](../../src/shell/registry.ts) 為頁面列出的資源全部不可用時，頁面才會標為不可用；開啟後會顯示不可用提示。任何頁面按 `Ctrl K`（macOS 為 `⌘ K`）可搜尋頁面、連線、節點、群組、訂閱、規則與來源。
+所有頁面都保留在導覽列中。只有 [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) 為頁面列出的資源全部不可用時，頁面才會標為不可用；開啟後會顯示不可用提示。任何頁面按 `Ctrl K`（macOS 為 `⌘ K`）可搜尋頁面、連線、節點、群組、訂閱、規則與來源。
 
 ![規則頁](../screenshots/zh-TW/rules-light.webp)
 
 ## 瀏覽器中儲存的設定
 
-doona 沒有供自身介面設定使用的伺服器端儲存空間。組態與執行期變更透過引擎寫入；doona 的介面設定儲存在瀏覽器中，範圍限於該網站來源的 `localStorage`。下表列出主要的鍵，完整清單見 [storage.ts](../../src/api/storage.ts)。
+doona 沒有供自身介面設定使用的伺服器端儲存空間。組態與執行期變更透過引擎寫入；doona 的介面設定儲存在瀏覽器中，範圍限於該網站來源的 `localStorage`。下表列出主要的鍵，完整清單見 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
 
 | 設定         | 鍵               | 值                                                                                                                                                                                                                                                                                                                         |
 | ------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,11 +88,11 @@ doona 沒有供自身介面設定使用的伺服器端儲存空間。組態與�
 | 使用中的後端 | `doona-profile`  | 所選後端的 `id`                                                                                                                                                                                                                                                                                                            |
 | 語言         | `doona-lang`     | `zh-TW`、`zh-CN`、`en`；未設定時依瀏覽器語言                                                                                                                                                                                                                                                                               |
 | 配色方案     | `doona-scheme`   | `system`（預設）、`light`、`dark`                                                                                                                                                                                                                                                                                          |
-| 配色         | `doona-palette`  | `rose-pine/moon`（預設）；其他值見 [palettes.ts](../../src/shell/palettes.ts) 的 `PaletteId`                                                                                                                                                                                                                               |
+| 配色         | `doona-palette`  | `rose-pine/moon`（預設）；其他值見 [palettes.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/palettes.ts) 的 `PaletteId`                                                                                                                                                                                                                               |
 | 字標         | `doona-wordmark` | `gradient`（預設）、`plain`                                                                                                                                                                                                                                                                                                |
 
 儲存的主題與語言在第一幀之前就套用，重新載入不會閃出預設外觀。
 
-在 HTTPS 或 localhost 下，service worker 預先快取應用程式外殼，並快取字型與圖示，離線也能開啟頁面，網站可安裝成應用程式。API 回應一律不快取。安全問題的回報方式見 [SECURITY.md](../../.github/SECURITY.md)。
+在 HTTPS 或 localhost 下，service worker 預先快取應用程式外殼，並快取字型與圖示，離線也能開啟頁面，網站可安裝成應用程式。API 回應一律不快取。安全問題的回報方式見 [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md)。
 
 ![深色模式的活動頁](../screenshots/zh-TW/activity-dark.webp)
