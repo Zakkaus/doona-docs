@@ -4,6 +4,8 @@
 
 送出 pull request 前先讀 [CONTRIBUTING.md](../../CONTRIBUTING.md)。修正翻譯或提議新增語言，見其中的 [Translations](../../CONTRIBUTING.md#translations) 一節。
 
+本文件及其網站的原始碼在 [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs)。
+
 ## 指令
 
 在倉庫根目錄執行：
@@ -16,8 +18,6 @@ pnpm check:size                  # gzip budgets for the dist/ build
 pnpm e2e:install --with-deps     # once, for the browser tests
 pnpm e2e                         # rebuild, then test against the mock at the root and under /ui/
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
-pnpm docs:build                  # the docs site in dist-docs/, served under DOCS_BASE (default /doona-docs/)
-pnpm docs:check                  # links and anchors in docs/ and in the built site
 ```
 
 `pnpm dev` 以 Vite 開發伺服器提供模擬後端。封存檔的版本號在本機取自 `package.json`，在標籤上取自 Git 描述；時間戳用 `SOURCE_DATE_EPOCH`，未設定時用 HEAD 提交時間。
@@ -45,8 +45,7 @@ pnpm docs:check                  # links and anchors in docs/ and in the built s
 | `e2e/`          | 瀏覽器測試                                        |
 | `tools/`        | 建置、打包、一致性檢查與截圖工具                  |
 | `install/`      | nfpm 設定與 OpenWrt、Alpine、Gentoo、Nix 打包設定 |
-| `docs/`         | 本文件、`anchors.json` 與截圖                     |
-| `site/`         | 文件網站的建置腳本與樣式表                        |
+| `docs/`         | 截圖                                              |
 
 ## 契約
 

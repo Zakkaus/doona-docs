@@ -4,6 +4,8 @@ English · [简体中文](../zh-CN/development.md) · [繁體中文](../zh-TW/de
 
 Read [CONTRIBUTING.md](../../CONTRIBUTING.md) before opening a pull request. Its [Translations](../../CONTRIBUTING.md#translations) section covers correcting a translation and proposing a language.
 
+This documentation and the site built from it are in [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs).
+
 ## Commands
 
 Run these from the repository root:
@@ -16,8 +18,6 @@ pnpm check:size                  # gzip budgets for the dist/ build
 pnpm e2e:install --with-deps     # once, for the browser tests
 pnpm e2e                         # rebuild, then test against the mock at the root and under /ui/
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
-pnpm docs:build                  # the docs site in dist-docs/, served under DOCS_BASE (default /doona-docs/)
-pnpm docs:check                  # links and anchors in docs/ and in the built site
 ```
 
 `pnpm dev` serves the mock on Vite's dev server. Archive versions come from `package.json` locally and from the Git description on tags; timestamps use `SOURCE_DATE_EPOCH` or the HEAD commit time.
@@ -45,8 +45,7 @@ For a read-only pass against a live backend, run `DOONA_API=http://router:9527 D
 | `e2e/`          | Browser tests                                              |
 | `tools/`        | Build, packaging, conformance and screenshot tools         |
 | `install/`      | nfpm configs, OpenWrt, Alpine, Gentoo and Nix recipes      |
-| `docs/`         | This documentation, `anchors.json` and the screenshots     |
-| `site/`         | The docs site build and its stylesheet                     |
+| `docs/`         | The screenshots                                            |
 
 ## Contract
 
