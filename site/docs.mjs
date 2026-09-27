@@ -29,20 +29,10 @@ export const locales = ['en', 'zh-CN', 'zh-TW'];
 // Navigation order, in the sections the sidebar shows under the headings in site/strings.mjs; docs/<locale>/ holds
 // exactly these pages.
 export const groups = {
-  start: [
-    'index',
-    'requirements',
-    'install-debian',
-    'install-fedora',
-    'install-arch',
-    'install-gentoo',
-    'install-openwrt',
-    'install-manual',
-    'minimal-configuration',
-    'service-management',
-    'first-sign-in'
-  ],
-  guides: ['install', 'configuration', 'features', 'troubleshooting'],
+  start: ['index', 'requirements'],
+  install: ['install-debian', 'install-fedora', 'install-arch', 'install-gentoo', 'install-openwrt', 'install-manual', 'install'],
+  firstRun: ['minimal-configuration', 'service-management', 'first-sign-in'],
+  guides: ['configuration', 'features', 'troubleshooting'],
   contributing: ['development']
 };
 export const pages = Object.values(groups).flat();
