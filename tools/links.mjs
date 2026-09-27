@@ -91,5 +91,5 @@ function relativeProblem(resolved, anchor) {
 function targetProblem(found, anchor) {
   if (anchor === undefined) return;
   if (!found.endsWith('.md') || statSync(found).isDirectory()) return 'has an anchor on a file that is not Markdown';
-  if (!page(found).ids.has(decodeURIComponent(anchor))) return `names no anchor or heading on ${relative(root, found).startsWith('..') ? `doona ${relative(doona, found)}` : relative(root, found)}`;
+  if (!page(found).ids.has(decodeURIComponent(anchor))) return `names no anchor or heading on ${relative(doona, found).startsWith('..') ? relative(root, found) : `doona ${relative(doona, found)}`}`;
 }
