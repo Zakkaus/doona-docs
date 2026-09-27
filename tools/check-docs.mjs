@@ -167,7 +167,8 @@ for (const base of ['/doona-docs/', '/']) {
           failures.push(`${where} is not under the base path`);
           continue;
         }
-        file = decodeURI(target.slice(base.length));
+        // A query only versions the file (site/build.mjs), so it names the same file.
+        file = decodeURI(target.slice(base.length).split('?')[0]);
         if (file === '' || file.endsWith('/')) file += 'index.html';
       }
       if (!site.has(file)) failures.push(`${where} names no file the build writes`);

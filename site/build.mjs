@@ -6,6 +6,7 @@
 // without it they link by path. DOONA_DIR names the doona checkout the build reads the app's styles, icons and logo
 // from (site/docs.mjs).
 import MarkdownIt from 'markdown-it';
+import {createHash} from 'node:crypto';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
 import {docs, doona, groups, locales, locate, ownRepository, pages, repository, root, slugger} from './docs.mjs';
@@ -251,6 +252,15 @@ function markdown(base, origin, files, locale, name) {
     .join('\n');
 }
 
+// Pages link the stylesheet and script with a hash of their content, so a browser holding the previous ones in its
+// cache (GitHub Pages sends max-age=600) fetches the new ones with the new pages instead of mixing the two.
+let versions;
+function assetVersions() {
+  const hash = text => createHash('sha256').update(text).digest('hex').slice(0, 10);
+  versions ??= {css: hash(stylesheet()), js: hash(readFileSync(join(root, 'site/site.js'), 'utf8'))};
+  return versions;
+}
+
 function head(base, lang, title, alternate) {
   return `<!doctype html>
 <html lang="${lang}">
@@ -260,14 +270,14 @@ function head(base, lang, title, alternate) {
 <meta name="color-scheme" content="light dark">
 <title>${escape(title)}</title>
 ${alternate ? `<link rel="alternate" type="text/markdown" href="${alternate}">\n` : ''}<link rel="icon" href="${base}logo.svg" type="image/svg+xml">
-<link rel="stylesheet" href="${base}site.css">
+<link rel="stylesheet" href="${base}site.css?v=${assetVersions().css}">
 <script>
 try {
   const theme = localStorage.getItem('doona-docs-theme');
   if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
 } catch {}
 </script>
-<script type="module" src="${base}site.js"></script>`;
+<script type="module" src="${base}site.js?v=${assetVersions().js}"></script>`;
 }
 
 // The app's logo, the same file in both schemes.
