@@ -1,7 +1,11 @@
 // Colours the docs' code blocks at build time. dae goes through the app's own tokenizer, so a block reads as it does in
 // doona; shell and ini get small tokenizers of their own. Every language uses the app's token names, which the
 // stylesheet colours as the app does.
-import {tokenizeDae} from '../src/ui/code/daeTokens.ts';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {doona} from './docs.mjs';
+
+const {tokenizeDae} = await import(pathToFileURL(join(doona, 'src/ui/code/daeTokens.ts')).href);
 
 const reserved = /^(if|then|else|elif|fi|for|while|until|do|done|case|esac|in|function)$/;
 

@@ -1,11 +1,12 @@
 // Checks docs/ as GitHub renders it: every relative link and image resolves, every #anchor names an <a name> or a
 // generated heading slug on its target page, docs/anchors.json matches the pages, and the locales have the same pages,
-// anchors and heading levels. The README files are checked for links too, every anchor the app passes to docsHref
-// is in docs/anchors.json, and every GitHub link the app makes into this repository resolves. Then it renders the
-// site (site/build.mjs) for both base paths and checks that every internal link, image and #id in the HTML resolves.
+// anchors and heading levels. A path this repository does not hold is looked up in doona's checkout (DOONA_DIR), as the
+// build does. The README files are checked for links too, and every anchor doona's docsHref links is in
+// docs/anchors.json on the same page. Then it renders the site (site/build.mjs) for both base paths and checks that
+// every internal link, image and #id in the HTML resolves.
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
-import {anchors, docs, locales, pages as pageOrder, root, slugger} from '../site/docs.mjs';
+import {anchors, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
 import {render} from '../site/build.mjs';
 
 const failures = [];
@@ -62,12 +63,14 @@ function checkLinks(file) {
   });
 }
 
-// A link from file to resolved, a path in the repository, and the #anchor on it if any.
+// A link from file to resolved, a path in the repository or else in doona's checkout, and the #anchor on it if any.
 function checkTarget(file, where, resolved, anchor) {
-  if (!resolved.startsWith(root) || !existsSync(resolved)) return fail(file, `${where} does not resolve`);
+  if (!resolved.startsWith(root)) return fail(file, `${where} does not resolve`);
+  const found = locate(resolved);
+  if (!existsSync(found)) return fail(file, `${where} does not resolve`);
   if (anchor === undefined) return;
-  if (!resolved.endsWith('.md') || statSync(resolved).isDirectory()) return fail(file, `${where} has an anchor on a file that is not Markdown`);
-  if (!page(resolved).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
+  if (!found.endsWith('.md') || statSync(found).isDirectory()) return fail(file, `${where} has an anchor on a file that is not Markdown`);
+  if (!page(found).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
 }
 
 const pageSets = new Map(
@@ -120,16 +123,13 @@ for (const locale of locales) {
 
 for (const name of readdirSync(root).filter(name => /^README.*\.md$/.test(name))) checkLinks(join(root, name));
 
-// Every anchor the app links with docsHref(lang, 'anchor') is in docs/anchors.json, and every link the app makes to a
-// file in this repository on GitHub, such as README.md#install, names a file and heading that still exist.
-for (const file of readdirSync(join(root, 'src'), {recursive: true}).filter(name => /\.tsx?$/.test(name))) {
-  const path = join(root, 'src', file);
-  const text = readFileSync(path, 'utf8');
-  for (const match of text.matchAll(/docsHref\([^,()]+,\s*'([^']+)'/g)) {
-    if (!(match[1] in anchors)) fail(path, `docsHref anchor ${match[1]} is not in docs/anchors.json`);
-  }
-  for (const match of text.matchAll(/github\.com\/Zakkaus\/doona\/(?:blob|tree)\/main\/([^\s'"`#?)]+)(?:#([^\s'"`)]+))?/g)) {
-    checkTarget(path, match[0], resolve(root, decodeURIComponent(match[1])), match[2]);
+// doona's docsHref links a section through its own map of the anchors it uses, each to its page. Every entry there
+// must be an anchor this site keeps, on the same page, so moving or dropping one the app links fails here.
+const appAnchors = 'src/features/shared/docsAnchors.json';
+if (!existsSync(join(doona, appAnchors))) failures.push(`doona ${appAnchors}: missing`);
+else {
+  for (const [anchor, slug] of Object.entries(JSON.parse(readFileSync(join(doona, appAnchors), 'utf8')))) {
+    if (anchors[anchor] !== slug) failures.push(`doona ${appAnchors}: ${anchor} is on ${anchors[anchor] ?? 'no page'} here, not ${slug}`);
   }
 }
 

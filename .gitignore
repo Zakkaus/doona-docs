@@ -1,0 +1,4 @@
+node_modules
+dist-docs
+# A doona checkout for DOONA_DIR, as CI makes one.
+/doona

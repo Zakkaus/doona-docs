@@ -1,14 +1,14 @@
 // Renders docs/<locale>/*.md into a static site: one HTML page per Markdown page, a root page that sends the browser to
 // its language, and a 404 page. `node site/build.mjs` writes dist-docs/; tools/check-docs.mjs calls render() directly.
-// DOCS_BASE is the path the site is served under: /doona-docs/ on github.io, / on a domain of its own.
+// DOCS_BASE is the path the site is served under: /doona-docs/ on github.io, / on a domain of its own. DOONA_DIR names
+// the doona checkout the build reads the app's styles, icons and logo from (site/docs.mjs).
 import MarkdownIt from 'markdown-it';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
-import {docs, groups, locales, pages, root, slugger} from './docs.mjs';
+import {docs, doona, groups, locales, locate, ownRepository, pages, repository, root, slugger} from './docs.mjs';
 import {highlight, languages} from './highlight.mjs';
 import strings from './strings.mjs';
 
-const repository = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).repository.url.replace(/\.git$/, '');
 const alerts = ['note', 'tip', 'important', 'warning', 'caution'];
 
 const md = new MarkdownIt({html: true});
@@ -34,7 +34,7 @@ const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt
 const shapeAttributes = {path: ['d'], circle: ['cx', 'cy', 'r']};
 function icon(name) {
   const file = `src/ui/icons/${name}.tsx`;
-  const source = readFileSync(join(root, file), 'utf8');
+  const source = readFileSync(join(doona, file), 'utf8');
   const viewBox = /viewBox="([^"]+)"/.exec(source)?.[1];
   const shapes = [...source.matchAll(/<(\w+)\s([^>]*?)\/>/g)].map(([, tag, attributes]) => {
     if (!(tag in shapeAttributes)) throw new Error(`${file}: <${tag}> is not a path or circle`);
@@ -63,7 +63,7 @@ const icons = {
 // own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii and type sizes the sheet uses written
 // in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
 function stylesheet() {
-  const palettes = readFileSync(join(root, 'src/ui/styles/palettes.css'), 'utf8');
+  const palettes = readFileSync(join(doona, 'src/ui/styles/palettes.css'), 'utf8');
   const colours = selector => {
     const start = palettes.indexOf(`${selector} {`);
     if (start < 0) throw new Error(`src/ui/styles/palettes.css: no ${selector} block`);
@@ -78,7 +78,7 @@ function stylesheet() {
   if (!css.includes(marker)) throw new Error('site/site.css: no /* palette */ line');
   const sizesMarker = '  /* sizes */\n';
   if (!css.includes(sizesMarker)) throw new Error('site/site.css: no /* sizes */ line');
-  const motion = readFileSync(join(root, 'src/ui/styles/motion.css'), 'utf8');
+  const motion = readFileSync(join(doona, 'src/ui/styles/motion.css'), 'utf8');
   const scale = new Map([...motion.matchAll(/(--rp-(?:r|text)-[\w-]+):\s*(\d+px);/g)].map(match => [match[1], match[2]]));
   const used = new Set([...css.matchAll(/var\((--rp-(?:r|text)-[\w-]+)\)/g)].map(match => match[1]));
   const missing = [...used].filter(name => !scale.has(name));
@@ -96,18 +96,19 @@ const plain = inline =>
 const pageUrl = (base, locale, name) => `${base}${locale}/${name === 'index' ? '' : `${name}.html`}`;
 
 // A link as the site serves it: pages and images in docs/ under the base, other repository files on GitHub. An image it
-// links is added to files, the map render() writes.
+// links is added to files, the map render() writes. A path this repository does not hold is doona's (locate).
 function rewrite(base, files, target, file) {
   if (/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(target)) return target;
   const [path, ...hash] = target.split('#');
   const suffix = hash.length ? `#${hash.join('#')}` : '';
   const absolute = resolve(dirname(file), decodeURIComponent(path));
   const inDocs = relative(docs, absolute);
+  const found = locate(absolute);
   if (inDocs.startsWith('..') || isAbsolute(inDocs)) {
     const inRepo = relative(root, absolute);
     if (inRepo.startsWith('..') || isAbsolute(inRepo)) throw new Error(`${file}: ${target} is outside the repository`);
-    const kind = existsSync(absolute) && statSync(absolute).isDirectory() ? 'tree' : 'blob';
-    return `${repository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
+    const kind = existsSync(found) && statSync(found).isDirectory() ? 'tree' : 'blob';
+    return `${found === absolute ? ownRepository : repository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
   }
   const parts = inDocs.split(sep);
   if (inDocs.endsWith('.md')) {
@@ -116,7 +117,7 @@ function rewrite(base, files, target, file) {
     return pageUrl(base, locale, name.slice(0, -3)) + suffix;
   }
   // Only files that exist are published; a missing one leaves the link dangling for the checker to report.
-  if (existsSync(absolute)) files.set(parts.join('/'), {from: absolute});
+  if (existsSync(found)) files.set(parts.join('/'), {from: found});
   return base + encodeURI(parts.join('/')) + suffix;
 }
 
@@ -337,12 +338,12 @@ ${missing.join('\n')}
 
   files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
-  files.set('logo.svg', {from: join(root, 'public/logo.svg')});
+  files.set('logo.svg', {from: join(doona, 'public/logo.svg')});
   // The icons above are Adobe Spectrum artwork and the GitHub mark: their notice and terms travel with them, as in the
   // release archives.
-  files.set('NOTICE.txt', {from: join(root, 'NOTICE')});
-  files.set('LICENSES/Apache-2.0.txt', {from: join(root, 'LICENSES/Apache-2.0.txt')});
-  files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(root, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
+  files.set('NOTICE.txt', {from: join(doona, 'NOTICE')});
+  files.set('LICENSES/Apache-2.0.txt', {from: join(doona, 'LICENSES/Apache-2.0.txt')});
+  files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(doona, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
   // GitHub Pages would otherwise run Jekyll over the files.
   files.set('.nojekyll', {text: ''});
   return files;

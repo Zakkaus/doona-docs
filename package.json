@@ -1,0 +1,24 @@
+{
+  "name": "doona-docs",
+  "private": true,
+  "description": "Documentation for doona, the web UI for the daeuniverse engines, and the site built from it.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zakkaus/doona-docs.git"
+  },
+  "engines": {
+    "node": "^22.18.0 || ^24.0.0 || >=26.0.0"
+  },
+  "type": "module",
+  "license": "GPL-3.0-only",
+  "packageManager": "pnpm@11.15.1",
+  "scripts": {
+    "docs:build": "node site/build.mjs",
+    "docs:check": "node tools/check-docs.mjs",
+    "test": "vitest run tools"
+  },
+  "devDependencies": {
+    "markdown-it": "^15.0.2",
+    "vitest": "^5.0.0"
+  }
+}

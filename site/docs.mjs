@@ -1,9 +1,27 @@
 // What the docs build and the docs checker share: the locales, the page order and GitHub's heading ids.
-import {readFileSync} from 'node:fs';
-import {dirname, join, resolve} from 'node:path';
+import {existsSync, readFileSync} from 'node:fs';
+import {dirname, join, relative, resolve} from 'node:path';
 
 export const root = resolve(dirname(new URL(import.meta.url).pathname), '..');
 export const docs = join(root, 'docs');
+
+// A checkout of Zakkaus/doona: the site takes its palette, sizes, icons, logo, dae colouring and notices from the app,
+// and the pages link its screenshots and source files. DOONA_DIR names it, relative to this repository; the default is
+// a checkout next to this one.
+export const doona = resolve(root, process.env.DOONA_DIR || '../doona');
+if (!existsSync(join(doona, 'src/ui/styles/palettes.css')))
+  throw new Error(`${doona} is not a doona checkout: clone Zakkaus/doona there or point DOONA_DIR at one`);
+
+const repositoryOf = dir => JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).repository.url.replace(/\.git$/, '');
+// doona's repository on GitHub, which the top bar links, and this one's.
+export const repository = repositoryOf(doona);
+export const ownRepository = repositoryOf(root);
+
+// A path a page links, on disk. The pages keep the paths they had in doona, so a file this repository does not hold,
+// such as ../screenshots/ or ../../src/, is the same path in doona's checkout.
+export function locate(absolute) {
+  return existsSync(absolute) ? absolute : join(doona, relative(root, absolute));
+}
 
 // In the order of the language line at the top of every page.
 export const locales = ['en', 'zh-CN', 'zh-TW'];
@@ -17,7 +35,8 @@ export const groups = {
 };
 export const pages = Object.values(groups).flat();
 
-// Anchor -> page (file name without .md). The app's docsHref and the checker read the same file.
+// Anchor -> page (file name without .md). doona's docsHref links through a copy of the entries it uses, which
+// tools/check-docs.mjs holds to this map.
 export const anchors = JSON.parse(readFileSync(join(docs, 'anchors.json'), 'utf8'));
 
 // GitHub's heading ids (github-slugger): lower case, drop punctuation and symbols, spaces to hyphens, repeats numbered.
