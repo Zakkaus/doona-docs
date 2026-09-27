@@ -352,6 +352,9 @@ pre {
   overflow-x: auto;
   border-radius: var(--rp-r-lg);
   background: var(--rp-overlay);
+  /* A classic scrollbar, so a line wider than the column shows that it scrolls even where scrollbars overlay. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--rp-hl-high) transparent;
   font-size: var(--rp-text-md);
   line-height: 1.6;
   overflow-wrap: normal;
