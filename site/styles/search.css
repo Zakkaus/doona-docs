@@ -1,0 +1,178 @@
+/* The search dialog, which is also the phone navigation: its trigger, the dialog, the filters and the page cards. */
+.search-trigger {
+  position: absolute;
+  inset-inline-start: min(50%, calc(100% - 560px));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 500px;
+  min-height: 40px;
+  padding: 1px 8px 1px 20px;
+  border: 2px solid var(--rp-line);
+  border-radius: 9999px;
+  background: var(--rp-surface);
+  color: var(--rp-subtle-text);
+  font: 400 1rem/24px var(--docs-sans);
+  text-align: start;
+  cursor: pointer;
+}
+.search-trigger span { flex: 1; }
+kbd {
+  padding: 0 8px;
+  border: 1px solid var(--rp-line);
+  border-radius: 9999px;
+  font: 400 0.875rem/22px var(--docs-sans);
+  white-space: nowrap;
+}
+.nav-trigger,
+.search-close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.nav-trigger { display: none; }
+#docs-search {
+  width: min(1312px, calc(95% + 32px));
+  max-width: calc(100% - 16px);
+  height: calc(90dvh + 16px);
+  max-height: calc(100dvh - 16px);
+  margin: 8px auto;
+  padding: 20px 32px 0 16px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
+  background: var(--rp-base);
+  color: var(--rp-text);
+  box-shadow: var(--rp-elevated);
+}
+#docs-search::backdrop {
+  background: color-mix(in srgb, var(--rp-text) 48%, transparent);
+}
+body:has(#docs-search[open]) { overflow: hidden; }
+.search-layout {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 24px;
+}
+.search-content { position: relative; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.search-brand {
+  align-self: start;
+  padding-inline-start: 12px;
+  border-inline-start: 2px solid var(--rp-text);
+}
+.search-brand .brand { margin: 0; padding: 0; min-height: 28px; }
+.search-brand p { margin: 0 16px 0 36px; font-size: 0.875rem; line-height: 18px; }
+.search-field {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(500px, calc(100% - 40px));
+  min-height: 40px;
+  padding: 0 16px;
+  border: 2px solid var(--rp-text);
+  border-radius: 9999px;
+  background: var(--rp-surface);
+}
+.search-field:focus-within { border-color: var(--rp-accent); }
+.search-field input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--rp-text);
+  font: 400 1rem/24px var(--docs-sans);
+}
+.search-field input::placeholder { color: var(--rp-subtle-text); opacity: 1; }
+.search-close { position: absolute; top: 16px; inset-inline-end: 24px; }
+.search-filters {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-block: 20px 12px;
+  overflow-x: auto;
+}
+.search-filters button {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--rp-overlay);
+  color: inherit;
+  font: 400 0.875rem/18px var(--docs-sans);
+  cursor: pointer;
+}
+.search-filters button[aria-pressed='true'] { background: var(--rp-text); color: var(--rp-base); }
+.search-cards { flex: 1; min-height: 0; margin: 0 -16px; padding: 16px; overflow-y: auto; display: grid; align-content: start; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.search-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.search-card[aria-current] { outline: 2px solid var(--rp-text); outline-offset: -2px; }
+.card-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.6;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(125deg, var(--rp-iris), var(--rp-pine));
+  color: var(--rp-base);
+}
+.card-art .icon { width: 64px; height: 64px; }
+.card-text { display: grid; align-content: start; gap: 4px; padding: 12px; font-size: 0.8125rem; line-height: 18px; }
+.card-text strong { font-weight: 600; }
+.search-status { position: absolute; top: 120px; inset-inline-start: 0; margin: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .search-trigger:hover { border-color: var(--rp-hl-high); }
+  .nav-trigger:hover,
+  .search-close:hover { background: var(--rp-overlay); }
+  .search-card:hover { outline: 2px solid var(--rp-hl-high); outline-offset: -2px; }
+}
+.search-card:focus-visible { outline: 2px solid var(--rp-accent); outline-offset: 2px; }
+@media (max-width: 1199px) {
+  .search-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .nav-trigger { display: grid; }
+  #docs-search {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 12px;
+    border-radius: 0;
+  }
+  .search-layout { display: flex; flex-direction: column; gap: 0; }
+  .search-content { flex: 1; }
+  .search-brand { flex-shrink: 0; display: flex; width: fit-content; padding: 0 0 4px; border: 0; border-bottom: 2px solid var(--rp-text); }
+  .search-brand p { display: none; }
+  .search-brand .brand { min-height: 26px; line-height: 20px; padding-inline: 8px; }
+  .search-close { top: 10px; inset-inline-end: 12px; }
+  .search-field { width: calc(100% - 8px); min-height: 32px; margin: 16px 4px 0; padding-inline: 12px; }
+  .search-field input { font-size: 0.875rem; }
+  .search-filters { margin: 12px -4px 12px; padding: 0; }
+  .search-status { top: 116px; }
+  .search-cards { margin: 0 -12px -12px; padding: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .search-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

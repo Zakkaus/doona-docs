@@ -1,0 +1,84 @@
+/* The layout below 1024px: a sticky top bar, one column, and the outline in the top bar's section menu. */
+@media (max-width: 1023px) {
+  :root { --docs-top: 56px; }
+  body:has(.layout) {
+    height: auto;
+    overflow: auto;
+  }
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    background: var(--rp-surface);
+    gap: 12px;
+  }
+  .brand {
+    min-height: 32px;
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+  }
+  .brand img { width: 20px; height: 20px; }
+  .top .actions {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+  }
+  .top .language { display: none; }
+  .top .demo,
+  .top .github { display: none; }
+  .top .search-trigger { display: none; }
+  .layout {
+    display: block;
+    height: auto;
+    padding: 0;
+  }
+  /* The outline moves into the top bar's section menu; the page actions stay, after the article. */
+  .sidebar,
+  .toc-sections { display: none; }
+  .toc {
+    position: static;
+    max-height: none;
+    padding-top: 0;
+  }
+  .page-actions {
+    max-width: 768px;
+    margin: 48px auto 0;
+  }
+  .foot {
+    margin-top: 0;
+  }
+  .panel {
+    display: block;
+    height: auto;
+    overflow: visible;
+    padding: 12px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .panel > main {
+    margin-inline: auto;
+  }
+  .menu {
+    display: block;
+    margin-bottom: 24px;
+  }
+  :root[data-enhanced] .menu { display: none; }
+  .menu > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: var(--rp-overlay);
+    font-size: 0.875rem;
+  }
+  .menu > summary span { flex: 1; }
+  .menu nav { padding-top: 16px; }
+  main h1 {
+    font-size: var(--docs-h1-phone);
+    line-height: 64px;
+  }
+  pre { padding: 12px; font-size: 0.75rem; line-height: 18px; }
+  main :is(h2, h3) { scroll-margin-top: 80px; }
+}

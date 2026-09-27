@@ -1,0 +1,46 @@
+/* Callouts: quotes, and the GitHub alerts [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] and [!CAUTION]. */
+.callout {
+  --tone: var(--rp-hl-high);
+  --tone-text: var(--rp-text);
+
+  position: relative;
+  margin: 32px 0;
+  padding: 24px;
+  border: 2px solid var(--tone);
+  border-radius: 10px;
+  background: var(--rp-surface);
+  font-size: 1.125rem;
+  line-height: 27px;
+}
+.callout > .icon {
+  position: absolute;
+  top: 24px;
+  inset-inline-end: 24px;
+  color: var(--tone-text);
+}
+.callout-title {
+  margin: 0 32px 14px 0;
+  font-size: 0.875rem;
+  line-height: 18px;
+  color: var(--tone-text);
+  font-weight: 700;
+}
+.callout.note {
+  --tone: var(--rp-info);
+  --tone-text: var(--rp-info-text);
+}
+.callout.tip {
+  --tone: var(--rp-positive);
+  --tone-text: var(--rp-positive-text);
+}
+.callout.important {
+  --tone: var(--rp-iris);
+}
+.callout.warning {
+  --tone: var(--rp-notice);
+  --tone-text: var(--rp-notice-text);
+}
+.callout.caution {
+  --tone: var(--rp-negative);
+  --tone-text: var(--rp-negative-text);
+}

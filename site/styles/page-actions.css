@@ -1,0 +1,94 @@
+/* The page actions under the outline: Copy for LLM and the menu that opens the page's Markdown or an assistant. */
+.page-actions {
+  position: relative;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 12px 4px 16px;
+  border-top: 1px solid var(--rp-line);
+}
+.md-copy,
+.md-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 1px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: 500 0.875rem/18px var(--docs-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.md-copy { min-width: 123px; }
+.md-copy .icon {
+  width: 16px;
+  height: 16px;
+}
+.md-copy > .icon:nth-child(2),
+.md-copy[data-copied] > .icon:first-child {
+  display: none;
+}
+.md-copy[data-copied] > .icon:nth-child(2) {
+  display: block;
+  color: var(--rp-positive-text);
+}
+.md-more {
+  width: 32px;
+  padding-inline: 0;
+}
+.md-menu > .md-more .icon,
+.md-menu[open] > .md-more .icon {
+  width: 20px;
+  height: 20px;
+  transform: rotate(90deg);
+}
+.md-menu[open] > summary,
+.md-copy:active,
+.md-more:active {
+  background: var(--rp-hl-med);
+}
+.md-menu ul {
+  position: absolute;
+  margin: 0;
+  list-style: none;
+  inset-inline-end: 4px;
+  bottom: calc(100% - 8px);
+  z-index: 10;
+  min-width: 168px;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.md-menu li {
+  margin: 0;
+}
+.md-menu li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 32px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: var(--rp-text);
+  font-size: 0.875rem;
+  line-height: 18px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.md-menu li a:focus-visible {
+  background: var(--rp-overlay);
+  outline-offset: -2px;
+}
+.md-menu .external {
+  width: 12px;
+  height: 12px;
+}

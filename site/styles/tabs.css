@@ -1,0 +1,54 @@
+/* Tabs over alternative forms of one code block, drawn as Spectrum's tabs: plain labels over a divider, the selected
+   one in the text colour with a bar under it, as the page lists mark theirs. Without site.js every block shows under
+   its .tab-label. */
+.tabs {
+  margin: 32px 0;
+}
+.tabs .code {
+  margin: 0;
+}
+.tab-panel + .tab-panel {
+  margin-top: 16px;
+}
+.tabs:has(> .tablist) > .tab-panel {
+  margin-top: 0;
+}
+main .tab-label {
+  margin: 0 0 8px;
+  color: var(--rp-subtle-text);
+  font-size: var(--rp-text-md);
+  line-height: 18px;
+}
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rp-line);
+}
+.tablist > [role='tab'] {
+  position: relative;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--rp-r-sm);
+  background: none;
+  color: var(--rp-subtle-text);
+  font: 500 var(--rp-text-md)/18px var(--docs-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tablist > [role='tab']::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 1px;
+}
+.tablist > [role='tab'][aria-selected='true'] {
+  color: var(--rp-text);
+}
+.tablist > [role='tab'][aria-selected='true']::after {
+  background: currentColor;
+}

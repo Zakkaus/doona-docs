@@ -1,0 +1,31 @@
+/* Hover states for the top bar, the page lists, the code copy button, the tabs and the page actions. Search keeps its
+   own hover states in search.css. */
+/* A touch leaves :hover stuck on the tapped item, so only a fine pointer highlights it; there is no script to set
+   data-hovered here. */
+/* stylelint-disable selector-pseudo-class-disallowed-list -- guarded by the media query */
+@media (hover: hover) and (pointer: fine) {
+  .language > summary:hover,
+  .theme:hover,
+  .demo:hover,
+  .github:hover,
+  .language li a:hover {
+    background: var(--rp-overlay);
+  }
+  .pages a:not([aria-current]):hover::before,
+  .toc-sections a:hover::before {
+    background: var(--rp-hl-high);
+  }
+  .copy:hover {
+    background: var(--rp-hl-med);
+    color: var(--rp-text);
+  }
+  .tablist > [role='tab']:hover {
+    color: var(--rp-text);
+  }
+  .md-copy:hover,
+  .md-menu > summary:hover,
+  .md-menu li a:hover {
+    background: var(--rp-overlay);
+  }
+}
+/* stylelint-enable selector-pseudo-class-disallowed-list */

@@ -82,7 +82,13 @@ const icons = {
   alert: icon('AlertTriangle')
 };
 
-// site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
+// The published site.css is the files in site/styles/ joined in this order, which is the cascade order: a later file
+// wins over an earlier one at equal specificity. A new file goes in the list next to the component it styles.
+const styleFiles = ['fonts', 'tokens', 'base', 'topbar', 'layout', 'nav', 'panel', 'outline', 'hover', 'page-actions', 'content', 'code',
+  'tabs', 'tables', 'callouts', 'chooser', 'phone', 'search', 'motion', 'section-menu'];
+export const styles = () => styleFiles.map(name => readFileSync(join(root, `site/styles/${name}.css`), 'utf8')).join('\n');
+
+// The stylesheet with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
 // own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii, type sizes, duration and easing the
 // sheet uses written in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
 function stylesheet() {
@@ -96,11 +102,11 @@ function stylesheet() {
   const dark = colours(":root[data-flavour='moon'][data-scheme='dark']");
   const unpaired = [...light.keys()].filter(name => !dark.has(name));
   if (!light.size || unpaired.length) throw new Error(`src/ui/styles/palettes.css: Moon does not set ${unpaired.join(', ') || 'any colour'}`);
-  const css = readFileSync(join(root, 'site/site.css'), 'utf8');
+  const css = styles();
   const marker = '  /* palette */\n';
-  if (!css.includes(marker)) throw new Error('site/site.css: no /* palette */ line');
+  if (!css.includes(marker)) throw new Error('site/styles/tokens.css: no /* palette */ line');
   const sizesMarker = '  /* sizes */\n';
-  if (!css.includes(sizesMarker)) throw new Error('site/site.css: no /* sizes */ line');
+  if (!css.includes(sizesMarker)) throw new Error('site/styles/tokens.css: no /* sizes */ line');
   const motion = readFileSync(join(doona, 'src/ui/styles/motion.css'), 'utf8');
   const scaleName = '--rp-(?:(?:r|text)-[\\w-]+|duration|ease)';
   const scale = new Map([...motion.matchAll(new RegExp(`(${scaleName}):\\s*(\\d+px|\\d+ms|cubic-bezier\\([\\d., ]+\\));`, 'g'))].map(match => [match[1], match[2]]));

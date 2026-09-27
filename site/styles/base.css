@@ -1,0 +1,74 @@
+/* Element defaults, the icon size, the [hidden] overrides, the details marker and the skip link. */
+/* Native scrollbars retain doona's thumb colour in every scroll container. */
+* {
+  box-sizing: border-box;
+  scrollbar-width: auto;
+  scrollbar-color: var(--rp-hl-high) transparent;
+}
+body {
+  margin: 0;
+  background: var(--rp-base);
+  color: var(--rp-text);
+  font-family: var(--docs-sans);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body:has(.layout) {
+  height: 100dvh;
+  overflow: hidden;
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--rp-accent);
+  outline-offset: 2px;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* These classes set a display, which outranks the browser's [hidden] rule. site.js unhides the buttons it enhances,
+   such as the copy buttons where the clipboard can be written, and hides the search cards a query rules out. */
+.copy[hidden],
+.md-copy[hidden],
+.search-trigger[hidden],
+.nav-trigger[hidden],
+.search-card[hidden] {
+  display: none;
+}
+summary {
+  list-style: none;
+  cursor: pointer;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary .icon:last-child {
+  width: 16px;
+  height: 16px;
+}
+details[open] > summary .icon:last-child {
+  transform: rotate(180deg);
+}
+
+.skip {
+  position: absolute;
+  inset-inline-start: 8px;
+  top: -100px;
+  z-index: 20;
+  padding: 8px 12px;
+  border-radius: var(--rp-r-md);
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.skip:focus {
+  top: 8px;
+}

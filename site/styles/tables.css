@@ -1,0 +1,29 @@
+/* Tables, in a box that scrolls when the table is wider than the article. */
+.table {
+  margin: 32px 0;
+  overflow-x: auto;
+  border: 1px solid var(--rp-line);
+  border-radius: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 18px;
+}
+/* A column keeps room for a few words; a table wider than the column scrolls in its box instead of squeezing the
+   text into a word a line. */
+th,
+td {
+  min-width: 8em;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--rp-line);
+  text-align: start;
+  vertical-align: top;
+}
+th {
+  padding-block: 7px;
+  font-weight: 700;
+  background: var(--rp-overlay);
+}
+tr:last-child td { border-bottom: 0; }

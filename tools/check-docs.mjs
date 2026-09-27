@@ -8,7 +8,7 @@
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {anchors, awaitsScreenshots, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
-import {render} from '../site/build.mjs';
+import {render, styles} from '../site/build.mjs';
 
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
@@ -203,12 +203,12 @@ for (const base of ['/doona-docs/', '/']) {
 
 // An element the build writes hidden stays hidden until site.js shows it. A display the stylesheet gives its class
 // outranks the browser's own [hidden] rule, so the stylesheet has to hide it again.
-const css = readFileSync(join(root, 'site/site.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const css = styles().replace(/\/\*[\s\S]*?\*\//g, '');
 const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({selectors: match[1].split(',').map(selector => selector.trim()), body: match[2]}));
 for (const name of hiddenClasses) {
   const shown = rules.some(rule => rule.selectors.some(selector => selector.endsWith(`.${name}`)) && /(^|;)\s*display:\s*(?!none)/.test(rule.body));
   const hidden = rules.some(rule => rule.selectors.includes(`.${name}[hidden]`) && /(^|;)\s*display:\s*none/.test(rule.body));
-  if (shown && !hidden) failures.push(`site/site.css: .${name} sets a display, so .${name}[hidden] needs display: none`);
+  if (shown && !hidden) failures.push(`site/styles: .${name} sets a display, so .${name}[hidden] needs display: none`);
 }
 
 if (failures.length) {
