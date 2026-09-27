@@ -1,6 +1,7 @@
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
+import {render} from '../site/build.mjs';
 import {slugger} from '../site/docs.mjs';
 
 describe('slugger', () => {
@@ -52,5 +53,13 @@ describe('copy button', () => {
     await expect(button.click()).resolves.toBeUndefined();
     expect(button.dataset.copied).toBeUndefined();
     expect(status.textContent).toBe('');
+  });
+});
+
+describe('icons', () => {
+  it('keeps the bullets of the page-menu icon', () => {
+    const page = render().get('en/index.html').text;
+    const summary = /<details class="menu"[^]*?<summary>(<svg[^]*?<\/svg>)/.exec(page)[1];
+    expect(summary.match(/<circle /g)).toHaveLength(3);
   });
 });

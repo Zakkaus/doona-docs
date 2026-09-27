@@ -29,13 +29,24 @@ md.renderer.rules.fence = (tokens, index, options, env) => {
 
 const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[char]);
 
-// The icons doona draws, read from its own components so the two stay the same.
+// The icons doona draws, read from its own components so the two stay the same. Only paths and circles are copied, so
+// an icon drawn with any other element fails the build rather than losing that part.
+const shapeAttributes = {path: ['d'], circle: ['cx', 'cy', 'r']};
 function icon(name) {
-  const source = readFileSync(join(root, 'src/ui/icons', `${name}.tsx`), 'utf8');
+  const file = `src/ui/icons/${name}.tsx`;
+  const source = readFileSync(join(root, file), 'utf8');
   const viewBox = /viewBox="([^"]+)"/.exec(source)?.[1];
-  const paths = [...source.matchAll(/\sd="([^"]+)"/g)].map(match => `<path fill="currentColor" d="${match[1]}"/>`);
-  if (!viewBox || !paths.length) throw new Error(`src/ui/icons/${name}.tsx: no viewBox or path`);
-  return `<svg class="icon" viewBox="${viewBox}" aria-hidden="true" focusable="false">${paths.join('')}</svg>`;
+  const shapes = [...source.matchAll(/<(\w+)\s([^>]*?)\/>/g)].map(([, tag, attributes]) => {
+    if (!(tag in shapeAttributes)) throw new Error(`${file}: <${tag}> is not a path or circle`);
+    const values = shapeAttributes[tag].map(attribute => {
+      const value = new RegExp(`(?:^|\\s)${attribute}="([^"]+)"`).exec(attributes)?.[1];
+      if (!value) throw new Error(`${file}: <${tag}> has no ${attribute}`);
+      return ` ${attribute}="${value}"`;
+    });
+    return `<${tag} fill="currentColor"${values.join('')}/>`;
+  });
+  if (!viewBox || !shapes.length) throw new Error(`${file}: no viewBox or shape`);
+  return `<svg class="icon" viewBox="${viewBox}" aria-hidden="true" focusable="false">${shapes.join('')}</svg>`;
 }
 const icons = {
   github: icon('GitHub'),
