@@ -14,14 +14,14 @@ doona needs honk's native API, which exists only on the `feat/native-api` branch
 
 ## Pages
 
-For a new gateway, follow the Getting started pages in order: Requirements, the install page for your system, Minimal configuration, Service management and First sign-in.
+For a new gateway, read Requirements and the install page for your system, then the First run pages in order: Minimal configuration, Service management and First sign-in.
 
 1. [Requirements](requirements.md): the kernel, the honk build, browsers and build tools.
 2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md) or [another system](install-manual.md).
-3. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
-4. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
-5. [First sign-in](first-sign-in.md): create the administrator and check the overview.
-6. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
+3. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
+4. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
+5. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
+6. [First sign-in](first-sign-in.md): create the administrator and check the overview.
 7. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
 8. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
 9. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.

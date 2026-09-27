@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
-import {locales, pages, slugger} from '../site/docs.mjs';
+import {groups, locales, pages, slugger} from '../site/docs.mjs';
 
 describe('slugger', () => {
   it('numbers repeated headings as GitHub does', () => {
@@ -81,22 +81,83 @@ describe('icons', () => {
   });
 });
 
+// site/site.js over a sidebar and phone menu that each hold the install and guides sections, with storage holding
+// `stored`, or throwing it when it is an Error.
+function navSections(stored) {
+  const details = ['install', 'guides', 'install', 'guides'].map(group => ({
+    dataset: {group},
+    open: true,
+    addEventListener(type, listener) {
+      this.ontoggle = listener;
+    }
+  }));
+  const saved = [];
+  const fail = () => {
+    if (stored instanceof Error) throw stored;
+  };
+  const localStorage = {
+    getItem: () => (fail(), stored),
+    setItem: (key, value) => (fail(), saved.push(value))
+  };
+  const document = {
+    documentElement: {dataset: {}},
+    addEventListener() {},
+    querySelector: () => null,
+    querySelectorAll: selector => (selector === '.nav-group[data-group]' ? details : [])
+  };
+  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  runInNewContext(script, {document, localStorage, navigator: {}, setTimeout: () => 0, clearTimeout: () => {}});
+  // Each section's state, after checking that the sidebar and the phone menu agree.
+  const sections = () => {
+    for (const [index, section] of details.slice(0, 2).entries()) expect(details[index + 2].open).toBe(section.open);
+    return Object.fromEntries(details.slice(0, 2).map(section => [section.dataset.group, section.open]));
+  };
+  // The visitor opens or closes one section in the sidebar; the browser then fires toggle on it.
+  sections.toggle = (group, open) => {
+    const section = details.find(item => item.dataset.group === group);
+    section.open = open;
+    section.ontoggle();
+  };
+  return {sections, saved};
+}
+
 describe('navigation', () => {
   const site = render();
   // The sidebar's sections, in order: whether each is a plain label or collapses, and whether it starts open.
   const sections = page => {
     const nav = /<nav class="sidebar"[^>]*>([^]*?)<\/nav>/.exec(site.get(page).text)[1];
-    return [...nav.matchAll(/<li class="nav-static"><span class="nav-label">|<details class="nav-group"( open)?><summary/g)].map(match =>
+    return [...nav.matchAll(/<li class="nav-static"><span class="nav-label">|<details class="nav-group" data-group="[a-zA-Z]+"( open)?><summary/g)].map(match =>
       match[0].includes('nav-static') ? 'label' : match[1] ? 'open' : 'closed'
     );
   };
 
-  it('shows the first section as a label and opens only the section holding the page', () => {
-    for (const locale of locales) {
-      expect(sections(`${locale}/index.html`)).toEqual(['label', 'closed', 'closed']);
-      expect(sections(`${locale}/features.html`)).toEqual(['label', 'open', 'closed']);
-      expect(sections(`${locale}/development.html`)).toEqual(['label', 'closed', 'open']);
-    }
+  it('shows the first section as a label and every other section open', () => {
+    for (const locale of locales) for (const name of pages) expect(sections(`${locale}/${name}.html`)).toEqual(['label', 'open', 'open', 'open', 'open']);
+  });
+
+  it('keeps the pages in section order', () => {
+    expect(Object.keys(groups)).toEqual(['start', 'install', 'firstRun', 'guides', 'contributing']);
+    expect(groups.start).toEqual(['index', 'requirements']);
+    expect(groups.install.at(-1)).toBe('install');
+    expect(pages).toEqual(Object.values(groups).flat());
+    const listed = [...site.get('llms.txt').text.matchAll(/\/([a-zA-Z-]+)\/([a-z-]+)\.md\)/g)];
+    for (const locale of locales) expect(listed.filter(match => match[1] === locale).map(match => match[2])).toEqual(pages);
+  });
+
+  it('remembers the sections the visitor closes', () => {
+    const {sections: open, saved} = navSections(JSON.stringify(['guides']));
+    expect(open()).toEqual({install: true, guides: false});
+    open.toggle('install', false);
+    expect(open()).toEqual({install: false, guides: false});
+    expect(JSON.parse(saved.at(-1))).toEqual(['guides', 'install']);
+    open.toggle('guides', true);
+    expect(JSON.parse(saved.at(-1))).toEqual(['install']);
+  });
+
+  it('leaves every section open when storage throws', () => {
+    const {sections: open} = navSections(new Error('SecurityError'));
+    expect(open()).toEqual({install: true, guides: true});
+    expect(() => open.toggle('install', false)).not.toThrow();
   });
 
   it('gives the label no toggle and the phone menu the same sections', () => {

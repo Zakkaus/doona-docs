@@ -277,7 +277,7 @@ const logo = base => `<img src="${base}logo.svg" alt="" width="28" height="28">`
 const sectionChevron = '<svg class="icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7.965 5.178C7.978 5.118 8 5.061 8 5s-.021-.118-.034-.178c-.01-.05-.01-.102-.03-.15-.023-.058-.068-.107-.104-.16-.03-.042-.047-.09-.084-.127l-.004-.003-.003-.004L3.615.303a.875.875 0 1 0-1.23 1.244L5.88 5 2.385 8.453a.875.875 0 1 0 1.23 1.244L7.74 5.622l.003-.004.004-.003c.037-.038.055-.085.084-.127.036-.053.08-.102.104-.16.02-.048.02-.1.03-.15"/></svg>';
 
 // The pages under their section headings. As in the reference docs, the first section is a plain label with its pages
-// always shown; the others collapse, and only the one holding the current page starts open.
+// always shown; the others collapse and start open, and site.js closes the ones the visitor closed before.
 function navList(base, locale, parsed, current) {
   const titles = new Map(parsed.map(page => [page.name, page.title]));
   const sections = Object.entries(groups).map(([group, names], index) => {
@@ -287,8 +287,7 @@ function navList(base, locale, parsed, current) {
     });
     const label = strings[locale].groups[group];
     if (index === 0) return `<li class="nav-static"><span class="nav-label">${label}</span><ul>${items.join('')}</ul></li>`;
-    const open = names.includes(current) ? ' open' : '';
-    return `<li><details class="nav-group"${open}><summary class="group"><span>${label}</span>${sectionChevron}</summary><ul>${items.join('')}</ul></details></li>`;
+    return `<li><details class="nav-group" data-group="${group}" open><summary class="group"><span>${label}</span>${sectionChevron}</summary><ul>${items.join('')}</ul></details></li>`;
   });
   return `<ul class="pages">${sections.join('')}</ul>`;
 }

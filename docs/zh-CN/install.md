@@ -2,7 +2,7 @@
 
 # 安装详解
 
-先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前请确认[系统要求](requirements.md#requirements)。“入门”各页按系统逐步介绍同样的安装过程，从 [Debian 或 Ubuntu](install-debian.md) 开始。
+先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前请确认[系统要求](requirements.md#requirements)。“安装”下的其他页面按系统逐步介绍同样的安装过程，从 [Debian 或 Ubuntu](install-debian.md) 开始。
 
 <a name="install"></a>
 
