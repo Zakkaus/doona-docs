@@ -462,7 +462,8 @@ describe('page actions', () => {
       expect(aside.indexOf('page-actions')).toBeGreaterThan(aside.indexOf('</ul>'));
       expect(aside).toContain(`<span>${labels[locale]}</span>`);
       expect(aside).toContain('class="md-more"');
-      expect(aside).toContain('aria-haspopup="menu"');
+      // The menu roles promise the arrow keys, so only site.js adds them.
+      expect(aside).not.toMatch(/aria-haspopup|role="menu|role="none"/);
       const menu = /<ul id="page-action-menu"[^]*?<\/ul>/.exec(aside)[0];
       const links = [...menu.matchAll(/<a ([^]*?)<\/a>/g)].map(match => match[1]);
       expect(links).toHaveLength(3);
