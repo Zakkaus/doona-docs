@@ -10,7 +10,7 @@ import {join, relative} from 'node:path';
 import {anchors, awaitsScreenshots, docs, doona, locales, pages as pageOrder, root} from '../site/docs.mjs';
 import {linkFailures, page} from './links.mjs';
 import {render} from '../site/build.mjs';
-import {styles} from '../site/build/assets.mjs';
+import {noticeFiles, styles} from '../site/build/assets.mjs';
 
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
@@ -120,6 +120,8 @@ for (const base of ['/doona-docs/', '/']) {
       else if (fragment !== undefined && !html.get(file)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${file}`);
     }
   }
+  // The notices and licences NOTICE.txt names are published beside it.
+  for (const name of noticeFiles(site.get('NOTICE.txt').text)) if (!site.has(name)) failures.push(`site (${base}) NOTICE.txt: ${name} names no file the build writes`);
   // The Markdown pages and llms.txt link by path here, as DOCS_ORIGIN is not set; a #fragment on a Markdown page names
   // an id on its HTML page.
   for (const path of html.keys()) {

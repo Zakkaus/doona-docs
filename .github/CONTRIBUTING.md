@@ -100,7 +100,7 @@ DOONA_DIR=../doona pnpm test
 - a page's anchors or heading levels differ from the English page;
 - an anchor sits on more than one page, or `docs/anchors.json` does not map it to its page;
 - an anchor doona's in-app links use is missing, or sits on another page;
-- the built site, for `/doona-docs/` and for `/`, has a link, image or `#fragment` that resolves to nothing, repeats an id on a page, or lacks a page's Markdown;
+- the built site, for `/doona-docs/` and for `/`, has a link, image or `#fragment` that resolves to nothing, repeats an id on a page, or lacks a page's Markdown, or its `NOTICE.txt` names a licence file the build does not publish;
 - a link in the Markdown pages or `llms.txt` resolves to nothing;
 - a class the build writes hidden sets a `display` without a `[hidden]` rule.
 
