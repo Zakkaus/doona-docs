@@ -4,7 +4,7 @@
 import MarkdownIt from 'markdown-it';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
-import {docs, locales, pages, root, slugger} from './docs.mjs';
+import {docs, groups, locales, pages, root, slugger} from './docs.mjs';
 import {highlight, languages} from './highlight.mjs';
 import strings from './strings.mjs';
 
@@ -192,12 +192,17 @@ try {
 // The app's logo, the same file in both schemes.
 const logo = base => `<img src="${base}logo.svg" alt="" width="28" height="28">`;
 
+// The pages under their section headings.
 function navList(base, locale, parsed, current) {
-  const items = parsed.map(page => {
-    const here = page.name === current ? ' aria-current="page"' : '';
-    return `<li><a href="${pageUrl(base, locale, page.name)}"${here}>${escape(page.title)}</a></li>`;
+  const titles = new Map(parsed.map(page => [page.name, page.title]));
+  const sections = Object.entries(groups).map(([group, names]) => {
+    const items = names.map(name => {
+      const here = name === current ? ' aria-current="page"' : '';
+      return `<li><a href="${pageUrl(base, locale, name)}"${here}>${escape(titles.get(name))}</a></li>`;
+    });
+    return `<li><span class="group">${strings[locale].groups[group]}</span><ul>${items.join('')}</ul></li>`;
   });
-  return `<ul>${items.join('')}</ul>`;
+  return `<ul class="pages">${sections.join('')}</ul>`;
 }
 
 // The language and page menus share a details name, so opening one closes the other.

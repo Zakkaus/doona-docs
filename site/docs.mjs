@@ -8,8 +8,14 @@ export const docs = join(root, 'docs');
 // In the order of the language line at the top of every page.
 export const locales = ['en', 'zh-CN', 'zh-TW'];
 
-// Navigation order; docs/<locale>/ holds exactly these pages.
-export const pages = ['index', 'requirements', 'install', 'configuration', 'features', 'troubleshooting', 'development'];
+// Navigation order, in the sections the sidebar shows under the headings in site/strings.mjs; docs/<locale>/ holds
+// exactly these pages.
+export const groups = {
+  start: ['index', 'requirements', 'install'],
+  guides: ['configuration', 'features', 'troubleshooting'],
+  contributing: ['development']
+};
+export const pages = Object.values(groups).flat();
 
 // Anchor -> page (file name without .md). The app's docsHref and the checker read the same file.
 export const anchors = JSON.parse(readFileSync(join(docs, 'anchors.json'), 'utf8'));
