@@ -1,5 +1,5 @@
 // The search dialog, which is also the phone navigation: its triggers and Ctrl K, the section filters, the query over
-// the locale's search.json, and arrow keys over the page cards.
+// the locale's search.json, and the arrow keys, Home, End and Enter over the page cards while focus stays in the field.
 
 // Where a page ranks for a query, best first: its title starts with the query, its title holds it, a section heading,
 // a keyword, then its text. The entry and the query are normalized; Infinity is no match.
@@ -30,8 +30,18 @@ if (search) {
   let selectedGroup = initialGroup;
   let matching;
   const pageOrder = [...cards.children];
+  let active;
+  const activate = card => {
+    active?.removeAttribute('aria-selected');
+    active = card;
+    if (!card) return input.removeAttribute('aria-activedescendant');
+    card.setAttribute('aria-selected', 'true');
+    input.setAttribute('aria-activedescendant', card.id);
+    card.scrollIntoView({block: 'nearest'});
+  };
   const group = value => {
     selectedGroup = value;
+    activate();
     for (const button of filters.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.group === value));
     for (const card of cards.children) card.hidden = Boolean(input.value.trim() && !matching) || Boolean(value && card.dataset.group !== value) || Boolean(matching && !matching.has(card.getAttribute('href')));
     if (matching) {
@@ -128,16 +138,22 @@ if (search) {
     cards.append(...ranked.map(entry => cardFor.get(entry.url)));
     group(selectedGroup);
   });
-  search.addEventListener('keydown', event => {
-    const card = event.target.closest('.search-card');
-    if (event.isComposing || (event.target !== input && !card)) return;
-    if (!['ArrowDown', 'ArrowUp'].includes(event.key) && !(card && ['Home', 'End'].includes(event.key))) return;
-    const links = [...search.querySelectorAll('.search-card:not([hidden])')].filter(link => link.getClientRects().length);
-    if (!links.length) return;
-    const current = links.indexOf(document.activeElement);
+  input.addEventListener('keydown', event => {
+    if (event.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === 'Enter') {
+      if (active) {
+        event.preventDefault();
+        active.click();
+      }
+      return;
+    }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key) || (event.shiftKey && ['Home', 'End'].includes(event.key))) return;
+    const shown = [...cards.children].filter(card => !card.hidden);
+    if (!shown.length) return;
     event.preventDefault();
-    const next = event.key === 'Home' ? 0 : event.key === 'End' ? links.length - 1
-      : event.key === 'ArrowDown' ? (current + 1) % links.length : current <= 0 ? links.length - 1 : current - 1;
-    links[next].focus();
+    const current = shown.indexOf(active);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? shown.length - 1
+      : event.key === 'ArrowDown' ? (current + 1) % shown.length : current <= 0 ? shown.length - 1 : current - 1;
+    activate(shown[next]);
   });
 }
