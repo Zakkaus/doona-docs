@@ -45,7 +45,8 @@ if (search) {
     for (const button of filters.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.group === value));
     for (const card of cards.children) card.hidden = Boolean(input.value.trim() && !matching) || Boolean(value && card.dataset.group !== value) || Boolean(matching && !matching.has(card.getAttribute('href')));
     if (matching) {
-      message.textContent = message.dataset.empty;
+      // A function replacement, so a query holding $& or $' is shown as typed.
+      message.textContent = message.dataset.empty.replace('{query}', () => input.value.trim());
       message.hidden = [...cards.children].some(card => !card.hidden);
     }
   };
