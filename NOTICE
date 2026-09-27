@@ -9,3 +9,8 @@ The published site also carries files the build reads from a doona checkout:
 doona's palette and sizes, its logo, and the icons in its src/ui/icons. Their
 terms travel with the site as NOTICE.txt and LICENSES/, copied from doona:
 https://github.com/Zakkaus/doona/blob/main/NOTICE
+
+The site serves Source Sans 3 and Source Code Pro font files under the SIL
+Open Font License 1.1. Copyright Adobe, with Reserved Font Name 'Source'.
+Their original license notices are published in fonts/LICENSE-SourceSans3.txt
+and fonts/LICENSE-SourceCodePro.txt. See site/fonts/README.md for source revisions.

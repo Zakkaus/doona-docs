@@ -444,10 +444,13 @@ ${missing.join('\n')}
 
   files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
+  for (const name of ['source-sans-3.woff2', 'source-code-pro.woff2', 'LICENSE-SourceSans3.txt', 'LICENSE-SourceCodePro.txt']) {
+    files.set(`fonts/${name}`, {from: join(root, 'site/fonts', name)});
+  }
   files.set('logo.svg', {from: join(doona, 'public/logo.svg')});
   // The icons above are Adobe Spectrum artwork and the GitHub mark: their notice and terms travel with them, as in the
-  // release archives.
-  files.set('NOTICE.txt', {from: join(doona, 'NOTICE')});
+  // release archives. This repository's NOTICE follows doona's and covers the pages and the fonts.
+  files.set('NOTICE.txt', {text: readFileSync(join(doona, 'NOTICE'), 'utf8') + '\n' + readFileSync(join(root, 'NOTICE'), 'utf8')});
   files.set('LICENSES/CC-BY-4.0.txt', {from: join(root, 'LICENSES/CC-BY-4.0.txt')});
   files.set('LICENSES/Apache-2.0.txt', {from: join(doona, 'LICENSES/Apache-2.0.txt')});
   files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(doona, 'LICENSES/LicenseRef-GitHub-Logos.txt')});

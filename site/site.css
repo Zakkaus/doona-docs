@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('./fonts/source-sans-3.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('./fonts/source-code-pro.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 /* The docs site's one stylesheet. The colour, radius and type tokens are doona's. site/build.mjs writes in Rosé Pine
    Dawn and Moon, its default palette (DEFAULT_PALETTE in src/shell/palettes.ts), from src/ui/styles/palettes.css, and
    the radii and type sizes this sheet uses from src/ui/styles/motion.css; the role tokens are copied from motion.css.
@@ -37,8 +53,8 @@
   --docs-code-number: light-dark(color-mix(in oklab, var(--rp-iris), #000 17%), var(--rp-iris));
   --docs-code-property: light-dark(var(--rp-pine), color-mix(in oklab, var(--rp-pine), #fff 23%));
   --docs-code-punctuation: light-dark(color-mix(in oklab, var(--rp-subtle), #000 12%), color-mix(in oklab, var(--rp-subtle), #fff 16%));
-  --docs-sans: 'Noto Sans TC', system-ui, sans-serif;
-  --docs-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
+  --docs-sans: 'Source Sans 3', 'Noto Sans TC', system-ui, sans-serif;
+  --docs-mono: 'Source Code Pro', ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
 }
 :root[data-theme='light'] {
   color-scheme: light;
@@ -48,7 +64,7 @@
 }
 /* Simplified Chinese prefers the SC glyph forms, as in the app. */
 :root:lang(zh-CN) {
-  --docs-sans: 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
+  --docs-sans: 'Source Sans 3', 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
 }
 
 /* The app's thin scrollbars (doona's foundations.css), on the root, the sidebar and every scroll container. A classic
