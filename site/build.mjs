@@ -39,6 +39,9 @@ md.renderer.rules.fence = (tokens, index, options, env) => {
   return `${token.meta.first ? '<div class="tabs">\n' : ''}${panel}${token.meta.last ? '</div>\n' : ''}`;
 };
 
+// The public demo: doona on its in-browser mock backend.
+const demo = 'https://demo.daeuniverse.org/';
+
 const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[char]);
 
 // The icons doona draws, read from its own components so the two stay the same. Only paths and circles are copied, so
@@ -62,6 +65,7 @@ function icon(name) {
 }
 const icons = {
   github: icon('GitHub'),
+  demo: icon('Visibility'),
   language: icon('Translate'),
   chevron: icon('ChevronDown'),
   pages: icon('ListBulleted'),
@@ -381,6 +385,7 @@ function page(base, origin, locale, parsed, current) {
 <ul>${languages.join('')}</ul>
 </details>
 <button type="button" class="theme" aria-label="${themeLabels.system}" ${themeData}><span class="scheme">${icons.moon}${icons.sun}</span></button>
+<a class="demo" href="${demo}" aria-label="${text.demo}">${icons.demo}<span>${text.demoLabel}</span></a>
 <a class="github" href="${repository}" aria-label="${text.github}">${icons.github}</a>
 </div>
 <button class="nav-trigger" type="button" aria-label="${text.navigation}" aria-haspopup="dialog" aria-controls="docs-search" hidden>${icons.menu}</button>
