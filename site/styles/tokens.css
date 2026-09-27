@@ -24,9 +24,25 @@
   --rp-line: var(--rp-hl-med);
   --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
   /* sizes */
-  /* The docs' own reading sizes, above the app's scale. */
+  /* The docs' own reading sizes, above the app's scale, as the Spectrum 2 docs set them: heading-size-xxxl for the
+     title (55px on a phone), heading-size-l and -m for sections, body-size-xl for the introduction, body-size-l for
+     text and code-size-s for code. Line heights follow S2's rule for Latin text. */
   --docs-h1: 3.625rem;
+  --docs-h1-line: 66px;
   --docs-h1-phone: 3.4375rem;
+  --docs-h1-phone-line: 64px;
+  --docs-h2: 1.75rem;
+  --docs-h2-line: 32px;
+  --docs-h3: 1.375rem;
+  --docs-h3-line: 26px;
+  --docs-lead: 1.25rem;
+  --docs-lead-line: 30px;
+  --docs-body: 1.125rem;
+  --docs-body-line: 1.5;
+  --docs-callout-line: 27px;
+  --docs-code-line: 21px;
+  --docs-code-phone-line: 18px;
+  --docs-table-line: 18px;
   --docs-top: 72px;
   /* Code sits one step off the page surface. The dark overlay leans further into violet than the surface, so dark
      code lightens the surface itself instead. */
@@ -47,6 +63,26 @@
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
+}
+/* Chinese takes Spectrum's CJK type scale (the *-cjk-* tokens of @adobe/spectrum-tokens), one step below the Latin
+   sizes, with its line heights: 1.5 for headings and UI text, 1.7 for body text and code. Code and UI sizes stay. */
+:root:lang(zh) {
+  --docs-h1: 3.1875rem;
+  --docs-h1-line: 1.5;
+  --docs-h1-phone: 3.0625rem;
+  --docs-h1-phone-line: 1.5;
+  --docs-h2: 1.5625rem;
+  --docs-h2-line: 1.5;
+  --docs-h3: 1.25rem;
+  --docs-h3-line: 1.5;
+  --docs-lead: 1.125rem;
+  --docs-lead-line: 1.7;
+  --docs-body: 1rem;
+  --docs-body-line: 1.7;
+  --docs-callout-line: 1.7;
+  --docs-code-line: 1.7;
+  --docs-code-phone-line: 1.7;
+  --docs-table-line: 1.5;
 }
 /* Simplified Chinese prefers the SC glyph forms, as in the app. */
 :root:lang(zh-CN) {
