@@ -14,14 +14,18 @@ doona 需要 honk 的原生 API。此 API 目前只存在於 Glassyiris/honk 的
 
 ## 頁面
 
-部署新的閘道器時，請依序閱讀前四頁。
+部署新的閘道器時，請依序閱讀「入門」各頁：系統需求、對應系統的安裝頁、最小組態、服務管理與首次登入。
 
 1. [系統需求](requirements.md)：核心、honk 建置、瀏覽器與建置工具。
-2. [安裝](install.md)：安裝 honk、doona 與 systemd 服務，啟動 honk 並登入，以及日常更新。
-3. [組態](configuration.md)：啟用原生 API 的 honk 範例組態，以及每個 `native_api` 欄位啟用的功能。
-4. [功能](features.md)：逐項檢查 doona 功能所需的設定、各頁面讀取的資源，以及 doona 在瀏覽器中儲存的設定。
-5. [疑難排解](troubleshooting.md)：啟動錯誤、狀態資料庫、缺少原生 API、登入與唯讀的組態檔案。
-6. [開發](development.md)：建置與測試 doona、原始碼配置與 API 契約。
+2. 在 [Debian 或 Ubuntu](install-debian.md)、[Fedora 或 RHEL](install-fedora.md)、[Arch Linux](install-arch.md)、[Gentoo](install-gentoo.md)、[OpenWrt](install-openwrt.md) 或[其他系統](install-manual.md)上安裝 doona 與 honk-core。
+3. [最小組態](minimal-configuration.md)：能提供 doona 的最小組態，以及檢查方法。
+4. [服務管理](service-management.md)：以 systemd 或 procd 服務執行 honk，啟動、停止、重載並查看日誌。
+5. [首次登入](first-sign-in.md)：建立管理員並檢查概覽。
+6. [安裝詳解](install.md)：在一頁內完成手動安裝，以及從其他來源開啟 doona、發行版套件與更新。
+7. [組態](configuration.md)：啟用原生 API 的 honk 範例組態，以及每個 `native_api` 欄位啟用的功能。
+8. [功能](features.md)：逐項檢查 doona 功能所需的設定、各頁面讀取的資源，以及 doona 在瀏覽器中儲存的設定。
+9. [疑難排解](troubleshooting.md)：啟動錯誤、狀態資料庫、缺少原生 API、登入與唯讀的組態檔案。
+10. [開發](development.md)：建置與測試 doona、原始碼配置與 API 契約。
 
 ## 連結
 

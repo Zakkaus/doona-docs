@@ -14,14 +14,18 @@ doona needs honk's native API, which exists only on the `feat/native-api` branch
 
 ## Pages
 
-Read the first four pages in order for a new gateway.
+For a new gateway, follow the Getting started pages in order: Requirements, the install page for your system, Minimal configuration, Service management and First sign-in.
 
 1. [Requirements](requirements.md): the kernel, the honk build, browsers and build tools.
-2. [Install](install.md): install honk, doona and the systemd service, start honk and sign in, then keep them up to date.
-3. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
-4. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
-5. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.
-6. [Development](development.md): build and test doona, the source layout and the API contract.
+2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md) or [another system](install-manual.md).
+3. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
+4. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
+5. [First sign-in](first-sign-in.md): create the administrator and check the overview.
+6. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
+7. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
+8. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
+9. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.
+10. [Development](development.md): build and test doona, the source layout and the API contract.
 
 ## Links
 

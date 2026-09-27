@@ -129,6 +129,16 @@ function tabBoxes(labels, stored) {
 }
 
 describe('code tabs', () => {
+  it('renders adjacent labelled fences as one box, each block under its label', () => {
+    const page = render().get('en/install-debian.html').text;
+    const box = /<div class="tabs">\n([^]*?)<\/div>\n<\/div>\n(?!<div class="tab-panel")/.exec(page)[1];
+    expect([...box.matchAll(/<div class="tab-panel" data-tab="([^"]+)"><p class="tab-label">([^<]+)<\/p>/g)].map(match => [match[1], match[2]])).toEqual([
+      ['sudo', 'sudo'],
+      ['root', 'root']
+    ]);
+    expect(box).toContain('<code class="language-sh">');
+  });
+
   it('turns each labelled block into a tab and shows the first', () => {
     const {boxes} = tabBoxes([['sudo', 'root']], null);
     const [{list, tabs, panels, shown}] = boxes;
