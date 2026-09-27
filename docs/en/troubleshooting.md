@@ -93,7 +93,7 @@ Find the latest `honk-core <version> starting` line in the current boot’s `jou
 
 - First-time setup works only from the gateway or a private-network client.
 - “Network connection failed” or “Network or CORS request failed” in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
-- A forgotten password: stop honk, run `sudo honk-core admin reset`, and start honk to set up again.
+- A forgotten password: stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), and start honk to set up again.
 - An HTTPS page cannot reach an HTTP API; see [doona on another origin](install.md#other-origin).
 
 <a name="read-only"></a>
