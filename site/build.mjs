@@ -5,6 +5,7 @@ import MarkdownIt from 'markdown-it';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
 import {docs, locales, pages, root, slugger} from './docs.mjs';
+import {highlight, languages} from './highlight.mjs';
 import strings from './strings.mjs';
 
 const repository = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).repository.url.replace(/\.git$/, '');
@@ -17,6 +18,12 @@ md.renderer.rules.blockquote_open = (tokens, index, options, env, self) => {
   const alert = tokens[index].meta?.alert;
   const title = alert ? `<p class="callout-title">${strings[env.locale][alert]}</p>\n` : '';
   return self.renderToken(tokens, index, options) + title;
+};
+// parse() has checked the fence's language.
+md.renderer.rules.fence = (tokens, index) => {
+  const token = tokens[index];
+  const language = token.info.trim();
+  return `<pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>\n`;
 };
 
 const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[char]);
@@ -90,6 +97,8 @@ export function render({base = '/doona-docs/'} = {}) {
         index -= 2;
         continue;
       }
+      if (token.type === 'fence' && !languages.includes(token.info.trim()))
+        throw new Error(`${file}: a code block needs one of ${languages.join(', ')} after its fence, not "${token.info.trim()}"`);
       if (token.type === 'heading_open') {
         const inline = tokens[index + 1];
         // Every heading counts toward GitHub's numbering of repeated slugs, the h1 included. The h1 keeps only an

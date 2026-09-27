@@ -6,6 +6,7 @@
   --rp-base: #faf4ed;
   --rp-surface: #fffaf3;
   --rp-overlay: #f2e9e1;
+  --rp-muted: #9893a5;
   --rp-subtle: #797593;
   --rp-text: #464261;
   --rp-love: #b4637a;
@@ -45,6 +46,14 @@
   --docs-top: 56px;
   /* Code sits one step off the page surface. */
   --docs-code: var(--rp-overlay);
+  /* Syntax colours: the editor's hue for each token (src/ui/styles/page-layout.css), darkened in the light scheme and
+     lightened in the dark one just enough to reach 4.5:1 on the code background. */
+  --docs-code-comment: color-mix(in oklab, var(--rp-muted), #000 25%);
+  --docs-code-string: color-mix(in oklab, var(--rp-gold), #000 33%);
+  --docs-code-keyword: color-mix(in oklab, var(--rp-love), #000 14%);
+  --docs-code-number: color-mix(in oklab, var(--rp-iris), #000 17%);
+  --docs-code-property: var(--rp-pine);
+  --docs-code-punctuation: color-mix(in oklab, var(--rp-subtle), #000 12%);
   --docs-sans: 'Noto Sans TC', system-ui, sans-serif;
   --docs-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
 }
@@ -54,6 +63,7 @@
     --rp-base: #232136;
     --rp-surface: #2a273f;
     --rp-overlay: #393552;
+    --rp-muted: #6e6a86;
     --rp-subtle: #908caa;
     --rp-text: #e0def4;
     --rp-love: #eb6f92;
@@ -72,6 +82,12 @@
     --rp-info-text: var(--rp-text);
     /* The dark overlay leans further into violet than the surface, so code lightens the surface itself instead. */
     --docs-code: color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface));
+    --docs-code-comment: color-mix(in oklab, var(--rp-muted), #fff 38%);
+    --docs-code-string: var(--rp-gold);
+    --docs-code-keyword: color-mix(in oklab, var(--rp-love), #fff 9%);
+    --docs-code-number: var(--rp-iris);
+    --docs-code-property: color-mix(in oklab, var(--rp-pine), #fff 23%);
+    --docs-code-punctuation: color-mix(in oklab, var(--rp-subtle), #fff 16%);
   }
 }
 /* Simplified Chinese prefers the SC glyph forms, as in the app. */
@@ -367,6 +383,27 @@ pre code {
   padding: 0;
   background: none;
   font-size: inherit;
+}
+/* The token names are the app's (src/ui/code/daeTokens.ts); variableName keeps the text colour, as in the editor. */
+.t-comment {
+  color: var(--docs-code-comment);
+}
+.t-string {
+  color: var(--docs-code-string);
+}
+.t-keyword {
+  color: var(--docs-code-keyword);
+  font-weight: 700;
+}
+.t-number {
+  color: var(--docs-code-number);
+}
+.t-propertyName {
+  color: var(--docs-code-property);
+}
+.t-punctuation,
+.t-operator {
+  color: var(--docs-code-punctuation);
 }
 .table {
   margin: 0 0 16px;
