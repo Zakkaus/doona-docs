@@ -43,7 +43,9 @@ const icons = {
   chevron: icon('ChevronDown'),
   pages: icon('ListBulleted'),
   copy: icon('Copy'),
-  copied: icon('Checkmark')
+  copied: icon('Checkmark'),
+  moon: icon('Contrast'),
+  sun: icon('Lighten')
 };
 
 // Heading text without Markdown, for titles, navigation and the table of contents.
@@ -161,10 +163,17 @@ export function render({base = '/doona-docs/'} = {}) {
 <title>${escape(title)}</title>
 <link rel="icon" href="${base}logo-light.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${base}site.css">
-<script src="${base}site.js" defer></script>`;
+<script>
+try {
+  const theme = localStorage.getItem('doona-docs-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+} catch {}
+</script>
+<script type="module" src="${base}site.js"></script>`;
   }
 
-  const logo = `<picture><source media="(prefers-color-scheme: dark)" srcset="${base}logo-dark.svg"><img src="${base}logo-light.svg" alt="" width="28" height="28"></picture>`;
+  // Both logos are in the page and the stylesheet shows the one for the scheme, which the theme button can override.
+  const logo = ['light', 'dark'].map(scheme => `<img class="logo-${scheme}" src="${base}logo-${scheme}.svg" alt="" width="28" height="28">`).join('');
 
   function navList(locale, parsed, current) {
     const items = parsed.map(page => {
@@ -185,6 +194,11 @@ export function render({base = '/doona-docs/'} = {}) {
     });
     const toc = current.toc.map(entry => `<li class="${entry.level}"><a href="#${entry.id}">${escape(entry.text)}</a></li>`);
     const body = md.renderer.render(current.tokens, md.options, {locale});
+    // The theme button toggles as the app's does: a system scheme to its opposite, an override back to the system.
+    const themeLabels = Object.fromEntries(['system', 'light', 'dark'].map(scheme => [scheme, text.theme.replace('{theme}', text[scheme])]));
+    const themeData = Object.entries(themeLabels)
+      .map(([scheme, label]) => `data-${scheme}="${label}"`)
+      .join(' ');
     return `${head(locale, title)}
 </head>
 <body>
@@ -196,6 +210,7 @@ export function render({base = '/doona-docs/'} = {}) {
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
 <ul>${languages.join('')}</ul>
 </details>
+<button type="button" class="theme" aria-label="${themeLabels.system}" ${themeData}><span class="scheme">${icons.moon}${icons.sun}</span></button>
 <a class="github" href="${repository}" aria-label="${text.github}">${icons.github}</a>
 </div>
 </header>

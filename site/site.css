@@ -1,33 +1,36 @@
 /* The docs site's one stylesheet. The colour, radius and type tokens are doona's: Rosé Pine Dawn and Moon, its default
    palette (DEFAULT_PALETTE in src/shell/palettes.ts), copied from src/ui/styles/palettes.css and the role tokens in
-   src/ui/styles/motion.css. Light or dark follows the system. */
+   src/ui/styles/motion.css. Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by
+   default, or the one the theme button stores, which the page head applies as data-theme before the first paint. */
 :root {
-  color-scheme: light;
-  --rp-base: #faf4ed;
-  --rp-surface: #fffaf3;
-  --rp-overlay: #f2e9e1;
-  --rp-muted: #9893a5;
-  --rp-subtle: #797593;
-  --rp-text: #464261;
-  --rp-love: #b4637a;
-  --rp-gold: #ea9d34;
-  --rp-pine: #286983;
-  --rp-foam: #56949f;
-  --rp-iris: #907aa9;
-  --rp-hl-low: #f4ede8;
-  --rp-hl-med: #dfdad9;
-  --rp-hl-high: #cecacd;
-  --rp-elevated: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.12);
+  color-scheme: light dark;
+  --rp-base: light-dark(#faf4ed, #232136);
+  --rp-surface: light-dark(#fffaf3, #2a273f);
+  --rp-overlay: light-dark(#f2e9e1, #393552);
+  --rp-muted: light-dark(#9893a5, #6e6a86);
+  --rp-subtle: light-dark(#797593, #908caa);
+  --rp-text: light-dark(#464261, #e0def4);
+  --rp-love: light-dark(#b4637a, #eb6f92);
+  --rp-gold: light-dark(#ea9d34, #f6c177);
+  --rp-pine: light-dark(#286983, #3e8fb0);
+  --rp-foam: light-dark(#56949f, #9ccfd8);
+  --rp-iris: light-dark(#907aa9, #c4a7e7);
+  --rp-hl-low: light-dark(#f4ede8, #2a283e);
+  --rp-hl-med: light-dark(#dfdad9, #44415a);
+  --rp-hl-high: light-dark(#cecacd, #56526e);
+  --rp-elevated:
+    0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.4)), 0 2px 6px light-dark(rgba(0, 0, 0, 0.04), transparent),
+    0 0 2px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.5));
   --rp-accent: var(--rp-pine);
-  --rp-accent-text: var(--rp-accent);
+  --rp-accent-text: light-dark(var(--rp-accent), var(--rp-text));
   --rp-negative: var(--rp-love);
   --rp-positive: var(--rp-foam);
   --rp-notice: var(--rp-gold);
   --rp-info: var(--rp-pine);
-  --rp-negative-text: var(--rp-text);
-  --rp-notice-text: var(--rp-text);
-  --rp-positive-text: var(--rp-text);
-  --rp-info-text: var(--rp-info);
+  --rp-negative-text: light-dark(var(--rp-text), var(--rp-negative));
+  --rp-notice-text: light-dark(var(--rp-text), var(--rp-notice));
+  --rp-positive-text: light-dark(var(--rp-text), var(--rp-positive));
+  --rp-info-text: light-dark(var(--rp-info), var(--rp-text));
   --rp-line: var(--rp-hl-med);
   --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
   --rp-r-md: 8px;
@@ -44,51 +47,25 @@
   --docs-h1: 40px;
   --docs-h1-phone: 32px;
   --docs-top: 56px;
-  /* Code sits one step off the page surface. */
-  --docs-code: var(--rp-overlay);
+  /* Code sits one step off the page surface. The dark overlay leans further into violet than the surface, so dark
+     code lightens the surface itself instead. */
+  --docs-code: light-dark(var(--rp-overlay), color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface)));
   /* Syntax colours: the editor's hue for each token (src/ui/styles/page-layout.css), darkened in the light scheme and
      lightened in the dark one just enough to reach 4.5:1 on the code background. */
-  --docs-code-comment: color-mix(in oklab, var(--rp-muted), #000 25%);
-  --docs-code-string: color-mix(in oklab, var(--rp-gold), #000 33%);
-  --docs-code-keyword: color-mix(in oklab, var(--rp-love), #000 14%);
-  --docs-code-number: color-mix(in oklab, var(--rp-iris), #000 17%);
-  --docs-code-property: var(--rp-pine);
-  --docs-code-punctuation: color-mix(in oklab, var(--rp-subtle), #000 12%);
+  --docs-code-comment: light-dark(color-mix(in oklab, var(--rp-muted), #000 25%), color-mix(in oklab, var(--rp-muted), #fff 38%));
+  --docs-code-string: light-dark(color-mix(in oklab, var(--rp-gold), #000 33%), var(--rp-gold));
+  --docs-code-keyword: light-dark(color-mix(in oklab, var(--rp-love), #000 14%), color-mix(in oklab, var(--rp-love), #fff 9%));
+  --docs-code-number: light-dark(color-mix(in oklab, var(--rp-iris), #000 17%), var(--rp-iris));
+  --docs-code-property: light-dark(var(--rp-pine), color-mix(in oklab, var(--rp-pine), #fff 23%));
+  --docs-code-punctuation: light-dark(color-mix(in oklab, var(--rp-subtle), #000 12%), color-mix(in oklab, var(--rp-subtle), #fff 16%));
   --docs-sans: 'Noto Sans TC', system-ui, sans-serif;
   --docs-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --rp-base: #232136;
-    --rp-surface: #2a273f;
-    --rp-overlay: #393552;
-    --rp-muted: #6e6a86;
-    --rp-subtle: #908caa;
-    --rp-text: #e0def4;
-    --rp-love: #eb6f92;
-    --rp-gold: #f6c177;
-    --rp-pine: #3e8fb0;
-    --rp-foam: #9ccfd8;
-    --rp-iris: #c4a7e7;
-    --rp-hl-low: #2a283e;
-    --rp-hl-med: #44415a;
-    --rp-hl-high: #56526e;
-    --rp-elevated: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 2px rgba(0, 0, 0, 0.5);
-    --rp-accent-text: var(--rp-text);
-    --rp-negative-text: var(--rp-negative);
-    --rp-notice-text: var(--rp-notice);
-    --rp-positive-text: var(--rp-positive);
-    --rp-info-text: var(--rp-text);
-    /* The dark overlay leans further into violet than the surface, so code lightens the surface itself instead. */
-    --docs-code: color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface));
-    --docs-code-comment: color-mix(in oklab, var(--rp-muted), #fff 38%);
-    --docs-code-string: var(--rp-gold);
-    --docs-code-keyword: color-mix(in oklab, var(--rp-love), #fff 9%);
-    --docs-code-number: var(--rp-iris);
-    --docs-code-property: color-mix(in oklab, var(--rp-pine), #fff 23%);
-    --docs-code-punctuation: color-mix(in oklab, var(--rp-subtle), #fff 16%);
-  }
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 /* Simplified Chinese prefers the SC glyph forms, as in the app. */
 :root:lang(zh-CN) {
@@ -173,6 +150,25 @@ details[open] > summary .icon:last-child {
 .brand img {
   display: block;
 }
+/* The logo and the theme icon for the scheme in use: the system's, unless data-theme overrides it. */
+.logo-dark,
+.scheme .icon:last-child {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :is(.logo-light, .scheme .icon:first-child) {
+    display: none;
+  }
+  :root:not([data-theme='light']) :is(.logo-dark, .scheme .icon:last-child) {
+    display: block;
+  }
+}
+:root[data-theme='dark'] :is(.logo-light, .scheme .icon:first-child) {
+  display: none;
+}
+:root[data-theme='dark'] :is(.logo-dark, .scheme .icon:last-child) {
+  display: block;
+}
 .actions {
   display: flex;
   align-items: center;
@@ -182,6 +178,7 @@ details[open] > summary .icon:last-child {
   position: relative;
 }
 .language > summary,
+.theme,
 .github {
   display: inline-flex;
   align-items: center;
@@ -191,6 +188,15 @@ details[open] > summary .icon:last-child {
   border-radius: var(--rp-r-md);
   font-size: var(--rp-text-md);
   text-decoration: none;
+}
+.theme {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.scheme {
+  display: grid;
 }
 .language ul {
   position: absolute;
@@ -301,6 +307,7 @@ details[open] > summary .icon:last-child {
 /* stylelint-disable selector-pseudo-class-disallowed-list -- guarded by the media query */
 @media (hover: hover) and (pointer: fine) {
   .language > summary:hover,
+  .theme:hover,
   .github:hover,
   .language li a:hover,
   .sidebar a:hover,
