@@ -8,24 +8,32 @@
 
 ## 安装 honk
 
-从 Glassyiris/honk 的 `debug` 版本下载 honk。其他构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。
+每个 doona 发行版都附带具备原生 API 的 honk-core 构建，`HONK-SOURCE.txt` 注明构建所用的 honk 提交。请从同一个发行版下载适合网关的归档文件与 `SHA256SUMS`。其他 honk 构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。v0.1.0-beta.7 及更早的发行版不含 honk，请改从 Glassyiris/honk 的 `debug` 版本下载同名归档文件；每次新的 honk 构建都会替换该版本的文件。
 
+- [doona 发布页](https://github.com/Zakkaus/doona/releases)
 - [Glassyiris/honk `debug` 版本](https://github.com/Glassyiris/honk/releases/tag/debug)
 - [honk 快速入门](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 
-| 文件                                                                                      | 用途                                                              |
-| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `honk-core-debug-x86_64-unknown-linux-musl.tar.gz`、`…-aarch64-unknown-linux-musl.tar.gz` | 静态链接，适用于网关。无法确定时选择此项。                        |
-| `…-unknown-linux-gnu.tar.gz`                                                              | 链接 glibc，适用于常规发行版。                                    |
-| `-stock` 后缀                                                                             | 使用系统内存分配器而非 mimalloc，适用于更重视内存占用的小型设备。 |
+| 文件名片段           | 用途                                                              |
+| -------------------- | ----------------------------------------------------------------- |
+| `x86_64`、`aarch64`  | 网关的 CPU 架构，即 `uname -m` 的输出。                           |
+| `unknown-linux-musl` | 静态链接，适用于网关。无法确定时选择此项。                        |
+| `unknown-linux-gnu`  | 链接 glibc，适用于常规发行版。                                    |
+| 无后缀               | 使用 mimalloc，为默认构建，QUIC 性能更好。                        |
+| `-stock` 后缀        | 使用系统内存分配器而非 mimalloc，适用于更重视内存占用的小型设备。 |
 
 ```sh
+VERSION=0.3.0-beta.1               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
-curl -fLO https://github.com/Glassyiris/honk/releases/download/debug/honk-core-debug-$TARGET.tar.gz
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
+sha256sum --ignore-missing -c SHA256SUMS
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 honk-core --version   # prints the tag the build came from, such as debug.2026.9.26.native-api.4
 ```
+
+如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，并启用 `native-api` 特性构建 `honk-core`。
 
 二进制文件已内置 eBPF 对象，无需单独安装该对象。
 
@@ -85,7 +93,7 @@ WantedBy=multi-user.target
 - [doona 发布页](https://github.com/Zakkaus/doona/releases)
 
 ```sh
-VERSION=0.1.0-beta.7   # the release you downloaded, without v
+VERSION=0.3.0-beta.1   # the release you downloaded, without v
 sha256sum --ignore-missing -c SHA256SUMS
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
@@ -161,7 +169,7 @@ sudo journalctl -u honk-core -e    # look for applied or rejected
 
 ### 更新 honk
 
-下载新的 `debug` 文件，按[安装 honk](#install) 一节安装，然后执行 `sudo systemctl restart honk-core` 并检查 `honk-core --version`。`debug` 标签随每次构建移动，请将版本与 [honk 版本](requirements.md#honk-version)中注明的版本对照。
+从较新的 doona 发行版下载 honk-core 归档文件，或从 honk `debug` 版本下载较新的构建，按[安装 honk](#install) 一节安装，然后执行 `sudo systemctl restart honk-core` 并检查 `honk-core --version`。`debug` 标签随每次构建移动，请将版本与 [honk 版本](requirements.md#honk-version)中注明的版本对照。
 
 ### 更新 doona
 

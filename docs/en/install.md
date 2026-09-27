@@ -8,24 +8,32 @@ Install honk, write its configuration, then install doona and start honk. Check 
 
 ## Install honk
 
-Download honk from the `debug` release of Glassyiris/honk. Other builds lack the native API; see [honk version](requirements.md#honk-version).
+Each doona release attaches honk-core builds with the native API, and `HONK-SOURCE.txt` names the honk commit they were built from. Download the archive for the gateway and `SHA256SUMS` from the same release. Other honk builds lack the native API; see [honk version](requirements.md#honk-version). Releases up to v0.1.0-beta.7 carry no honk; take the same archive from the Glassyiris/honk `debug` release, which each new honk build replaces.
 
+- [doona releases](https://github.com/Zakkaus/doona/releases)
 - [Glassyiris/honk `debug` release](https://github.com/Glassyiris/honk/releases/tag/debug)
 - [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 
-| Asset                                                                                     | Use                                                                                                        |
-| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `honk-core-debug-x86_64-unknown-linux-musl.tar.gz`, `…-aarch64-unknown-linux-musl.tar.gz` | Static binary for gateways. Choose this one when unsure.                                                   |
-| `…-unknown-linux-gnu.tar.gz`                                                              | Linked against glibc, for ordinary distributions.                                                          |
-| `-stock` suffix                                                                           | The system allocator instead of mimalloc, for small devices where memory use matters more than throughput. |
+| Asset name part      | Use                                                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `x86_64`, `aarch64`  | The gateway's CPU, as `uname -m` prints it.                                                                |
+| `unknown-linux-musl` | Static binary for gateways. Choose this one when unsure.                                                   |
+| `unknown-linux-gnu`  | Linked against glibc, for ordinary distributions.                                                          |
+| no suffix            | mimalloc, the default; faster for QUIC.                                                                    |
+| `-stock` suffix      | The system allocator instead of mimalloc, for small devices where memory use matters more than throughput. |
 
 ```sh
+VERSION=0.3.0-beta.1               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
-curl -fLO https://github.com/Glassyiris/honk/releases/download/debug/honk-core-debug-$TARGET.tar.gz
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
+sha256sum --ignore-missing -c SHA256SUMS
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 honk-core --version   # prints the tag the build came from, such as debug.2026.9.26.native-api.4
 ```
+
+To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build `honk-core` with the `native-api` feature.
 
 The binary embeds the eBPF object; no separate object file is needed.
 
@@ -85,7 +93,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 - [doona releases](https://github.com/Zakkaus/doona/releases)
 
 ```sh
-VERSION=0.1.0-beta.7   # the release you downloaded, without v
+VERSION=0.3.0-beta.1   # the release you downloaded, without v
 sha256sum --ignore-missing -c SHA256SUMS
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
@@ -161,7 +169,7 @@ A reload re-reads the configuration and logs `applied` or `rejected`. Changes to
 
 ### Update honk
 
-Download the new `debug` asset, install it as in [Install honk](#install), then run `sudo systemctl restart honk-core` and check `honk-core --version`. The `debug` tag moves with every build, so compare the version with the one [honk version](requirements.md#honk-version) names.
+Download the honk-core archive from a newer doona release, or a newer build from the honk `debug` release, install it as in [Install honk](#install), then run `sudo systemctl restart honk-core` and check `honk-core --version`. The `debug` tag moves with every build, so compare the version with the one [honk version](requirements.md#honk-version) names.
 
 ### Update doona
 
