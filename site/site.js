@@ -1,4 +1,4 @@
-// The docs site's one script: the theme button, the copy buttons on code blocks and the page's Copy as Markdown, the
+// The docs site's one script: the theme button, the copy buttons on code blocks and the page's Copy for LLM, the
 // language the visitor picks, and Escape on the menus. The page head has already applied a stored theme as data-theme;
 // without one the page follows the system.
 const root = document.documentElement;
@@ -37,13 +37,23 @@ const status = document.querySelector('[role="status"][data-copied]');
 function copyButton(button, write) {
   if (!navigator.clipboard || !status || !button) return;
   let timer;
+  let pending = false;
   button.hidden = false;
   button.addEventListener('click', async () => {
+    if (pending) return;
+    pending = true;
+    button.dataset.pending = '';
+    clearTimeout(timer);
+    delete button.dataset.copied;
+    status.textContent = '';
     try {
       await write();
     } catch {
-      // The browser can refuse the write, as when clipboard permission is denied; the button then stays as it was.
+      status.textContent = status.dataset.copyFailed || '';
       return;
+    } finally {
+      pending = false;
+      delete button.dataset.pending;
     }
     button.dataset.copied = '';
     status.textContent = status.dataset.copied;
@@ -73,6 +83,7 @@ copyButton(markdown, () => {
 document.addEventListener('keydown', event => {
   const open = event.key === 'Escape' && document.querySelector('details[name="docs-menu"][open]');
   if (!open) return;
+  event.preventDefault();
   open.open = false;
   open.querySelector('summary').focus();
 });
@@ -140,3 +151,44 @@ try {
   // Blocked storage starts every box on its first tab.
 }
 for (const box of boxes) if (!showTab(box, storedTab)) showTab(box, box.panels[0].dataset.tab);
+
+// The action menu has one keyboard entry; arrows move between its links.
+const actionMenu = document.querySelector('.md-menu');
+if (actionMenu) {
+  const trigger = actionMenu.querySelector('summary');
+  const items = [...actionMenu.querySelectorAll('[role="menuitem"]')];
+  for (const item of items) item.tabIndex = -1;
+  trigger.setAttribute('aria-expanded', 'false');
+  actionMenu.addEventListener('toggle', () => {
+    trigger.setAttribute('aria-expanded', String(actionMenu.open));
+    if (actionMenu.open && document.activeElement === trigger) items[0]?.focus();
+  });
+  actionMenu.addEventListener('keydown', event => {
+    const index = items.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % items.length;
+    if (event.key === 'ArrowUp') next = index <= 0 ? items.length - 1 : index - 1;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = items.length - 1;
+    if (next !== undefined) {
+      event.preventDefault();
+      actionMenu.open = true;
+      items[next]?.focus();
+    }
+    if (event.key === 'Tab') {
+      trigger.focus();
+      actionMenu.open = false;
+    }
+  });
+  actionMenu.addEventListener('click', event => {
+    if (event.target.closest('a')) {
+      actionMenu.open = false;
+      trigger.focus();
+    }
+  });
+}
+
+document.addEventListener('pointerdown', event => {
+  const open = document.querySelector('details[name="docs-menu"][open]');
+  if (open && !open.contains(event.target)) open.open = false;
+});
