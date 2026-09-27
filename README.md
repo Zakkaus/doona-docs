@@ -6,9 +6,9 @@
 
 **The documentation for [doona](https://github.com/Zakkaus/doona), the web UI for the daeuniverse engines, and the site built from it.**
 
-English · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
+English / [简体中文](README.zh-CN.md) / [繁體中文](README.zh-TW.md)
 
-[Read the docs](https://zakkaus.github.io/doona-docs/) • [Build](#build) • [Layout](#layout) • [Contributing](.github/CONTRIBUTING.md)
+[Read the docs](https://zakkaus.github.io/doona-docs/) / [Build](#build) / [Layout](#layout) / [Contributing](.github/CONTRIBUTING.md)
 
 </div>
 

@@ -6,9 +6,9 @@
 
 **[doona](https://github.com/Zakkaus/doona)（daeuniverse 引擎的 Web 介面）的文件，以及由此建置的文件網站。**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · 繁體中文
+[English](README.md) / [简体中文](README.zh-CN.md) / 繁體中文
 
-[閱讀文件](https://zakkaus.github.io/doona-docs/zh-TW/) • [建置](#建置) • [目錄結構](#目錄結構) • [貢獻指南](.github/CONTRIBUTING.md)
+[閱讀文件](https://zakkaus.github.io/doona-docs/zh-TW/) / [建置](#建置) / [目錄結構](#目錄結構) / [貢獻指南](.github/CONTRIBUTING.md)
 
 </div>
 
