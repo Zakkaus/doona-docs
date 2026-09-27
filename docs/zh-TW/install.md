@@ -93,7 +93,9 @@ WantedBy=multi-user.target
 - [doona 發布頁](https://github.com/Zakkaus/doona/releases)
 
 ```sh
-VERSION=0.1.0-beta.8   # the release you downloaded, without v
+VERSION=0.1.0-beta.8   # the doona release, without v
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona

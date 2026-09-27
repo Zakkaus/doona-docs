@@ -30,9 +30,8 @@ CONFIG_NET_CLS_ACT=y
 CONFIG_NET_NS=y
 # Held-first-packet UDP (NFQUEUE, on by default) also needs:
 CONFIG_NF_TABLES=y|m
-CONFIG_NF_TABLES_INET=y|m
+CONFIG_NF_TABLES_INET=y
 CONFIG_NETFILTER_NETLINK_QUEUE=y|m
-CONFIG_NFNETLINK_QUEUE=y|m
 ```
 
 Mount bpffs if the system does not:
