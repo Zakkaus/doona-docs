@@ -220,7 +220,7 @@ details[open] > summary .icon:last-child {
   display: block;
   margin-bottom: 8px;
   padding-inline-start: 6px;
-  color: var(--rp-subtle);
+  color: var(--rp-subtle-text);
   font-size: var(--rp-text-xs);
   font-weight: 500;
   line-height: 16px;
@@ -285,7 +285,7 @@ details[open] > summary .icon:last-child {
   margin-top: 64px;
   padding-top: 16px;
   border-top: 1px solid var(--rp-line);
-  color: var(--rp-subtle);
+  color: var(--rp-subtle-text);
   font-size: var(--rp-text-sm);
 }
 .menu {
