@@ -43,6 +43,8 @@
   --docs-h1: 40px;
   --docs-h1-phone: 32px;
   --docs-top: 56px;
+  /* Code sits one step off the page surface. */
+  --docs-code: var(--rp-overlay);
   --docs-sans: 'Noto Sans TC', system-ui, sans-serif;
   --docs-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
 }
@@ -68,6 +70,8 @@
     --rp-notice-text: var(--rp-notice);
     --rp-positive-text: var(--rp-positive);
     --rp-info-text: var(--rp-text);
+    /* The dark overlay leans further into violet than the surface, so code lightens the surface itself instead. */
+    --docs-code: color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface));
   }
 }
 /* Simplified Chinese prefers the SC glyph forms, as in the app. */
@@ -342,7 +346,7 @@ main img {
 code {
   padding: 1px 4px;
   border-radius: 4px;
-  background: var(--rp-overlay);
+  background: var(--docs-code);
   font-family: var(--docs-mono);
   font-size: 0.875em;
 }
@@ -351,7 +355,7 @@ pre {
   padding: 16px 20px;
   overflow-x: auto;
   border-radius: var(--rp-r-lg);
-  background: var(--rp-overlay);
+  background: var(--docs-code);
   /* A classic scrollbar, so a line wider than the column shows that it scrolls even where scrollbars overlay. */
   scrollbar-width: thin;
   scrollbar-color: var(--rp-hl-high) transparent;
