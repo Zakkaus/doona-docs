@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/index.md) · [繁體中文](../zh-TW/index.md)
+English / [简体中文](../zh-CN/index.md) / [繁體中文](../zh-TW/index.md)
 
 # doona documentation
 

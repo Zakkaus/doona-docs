@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/install-arch.md) · [繁體中文](../zh-TW/install-arch.md)
+English / [简体中文](../zh-CN/install-arch.md) / [繁體中文](../zh-TW/install-arch.md)
 
 # Install on Arch Linux
 

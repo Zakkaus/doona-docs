@@ -1,4 +1,4 @@
-[English](../en/install-openwrt.md) · 简体中文 · [繁體中文](../zh-TW/install-openwrt.md)
+[English](../en/install-openwrt.md) / 简体中文 / [繁體中文](../zh-TW/install-openwrt.md)
 
 # 在 OpenWrt 上安装
 

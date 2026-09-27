@@ -1,4 +1,4 @@
-[English](../en/troubleshooting.md) · [简体中文](../zh-CN/troubleshooting.md) · 繁體中文
+[English](../en/troubleshooting.md) / [简体中文](../zh-CN/troubleshooting.md) / 繁體中文
 
 <a name="troubleshooting"></a>
 

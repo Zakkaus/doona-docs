@@ -1,4 +1,4 @@
-[English](../en/install-gentoo.md) · 简体中文 · [繁體中文](../zh-TW/install-gentoo.md)
+[English](../en/install-gentoo.md) / 简体中文 / [繁體中文](../zh-TW/install-gentoo.md)
 
 # 在 Gentoo 上安装
 

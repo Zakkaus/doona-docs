@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/minimal-configuration.md) · [繁體中文](../zh-TW/minimal-configuration.md)
+English / [简体中文](../zh-CN/minimal-configuration.md) / [繁體中文](../zh-TW/minimal-configuration.md)
 
 # Minimal configuration
 

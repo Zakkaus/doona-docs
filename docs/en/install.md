@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/install.md) · [繁體中文](../zh-TW/install.md)
+English / [简体中文](../zh-CN/install.md) / [繁體中文](../zh-TW/install.md)
 
 # Installation details
 

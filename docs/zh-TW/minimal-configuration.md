@@ -1,4 +1,4 @@
-[English](../en/minimal-configuration.md) · [简体中文](../zh-CN/minimal-configuration.md) · 繁體中文
+[English](../en/minimal-configuration.md) / [简体中文](../zh-CN/minimal-configuration.md) / 繁體中文
 
 # 最小組態
 

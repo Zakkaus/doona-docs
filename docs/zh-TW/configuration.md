@@ -1,4 +1,4 @@
-[English](../en/configuration.md) · [简体中文](../zh-CN/configuration.md) · 繁體中文
+[English](../en/configuration.md) / [简体中文](../zh-CN/configuration.md) / 繁體中文
 
 <a name="config"></a>
 
