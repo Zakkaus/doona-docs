@@ -41,4 +41,4 @@ pnpm test                            # 站点脚本与标题 id 的测试
 
 ## 许可证
 
-与 doona 相同，采用 GPL-3.0-only。发布的站点另附 doona 的 `NOTICE`，涵盖其图标；见 [NOTICE](NOTICE)。
+`docs/` 中的页面采用 [CC BY 4.0](LICENSES/CC-BY-4.0.txt)；站点构建与检查工具与 doona 相同，采用 GPL-3.0-only。发布的站点另附 doona 的 `NOTICE`，涵盖其图标；见 [NOTICE](NOTICE)。

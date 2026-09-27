@@ -1,9 +1,9 @@
 doona-docs
 Copyright doona contributors
-Licensed under the GNU General Public License, version 3 only; see LICENSE.
-
-The pages, the site build and the checker were moved here from Zakkaus/doona
-and keep its licence.
+The pages in docs/ are licensed under Creative Commons Attribution 4.0
+International; see LICENSES/CC-BY-4.0.txt. The site build, the checker and
+the other files are licensed under the GNU General Public License, version 3
+only; see LICENSE.
 
 The published site also carries files the build reads from a doona checkout:
 doona's palette and sizes, its logo, and the icons in its src/ui/icons. Their
