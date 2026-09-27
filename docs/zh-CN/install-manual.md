@@ -2,19 +2,19 @@
 
 # 在其他系统上安装
 
-本页在没有 doona 软件包的 Linux 系统（例如 Alpine Linux）上，用发行版中的归档文件安装 doona 与 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
+本页在没有 doona 软件包、符合内核要求的 x86_64 或 aarch64 Linux 系统（例如 Alpine Linux）上，用发布版本中的归档文件安装 doona 与 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
 
 ## 开始之前
 
 - Linux 6.12 或更高版本，以及[系统要求](requirements.md#requirements)列出的内核选项。用 `uname -r` 查看内核版本。
 - 可使用 sudo 的用户，或 root shell。需要 root 权限的命令分为“sudo”与“root”两个标签页，请选择与当前 shell 相符的一个。
-- curl、tar、gzip、`sha256sum` 与 CA 证书。缺少 CA 证书时 honk 会在启动阶段退出。在 Alpine 上用 `apk add curl ca-certificates` 安装；其他系统的软件包名称相近。
+- curl、tar、gzip、`sha256sum` 与 CA 证书。缺少 CA 证书时 honk 会在启动阶段退出。在 Alpine 上用 `sudo apk add curl ca-certificates` 安装，或在 root shell 中执行 `apk add curl ca-certificates`；其他系统的软件包名称相近。
 - 能够访问 github.com。
 - 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `VERSION`、`BASE` 与 `TARGET` 变量。
 
 ## 1. 下载 doona
 
-设置发行版版本号，然后把程序归档文件与校验和文件下载到当前目录。
+设置发布版本号，然后把程序归档文件与校验和文件下载到当前目录。
 
 ```sh
 VERSION=0.1.0-beta.8
@@ -74,7 +74,7 @@ tar -xzf doona-fonts-${VERSION}.tar.gz -C /usr/share/doona
 uname -m
 ```
 
-发行版附带 8 个 honk-core 归档文件，名称为 `honk-core-debug-<target>.tar.gz`。根据机器类型与 C 库确定 target：
+发布版本附带 8 个 honk-core 归档文件，名称为 `honk-core-debug-<target>.tar.gz`。根据机器类型与 C 库确定 target：
 
 | `uname -m` 输出 | target 开头              |
 | --------------- | ------------------------ |
@@ -83,7 +83,7 @@ uname -m
 
 | target 结尾     | 适用情况                                                                                        |
 | --------------- | ----------------------------------------------------------------------------------------------- |
-| `musl`          | 无法确定，或系统使用 musl（例如 Alpine）时选择此项。静态链接的二进制文件，可在任何 Linux 上运行。 |
+| `musl`          | 无法确定，或系统使用 musl（例如 Alpine）时选择此项。静态链接，不受系统 glibc 版本限制。 |
 | `gnu`           | 系统的 glibc 为 2.39 或更高版本。glibc 较旧时会报错 `GLIBC_2.38' not found` 并退出。           |
 | `-stock` 后缀   | 内存比速度更重要，例如小型设备。使用系统内存分配器而不是 mimalloc。                             |
 
@@ -91,7 +91,7 @@ uname -m
 
 ## 5. 下载并校验 honk-core
 
-把 `TARGET` 设为所选的构建，然后从同一个发行版下载，并用同一个 `SHA256SUMS` 校验。
+把 `TARGET` 设为所选的构建，然后从同一个发布版本下载，并用同一个 `SHA256SUMS` 校验。
 
 ```sh
 TARGET=x86_64-unknown-linux-musl
@@ -124,12 +124,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
-同一个发行版中的 `HONK-SOURCE.txt` 注明其附带的构建。
+同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。
 
-下一步：[最小配置](minimal-configuration.md)。后续页面中的服务是 systemd 单元，OpenWrt 另有 procd 脚本；doona 与 honk 都不提供 OpenRC 脚本，在 Alpine 上请自行编写服务脚本来运行 honk。
+下一步：[最小配置](minimal-configuration.md)。服务相关步骤只涵盖 systemd 与 OpenWrt 的 procd；doona 与 honk 都不提供 OpenRC 脚本。使用 OpenRC 时（例如 Alpine），[服务管理](service-management.md)给出在前台运行 honk 的命令，用于完成首次登录。
 
 ## 遇到问题时
 

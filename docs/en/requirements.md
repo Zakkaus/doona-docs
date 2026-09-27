@@ -48,7 +48,7 @@ mountpoint /sys/fs/bpf
 
 ## honk version
 
-- Only builds from the `feat/native-api` branch of Glassyiris/honk have the native API: the rolling `debug` release, currently built from tag `debug.2026.9.26.native-api.4` (commit `5d8f32c1`). Each doona release attaches the build current when it was made; its `HONK-SOURCE.txt` names the tag and commit.
+- Only builds from the `feat/native-api` branch of Glassyiris/honk have the native API: the rolling `debug` release, currently built from tag `debug.2026.9.28.native-api.1` (commit `3603894a`). Each doona release attaches the build current when it was made; its `HONK-SOURCE.txt` names the tag and commit.
 - Builds of daeuniverse/honk main, such as `debug.2026.9.24.1`, have no native API. honk rejects every `native_api` setting as “unknown experimental setting”, and `/api` and `/ui/` answer 404.
 - Geodata source settings need `debug.2026.9.26.native-api.1` or later. `debug.2026.9.24.native-api.*` builds update geodata but have no configurable sources.
 

@@ -88,7 +88,7 @@ The release carries eight honk-core archives, named `honk-core-debug-<target>.ta
 
 | Target ends with | Choose it when                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `musl`           | Unsure. A static binary that runs on any Linux.                                                                    |
+| `musl`           | Unsure. Statically linked, so the system’s glibc version does not matter.                                                                    |
 | `gnu`            | The system has glibc 2.39 or later, such as Fedora 44. On an older glibc it stops with `GLIBC_2.38' not found`. |
 | `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
 
@@ -129,7 +129,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

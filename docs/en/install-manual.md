@@ -2,13 +2,13 @@ English · [简体中文](../zh-CN/install-manual.md) · [繁體中文](../zh-TW
 
 # Install on other systems
 
-This page installs doona and honk-core from the release archives on any Linux system without a doona package, such as Alpine Linux. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+This page installs doona and honk-core from the release archives on a Linux system without a doona package, such as Alpine Linux. The system must be x86_64 or aarch64 and meet the kernel requirements below. After the last step, continue with [Minimal configuration](minimal-configuration.md).
 
 ## Before you start
 
 - Linux 6.12 or later and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
 - A user account with sudo, or a root shell. Commands that need root have a sudo tab and a root tab; pick the one that matches your shell.
-- curl, tar, gzip, `sha256sum` and CA certificates. honk stops at startup without CA certificates. On Alpine, install them with `apk add curl ca-certificates`; other systems name the packages similarly.
+- curl, tar, gzip, `sha256sum` and CA certificates. honk stops at startup without CA certificates. On Alpine, install them with `sudo apk add curl ca-certificates`, or with `apk add curl ca-certificates` in a root shell; other systems name the packages similarly.
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
@@ -83,7 +83,7 @@ The release carries eight honk-core archives, named `honk-core-debug-<target>.ta
 
 | Target ends with | Choose it when                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `musl`           | Unsure, or the system uses musl, as Alpine does. A static binary that runs on any Linux.                          |
+| `musl`           | Unsure, or the system uses musl, as Alpine does. Statically linked, so the system’s glibc version does not matter.                          |
 | `gnu`            | The system has glibc 2.39 or later. On an older glibc it stops with `GLIBC_2.38' not found`.                      |
 | `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
 
@@ -124,12 +124,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
-Next: [Minimal configuration](minimal-configuration.md). The service there is a systemd unit, with a procd script for OpenWrt; doona and honk ship no OpenRC script, so on Alpine run honk under a service script of your own.
+Next: [Minimal configuration](minimal-configuration.md). The service steps cover systemd and OpenWrt’s procd only; doona and honk ship no OpenRC script. With OpenRC, as on Alpine, [Service management](service-management.md) gives the foreground command that runs honk for the first sign-in.
 
 ## If it doesn’t work
 

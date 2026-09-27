@@ -2,7 +2,7 @@
 
 # 在 Debian 或 Ubuntu 上安裝
 
-本頁在 Debian、Ubuntu 及其他使用 APT 的系統上，用 `.deb` 套件安裝 doona，並從同一個 doona 發行版安裝 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+本頁在 Debian、Ubuntu 及其他使用 APT 的系統上，用 `.deb` 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
 ## 開始之前
 
@@ -27,7 +27,7 @@ apt install curl ca-certificates
 
 ## 2. 下載 doona
 
-設定發行版版本號，然後把套件與總和檢查碼檔案下載到目前目錄。
+設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。
 
 ```sh
 VERSION=0.1.0-beta.8
@@ -81,7 +81,7 @@ apt install ./doona-fonts_${VERSION}-1_all.deb
 uname -m
 ```
 
-發行版附帶 8 個 honk-core 封存檔，名稱為 `honk-core-debug-<target>.tar.gz`。根據機器類型與 C 函式庫確定 target：
+發行版本附帶 8 個 honk-core 封存檔，名稱為 `honk-core-debug-<target>.tar.gz`。根據機器類型與 C 函式庫確定 target：
 
 | `uname -m` 輸出 | target 開頭              |
 | --------------- | ------------------------ |
@@ -90,7 +90,7 @@ uname -m
 
 | target 結尾     | 適用情況                                                                                            |
 | --------------- | --------------------------------------------------------------------------------------------------- |
-| `musl`          | 無法確定時選擇此項。靜態連結的二進位檔，可在任何 Linux 上執行。                                   |
+| `musl`          | 無法確定時選擇此項。靜態連結，不受系統 glibc 版本限制。                                   |
 | `gnu`           | 系統的 glibc 為 2.39 或更高版本，例如 Debian 13 或 Ubuntu 24.04。在 Debian 12 上會顯示錯誤 `GLIBC_2.38' not found` 並結束。 |
 | `-stock` 後綴   | 記憶體比速度更重要，例如小型裝置。使用系統記憶體分配器而不是 mimalloc。                                 |
 
@@ -98,7 +98,7 @@ uname -m
 
 ## 6. 下載並驗證 honk-core
 
-把 `TARGET` 設為所選的建置，然後從同一個發行版下載，並用同一個 `SHA256SUMS` 驗證。
+把 `TARGET` 設為所選的建置，然後從同一個發行版本下載，並用同一個 `SHA256SUMS` 驗證。
 
 ```sh
 TARGET=x86_64-unknown-linux-musl
@@ -131,10 +131,10 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
-同一個發行版中的 `HONK-SOURCE.txt` 註明其附帶的建置。
+同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
 下一步：[最小組態](minimal-configuration.md)。
 

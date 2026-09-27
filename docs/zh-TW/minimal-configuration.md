@@ -2,7 +2,7 @@
 
 # 最小組態
 
-本頁撰寫能啟動 honk 並提供 doona 的最小 honk 組態，然後手動啟動 honk 檢查組態。本頁假定 doona 已位於 `/usr/share/doona`，honk-core 也已安裝，即各安裝頁完成後的狀態。
+本頁撰寫能啟動 honk 並提供 doona 的最小 honk 組態，然後手動啟動 honk 檢查組態。本頁假定 doona 已位於 `/usr/share/doona`，honk-core 也已安裝，即[各安裝頁](install.md)完成後的狀態。
 
 組態由兩個檔案組成。`/etc/honk/config.dae` 是主檔案。`/etc/honk/config.d/api.dae` 啟用 doona 所用的原生 API。在加入節點與規則之前，所有連線都直接發出；更完整的範例見[組態](configuration.md#config)。
 
@@ -189,7 +189,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前景持續運作。每行以時間戳開頭，其中應包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.9.26.native-api.4 starting
+INFO honk_core: honk-core debug.2026.9.28.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
@@ -242,7 +242,8 @@ honk 在以 `fatal error, shutting down:` 開頭的行或 `ERROR` 行中給出�
 | `failed to inspect native UI index.html: No such file or directory`                       | `/usr/share/doona` 中沒有 doona。請重做安裝頁中安裝 doona 的步驟。                                            |
 | `Subscription network owner failed error="subscription HTTP client creation failed"`，隨後是 `subscription network startup failed` | 缺少 CA 憑證。請安裝 `ca-certificates` 套件（OpenWrt 上為 `ca-bundle`）。 |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | `api.dae` 缺少 `password_auth: true` 一行。                                                                   |
-| `unknown experimental setting`                                                            | 某個 `native_api` 欄位直接寫在了 `experimental` 下，或這個 honk 建置沒有原生 API。見 [unknown experimental setting](troubleshooting.md#unknown-setting)。 |
+| `native API setting belongs inside native_api { }`                                        | 某個 `native_api` 欄位直接寫在了 `experimental` 下。請把它移入 `native_api { }`。 |
+| `unknown experimental setting`                                                            | `enabled` 直接寫在了 `experimental` 下，或這個 honk 建置沒有原生 API。見 [unknown experimental setting](troubleshooting.md#unknown-setting)。 |
 | `command not found`                                                                       | honk-core 不在命令所指的路徑上。請重做安裝 honk-core 的步驟。                                                 |
 
 啟動成功並不代表每個值都符合預期：honk 會接受某些未知的值而不報錯。更多錯誤訊息見[疑難排解](troubleshooting.md#troubleshooting)。

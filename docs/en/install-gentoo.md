@@ -10,25 +10,31 @@ This page installs doona with Portage from the ebuild in doona’s repository, a
 - A user account with sudo, or a root shell. Commands that need root have a sudo tab and a root tab; pick the one that matches your shell.
 - `net-misc/curl` and `app-misc/ca-certificates`, which a stage3 already contains. honk stops at startup without CA certificates.
 - Access to github.com.
-- Run every step in the same terminal: later steps use the `VERSION`, `PV`, `BASE` and `TARGET` variables that earlier steps set.
+- Run every step in the same terminal: later steps use the `REPO`, `VERSION`, `PV`, `BASE` and `TARGET` variables that earlier steps set.
 
 ## 1. Create a local repository
 
-Skip this step if you already have a local ebuild repository; use its path in step 2 instead of `/var/db/repos/local`.
+Set `REPO` to the repository path. If you already have a local ebuild repository, set `REPO` to its path and skip the rest of this step.
+
+```sh
+REPO=/var/db/repos/local
+```
+
+Create the repository and register it with Portage:
 
 ```sh tab="sudo"
-sudo mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
-echo local | sudo tee /var/db/repos/local/profiles/repo_name
-printf 'masters = gentoo\nauto-sync = false\n' | sudo tee /var/db/repos/local/metadata/layout.conf
-printf '[local]\nlocation = /var/db/repos/local\n' | sudo tee /etc/portage/repos.conf/local.conf
+sudo mkdir -p "$REPO/metadata" "$REPO/profiles" /etc/portage/repos.conf
+echo local | sudo tee "$REPO/profiles/repo_name"
+printf 'masters = gentoo\nauto-sync = false\n' | sudo tee "$REPO/metadata/layout.conf"
+printf '[local]\nlocation = %s\n' "$REPO" | sudo tee /etc/portage/repos.conf/local.conf
 portageq get_repos /
 ```
 
 ```sh tab="root"
-mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
-echo local > /var/db/repos/local/profiles/repo_name
-printf 'masters = gentoo\nauto-sync = false\n' > /var/db/repos/local/metadata/layout.conf
-printf '[local]\nlocation = /var/db/repos/local\n' > /etc/portage/repos.conf/local.conf
+mkdir -p "$REPO/metadata" "$REPO/profiles" /etc/portage/repos.conf
+echo local > "$REPO/profiles/repo_name"
+printf 'masters = gentoo\nauto-sync = false\n' > "$REPO/metadata/layout.conf"
+printf '[local]\nlocation = %s\n' "$REPO" > /etc/portage/repos.conf/local.conf
 portageq get_repos /
 ```
 
@@ -42,8 +48,8 @@ Set the release version and its Gentoo form, then download the ebuild and `metad
 VERSION=0.1.0-beta.8
 PV=0.1.0_beta8
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
-sudo mkdir -p /var/db/repos/local/net-proxy/doona
-cd /var/db/repos/local/net-proxy/doona
+sudo mkdir -p "$REPO/net-proxy/doona"
+cd "$REPO/net-proxy/doona"
 sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
@@ -52,8 +58,8 @@ cd -
 VERSION=0.1.0-beta.8
 PV=0.1.0_beta8
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
-mkdir -p /var/db/repos/local/net-proxy/doona
-cd /var/db/repos/local/net-proxy/doona
+mkdir -p "$REPO/net-proxy/doona"
+cd "$REPO/net-proxy/doona"
 curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
@@ -83,17 +89,17 @@ Copy the checked archives into the distfiles directory under the names the ebuil
 DISTDIR=$(portageq distdir)
 sudo cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
 sudo cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
-sudo ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+sudo ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 ```
 
 ```sh tab="root"
 DISTDIR=$(portageq distdir)
 cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
 cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
-ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 ```
 
-The last command prints `>>> Creating Manifest for /var/db/repos/local/net-proxy/doona`.
+The last command prints `>>> Creating Manifest for` and the package directory, `/var/db/repos/local/net-proxy/doona` by default.
 
 ## 5. Install doona
 
@@ -130,7 +136,7 @@ The release carries eight honk-core archives, named `honk-core-debug-<target>.ta
 
 | Target ends with | Choose it when                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `musl`           | Unsure, or the system uses musl. A static binary that runs on any Linux.                                          |
+| `musl`           | Unsure, or the system uses musl. Statically linked, so the system’s glibc version does not matter.                                          |
 | `gnu`            | The system has glibc 2.39 or later. On an older glibc it stops with `GLIBC_2.38' not found`.                      |
 | `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
 
@@ -171,12 +177,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
-Next: [Minimal configuration](minimal-configuration.md). The service there is a systemd unit; doona and honk ship no OpenRC script.
+Next: [Minimal configuration](minimal-configuration.md). The service steps cover systemd and OpenWrt’s procd only; doona and honk ship no OpenRC script. With OpenRC, [Service management](service-management.md) gives the foreground command that runs honk for the first sign-in.
 
 ## If it doesn’t work
 

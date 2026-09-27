@@ -2,7 +2,7 @@
 
 # 在 Fedora 或 RHEL 上安装
 
-本页在 Fedora、RHEL 及其他使用 DNF 的系统上，用 `.rpm` 软件包安装 doona，并从同一个 doona 发行版安装 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
+本页在 Fedora、RHEL 及其他使用 DNF 的系统上，用 `.rpm` 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
 
 ## 开始之前
 
@@ -25,7 +25,7 @@ dnf install curl ca-certificates
 
 ## 2. 下载 doona
 
-设置发行版版本号，然后把软件包与校验和文件下载到当前目录。
+设置发布版本号，然后把软件包与校验和文件下载到当前目录。
 
 ```sh
 VERSION=0.1.0-beta.8
@@ -79,7 +79,7 @@ dnf install ./doona-fonts-${VERSION}-1.noarch.rpm
 uname -m
 ```
 
-发行版附带 8 个 honk-core 归档文件，名称为 `honk-core-debug-<target>.tar.gz`。根据机器类型与 C 库确定 target：
+发布版本附带 8 个 honk-core 归档文件，名称为 `honk-core-debug-<target>.tar.gz`。根据机器类型与 C 库确定 target：
 
 | `uname -m` 输出 | target 开头              |
 | --------------- | ------------------------ |
@@ -88,7 +88,7 @@ uname -m
 
 | target 结尾     | 适用情况                                                                                            |
 | --------------- | --------------------------------------------------------------------------------------------------- |
-| `musl`          | 无法确定时选择此项。静态链接的二进制文件，可在任何 Linux 上运行。                                   |
+| `musl`          | 无法确定时选择此项。静态链接，不受系统 glibc 版本限制。                                   |
 | `gnu`           | 系统的 glibc 为 2.39 或更高版本，例如 Fedora 44。glibc 较旧时会报错 `GLIBC_2.38' not found` 并退出。 |
 | `-stock` 后缀   | 内存比速度更重要，例如小型设备。使用系统内存分配器而不是 mimalloc。                                 |
 
@@ -96,7 +96,7 @@ uname -m
 
 ## 6. 下载并校验 honk-core
 
-把 `TARGET` 设为所选的构建，然后从同一个发行版下载，并用同一个 `SHA256SUMS` 校验。
+把 `TARGET` 设为所选的构建，然后从同一个发布版本下载，并用同一个 `SHA256SUMS` 校验。
 
 ```sh
 TARGET=x86_64-unknown-linux-musl
@@ -129,10 +129,10 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
-同一个发行版中的 `HONK-SOURCE.txt` 注明其附带的构建。
+同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。
 
 下一步：[最小配置](minimal-configuration.md)。
 
