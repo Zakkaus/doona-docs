@@ -443,6 +443,20 @@ describe('404 page', () => {
     expect(redirect(null, ['en'], '404.html', '/doona-docs/index')).toBe('/doona-docs/en/');
   });
 
+  it('shows one heading, in the visitor language, with the other languages linked without script', () => {
+    const html = render().get('404.html').text;
+    const shown = [...html.matchAll(/<section lang="([^"]+)"( hidden)?>\n<h1>/g)].filter(match => !match[2]);
+    expect(shown.map(match => match[1])).toEqual(['en']);
+    const noscript = /<noscript>([^]*?)<\/noscript>/.exec(html)[1];
+    expect([...noscript.matchAll(/hreflang="([^"]+)"/g)].map(match => match[1])).toEqual(locales.slice(1));
+    const script = [...html.matchAll(/<script>\n([^]*?)<\/script>/g)].map(match => match[1]).find(text => text.includes('section[lang]'));
+    const sections = locales.map(lang => ({lang, hidden: lang !== 'en', querySelector: () => ({textContent: `title ${lang}`})}));
+    const document = {documentElement: {}, querySelectorAll: () => sections};
+    runInNewContext(script, {document, localStorage: {getItem: () => null}, navigator: {languages: ['zh-HK']}});
+    expect(sections.filter(section => !section.hidden).map(section => section.lang)).toEqual(['zh-TW']);
+    expect([document.title, document.documentElement.lang]).toEqual(['title zh-TW', 'zh-TW']);
+  });
+
   it('leaves a missing page in a language as not found', () => {
     expect(redirect(null, ['en'], '404.html', '/doona-docs/zh-TW/missing.html')).toBeUndefined();
     expect(redirect(null, ['en'], '404.html', '/doona-docs/missing.html')).toBeUndefined();

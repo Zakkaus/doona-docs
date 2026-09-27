@@ -155,12 +155,16 @@ location.replace(${JSON.stringify(base)} + (${chooseLocale})() + '/');
 }
 
 // The 404 page. A page path with no language, such as features.html, goes to that page in the visitor's language; any
-// other path, a page in a language included, is not found.
+// other path, a page in a language included, is not found. The page shows one language's message, chosen as the root
+// page chooses; without script it shows the first language's, with links home in the others.
 export function notFoundPage(base) {
   const missing = locales.map(
-    locale =>
-      `<section lang="${locale}">\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
+    (locale, index) =>
+      `<section lang="${locale}"${index ? ' hidden' : ''}>\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
   );
+  const others = locales
+    .slice(1)
+    .map(locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`);
   return `${head(base, 'en', strings.en.notFound)}
 <script>
 (function () {
@@ -178,7 +182,19 @@ export function notFoundPage(base) {
 <main id="content" class="choose">
 <a class="brand" href="${base}">${logo(base)}<span>doona</span></a>
 ${missing.join('\n')}
+<noscript><ul>${others.join('')}</ul></noscript>
 </main>
+<script>
+(function () {
+  var locale = (${chooseLocale})();
+  var sections = document.querySelectorAll('main section[lang]');
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].hidden = sections[i].lang !== locale;
+    if (!sections[i].hidden) document.title = sections[i].querySelector('h1').textContent;
+  }
+  document.documentElement.lang = locale;
+})();
+</script>
 </body>
 </html>
 `;
