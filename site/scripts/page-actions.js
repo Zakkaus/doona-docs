@@ -1,10 +1,16 @@
 // Keyboard use of the page actions menu, which opens the page's Markdown or an assistant.
-// The action menu has one keyboard entry; arrows move between its links.
+// The script turns the plain list into a menu with one keyboard entry; arrows move between its links.
 const actionMenu = document.querySelector('.md-menu');
 if (actionMenu) {
   const trigger = actionMenu.querySelector('summary');
-  const items = [...actionMenu.querySelectorAll('[role="menuitem"]')];
-  for (const item of items) item.tabIndex = -1;
+  const items = [...actionMenu.querySelectorAll('li a')];
+  trigger.setAttribute('aria-haspopup', 'menu');
+  actionMenu.querySelector('ul').setAttribute('role', 'menu');
+  for (const item of items) {
+    item.parentElement.setAttribute('role', 'none');
+    item.setAttribute('role', 'menuitem');
+    item.tabIndex = -1;
+  }
   trigger.setAttribute('aria-expanded', 'false');
   actionMenu.addEventListener('toggle', () => {
     trigger.setAttribute('aria-expanded', String(actionMenu.open));

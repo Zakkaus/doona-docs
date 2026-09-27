@@ -30,7 +30,8 @@ try {
 <script type="module" src="${base}site.js?v=${assetVersions().js}"></script>`;
 }
 
-// The page actions sit below the section links; the Markdown fetch remains relative to the served page.
+// The page actions sit below the section links; the Markdown fetch remains relative to the served page. The links are a
+// plain list until site.js gives them the menu roles and the arrow keys those roles promise.
 function pageActions(base, origin, locale, name) {
   const text = strings[locale];
   const source = origin + markdownUrl(base, locale, name);
@@ -38,7 +39,7 @@ function pageActions(base, origin, locale, name) {
   // The Spectrum LinkOut UI icon (S2_LinkOutSize200 in @react-spectrum/s2 1.7.1), as the React Spectrum docs draw it.
   // Copyright 2024 Adobe, Apache License 2.0 (LICENSES/Apache-2.0.txt); see NOTICE.
   const external = '<svg class="icon external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10.089 1h-5.51a.911.911 0 0 0 0 1.822h3.31L1.355 9.355a.91.91 0 1 0 1.29 1.29L9.178 4.11v3.31a.911.911 0 0 0 1.822 0v-5.51A.91.91 0 0 0 10.089 1"/></svg>';
-  const link = (url, label, type = '') => `<li role="none"><a role="menuitem" href="${url}"${type} target="_blank" rel="noopener noreferrer"><span>${label}</span>${external}</a></li>`;
+  const link = (url, label, type = '') => `<li><a href="${url}"${type} target="_blank" rel="noopener noreferrer"><span>${label}</span>${external}</a></li>`;
   const assistants = origin
     ? [
         ['ChatGPT', 'https://chatgpt.com/?q='],
@@ -48,8 +49,8 @@ function pageActions(base, origin, locale, name) {
   return `<div class="page-actions">
 <button type="button" class="md-copy" data-src="${markdownUrl(base, locale, name)}" hidden>${icons.copy}${icons.copied}<span>${text.copyMarkdown}</span></button>
 <details class="md-menu" name="docs-menu">
-<summary class="md-more" aria-label="${text.markdownMenu}" aria-haspopup="menu" aria-controls="page-action-menu">${icons.more}</summary>
-<ul id="page-action-menu" role="menu" aria-label="${text.markdownMenu}">${link(source, text.viewMarkdown, ' type="text/markdown"')}${assistants.join('')}</ul>
+<summary class="md-more" aria-label="${text.markdownMenu}" aria-controls="page-action-menu">${icons.more}</summary>
+<ul id="page-action-menu" aria-label="${text.markdownMenu}">${link(source, text.viewMarkdown, ' type="text/markdown"')}${assistants.join('')}</ul>
 </details>
 </div>`;
 }
