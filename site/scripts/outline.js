@@ -12,7 +12,12 @@ if (panel && sectionMenu) {
     scheduled = false;
     const mobile = matchMedia('(max-width: 1023px)').matches;
     const edge = mobile ? 80 : panel.getBoundingClientRect().top + 40;
-    const current = headings.filter(heading => heading.getBoundingClientRect().top <= edge).at(-1);
+    // Short sections at the end never reach the edge. Once the page is scrolled to the bottom, the last heading in view
+    // is the one being read.
+    const scroller = mobile ? document.scrollingElement : panel;
+    const bottom = scroller.scrollTop > 0 && scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 1;
+    const limit = bottom ? (mobile ? innerHeight : panel.getBoundingClientRect().bottom) : edge;
+    const current = headings.filter(heading => heading.getBoundingClientRect().top <= limit).at(-1);
     for (const link of links) {
       if (current && link.hash === '#' + current.id) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
