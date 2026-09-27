@@ -170,7 +170,7 @@ describe('navigation', () => {
   });
 });
 
-// site/site.js over two .tabs boxes as build.mjs renders them, with storage holding `stored`.
+// site/site.js over two .tabs boxes as site/build/markdown.mjs renders them, with storage holding `stored`.
 function tabBoxes(labels, stored) {
   const element = (tag, props = {}) => ({
     tag,
