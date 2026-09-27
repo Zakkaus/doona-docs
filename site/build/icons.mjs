@@ -24,7 +24,6 @@ function icon(name) {
 }
 export const icons = {
   github: icon('GitHub'),
-  demo: icon('Visibility'),
   language: icon('Translate'),
   chevron: icon('ChevronDown'),
   pages: icon('ListBulleted'),
