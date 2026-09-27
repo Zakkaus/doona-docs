@@ -4,7 +4,7 @@
 import MarkdownIt from 'markdown-it';
 import {existsSync, readFileSync, statSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
-import {docs, locales, locate, ownRepository, repository, root, slugger} from '../docs.mjs';
+import {docs, locales, locate, ownRepository, root, slugger} from '../docs.mjs';
 import {highlight, languages} from '../highlight.mjs';
 import strings from '../strings.mjs';
 import {escape, markdownUrl, pageUrl} from './common.mjs';
@@ -43,20 +43,19 @@ export const plain = inline =>
 
 // A link as the site serves it: pages and images in docs/ under the base, other repository files on GitHub. An image it
 // links is added to files, the map render() writes. With an origin, for the Markdown pages, a page link names the page's
-// Markdown and every link in docs/ starts with the origin; the origin is '' when DOCS_ORIGIN is not set. A path this
-// repository does not hold is doona's (locate).
+// Markdown and every link in docs/ starts with the origin; the origin is '' when DOCS_ORIGIN is not set. A screenshot
+// is doona's (locate).
 export function rewrite(base, files, target, file, origin) {
   if (/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(target)) return target;
   const [path, ...hash] = target.split('#');
   const suffix = hash.length ? `#${hash.join('#')}` : '';
   const absolute = resolve(dirname(file), decodeURIComponent(path));
   const inDocs = relative(docs, absolute);
-  const found = locate(absolute);
   if (inDocs.startsWith('..') || isAbsolute(inDocs)) {
     const inRepo = relative(root, absolute);
     if (inRepo.startsWith('..') || isAbsolute(inRepo)) throw new Error(`${file}: ${target} is outside the repository`);
-    const kind = existsSync(found) && statSync(found).isDirectory() ? 'tree' : 'blob';
-    return `${found === absolute ? ownRepository : repository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
+    const kind = existsSync(absolute) && statSync(absolute).isDirectory() ? 'tree' : 'blob';
+    return `${ownRepository}/${kind}/main/${encodeURI(inRepo.split(sep).join('/'))}${suffix}`;
   }
   const parts = inDocs.split(sep);
   if (inDocs.endsWith('.md')) {
@@ -65,6 +64,7 @@ export function rewrite(base, files, target, file, origin) {
     return (origin === undefined ? pageUrl(base, locale, name.slice(0, -3)) : origin + markdownUrl(base, locale, name.slice(0, -3))) + suffix;
   }
   // Only files that exist are published; a missing one leaves the link dangling for the checker to report.
+  const found = locate(absolute);
   if (existsSync(found)) files.set(parts.join('/'), {from: found});
   return (origin ?? '') + base + encodeURI(parts.join('/')) + suffix;
 }

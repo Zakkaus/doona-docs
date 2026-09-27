@@ -39,7 +39,7 @@ doona keeps no screenshots in git. Before the build, a push to `main` or a manua
 | `site/`             | The site build, its stylesheet and script                           |
 | `tools/`            | The docs check and the tests                                        |
 
-A page keeps the paths it had in doona: a link to `../screenshots/` or `../../src/` names doona's file, which the site copies or links on GitHub.
+A link to `../screenshots/` names doona's screenshot, which the site copies. Other doona files are linked by their GitHub URL, such as `https://github.com/Zakkaus/doona/blob/main/src/api/types.ts`, since a relative path into doona is broken on GitHub.
 
 ## Acknowledgements
 

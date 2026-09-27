@@ -1,81 +1,22 @@
-// Checks docs/ as GitHub renders it: every relative link and image resolves, every #anchor names an <a name> or a
-// generated heading slug on its target page, docs/anchors.json matches the pages, and the locales have the same pages,
-// anchors and heading levels. A path this repository does not hold is looked up in doona's checkout (DOONA_DIR), as the
-// build does. The README files are checked for links too, and every anchor doona's docsHref links is in
+// Checks docs/ as GitHub renders it: every relative link and image resolves in this repository and every link to
+// doona's files on GitHub in doona's checkout (DOONA_DIR), every #anchor names an <a name> or a generated heading slug
+// on its target page (tools/links.mjs), docs/anchors.json matches the pages, and the locales have the same pages,
+// anchors and heading levels. The README files are checked for links too, and every anchor doona's docsHref links is in
 // docs/anchors.json on the same page. Then it renders the site (site/build.mjs) for both base paths and checks that
 // every internal link, image and #id in the HTML resolves, that every page has its Markdown, and that every link in
 // the Markdown pages and llms.txt resolves.
-import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
-import {dirname, join, relative, resolve} from 'node:path';
-import {anchors, awaitsScreenshots, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
+import {existsSync, readFileSync, readdirSync} from 'node:fs';
+import {join, relative} from 'node:path';
+import {anchors, awaitsScreenshots, docs, doona, locales, pages as pageOrder, root} from '../site/docs.mjs';
+import {linkFailures, page} from './links.mjs';
 import {render} from '../site/build.mjs';
 import {styles} from '../site/build/assets.mjs';
 
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
 
-// The lines of a Markdown text, with fenced code blocks and their fences blanked.
-function unfenced(text) {
-  let fenced = false;
-  return text.split('\n').map(line => {
-    if (/^\s*(```|~~~)/.test(line)) {
-      fenced = !fenced;
-      return '';
-    }
-    return fenced ? '' : line;
-  });
-}
-
-const pages = new Map();
-function page(file) {
-  if (!pages.has(file)) {
-    const raw = readFileSync(file, 'utf8');
-    const outside = unfenced(raw);
-    // Headings keep their inline code, which counts toward the slug. Prose drops it, so a literal `[x](y)` is not read
-    // as a link.
-    const headingLines = outside.filter(line => /^#{1,6}\s/.test(line));
-    const lines = outside.map(line => line.replace(/`[^`]*`/g, ''));
-    const names = [...raw.matchAll(/<a name="([^"]+)"><\/a>/g)].map(match => match[1]);
-    pages.set(file, {
-      lines,
-      names,
-      levels: headingLines.map(line => /^#+/.exec(line)[0].length),
-      ids: new Set([...names, ...headingLines.map(line => /^#{1,6}\s+(.*?)\s*#*\s*$/.exec(line)[1]).map(slugger())])
-    });
-  }
-  return pages.get(file);
-}
-
-function targets(line) {
-  const found = [];
-  for (const match of line.matchAll(/!?\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g)) found.push(match[1]);
-  for (const match of line.matchAll(/<(?:img|source|a)\b[^>]*?\s(?:src|srcset|href)="([^"]+)"/g)) found.push(match[1]);
-  return found;
-}
-
 function checkLinks(file) {
-  const {lines} = page(file);
-  lines.forEach((line, index) => {
-    for (const target of targets(line)) {
-      if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
-      const [path, anchor] = target.split('#');
-      const where = `line ${index + 1}: ${target}`;
-      checkTarget(file, where, path ? resolve(dirname(file), decodeURIComponent(path)) : file, anchor);
-    }
-  });
-}
-
-// A link from file to resolved, a path in the repository or else in doona's checkout, and the #anchor on it if any.
-function checkTarget(file, where, resolved, anchor) {
-  if (!resolved.startsWith(root)) return fail(file, `${where} does not resolve`);
-  const found = locate(resolved);
-  if (!existsSync(found)) {
-    if (!awaitsScreenshots(relative(docs, resolved))) fail(file, `${where} does not resolve`);
-    return;
-  }
-  if (anchor === undefined) return;
-  if (!found.endsWith('.md') || statSync(found).isDirectory()) return fail(file, `${where} has an anchor on a file that is not Markdown`);
-  if (!page(found).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
+  for (const failure of linkFailures(file)) fail(file, failure);
 }
 
 const pageSets = new Map(
