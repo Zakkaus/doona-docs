@@ -226,6 +226,7 @@ details[open] > summary .icon:last-child {
 .panel {
   display: grid;
   grid-template-columns: minmax(0, 768px) 200px;
+  grid-template-rows: 1fr auto;
   justify-content: center;
   column-gap: 64px;
   min-height: calc(100vh - var(--docs-top));
@@ -238,6 +239,15 @@ details[open] > summary .icon:last-child {
   grid-row: 1;
   min-width: 0;
   overflow-wrap: break-word;
+}
+.foot {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: 64px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rp-line);
+  color: var(--rp-subtle);
+  font-size: var(--rp-text-sm);
 }
 .menu {
   display: none;

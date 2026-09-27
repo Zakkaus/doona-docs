@@ -189,6 +189,7 @@ export function render({base = '/doona-docs/'} = {}) {
 </details>
 <main id="content">
 ${body}</main>
+<footer class="foot"><a href="${base}NOTICE.txt">${text.notice}</a></footer>
 ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-title">${text.onThisPage}</h2>\n<ul>${toc.join('')}</ul>\n</aside>` : ''}
 </div>
 </div>
@@ -251,6 +252,9 @@ ${missing.join('\n')}
 
   files.set('site.css', {from: join(root, 'site/site.css')});
   for (const logoFile of ['logo-light.svg', 'logo-dark.svg']) files.set(logoFile, {from: join(docs, logoFile)});
+  // The icons above are Adobe Spectrum artwork: the notice and licence travel with them, as in the release archives.
+  files.set('NOTICE.txt', {from: join(root, 'NOTICE')});
+  files.set('LICENSES/Apache-2.0.txt', {from: join(root, 'LICENSES/Apache-2.0.txt')});
   // GitHub Pages would otherwise run Jekyll over the files.
   files.set('.nojekyll', {text: ''});
   return files;
