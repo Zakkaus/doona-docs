@@ -8,7 +8,8 @@
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {anchors, awaitsScreenshots, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
-import {render, styles} from '../site/build.mjs';
+import {render} from '../site/build.mjs';
+import {styles} from '../site/build/assets.mjs';
 
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
@@ -170,7 +171,7 @@ for (const base of ['/doona-docs/', '/']) {
           failures.push(`${where} is not under the base path`);
           continue;
         }
-        // A query only versions the file (site/build.mjs), so it names the same file.
+        // A query only versions the file (site/build/assets.mjs), so it names the same file.
         file = decodeURI(target.slice(base.length).split('?')[0]);
         if (file === '' || file.endsWith('/')) file += 'index.html';
       }
