@@ -147,10 +147,8 @@ details[open] > summary .icon:last-child {
   font-weight: 700;
   text-decoration: none;
 }
-.brand img {
-  display: block;
-}
-/* The logo and the theme icon for the scheme in use: the system's, unless data-theme overrides it. */
+/* The logo and the theme icon for the scheme in use: the system's, unless data-theme overrides it. The images are flex
+   items and so already blocks; a display rule on every .brand img would outrank .logo-dark and show both. */
 .logo-dark,
 .scheme .icon:last-child {
   display: none;
@@ -377,18 +375,20 @@ code {
   font-family: var(--docs-mono);
   font-size: 0.875em;
 }
-/* The type is the editor's, 13px without ligatures, with more leading for reading. */
+/* The type is the editor's, 13px without ligatures, with more leading for reading. The block draws the frame so that
+   the pre, which scrolls, can fade its own edge without fading the frame. */
 .code {
   position: relative;
   margin: 0 0 16px;
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-r-lg);
+  background: var(--docs-code);
 }
 pre {
   margin: 0;
   padding: 16px 20px;
   overflow-x: auto;
-  border: 1px solid var(--rp-line);
-  border-radius: var(--rp-r-lg);
-  background: var(--docs-code);
+  border-radius: calc(var(--rp-r-lg) - 1px);
   /* A classic scrollbar, so a line wider than the column shows that it scrolls even where scrollbars overlay. */
   scrollbar-width: thin;
   scrollbar-color: var(--rp-hl-high) transparent;
@@ -397,20 +397,50 @@ pre {
   font-variant-ligatures: none;
   overflow-wrap: normal;
 }
+/* The copy button gets a row of its own above the first line, so no line scrolls under it. */
+.code:has(> .copy:not([hidden])) > pre {
+  padding-top: 40px;
+}
+/* The lines fade out at the right edge while there is more to scroll to, since an overlay scrollbar is invisible at
+   rest. The bottom 12px, where a scrollbar sits, is left unmasked. Without scroll-driven animations there is no fade. */
+@property --code-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@supports (animation-timeline: scroll()) {
+  pre {
+    mask-image: linear-gradient(to left, transparent, #000 var(--code-fade)), linear-gradient(#000, #000);
+    mask-position: top, bottom;
+    mask-size:
+      100% calc(100% - 12px),
+      100% 12px;
+    mask-repeat: no-repeat;
+    animation: code-more linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+@keyframes code-more {
+  0%,
+  90% {
+    --code-fade: 40px;
+  }
+  100% {
+    --code-fade: 0px;
+  }
+}
 .copy {
   position: absolute;
   top: 6px;
   inset-inline-end: 6px;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  border: 0;
+  border: 1px solid var(--rp-line);
   border-radius: var(--rp-r-md);
-  background: var(--docs-code);
-  /* The ring hides a long first line where it runs under the button. */
-  box-shadow: 0 0 0 5px var(--docs-code);
+  background: color-mix(in srgb, var(--rp-text) 4%, var(--docs-code));
   color: var(--rp-subtle);
   cursor: pointer;
 }
