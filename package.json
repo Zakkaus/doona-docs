@@ -15,7 +15,7 @@
   "scripts": {
     "docs:build": "node site/build.mjs",
     "docs:check": "node tools/check-docs.mjs",
-    "test": "vitest run tools"
+    "test": "vitest run --dir tools"
   },
   "devDependencies": {
     "markdown-it": "^15.0.2",
