@@ -1,0 +1,54 @@
+/* The design tokens. The docs site's palette comes from doona; document geometry follows the Spectrum docs.
+   site/build.mjs writes in Rosé Pine Dawn and Moon, its default palette (DEFAULT_PALETTE in
+   src/shell/palettes.ts), from src/ui/styles/palettes.css, in place of the palette marker below, and the radii and type
+   sizes the stylesheet uses from src/ui/styles/motion.css in place of the sizes marker; the role tokens are copied
+   from motion.css.
+   Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by default, or the one the
+   theme button stores, which the page head applies as data-theme before the first paint. */
+:root {
+  color-scheme: light dark;
+  /* palette */
+  --rp-elevated:
+    0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.4)), 0 2px 6px light-dark(rgba(0, 0, 0, 0.04), transparent),
+    0 0 2px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.5));
+  --rp-accent: var(--rp-pine);
+  --rp-accent-text: light-dark(var(--rp-accent), var(--rp-text));
+  --rp-negative: var(--rp-love);
+  --rp-positive: var(--rp-foam);
+  --rp-notice: var(--rp-gold);
+  --rp-info: var(--rp-pine);
+  --rp-negative-text: light-dark(var(--rp-text), var(--rp-negative));
+  --rp-notice-text: light-dark(var(--rp-text), var(--rp-notice));
+  --rp-positive-text: light-dark(var(--rp-text), var(--rp-positive));
+  --rp-info-text: light-dark(var(--rp-info), var(--rp-text));
+  --rp-line: var(--rp-hl-med);
+  --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
+  /* sizes */
+  /* The docs' own reading sizes, above the app's scale. */
+  --docs-h1: 3.625rem;
+  --docs-h1-phone: 3.4375rem;
+  --docs-top: 72px;
+  /* Code sits one step off the page surface. The dark overlay leans further into violet than the surface, so dark
+     code lightens the surface itself instead. */
+  --docs-code: light-dark(var(--rp-overlay), color-mix(in srgb, var(--rp-text) 6%, var(--rp-surface)));
+  /* Syntax colours: the editor's hue for each token (src/ui/styles/page-layout.css), darkened in the light scheme and
+     lightened in the dark one just enough to reach 4.5:1 on the code background. */
+  --docs-code-comment: light-dark(color-mix(in oklab, var(--rp-muted), #000 25%), color-mix(in oklab, var(--rp-muted), #fff 38%));
+  --docs-code-string: light-dark(color-mix(in oklab, var(--rp-gold), #000 33%), var(--rp-gold));
+  --docs-code-keyword: light-dark(color-mix(in oklab, var(--rp-love), #000 14%), color-mix(in oklab, var(--rp-love), #fff 9%));
+  --docs-code-number: light-dark(color-mix(in oklab, var(--rp-iris), #000 17%), var(--rp-iris));
+  --docs-code-property: light-dark(var(--rp-pine), color-mix(in oklab, var(--rp-pine), #fff 23%));
+  --docs-code-punctuation: light-dark(color-mix(in oklab, var(--rp-subtle), #000 12%), color-mix(in oklab, var(--rp-subtle), #fff 16%));
+  --docs-sans: 'Source Sans 3', 'Noto Sans TC', system-ui, sans-serif;
+  --docs-mono: 'Source Code Pro', ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+/* Simplified Chinese prefers the SC glyph forms, as in the app. */
+:root:lang(zh-CN) {
+  --docs-sans: 'Source Sans 3', 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
+}

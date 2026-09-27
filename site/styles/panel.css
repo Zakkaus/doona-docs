@@ -1,0 +1,37 @@
+/* The panel that holds the page: its scroll box, the article column, the footer and the phone page menu. */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  grid-template-rows: 1fr auto;
+  column-gap: 40px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px;
+  border-radius: 16px 16px 0 0;
+  box-shadow: var(--rp-elevated);
+  background: var(--rp-surface);
+}
+.panel > main {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 768px;
+  justify-self: center;
+  overflow-wrap: anywhere;
+}
+.foot {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 64px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rp-line);
+  color: var(--rp-subtle-text);
+  font-size: var(--rp-text-sm);
+}
+.menu {
+  display: none;
+}

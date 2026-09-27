@@ -1,0 +1,125 @@
+/* Inline code, code blocks with their copy button, the status line the copy buttons announce through, and the
+   syntax colours. */
+code {
+  padding: 1px 4px;
+  border: 1px solid var(--rp-line);
+  border-radius: 4px;
+  background: var(--docs-code);
+  font-family: var(--docs-mono);
+  font-size: 0.875rem;
+}
+/* Standalone snippets follow the reference's 14/21 reading scale; wide lines scroll within the block. */
+.code {
+  position: relative;
+  margin: 32px 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--docs-code);
+}
+pre {
+  margin: 0;
+  padding: 32px;
+  overflow-x: auto;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  line-height: 21px;
+  font-variant-ligatures: none;
+  overflow-wrap: normal;
+}
+/* Reserve the action at the end of the line without adding a blank row above the code. */
+.code:has(> .copy:not([hidden])) > pre {
+  padding-inline-end: 52px;
+}
+/* The lines fade out at the right edge while there is more to scroll to, since an overlay scrollbar is invisible at
+   rest. The bottom 12px, where a scrollbar sits, is left unmasked. Without scroll-driven animations there is no fade. */
+@property --code-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@supports (animation-timeline: scroll()) {
+  pre {
+    mask-image: linear-gradient(to left, transparent, #000 var(--code-fade)), linear-gradient(#000, #000);
+    mask-position: top, bottom;
+    mask-size:
+      100% calc(100% - 12px),
+      100% 12px;
+    mask-repeat: no-repeat;
+    animation: code-more linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+@keyframes code-more {
+  0%,
+  90% {
+    --code-fade: 40px;
+  }
+  100% {
+    --code-fade: 0px;
+  }
+}
+.copy {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+  color: var(--rp-text);
+  cursor: pointer;
+}
+.copy[data-copied] {
+  color: var(--rp-positive-text);
+}
+.copy > .icon:last-child,
+.copy[data-copied] > .icon:first-child {
+  display: none;
+}
+.copy[data-copied] > .icon:last-child {
+  display: block;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.copy .icon {
+  width: 16px;
+  height: 16px;
+}
+pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+}
+/* The token names are the app's (src/ui/code/daeTokens.ts); variableName keeps the text colour, as in the editor. */
+.t-comment {
+  color: var(--docs-code-comment);
+}
+.t-string {
+  color: var(--docs-code-string);
+}
+.t-keyword {
+  color: var(--docs-code-keyword);
+  font-weight: 400;
+}
+.t-number {
+  color: var(--docs-code-number);
+}
+.t-propertyName {
+  color: var(--docs-code-property);
+}
+.t-punctuation,
+.t-operator {
+  color: var(--docs-code-punctuation);
+}

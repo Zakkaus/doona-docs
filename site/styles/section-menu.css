@@ -1,0 +1,41 @@
+/* The section menu that replaces the brand in the phone top bar once the title scrolls away, and the language menu
+   inside the search dialog on phones. */
+.mobile-sections,
+.search-brand .language { display: none; }
+@media (max-width: 1023px) {
+  .search-brand .language { display: block; position: absolute; top: 12px; inset-inline-end: 56px; }
+  .search-brand .language > summary > span { display: none; }
+  :root[data-scrolled] .top > .brand span { display: none; }
+  :root[data-scrolled] .mobile-sections {
+    display: block;
+    position: absolute;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 192px);
+  }
+  .mobile-sections > summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    border-radius: 9px;
+    font-size: 1rem;
+    line-height: 20px;
+  }
+  .mobile-sections > summary span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mobile-sections ul {
+    position: absolute;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 4px);
+    width: 192px;
+    max-height: calc(100dvh - 72px);
+    overflow: auto;
+    padding: 8px;
+    border-radius: 10px;
+    background: var(--rp-surface);
+    box-shadow: var(--rp-elevated);
+  }
+  .mobile-sections a { display: block; padding: 10px 16px; border-radius: 8px; font-size: 1rem; line-height: 20px; text-decoration: none; }
+  .mobile-sections a[aria-current] { background: var(--rp-selected); }
+}

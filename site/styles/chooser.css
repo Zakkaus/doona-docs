@@ -1,0 +1,19 @@
+/* The language chooser at the root and the 404 page. */
+.choose {
+  max-width: 480px;
+  margin: 12vh auto;
+  padding: 0 16px;
+}
+.choose h1 {
+  margin: 32px 0 8px;
+  font-size: var(--rp-text-2xl);
+}
+.choose p {
+  margin: 0 0 8px;
+}
+.choose ul {
+  margin-top: 24px;
+}
+.choose li a {
+  color: var(--rp-accent-text);
+}

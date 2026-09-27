@@ -1,0 +1,53 @@
+/* The article: headings, paragraphs, lists, links and images. */
+main h1 {
+  margin: 0;
+  font-size: var(--docs-h1);
+  line-height: 66px;
+  font-weight: 800;
+}
+main h2 {
+  margin: 48px 0 24px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 32px;
+}
+main h3 {
+  margin: 32px 0 16px;
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 26px;
+}
+main :is(h2, h3) {
+  scroll-margin-top: 24px;
+}
+main p,
+main ul,
+main ol {
+  margin: 27px 0;
+}
+main h1 + p {
+  margin: 8px 0 0;
+  font-size: 1.25rem;
+  line-height: 30px;
+}
+main ul {
+  padding-inline-start: 24px;
+  list-style: disc;
+}
+main ol {
+  padding-inline-start: 24px;
+}
+main li + li {
+  margin-top: 4px;
+}
+main a {
+  color: var(--rp-accent-text);
+  text-underline-offset: 2px;
+}
+main img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0;
+  border-radius: var(--rp-r-lg);
+}

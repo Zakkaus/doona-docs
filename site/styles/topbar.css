@@ -1,0 +1,92 @@
+/* The top bar: the brand, the theme button and its icons, the demo and GitHub links, and the language menu. */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--docs-top);
+  position: relative;
+  padding: 12px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  margin-inline-start: 26px;
+  padding-inline: 12px;
+  border-radius: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+/* The theme icon for the scheme in use: the system's, unless data-theme overrides it. */
+.scheme .icon:last-child {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .scheme .icon:first-child {
+    display: none;
+  }
+  :root:not([data-theme='light']) .scheme .icon:last-child {
+    display: block;
+  }
+}
+:root[data-theme='dark'] .scheme .icon:first-child {
+  display: none;
+}
+:root[data-theme='dark'] .scheme .icon:last-child {
+  display: block;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.language {
+  position: relative;
+}
+.language > summary,
+.theme,
+.demo,
+.github {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: var(--rp-text-md);
+  text-decoration: none;
+}
+.theme {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.scheme {
+  display: grid;
+}
+.language ul {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  min-width: 160px;
+  padding: 4px;
+  border-radius: var(--rp-r-md);
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.language li a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: var(--rp-r-md);
+  font-size: var(--rp-text-md);
+  text-decoration: none;
+}
+.language a[aria-current] {
+  font-weight: 700;
+  background: var(--rp-selected);
+}
