@@ -78,8 +78,8 @@ const icons = {
 };
 
 // site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
-// own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii and type sizes the sheet uses written
-// in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
+// own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii, type sizes, duration and easing the
+// sheet uses written in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
 function stylesheet() {
   const palettes = readFileSync(join(doona, 'src/ui/styles/palettes.css'), 'utf8');
   const colours = selector => {
@@ -97,8 +97,9 @@ function stylesheet() {
   const sizesMarker = '  /* sizes */\n';
   if (!css.includes(sizesMarker)) throw new Error('site/site.css: no /* sizes */ line');
   const motion = readFileSync(join(doona, 'src/ui/styles/motion.css'), 'utf8');
-  const scale = new Map([...motion.matchAll(/(--rp-(?:r|text)-[\w-]+):\s*(\d+px);/g)].map(match => [match[1], match[2]]));
-  const used = new Set([...css.matchAll(/var\((--rp-(?:r|text)-[\w-]+)\)/g)].map(match => match[1]));
+  const scaleName = '--rp-(?:(?:r|text)-[\\w-]+|duration|ease)';
+  const scale = new Map([...motion.matchAll(new RegExp(`(${scaleName}):\\s*(\\d+px|\\d+ms|cubic-bezier\\([\\d., ]+\\));`, 'g'))].map(match => [match[1], match[2]]));
+  const used = new Set([...css.matchAll(new RegExp(`var\\((${scaleName})\\)`, 'g'))].map(match => match[1]));
   const missing = [...used].filter(name => !scale.has(name));
   if (missing.length) throw new Error(`src/ui/styles/motion.css: no ${missing.join(', ')}`);
   const sizes = [...scale].filter(([name]) => used.has(name));

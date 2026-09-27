@@ -103,6 +103,15 @@ ul {
   padding: 0;
   list-style: none;
 }
+/* These classes set a display, which outranks the browser's [hidden] rule. site.js unhides the buttons it enhances,
+   such as the copy buttons where the clipboard can be written, and hides the search cards a query rules out. */
+.copy[hidden],
+.md-copy[hidden],
+.search-trigger[hidden],
+.nav-trigger[hidden],
+.search-card[hidden] {
+  display: none;
+}
 summary {
   list-style: none;
   cursor: pointer;
@@ -271,6 +280,9 @@ details[open] > summary .icon:last-child {
   line-height: 18px;
   text-decoration: none;
 }
+.pages a {
+  padding-inline-start: 28px;
+}
 .pages a::before,
 .toc-sections a::before {
   content: '';
@@ -281,10 +293,15 @@ details[open] > summary .icon:last-child {
   height: 18px;
   border-radius: 1px;
 }
-.pages a[aria-current] {
+.pages a::before {
+  inset-inline-start: 20px;
+}
+.pages a[aria-current],
+.toc-sections a[aria-current] {
   font-weight: 700;
 }
-.pages a[aria-current]::before {
+.pages a[aria-current]::before,
+.toc-sections a[aria-current]::before {
   background: currentColor;
 }
 .pages a:focus-visible,
@@ -411,9 +428,6 @@ details[open] > summary .icon:last-child {
 .md-copy .icon {
   width: 16px;
   height: 16px;
-}
-.md-copy[hidden] {
-  display: none;
 }
 .md-copy > .icon:nth-child(2),
 .md-copy[data-copied] > .icon:first-child {
@@ -603,10 +617,6 @@ pre {
   color: var(--rp-text);
   cursor: pointer;
 }
-/* The grid above outranks the browser's [hidden] rule; site.js unhides the button where the clipboard can be written. */
-.copy[hidden] {
-  display: none;
-}
 .copy[data-copied] {
   color: var(--rp-positive-text);
 }
@@ -761,9 +771,7 @@ tr:last-child td { border-bottom: 0; }
     top: 0;
     z-index: 15;
     background: var(--rp-surface);
-    height: 56px;
     gap: 12px;
-    padding: 12px;
   }
   .brand {
     min-height: 32px;
@@ -823,9 +831,6 @@ tr:last-child td { border-bottom: 0; }
 }
 
 /* Search and phone navigation share one native modal and the same page catalogue. */
-[hidden] { display: none !important; }
-.search-trigger[hidden],
-.nav-trigger[hidden] { display: none; }
 .search-trigger {
   position: absolute;
   inset-inline-start: min(50%, calc(100% - 560px));
@@ -1008,7 +1013,9 @@ body:has(#docs-search[open]) { overflow: hidden; }
 }
 @media (prefers-reduced-motion: no-preference) {
   :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close) {
-    transition: transform 150ms cubic-bezier(0.45, 0, 0.4, 1), background-color 150ms cubic-bezier(0.45, 0, 0.4, 1);
+    transition:
+      transform var(--rp-duration) var(--rp-ease),
+      background-color var(--rp-duration) var(--rp-ease);
   }
   :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close):active {
     transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);
@@ -1018,10 +1025,6 @@ body:has(#docs-search[open]) { overflow: hidden; }
   pre { animation: none; }
 }
 
-.pages a { padding-inline-start: 28px; }
-.pages a::before { inset-inline-start: 20px; }
-.toc-sections a[aria-current] { font-weight: 700; }
-.toc-sections a[aria-current]::before { background: currentColor; }
 .mobile-sections,
 .search-brand .language { display: none; }
 @media (max-width: 1023px) {
