@@ -8,7 +8,7 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md) · 繁體中文
 
-[閱讀文件](https://zakkaus.github.io/doona-docs/zh-TW/) • [建置](#建置) • [目錄結構](#目錄結構)
+[閱讀文件](https://zakkaus.github.io/doona-docs/zh-TW/) • [建置](#建置) • [目錄結構](#目錄結構) • [貢獻指南](.github/CONTRIBUTING.md)
 
 </div>
 
