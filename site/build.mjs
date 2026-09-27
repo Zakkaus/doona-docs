@@ -67,7 +67,8 @@ const icons = {
   copy: icon('Copy'),
   copied: icon('Checkmark'),
   moon: icon('Contrast'),
-  sun: icon('Lighten')
+  sun: icon('Lighten'),
+  more: icon('MoreVertical')
 };
 
 // site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
@@ -278,24 +279,25 @@ function navList(base, locale, parsed, current) {
   return `<ul class="pages">${sections.join('')}</ul>`;
 }
 
-// The Markdown actions beside the h1, as on the React Spectrum docs: copy the page's Markdown, which site.js shows where
-// the clipboard can be written, and a menu that opens it, or with an origin hands its URL to a chat assistant. The menu
-// is the pair's one control where the clipboard cannot be written, so it names itself then.
+// The page actions sit below the section links; the Markdown fetch remains relative to the served page.
 function pageActions(base, origin, locale, name) {
   const text = strings[locale];
   const source = origin + markdownUrl(base, locale, name);
   const prompt = text.markdownPrompt.replace('{page}', origin + pageUrl(base, locale, name)).replace('{markdown}', source);
+  // Spectrum ArrowUpRight UI icon (Apache-2.0), as used by the reference docs.
+  const external = '<svg class="icon external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10.089 1h-5.51a.911.911 0 0 0 0 1.822h3.31L1.355 9.355a.91.91 0 1 0 1.29 1.29L9.178 4.11v3.31a.911.911 0 0 0 1.822 0v-5.51A.91.91 0 0 0 10.089 1"/></svg>';
+  const link = (url, label, type = '') => `<li role="none"><a role="menuitem" href="${url}"${type} target="_blank" rel="noopener noreferrer"><span>${label}</span>${external}</a></li>`;
   const assistants = origin
     ? [
         ['ChatGPT', 'https://chatgpt.com/?q='],
         ['Claude', 'https://claude.ai/new?q=']
-      ].map(([app, url]) => `<li><a href="${url}${encodeURIComponent(prompt)}">${text.openIn.replace('{app}', app)}</a></li>`)
+      ].map(([app, url]) => link(url + encodeURIComponent(prompt), text.openIn.replace('{app}', app)))
     : [];
   return `<div class="page-actions">
 <button type="button" class="md-copy" data-src="${markdownUrl(base, locale, name)}" hidden>${icons.copy}${icons.copied}<span>${text.copyMarkdown}</span></button>
 <details class="md-menu" name="docs-menu">
-<summary aria-label="${text.markdownMenu}"><span class="md-label">Markdown</span>${icons.chevron}</summary>
-<ul><li><a href="${source}" type="text/markdown">${text.viewMarkdown}</a></li>${assistants.join('')}</ul>
+<summary class="md-more" aria-label="${text.markdownMenu}" aria-haspopup="menu" aria-controls="page-action-menu">${icons.more}</summary>
+<ul id="page-action-menu" role="menu" aria-label="${text.markdownMenu}">${link(source, text.viewMarkdown, ' type="text/markdown"')}${assistants.join('')}</ul>
 </details>
 </div>`;
 }
@@ -310,11 +312,7 @@ function page(base, origin, locale, parsed, current) {
     return `<li><a href="${pageUrl(base, other, current.name)}" lang="${other}" hreflang="${other}"${here}>${strings[other].language}</a></li>`;
   });
   const toc = current.toc.map(entry => `<li class="${entry.level}"><a href="#${entry.id}">${escape(entry.text)}</a></li>`);
-  // The page opens with its h1, which shares a row with the Markdown actions.
-  const body = md.renderer.render(current.tokens, md.options, {locale}).replace(/^(<h1[^>]*>[^]*?<\/h1>)\n/, (h1, heading) => {
-    return `<div class="page-head">\n${heading}\n${pageActions(base, origin, locale, current.name)}\n</div>\n`;
-  });
-  if (!body.startsWith('<div class="page-head">')) throw new Error(`docs/${locale}/${current.name}.md: the page does not open with its h1`);
+  const body = md.renderer.render(current.tokens, md.options, {locale});
   // The theme button toggles as the app's does: a system scheme to its opposite, an override back to the system.
   const themeLabels = Object.fromEntries(['system', 'light', 'dark'].map(scheme => [scheme, text.theme.replace('{theme}', text[scheme])]));
   const themeData = Object.entries(themeLabels)
@@ -345,10 +343,14 @@ function page(base, origin, locale, parsed, current) {
 <main id="content">
 ${body}</main>
 <footer class="foot"><a href="${base}LICENSES/CC-BY-4.0.txt">${text.license}</a><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
-${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-title">${text.onThisPage}</h2>\n<ul>${toc.join('')}</ul>\n</aside>` : ''}
+<aside class="toc" aria-labelledby="toc-title">
+<div class="toc-sections"><h2 id="toc-title">${text.onThisPage}</h2>
+<ul>${toc.join('')}</ul></div>
+${pageActions(base, origin, locale, current.name)}
+</aside>
 </div>
 </div>
-<p class="visually-hidden" role="status" data-copied="${text.copied}"></p>
+<p class="visually-hidden" role="status" data-copied="${text.copied}" data-copy-failed="${text.copyFailed}"></p>
 </body>
 </html>
 `;

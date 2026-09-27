@@ -26,7 +26,7 @@ function copyButton(writeText) {
       this.click = listener;
     }
   };
-  const status = {dataset: {copied: 'Copied'}, textContent: ''};
+  const status = {dataset: {copied: 'Copied', copyFailed: 'Unable to copy'}, textContent: ''};
   const document = {
     documentElement: {dataset: {}},
     addEventListener() {},
@@ -49,11 +49,27 @@ describe('copy button', () => {
     expect(status.textContent).toBe('Copied');
   });
 
-  it('leaves the button as it was when the clipboard refuses', async () => {
+  it('writes once while a previous copy is pending', async () => {
+    let finish;
+    let writes = 0;
+    const {button} = copyButton(() => {
+      writes++;
+      return new Promise(resolve => { finish = resolve; });
+    });
+    const first = button.click();
+    const repeated = button.click();
+    expect(writes).toBe(1);
+    expect(button.dataset.pending).toBe('');
+    finish();
+    await Promise.all([first, repeated]);
+    expect(button.dataset.pending).toBeUndefined();
+  });
+
+  it('announces when the clipboard refuses', async () => {
     const {button, status} = copyButton(() => Promise.reject(new Error('NotAllowedError')));
     await expect(button.click()).resolves.toBeUndefined();
     expect(button.dataset.copied).toBeUndefined();
-    expect(status.textContent).toBe('');
+    expect(status.textContent).toBe('Unable to copy');
   });
 });
 
@@ -189,7 +205,7 @@ function markdownButton(clipboard) {
       this.click = listener;
     }
   };
-  const status = {dataset: {copied: 'Copied'}, textContent: ''};
+  const status = {dataset: {copied: 'Copied', copyFailed: 'Unable to copy'}, textContent: ''};
   const document = {
     documentElement: {dataset: {}},
     addEventListener() {},
@@ -318,4 +334,34 @@ describe('404 page', () => {
     expect(redirect(null, ['en'], '404.html', '/doona-docs/zh-TW/missing.html')).toBeUndefined();
     expect(redirect(null, ['en'], '404.html', '/doona-docs/missing.html')).toBeUndefined();
   });
+});
+
+// Page actions belong to the section column, independently of the page heading.
+describe('page actions', () => {
+  const site = render({base: '/', origin: 'https://docs.example'});
+  const labels = {en: 'Copy for LLM', 'zh-CN': '复制供 LLM 使用', 'zh-TW': '複製供 LLM 使用'};
+  for (const locale of locales) {
+    it(`renders the section-column actions in ${locale}`, () => {
+      const html = site.get(`${locale}/configuration.html`).text;
+      const main = /<main id="content">([^]*?)<\/main>/.exec(html)[1];
+      expect(main).not.toContain('page-actions');
+      const aside = /<aside class="toc"[^]*?<\/aside>/.exec(html)[0];
+      expect(aside.indexOf('page-actions')).toBeGreaterThan(aside.indexOf('</ul>'));
+      expect(aside).toContain(`<span>${labels[locale]}</span>`);
+      expect(aside).toContain('class="md-more"');
+      expect(aside).toContain('aria-haspopup="menu"');
+      const menu = /<ul id="page-action-menu"[^]*?<\/ul>/.exec(aside)[0];
+      const links = [...menu.matchAll(/<a ([^]*?)<\/a>/g)].map(match => match[1]);
+      expect(links).toHaveLength(3);
+      expect(links[0]).toContain('https://docs.example/' + locale + '/configuration.md');
+      expect(links[1]).toContain('https://chatgpt.com/');
+      expect(links[2]).toContain('https://claude.ai/');
+      for (const link of links) {
+        expect(link).toContain('target="_blank"');
+        expect(link).toContain('rel="noopener noreferrer"');
+        expect(link).toContain('class="icon external"');
+      }
+      expect(aside).toContain(`data-src="/${locale}/configuration.md"`);
+    });
+  }
 });

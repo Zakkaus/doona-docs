@@ -250,7 +250,7 @@ details[open] > summary .icon:last-child {
   gap: 6px;
 }
 .pages a,
-.toc a {
+.toc-sections a {
   position: relative;
   display: block;
   padding: 7px 12px;
@@ -260,7 +260,7 @@ details[open] > summary .icon:last-child {
   text-decoration: none;
 }
 .pages a::before,
-.toc a::before {
+.toc-sections a::before {
   content: '';
   position: absolute;
   inset-inline-start: 4px;
@@ -276,7 +276,7 @@ details[open] > summary .icon:last-child {
   background: currentColor;
 }
 .pages a:focus-visible,
-.toc a:focus-visible {
+.toc-sections a:focus-visible {
   outline-offset: -2px;
 }
 .panel {
@@ -315,19 +315,23 @@ details[open] > summary .icon:last-child {
   grid-column: 2;
   grid-row: 1;
   position: sticky;
-  top: 24px;
+  top: 0;
   align-self: start;
-  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 112px);
+  padding-top: 32px;
+}
+.toc-sections {
+  max-height: calc(100dvh - 220px);
   overflow-y: auto;
-  padding-top: 8px;
 }
 .toc h2 {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   padding: 6px 12px;
-  font-size: var(--rp-text-lg);
+  font-size: 1rem;
+  font-weight: 700;
   line-height: 20px;
 }
-.toc ul {
+.toc-sections ul {
   display: grid;
   gap: 8px;
 }
@@ -345,7 +349,7 @@ details[open] > summary .icon:last-child {
     background: var(--rp-overlay);
   }
   .pages a:not([aria-current]):hover::before,
-  .toc a:hover::before {
+  .toc-sections a:hover::before {
     background: var(--rp-hl-high);
   }
   .copy:hover {
@@ -361,51 +365,39 @@ details[open] > summary .icon:last-child {
 /* stylelint-enable selector-pseudo-class-disallowed-list */
 
 /* Page content */
-/* The h1 shares its row with the Markdown actions, which wrap under a title too long to leave them room. */
-.page-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px 24px;
-  margin-bottom: 24px;
-}
-.page-head h1 {
-  flex: 1 1 320px;
-  margin: 0;
-}
-/* A split button, as on the React Spectrum docs: Copy as Markdown, then the menu with the rest. The menu hangs from
-   the pair, so it lines up with the pair's edge wherever the pair sits. */
 .page-actions {
   position: relative;
   display: flex;
-  margin-top: 8px;
+  align-items: start;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 12px 4px 16px;
+  border-top: 1px solid var(--rp-line);
 }
 .md-copy,
-.md-menu > summary {
+.md-more {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   min-height: 32px;
-  padding: 0 10px;
-  border: 1px solid var(--rp-line);
-  background: var(--rp-surface);
+  padding: 1px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
   color: inherit;
-  font: inherit;
-  font-size: var(--rp-text-md);
-  line-height: 20px;
-}
-.md-copy {
-  border-inline-end: 0;
-  border-start-start-radius: var(--rp-r-md);
-  border-end-start-radius: var(--rp-r-md);
+  font: 500 0.875rem/18px var(--docs-sans);
+  white-space: nowrap;
   cursor: pointer;
+}
+.md-copy { min-width: 123px; }
+.md-copy .icon {
+  width: 16px;
+  height: 16px;
 }
 .md-copy[hidden] {
   display: none;
-}
-.md-copy[data-copied] > .icon:first-child {
-  color: var(--rp-positive-text);
 }
 .md-copy > .icon:nth-child(2),
 .md-copy[data-copied] > .icon:first-child {
@@ -415,30 +407,32 @@ details[open] > summary .icon:last-child {
   display: block;
   color: var(--rp-positive-text);
 }
-.md-menu > summary {
-  padding: 0 8px;
-  border-start-end-radius: var(--rp-r-md);
-  border-end-end-radius: var(--rp-r-md);
+.md-more {
+  width: 32px;
+  padding-inline: 0;
 }
-/* Alone, where the clipboard cannot be written, the menu is a whole button and names itself. */
-.md-copy[hidden] + .md-menu > summary {
-  padding: 0 10px;
-  border-radius: var(--rp-r-md);
+.md-menu > .md-more .icon,
+.md-menu[open] > .md-more .icon {
+  width: 20px;
+  height: 20px;
+  transform: rotate(90deg);
 }
-.md-copy:not([hidden]) + .md-menu .md-label {
-  display: none;
+.md-menu[open] > summary,
+.md-copy:active,
+.md-more:active {
+  background: var(--rp-hl-med);
 }
-/* The page's list styles stop at the menu. */
 .md-menu ul {
   position: absolute;
   margin: 0;
   list-style: none;
-  inset-inline-end: 0;
-  top: calc(100% + 4px);
+  inset-inline-end: 4px;
+  bottom: calc(100% - 8px);
   z-index: 10;
-  min-width: 200px;
-  padding: 4px;
-  border-radius: var(--rp-r-md);
+  min-width: 168px;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
   background: var(--rp-surface);
   box-shadow: var(--rp-elevated);
 }
@@ -446,14 +440,26 @@ details[open] > summary .icon:last-child {
   margin: 0;
 }
 .md-menu li a {
-  display: block;
-  padding: 6px 12px;
-  border-radius: var(--rp-r-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 32px;
+  padding: 7px 12px;
+  border-radius: 8px;
   color: var(--rp-text);
-  font-size: var(--rp-text-md);
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 18px;
   text-decoration: none;
   white-space: nowrap;
+}
+.md-menu li a:focus {
+  background: var(--rp-overlay);
+  outline: none;
+}
+.md-menu .external {
+  width: 12px;
+  height: 12px;
 }
 main h1 {
   margin: 0 0 24px;
@@ -701,7 +707,7 @@ th {
   color: var(--rp-accent-text);
 }
 
-@media (max-width: 1179px) {
+@media (max-width: 1023px) {
   .panel {
     grid-template-columns: minmax(0, 768px);
   }
@@ -748,13 +754,6 @@ th {
   }
   main h1 {
     font-size: var(--docs-h1-phone);
-  }
-  /* Under the title, the pair starts at the text's edge, and so does its menu. */
-  .page-actions {
-    margin-top: 0;
-  }
-  .md-menu ul {
-    inset-inline: 0 auto;
   }
   main h2 {
     font-size: var(--rp-text-4xl);
