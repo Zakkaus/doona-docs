@@ -16,7 +16,8 @@ pnpm check:size                  # gzip budgets for the dist/ build
 pnpm e2e:install --with-deps     # once, for the browser tests
 pnpm e2e                         # rebuild, then test against the mock at the root and under /ui/
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
-pnpm docs:check                  # links and anchors in docs/
+pnpm docs:build                  # the docs site in dist-docs/, served under DOCS_BASE (default /doona-docs/)
+pnpm docs:check                  # links and anchors in docs/ and in the built site
 ```
 
 `pnpm dev` 以 Vite 開發伺服器提供模擬後端。封存檔的版本號在本機取自 `package.json`，在標籤上取自 Git 描述；時間戳用 `SOURCE_DATE_EPOCH`，未設定時用 HEAD 提交時間。
@@ -45,6 +46,7 @@ pnpm docs:check                  # links and anchors in docs/
 | `tools/`        | 建置、打包、一致性檢查與截圖工具                  |
 | `install/`      | nfpm 設定與 OpenWrt、Alpine、Gentoo、Nix 打包設定 |
 | `docs/`         | 本文件、`anchors.json` 與截圖                     |
+| `site/`         | 文件網站的建置腳本與樣式表                        |
 
 ## 契約
 
