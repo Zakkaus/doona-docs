@@ -30,7 +30,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.2
 ```
 
 如需自行建置 honk，請簽出 `HONK-SOURCE.txt` 註明的提交，依 honk 快速入門的步驟建置：先建置 eBPF 物件，再執行 `cargo build --release -p honk-core --features ebpf`。`native-api` 是預設功能；未啟用 `ebpf` 時 honk 沒有資料路徑。發布頁同時附有該提交的原始碼封存 `honk-source-<commit>.tar.gz`。
@@ -123,7 +123,7 @@ sudo journalctl -u honk-core -e
 
 ### 狀態資料庫
 
-honk 預設會開啟 `<data_dir>/state/honk.db`：`global.store_subscribe` 預設為開啟，本範例也啟用了 `native_api`。狀態資料庫沒有需要加入的開關。此資料庫儲存管理員帳號、地理資料來源，以及 honk 需要持久保存的其他狀態。honk 會自行建立 `state/` 與 `honk.db`；`/var/lib/honk` 必須存在且 root 可寫入。
+honk 預設會開啟 `<data_dir>/state/honk.db`：`global.store_subscribe` 預設為開啟，本範例也啟用了 `native_api`。狀態資料庫沒有需要加入的開關。此資料庫儲存管理員帳號、地理資料來源，以及 honk 需要持久保存的其他狀態。honk 會自行建立 `state/` 與 `honk.db`，`/var/lib/honk` 不存在時也由 honk 建立。執行 honk 的使用者必須能在 `/var/lib` 中建立該目錄，並能寫入該目錄；本範例中該使用者為 root。
 
 本範例設定了 `password_auth: true`，資料庫無法開啟時 honk 不會啟動，因此 honk 正在執行即代表資料庫已開啟。Token 模式下 honk 不使用資料庫也會啟動，並記錄一則警告；此時缺少狀態資料庫代表它未能開啟。日誌訊息的意義請參閱[狀態資料庫問題](troubleshooting.md#state-db)。
 

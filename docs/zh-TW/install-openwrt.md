@@ -104,7 +104,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.1
+honk-core debug.2026.9.28.native-api.2
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

@@ -60,7 +60,7 @@ state database is locked by `honk-core admin reset`
 state database is corrupt
 ```
 
-1. unavailable: `data_dir` must exist and be writable by the user honk runs as, root with the [systemd unit](install.md#install). honk creates `state/` itself.
+1. unavailable: honk creates `data_dir` when it is missing, and `state/` inside it. The user honk runs as, root with the [systemd unit](install.md#install), must be able to create `data_dir` in its parent directory and write to it.
 2. unsafe: `state/` and `honk.db` must belong to that user and grant no group or other permissions. `honk.db` must be a regular file, not a symbolic link or a file replaced while honk opened it.
 3. locked: wait for `honk-core admin reset` to finish.
 4. corrupt: with `password_auth: true` honk stops. In token mode honk moves the file to `honk.db.corrupt` and starts a new one; if an older `.corrupt` file is already there, honk keeps both and runs without the database until that file is removed.

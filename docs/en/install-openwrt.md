@@ -104,7 +104,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.1
+honk-core debug.2026.9.28.native-api.2
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
