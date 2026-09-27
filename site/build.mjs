@@ -1,7 +1,10 @@
-// Renders docs/<locale>/*.md into a static site: one HTML page per Markdown page, a root page that sends the browser to
-// its language, and a 404 page. `node site/build.mjs` writes dist-docs/; tools/check-docs.mjs calls render() directly.
-// DOCS_BASE is the path the site is served under: /doona-docs/ on github.io, / on a domain of its own. DOONA_DIR names
-// the doona checkout the build reads the app's styles, icons and logo from (site/docs.mjs).
+// Renders docs/<locale>/*.md into a static site: one HTML page per Markdown page with the page's Markdown beside it,
+// llms.txt listing the Markdown pages, a root page that sends the browser to its language, and a 404 page.
+// `node site/build.mjs` writes dist-docs/; tools/check-docs.mjs calls render() directly. DOCS_BASE is the path the site
+// is served under: /doona-docs/ on github.io, / on a domain of its own. DOCS_ORIGIN, such as https://zakkaus.github.io,
+// makes the Markdown pages and llms.txt link by full URL, so the links still work once the text is pasted elsewhere;
+// without it they link by path. DOONA_DIR names the doona checkout the build reads the app's styles, icons and logo
+// from (site/docs.mjs).
 import MarkdownIt from 'markdown-it';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
@@ -94,10 +97,13 @@ const plain = inline =>
   inline.children.map(child => (child.type === 'text' || child.type === 'code_inline' ? child.content : child.type === 'softbreak' ? ' ' : '')).join('');
 
 const pageUrl = (base, locale, name) => `${base}${locale}/${name === 'index' ? '' : `${name}.html`}`;
+const markdownUrl = (base, locale, name) => `${base}${locale}/${name}.md`;
 
 // A link as the site serves it: pages and images in docs/ under the base, other repository files on GitHub. An image it
-// links is added to files, the map render() writes. A path this repository does not hold is doona's (locate).
-function rewrite(base, files, target, file) {
+// links is added to files, the map render() writes. With an origin, for the Markdown pages, a page link names the page's
+// Markdown and every link in docs/ starts with the origin; the origin is '' when DOCS_ORIGIN is not set. A path this
+// repository does not hold is doona's (locate).
+function rewrite(base, files, target, file, origin) {
   if (/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(target)) return target;
   const [path, ...hash] = target.split('#');
   const suffix = hash.length ? `#${hash.join('#')}` : '';
@@ -114,11 +120,11 @@ function rewrite(base, files, target, file) {
   if (inDocs.endsWith('.md')) {
     const [locale, name] = parts;
     if (parts.length !== 2 || !locales.includes(locale)) throw new Error(`${file}: ${target} is not a docs page`);
-    return pageUrl(base, locale, name.slice(0, -3)) + suffix;
+    return (origin === undefined ? pageUrl(base, locale, name.slice(0, -3)) : origin + markdownUrl(base, locale, name.slice(0, -3))) + suffix;
   }
   // Only files that exist are published; a missing one leaves the link dangling for the checker to report.
   if (existsSync(found)) files.set(parts.join('/'), {from: found});
-  return base + encodeURI(parts.join('/')) + suffix;
+  return (origin ?? '') + base + encodeURI(parts.join('/')) + suffix;
 }
 
 function parse(base, files, locale, name) {
@@ -190,10 +196,36 @@ function parse(base, files, locale, name) {
     }
   }
   if (!title) throw new Error(`${file}: no h1`);
-  return {name, title, toc, tokens};
+  // A paragraph right under the h1 introduces the page; its first sentence describes the page in llms.txt.
+  const h1 = tokens.findIndex(token => token.tag === 'h1');
+  const lead = tokens[h1 + 3]?.type === 'paragraph_open' ? plain(tokens[h1 + 4]) : '';
+  const description = /^[^]*?(?:[.!?](?=\s|$)|[。！？])/u.exec(lead)?.[0] ?? lead;
+  return {name, title, description, toc, tokens};
 }
 
-function head(base, lang, title) {
+// The page's Markdown as docs/ holds it, less the language line that parse() has checked, with each link rewritten as
+// the site serves it, by full URL when there is an origin. Code spans and fenced blocks are left as they are.
+function markdown(base, origin, files, locale, name) {
+  const file = join(docs, locale, `${name}.md`);
+  const source = readFileSync(file, 'utf8');
+  // A link to a heading on this page names the page too, so it still leads there from a chat.
+  const link = target => (target.startsWith('#') ? origin + markdownUrl(base, locale, name) + target : rewrite(base, files, target, file, origin));
+  let fenced = false;
+  return source
+    .slice(source.indexOf('\n\n') + 2)
+    .split('\n')
+    .map(line => {
+      if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
+      if (fenced) return line;
+      return line
+        .split(/(`+[^`]*`+)/)
+        .map((part, index) => (index % 2 ? part : part.replace(/(\]\(\s*<?)([^)\s>]+)/g, (match, open, target) => open + link(target))))
+        .join('');
+    })
+    .join('\n');
+}
+
+function head(base, lang, title, alternate) {
   return `<!doctype html>
 <html lang="${lang}">
 <head>
@@ -201,7 +233,7 @@ function head(base, lang, title) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>${escape(title)}</title>
-<link rel="icon" href="${base}logo.svg" type="image/svg+xml">
+${alternate ? `<link rel="alternate" type="text/markdown" href="${alternate}">\n` : ''}<link rel="icon" href="${base}logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${base}site.css">
 <script>
 try {
@@ -228,8 +260,30 @@ function navList(base, locale, parsed, current) {
   return `<ul class="pages">${sections.join('')}</ul>`;
 }
 
-// The language and page menus share a details name, so opening one closes the other.
-function page(base, locale, parsed, current) {
+// The Markdown actions beside the h1, as on the React Spectrum docs: copy the page's Markdown, which site.js shows where
+// the clipboard can be written, and a menu that opens it, or with an origin hands its URL to a chat assistant. The menu
+// is the pair's one control where the clipboard cannot be written, so it names itself then.
+function pageActions(base, origin, locale, name) {
+  const text = strings[locale];
+  const source = origin + markdownUrl(base, locale, name);
+  const prompt = text.markdownPrompt.replace('{page}', origin + pageUrl(base, locale, name)).replace('{markdown}', source);
+  const assistants = origin
+    ? [
+        ['ChatGPT', 'https://chatgpt.com/?q='],
+        ['Claude', 'https://claude.ai/new?q=']
+      ].map(([app, url]) => `<li><a href="${url}${encodeURIComponent(prompt)}">${text.openIn.replace('{app}', app)}</a></li>`)
+    : [];
+  return `<div class="page-actions">
+<button type="button" class="md-copy" data-src="${markdownUrl(base, locale, name)}" hidden>${icons.copy}${icons.copied}<span>${text.copyMarkdown}</span></button>
+<details class="md-menu" name="docs-menu">
+<summary aria-label="${text.markdownMenu}"><span class="md-label">Markdown</span>${icons.chevron}</summary>
+<ul><li><a href="${source}" type="text/markdown">${text.viewMarkdown}</a></li>${assistants.join('')}</ul>
+</details>
+</div>`;
+}
+
+// The language, page and Markdown menus share a details name, so opening one closes the others.
+function page(base, origin, locale, parsed, current) {
   const text = strings[locale];
   const home = parsed[0];
   const title = current.name === 'index' ? home.title : `${current.title} | ${home.title}`;
@@ -238,13 +292,17 @@ function page(base, locale, parsed, current) {
     return `<li><a href="${pageUrl(base, other, current.name)}" lang="${other}" hreflang="${other}"${here}>${strings[other].language}</a></li>`;
   });
   const toc = current.toc.map(entry => `<li class="${entry.level}"><a href="#${entry.id}">${escape(entry.text)}</a></li>`);
-  const body = md.renderer.render(current.tokens, md.options, {locale});
+  // The page opens with its h1, which shares a row with the Markdown actions.
+  const body = md.renderer.render(current.tokens, md.options, {locale}).replace(/^(<h1[^>]*>[^]*?<\/h1>)\n/, (h1, heading) => {
+    return `<div class="page-head">\n${heading}\n${pageActions(base, origin, locale, current.name)}\n</div>\n`;
+  });
+  if (!body.startsWith('<div class="page-head">')) throw new Error(`docs/${locale}/${current.name}.md: the page does not open with its h1`);
   // The theme button toggles as the app's does: a system scheme to its opposite, an override back to the system.
   const themeLabels = Object.fromEntries(['system', 'light', 'dark'].map(scheme => [scheme, text.theme.replace('{theme}', text[scheme])]));
   const themeData = Object.entries(themeLabels)
     .map(([scheme, label]) => `data-${scheme}="${label}"`)
     .join(' ');
-  return `${head(base, locale, title)}
+  return `${head(base, locale, title, origin + markdownUrl(base, locale, current.name))}
 </head>
 <body>
 <a class="skip" href="#content">${text.skip}</a>
@@ -278,14 +336,26 @@ ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-tit
 `;
 }
 
-export function render({base = '/doona-docs/'} = {}) {
+export function render({base = '/doona-docs/', origin = ''} = {}) {
   if (!/^\/(.+\/)?$/.test(base)) throw new Error(`DOCS_BASE must start and end with a slash: ${base}`);
+  if (!/^(https?:\/\/[^/]+)?$/.test(origin)) throw new Error(`DOCS_ORIGIN must be a scheme and host with no path: ${origin}`);
   const files = new Map();
 
+  // llms.txt, in the format of llmstxt.org: the site's name and summary, then each locale's Markdown pages.
+  const llms = [];
   for (const locale of locales) {
     const parsed = pages.map(name => parse(base, files, locale, name));
-    for (const current of parsed) files.set(`${locale}/${current.name}.html`, {text: page(base, locale, parsed, current)});
+    for (const current of parsed) {
+      files.set(`${locale}/${current.name}.html`, {text: page(base, origin, locale, parsed, current)});
+      files.set(`${locale}/${current.name}.md`, {text: markdown(base, origin, files, locale, current.name)});
+    }
+    if (!llms.length) llms.push(`# ${parsed[0].title}\n\n> ${parsed[0].description}\n`);
+    const entries = parsed.map(
+      ({name, title, description}) => `- [${title}](${origin}${markdownUrl(base, locale, name)})${description ? `: ${description}` : ''}`
+    );
+    llms.push(`## ${strings[locale].language}\n\n${entries.join('\n')}\n`);
   }
+  files.set('llms.txt', {text: llms.join('\n')});
 
   const home = locales.map(
     locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`
@@ -361,8 +431,9 @@ export function write(files, out) {
 
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   const base = process.env.DOCS_BASE || undefined;
+  const origin = process.env.DOCS_ORIGIN || undefined;
   const out = join(root, 'dist-docs');
-  const files = render({base});
+  const files = render({base, origin});
   write(files, out);
   console.log(`docs: ${files.size} files in ${relative(root, out)}/`);
 }

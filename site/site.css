@@ -332,10 +332,109 @@ details[open] > summary .icon:last-child {
     background: var(--rp-hl-med);
     color: var(--rp-text);
   }
+  .md-copy:hover,
+  .md-menu > summary:hover,
+  .md-menu li a:hover {
+    background: var(--rp-overlay);
+  }
 }
 /* stylelint-enable selector-pseudo-class-disallowed-list */
 
 /* Page content */
+/* The h1 shares its row with the Markdown actions, which wrap under a title too long to leave them room. */
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+.page-head h1 {
+  flex: 1 1 320px;
+  margin: 0;
+}
+/* A split button, as on the React Spectrum docs: Copy as Markdown, then the menu with the rest. The menu hangs from
+   the pair, so it lines up with the pair's edge wherever the pair sits. */
+.page-actions {
+  position: relative;
+  display: flex;
+  margin-top: 8px;
+}
+.md-copy,
+.md-menu > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--rp-line);
+  background: var(--rp-surface);
+  color: inherit;
+  font: inherit;
+  font-size: var(--rp-text-md);
+  line-height: 20px;
+}
+.md-copy {
+  border-inline-end: 0;
+  border-start-start-radius: var(--rp-r-md);
+  border-end-start-radius: var(--rp-r-md);
+  cursor: pointer;
+}
+.md-copy[hidden] {
+  display: none;
+}
+.md-copy[data-copied] > .icon:first-child {
+  color: var(--rp-positive-text);
+}
+.md-copy > .icon:nth-child(2),
+.md-copy[data-copied] > .icon:first-child {
+  display: none;
+}
+.md-copy[data-copied] > .icon:nth-child(2) {
+  display: block;
+  color: var(--rp-positive-text);
+}
+.md-menu > summary {
+  padding: 0 8px;
+  border-start-end-radius: var(--rp-r-md);
+  border-end-end-radius: var(--rp-r-md);
+}
+/* Alone, where the clipboard cannot be written, the menu is a whole button and names itself. */
+.md-copy[hidden] + .md-menu > summary {
+  padding: 0 10px;
+  border-radius: var(--rp-r-md);
+}
+.md-copy:not([hidden]) + .md-menu .md-label {
+  display: none;
+}
+/* The page's list styles stop at the menu. */
+.md-menu ul {
+  position: absolute;
+  margin: 0;
+  list-style: none;
+  inset-inline-end: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  min-width: 200px;
+  padding: 4px;
+  border-radius: var(--rp-r-md);
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.md-menu li {
+  margin: 0;
+}
+.md-menu li a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: var(--rp-r-md);
+  color: var(--rp-text);
+  font-size: var(--rp-text-md);
+  line-height: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
 main h1 {
   margin: 0 0 24px;
   font-size: var(--docs-h1);
@@ -629,6 +728,13 @@ th {
   }
   main h1 {
     font-size: var(--docs-h1-phone);
+  }
+  /* Under the title, the pair starts at the text's edge, and so does its menu. */
+  .page-actions {
+    margin-top: 0;
+  }
+  .md-menu ul {
+    inset-inline: 0 auto;
   }
   main h2 {
     font-size: var(--rp-text-4xl);

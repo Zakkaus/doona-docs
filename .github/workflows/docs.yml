@@ -43,7 +43,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      # The Markdown pages and llms.txt link by full URL on the published site.
       - run: pnpm docs:build
+        env:
+          DOCS_ORIGIN: https://zakkaus.github.io
       - run: pnpm docs:check
       - uses: actions/upload-artifact@v4
         with:

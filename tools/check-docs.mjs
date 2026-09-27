@@ -3,7 +3,8 @@
 // anchors and heading levels. A path this repository does not hold is looked up in doona's checkout (DOONA_DIR), as the
 // build does. The README files are checked for links too, and every anchor doona's docsHref links is in
 // docs/anchors.json on the same page. Then it renders the site (site/build.mjs) for both base paths and checks that
-// every internal link, image and #id in the HTML resolves.
+// every internal link, image and #id in the HTML resolves, that every page has its Markdown, and that every link in
+// the Markdown pages and llms.txt resolves.
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {anchors, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
@@ -171,6 +172,27 @@ for (const base of ['/doona-docs/', '/']) {
       }
       if (!site.has(file)) failures.push(`${where} names no file the build writes`);
       else if (fragment !== undefined && !html.get(file)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${file}`);
+    }
+  }
+  // The Markdown pages and llms.txt link by path here, as DOCS_ORIGIN is not set; a #fragment on a Markdown page names
+  // an id on its HTML page.
+  for (const path of html.keys()) {
+    if (locales.includes(path.split('/')[0]) && !site.has(path.replace(/\.html$/, '.md'))) failures.push(`site (${base}) ${path}: no Markdown beside it`);
+  }
+  for (const [path, file] of site) {
+    if (!path.endsWith('.md') && path !== 'llms.txt') continue;
+    for (const [, url] of file.text.matchAll(/\]\(\s*<?([^)\s>]+)/g)) {
+      if (/^[a-z][a-z0-9+.-]*:/i.test(url)) continue;
+      const where = `site (${base}) ${path}: ${url}`;
+      const [target, fragment] = url.split('#');
+      if (!target.startsWith(base)) {
+        failures.push(`${where} is not a path under the base`);
+        continue;
+      }
+      const linked = decodeURI(target.slice(base.length));
+      const page = linked.replace(/\.md$/, '.html');
+      if (!site.has(linked)) failures.push(`${where} names no file the build writes`);
+      else if (fragment !== undefined && !html.get(page)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${page}`);
     }
   }
 }
