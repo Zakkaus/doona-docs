@@ -250,22 +250,44 @@ details[open] > summary .icon:last-child {
 /* The page lists (sidebar, phone menu, "On this page") follow the Spectrum 2 docs: rows carry no fill, a bar at the
    start marks one instead, light on hover and in the text colour with bold text on the current page, and the gaps
    between rows keep any two marks apart. */
+/* The first section is a label over rows at the top level; the others are rows of their own, 6px apart like the page
+   rows, with a chevron that points down while the section is open. */
 .pages > li + li {
+  margin-top: 6px;
+}
+.pages > .nav-static + li {
   margin-top: 24px;
+}
+.nav-label {
+  display: block;
+  margin-bottom: 8px;
+  padding-inline-start: 6px;
+  color: var(--rp-subtle-text);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 16px;
 }
 .group {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  padding-block: 7px;
   padding-inline-start: 12px;
-  color: var(--rp-subtle-text);
-  font-size: 0.875rem;
+  font-size: var(--rp-text-md);
   font-weight: 400;
-  line-height: 20px;
+  line-height: 18px;
 }
-.nav-group > .group .icon { transform: rotate(-90deg); }
-.nav-group[open] > .group .icon { transform: none; }
+.nav-group:not([open]) > .group {
+  margin-bottom: 0;
+}
+.nav-group > .group .icon {
+  width: 10px;
+  height: 10px;
+  margin-inline-end: 9px;
+  transform: none;
+}
+.nav-group[open] > .group .icon { transform: rotate(90deg); }
 .pages ul {
   display: grid;
   gap: 6px;
@@ -295,6 +317,12 @@ details[open] > summary .icon:last-child {
 }
 .pages a::before {
   inset-inline-start: 20px;
+}
+.nav-static a {
+  padding-inline-start: 12px;
+}
+.nav-static a::before {
+  inset-inline-start: 4px;
 }
 .pages a[aria-current],
 .toc-sections a[aria-current] {
@@ -1089,6 +1117,9 @@ body:has(#docs-search[open]) { overflow: hidden; }
   }
   .tablist > [role='tab'] {
     transition: color var(--rp-duration) var(--rp-ease);
+  }
+  .nav-group > .group .icon {
+    transition: transform var(--rp-duration) var(--rp-ease);
   }
   :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close):active {
     transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);

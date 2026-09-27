@@ -81,6 +81,34 @@ describe('icons', () => {
   });
 });
 
+describe('navigation', () => {
+  const site = render();
+  // The sidebar's sections, in order: whether each is a plain label or collapses, and whether it starts open.
+  const sections = page => {
+    const nav = /<nav class="sidebar"[^>]*>([^]*?)<\/nav>/.exec(site.get(page).text)[1];
+    return [...nav.matchAll(/<li class="nav-static"><span class="nav-label">|<details class="nav-group"( open)?><summary/g)].map(match =>
+      match[0].includes('nav-static') ? 'label' : match[1] ? 'open' : 'closed'
+    );
+  };
+
+  it('shows the first section as a label and opens only the section holding the page', () => {
+    for (const locale of locales) {
+      expect(sections(`${locale}/index.html`)).toEqual(['label', 'closed', 'closed']);
+      expect(sections(`${locale}/features.html`)).toEqual(['label', 'open', 'closed']);
+      expect(sections(`${locale}/development.html`)).toEqual(['label', 'closed', 'open']);
+    }
+  });
+
+  it('gives the label no toggle and the phone menu the same sections', () => {
+    const page = site.get('zh-TW/index.html').text;
+    const label = /<li class="nav-static">([^]*?)<ul>/.exec(page)[1];
+    expect(label).toBe('<span class="nav-label">入門</span>');
+    const menu = /<details class="menu"[^]*?<nav[^>]*>([^]*?)<\/nav>/.exec(page)[1];
+    const sidebar = /<nav class="sidebar"[^>]*>([^]*?)<\/nav>/.exec(page)[1];
+    expect(menu).toBe(sidebar);
+  });
+});
+
 // site/site.js over two .tabs boxes as build.mjs renders them, with storage holding `stored`.
 function tabBoxes(labels, stored) {
   const element = (tag, props = {}) => ({
