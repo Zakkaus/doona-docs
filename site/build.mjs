@@ -156,6 +156,7 @@ export function render({base = '/doona-docs/'} = {}) {
     return `<ul>${items.join('')}</ul>`;
   }
 
+  // The language and page menus share a details name, so opening one closes the other.
   function page(locale, parsed, current) {
     const text = strings[locale];
     const home = parsed[0];
@@ -173,7 +174,7 @@ export function render({base = '/doona-docs/'} = {}) {
 <header class="top">
 <a class="brand" href="${pageUrl(locale, 'index')}">${logo}<span>doona</span></a>
 <div class="actions">
-<details class="language">
+<details class="language" name="docs-menu">
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
 <ul>${languages.join('')}</ul>
 </details>
@@ -183,7 +184,7 @@ export function render({base = '/doona-docs/'} = {}) {
 <div class="layout">
 <nav class="sidebar" aria-label="${text.pages}">${navList(locale, parsed, current.name)}</nav>
 <div class="panel">
-<details class="menu">
+<details class="menu" name="docs-menu">
 <summary>${icons.pages}<span>${escape(current.title)}</span>${icons.chevron}</summary>
 <nav aria-label="${text.pages}">${navList(locale, parsed, current.name)}</nav>
 </details>
