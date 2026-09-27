@@ -2,7 +2,7 @@
 
 # 在 Gentoo 上安裝
 
-本頁用 Portage 從 doona 儲存庫中的 ebuild 安裝 doona，並從同一個 doona 發行版安裝 honk-core。目前沒有 ebuild 儲存庫收錄 doona，因此需要把 ebuild 放進本機儲存庫。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+本頁用 Portage 從 doona 儲存庫中的 ebuild 安裝 doona，並從同一個 doona 發行版本安裝 honk-core。目前沒有 ebuild 儲存庫收錄 doona，因此需要把 ebuild 放進本機儲存庫。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
 ## 開始之前
 
@@ -10,25 +10,31 @@
 - 可使用 sudo 的使用者，或 root shell。需要 root 權限的命令分為「sudo」與「root」兩個分頁，請選擇與目前的 shell 相符的一個。
 - `net-misc/curl` 與 `app-misc/ca-certificates`，stage3 已包含這兩個套件。缺少 CA 憑證時 honk 會在啟動階段結束。
 - 能夠連線到 github.com。
-- 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `VERSION`、`PV`、`BASE` 與 `TARGET` 變數。
+- 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `REPO`、`VERSION`、`PV`、`BASE` 與 `TARGET` 變數。
 
 ## 1. 建立本機儲存庫
 
-如果已有本地 ebuild 儲存庫，請跳過此步，並在第 2 步中用該儲存庫的路徑替換 `/var/db/repos/local`。
+把 `REPO` 設為儲存庫路徑。如果已有本機 ebuild 儲存庫，把 `REPO` 設為該儲存庫的路徑，並跳過此步其餘的命令。
+
+```sh
+REPO=/var/db/repos/local
+```
+
+建立儲存庫並向 Portage 註冊：
 
 ```sh tab="sudo"
-sudo mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
-echo local | sudo tee /var/db/repos/local/profiles/repo_name
-printf 'masters = gentoo\nauto-sync = false\n' | sudo tee /var/db/repos/local/metadata/layout.conf
-printf '[local]\nlocation = /var/db/repos/local\n' | sudo tee /etc/portage/repos.conf/local.conf
+sudo mkdir -p "$REPO/metadata" "$REPO/profiles" /etc/portage/repos.conf
+echo local | sudo tee "$REPO/profiles/repo_name"
+printf 'masters = gentoo\nauto-sync = false\n' | sudo tee "$REPO/metadata/layout.conf"
+printf '[local]\nlocation = %s\n' "$REPO" | sudo tee /etc/portage/repos.conf/local.conf
 portageq get_repos /
 ```
 
 ```sh tab="root"
-mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
-echo local > /var/db/repos/local/profiles/repo_name
-printf 'masters = gentoo\nauto-sync = false\n' > /var/db/repos/local/metadata/layout.conf
-printf '[local]\nlocation = /var/db/repos/local\n' > /etc/portage/repos.conf/local.conf
+mkdir -p "$REPO/metadata" "$REPO/profiles" /etc/portage/repos.conf
+echo local > "$REPO/profiles/repo_name"
+printf 'masters = gentoo\nauto-sync = false\n' > "$REPO/metadata/layout.conf"
+printf '[local]\nlocation = %s\n' "$REPO" > /etc/portage/repos.conf/local.conf
 portageq get_repos /
 ```
 
@@ -36,14 +42,14 @@ portageq get_repos /
 
 ## 2. 加入 doona 的 ebuild
 
-設定發行版版本號及其 Gentoo 寫法，然後從該發行版的標籤下載 ebuild 與 `metadata.xml`。
+設定發行版本號及其 Gentoo 寫法，然後從該發行版本的標籤下載 ebuild 與 `metadata.xml`。
 
 ```sh tab="sudo"
 VERSION=0.1.0-beta.8
 PV=0.1.0_beta8
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
-sudo mkdir -p /var/db/repos/local/net-proxy/doona
-cd /var/db/repos/local/net-proxy/doona
+sudo mkdir -p "$REPO/net-proxy/doona"
+cd "$REPO/net-proxy/doona"
 sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
@@ -52,15 +58,15 @@ cd -
 VERSION=0.1.0-beta.8
 PV=0.1.0_beta8
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
-mkdir -p /var/db/repos/local/net-proxy/doona
-cd /var/db/repos/local/net-proxy/doona
+mkdir -p "$REPO/net-proxy/doona"
+cd "$REPO/net-proxy/doona"
 curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
 ## 3. 下載並驗證 doona 封存檔
 
-ebuild 安裝發行版中的程式封存檔；預設啟用的 `fonts` USE 標誌還會安裝字型封存檔。下載這兩個檔案與 `SHA256SUMS` 並驗證。
+ebuild 安裝發行版本中的程式封存檔；預設啟用的 `fonts` USE 標誌還會安裝字型封存檔。下載這兩個檔案與 `SHA256SUMS` 並驗證。
 
 ```sh
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
@@ -83,17 +89,17 @@ doona-fonts-0.1.0-beta.8.tar.gz: OK
 DISTDIR=$(portageq distdir)
 sudo cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
 sudo cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
-sudo ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+sudo ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 ```
 
 ```sh tab="root"
 DISTDIR=$(portageq distdir)
 cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
 cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
-ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 ```
 
-最後一條命令輸出 `>>> Creating Manifest for /var/db/repos/local/net-proxy/doona`。
+最後一條命令輸出 `>>> Creating Manifest for` 及套件目錄，預設為 `/var/db/repos/local/net-proxy/doona`。
 
 ## 5. 安裝 doona
 
@@ -121,7 +127,7 @@ Portage 最後輸出 `Point the engine's ui setting at /usr/share/doona, or serv
 uname -m
 ```
 
-發行版附帶 8 個 honk-core 封存檔，名稱為 `honk-core-debug-<target>.tar.gz`。根據機器類型與 C 函式庫確定 target：
+發行版本附帶 8 個 honk-core 封存檔，名稱為 `honk-core-debug-<target>.tar.gz`。根據機器類型與 C 函式庫確定 target：
 
 | `uname -m` 輸出 | target 開頭              |
 | --------------- | ------------------------ |
@@ -130,7 +136,7 @@ uname -m
 
 | target 結尾     | 適用情況                                                                              |
 | --------------- | ------------------------------------------------------------------------------------- |
-| `musl`          | 無法確定，或系統使用 musl 時選擇此項。靜態連結的二進位檔，可在任何 Linux 上執行。  |
+| `musl`          | 無法確定，或系統使用 musl 時選擇此項。靜態連結，不受系統 glibc 版本限制。  |
 | `gnu`           | 系統的 glibc 為 2.39 或更高版本。glibc 較舊時會顯示錯誤 `GLIBC_2.38' not found` 並結束。 |
 | `-stock` 後綴   | 記憶體比速度更重要，例如小型裝置。使用系統記憶體分配器而不是 mimalloc。                   |
 
@@ -138,7 +144,7 @@ uname -m
 
 ## 7. 下載並驗證 honk-core
 
-把 `TARGET` 設為所選的建置，然後從同一個發行版下載，並用同一個 `SHA256SUMS` 驗證。
+把 `TARGET` 設為所選的建置，然後從同一個發行版本下載，並用同一個 `SHA256SUMS` 驗證。
 
 ```sh
 TARGET=x86_64-unknown-linux-musl
@@ -171,12 +177,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
-同一個發行版中的 `HONK-SOURCE.txt` 註明其附帶的建置。
+同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
-下一步：[最小組態](minimal-configuration.md)。後續頁面中的服務是 systemd 單元；doona 與 honk 都不提供 OpenRC 指令碼。
+下一步：[最小組態](minimal-configuration.md)。服務相關步驟只涵蓋 systemd 與 OpenWrt 的 procd；doona 與 honk 都不提供 OpenRC 指令碼。使用 OpenRC 時，[服務管理](service-management.md)提供在前景運作 honk 的命令，用於完成首次登入。
 
 ## 遇到問題時
 

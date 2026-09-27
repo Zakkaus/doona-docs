@@ -10,7 +10,7 @@ doona is a static web UI for the native API that the daeuniverse engines share: 
 
 ## Native API status
 
-doona needs honk's native API, which exists only on the `feat/native-api` branch of Glassyiris/honk and its rolling `debug` release. These pages were checked against `debug.2026.9.26.native-api.4` (commit `5d8f32c1`). Keys and defaults may change before upstream honk releases the API.
+doona needs honk's native API, which exists only on the `feat/native-api` branch of Glassyiris/honk and its rolling `debug` release. These pages were checked against `debug.2026.9.28.native-api.1` (commit `3603894a`). Keys and defaults may change before upstream honk releases the API.
 
 ## Pages
 

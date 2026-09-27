@@ -2,9 +2,9 @@
 
 # 在 OpenWrt 上安裝
 
-本頁在 OpenWrt 25.12 上用發行版中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+本頁在 OpenWrt 25.12 上用發行版本中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
-發行版中的 `.ipk` 套件不適用於目前任何一個 OpenWrt 系列。OpenWrt 25.12 用 `apk` 安裝套件，`apk` 拒絕 `.ipk` 並報錯 `v2 package format error`。OpenWrt 24.10 仍使用 `opkg`，但核心是 Linux 6.6，低於 honk 要求的 6.12。
+發行版本中的 `.ipk` 套件不適用於目前任何一個 OpenWrt 系列。OpenWrt 25.12 用 `apk` 安裝套件，`apk` 拒絕 `.ipk` 並報錯 `v2 package format error`。OpenWrt 24.10 仍使用 `opkg`，但核心是 Linux 6.6，低於 honk 要求的 6.12。
 
 ## 開始之前
 
@@ -25,7 +25,7 @@ apk add curl ca-bundle
 
 ## 2. 下載 doona
 
-在 `/tmp` 中操作。`/tmp` 位於記憶體中，重新啟動後清空。設定發行版版本號，然後下載封存檔與總和檢查碼檔案。
+在 `/tmp` 中操作。`/tmp` 位於記憶體中，重新啟動後清空。設定發行版本號，然後下載封存檔與總和檢查碼檔案。
 
 ```sh
 cd /tmp
@@ -75,7 +75,7 @@ OpenWrt 使用 musl，因此選擇 `musl` 建置：
 
 ## 6. 下載並驗證 honk-core
 
-把 `TARGET` 設為所選的建置，然後從同一個發行版下載，並用同一個 `SHA256SUMS` 驗證。
+把 `TARGET` 設為所選的建置，然後從同一個發行版本下載，並用同一個 `SHA256SUMS` 驗證。
 
 ```sh
 TARGET=x86_64-unknown-linux-musl
@@ -104,10 +104,10 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.26.native-api.4
+honk-core debug.2026.9.28.native-api.1
 ```
 
-同一個發行版中的 `HONK-SOURCE.txt` 註明其附帶的建置。
+同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
 下一步：[最小組態](minimal-configuration.md)。該頁凡是提供「OpenWrt」分頁的地方，都選擇它。
 

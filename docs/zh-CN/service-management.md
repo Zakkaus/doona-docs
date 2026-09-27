@@ -2,7 +2,7 @@
 
 # 服务管理
 
-本页把 honk 作为服务运行：先创建一次服务，再列出启动、停止、重启、重载 honk 以及查看日志的命令。请先完成[最小配置](minimal-configuration.md)。
+本页把 honk 作为 systemd 或 OpenWrt procd 服务运行：先创建一次服务，再列出启动、停止、重启、重载 honk 以及查看日志的命令。本页不含 OpenRC 步骤。请先完成[最小配置](minimal-configuration.md)。
 
 doona 的软件包都不安装 honk 服务，honk 的发行归档文件中也没有服务文件，因此第 1 步需要自行创建。
 
@@ -10,7 +10,21 @@ doona 的软件包都不安装 honk 服务，honk 的发行归档文件中也没
 | ---------------------------------------------------------- | ---------- | ------------------------- |
 | Debian、Ubuntu、Fedora、RHEL、Arch Linux、使用 systemd 的 Gentoo | systemd | “sudo”或“root”     |
 | OpenWrt                                                    | procd      | “OpenWrt”              |
-| 使用 OpenRC 的 Gentoo 或 Alpine                            | OpenRC     | 不在本页范围内：没有提供 OpenRC 脚本 |
+| 使用 OpenRC 的 Gentoo 或 Alpine                            | OpenRC     | 不在本页范围内：见下文 OpenRC 一节 |
+
+## OpenRC
+
+doona 与 honk 都不提供 OpenRC 脚本。如需完成[首次登录](first-sign-in.md)，用[最小配置](minimal-configuration.md)第 6 步的命令在前台启动 honk：
+
+```sh tab="sudo"
+sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
+```
+
+```sh tab="root"
+/usr/local/bin/honk-core --config /etc/honk/config.dae
+```
+
+honk 持续运行，直到按下 Ctrl+C 或关闭终端，日志直接输出到该终端。honk 不会随开机启动。本页其余内容只适用于 systemd 与 procd。
 
 ## 1. 创建服务
 
@@ -152,7 +166,21 @@ journalctl -u honk-core -e
 logread -e honk-core
 ```
 
-如需持续显示新写入的日志，使用 `journalctl -u honk-core -f` 或 `logread -f -e honk-core`，按 Ctrl+C 结束。systemd 日志中也保留了之前几次启动的内容，请从最后一行 `starting` 开始阅读。
+如需持续显示新写入的日志：
+
+```sh tab="sudo"
+sudo journalctl -u honk-core -f
+```
+
+```sh tab="root"
+journalctl -u honk-core -f
+```
+
+```sh tab="OpenWrt"
+logread -f -e honk-core
+```
+
+按 Ctrl+C 结束。systemd 日志中也保留了之前几次启动的内容，请从最后一行 `starting` 开始阅读。
 
 ## 重载配置
 

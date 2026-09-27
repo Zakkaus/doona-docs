@@ -32,7 +32,7 @@ doona signs you in and opens the Activity page. honk keeps the account in its st
 Select Overview in the side navigation. With honk running, it shows:
 
 - Running at the top of the page.
-- The Engine card: under Engine, `honk` and the version `honk-core --version` printed, such as `honk debug.2026.9.26.native-api.4`; under API, `dae/honk-native v1 (draft)`; under Build, the honk commit and the build target you installed.
+- The Engine card: under Engine, `honk` and the version `honk-core --version` printed, such as `honk debug.2026.9.28.native-api.1`; under API, `dae/honk-native v1 (draft)`; under Build, the honk commit and the build target you installed.
 - The Backend features card, listing what this honk provides, such as Connections, Logs and Configuration.
 
 The bottom of the side navigation shows the same honk version. Traffic counters stay at 0 until traffic passes through honk.
@@ -46,7 +46,7 @@ Setup is complete. To route LAN devices, add nodes and rules, see [Configuration
 | The browser cannot connect                                                                 | honk is not running, or the address differs from `listen`. Check [step 3 of Service management](service-management.md) and `curl http://192.168.1.1:9527/api` on the gateway. A firewall on the gateway can also block port 9527. |
 | This honk build has no native API                                                      | The installed honk-core lacks the native API. Install the build from the doona release; see [honk version](requirements.md#honk-version).                                                             |
 | The backend accepts administrator setup only from loopback, private or link-local addresses. | The browser reached honk from a public address. Open doona from a device on the LAN, or on the gateway itself.                                                                                         |
-| The username or password is incorrect.                                                 | Enter them again. To replace a forgotten administrator, stop honk, run `honk-core admin reset` as root, then start honk; the setup page opens again.                                                    |
+| The username or password is incorrect.                                                 | Enter them again. To replace a forgotten administrator, stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), then start honk; the setup page opens again.                                                    |
 | Token required instead of the setup page                                               | `api.dae` sets `secret` instead of `password_auth: true`. Enter that secret as the token, or change `api.dae` as in [Minimal configuration](minimal-configuration.md) and restart honk.                 |
 
 For more, see [Sign-in problems](troubleshooting.md#sign-in).

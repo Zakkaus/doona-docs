@@ -32,7 +32,7 @@ doona 登录后打开“活动”页。honk 把账户保存在状态数据库 `/
 在侧边导航栏中选择“概览”。honk 运行时，该页显示：
 
 - 页面顶部的“运行中”。
-- “引擎”卡片：“引擎”下为 `honk` 与 `honk-core --version` 输出的版本，例如 `honk debug.2026.9.26.native-api.4`；“API”下为 `dae/honk-native v1 (draft)`；“构建”下为 honk 的提交与所安装构建的 target。
+- “引擎”卡片：“引擎”下为 `honk` 与 `honk-core --version` 输出的版本，例如 `honk debug.2026.9.28.native-api.1`；“API”下为 `dae/honk-native v1 (draft)`；“构建”下为 honk 的提交与所安装构建的 target。
 - “后端能力”卡片，列出这个 honk 提供的功能，例如“连接”“日志”“配置”。
 
 侧边导航栏底部显示同一个 honk 版本。在有流量经过 honk 之前，流量计数保持为 0。
@@ -44,9 +44,9 @@ doona 登录后打开“活动”页。honk 把账户保存在状态数据库 `/
 | 看到的内容                                                     | 原因与处理                                                                                                                                                         |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 浏览器无法连接                                                 | honk 没有运行，或地址与 `listen` 不一致。请按[服务管理第 3 步](service-management.md)检查，并在网关上执行 `curl http://192.168.1.1:9527/api`。网关上的防火墙也可能拦截 9527 端口。 |
-| “此 honk 构建未提供原生 API”                                | 已安装的 honk-core 没有原生 API。请安装 doona 发行版附带的构建，见 [honk 版本](requirements.md#honk-version)。                                                     |
+| “此 honk 构建未提供原生 API”                                | 已安装的 honk-core 没有原生 API。请安装 doona 发布版本附带的构建，见 [honk 版本](requirements.md#honk-version)。                                                     |
 | “后端只接受来自本机、私有网络或链路本地地址的管理员创建请求。” | 浏览器从公网地址访问了 honk。请在局域网设备或网关本机上打开 doona。                                                                                                |
-| “用户名或密码错误。”                                        | 重新输入。如需替换忘记密码的管理员，先停止 honk，以 root 执行 `honk-core admin reset`，再启动 honk，页面会重新显示创建管理员。                                        |
+| “用户名或密码错误。”                                        | 重新输入。如需替换忘记密码的管理员，先停止 honk，执行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上执行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再启动 honk，页面会重新显示创建管理员。                                        |
 | 显示“需要 Token”而不是创建管理员                           | `api.dae` 设置了 `secret` 而不是 `password_auth: true`。请把该 secret 作为 Token 输入，或按[最小配置](minimal-configuration.md)修改 `api.dae` 后重启 honk。          |
 
 更多内容见[登录问题](troubleshooting.md#sign-in)。

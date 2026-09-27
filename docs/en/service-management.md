@@ -2,7 +2,7 @@ English · [简体中文](../zh-CN/service-management.md) · [繁體中文](../z
 
 # Service management
 
-This page runs honk as a service: it creates the service once, then lists the commands that start, stop, restart and reload honk and read its log. Finish [Minimal configuration](minimal-configuration.md) first.
+This page runs honk as a systemd or OpenWrt procd service: it creates the service once, then lists the commands that start, stop, restart and reload honk and read its log. It has no OpenRC steps. Finish [Minimal configuration](minimal-configuration.md) first.
 
 No doona package installs a honk service, and honk’s release archives carry none, so step 1 creates it.
 
@@ -10,7 +10,21 @@ No doona package installs a honk service, and honk’s release archives carry no
 | ------------------------------------------------ | --------------- | ----------------- |
 | Debian, Ubuntu, Fedora, RHEL, Arch Linux, Gentoo with systemd | systemd | sudo or root |
 | OpenWrt                                          | procd           | OpenWrt       |
-| Gentoo or Alpine with OpenRC                     | OpenRC          | Not covered: no OpenRC script is provided |
+| Gentoo or Alpine with OpenRC                     | OpenRC          | Not covered: see OpenRC below |
+
+## OpenRC
+
+doona and honk ship no OpenRC script. To reach [First sign-in](first-sign-in.md), start honk in the foreground with the command from step 6 of [Minimal configuration](minimal-configuration.md):
+
+```sh tab="sudo"
+sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
+```
+
+```sh tab="root"
+/usr/local/bin/honk-core --config /etc/honk/config.dae
+```
+
+honk runs until you press Ctrl+C or close the terminal, and prints its log there. It does not start at boot. The rest of this page applies to systemd and procd only.
 
 ## 1. Create the service
 
@@ -152,7 +166,21 @@ journalctl -u honk-core -e
 logread -e honk-core
 ```
 
-To follow new lines as they arrive, use `journalctl -u honk-core -f` or `logread -f -e honk-core`, and press Ctrl+C to stop following. The systemd journal keeps lines from earlier starts too; read from the last `starting` line.
+To follow new lines as they arrive:
+
+```sh tab="sudo"
+sudo journalctl -u honk-core -f
+```
+
+```sh tab="root"
+journalctl -u honk-core -f
+```
+
+```sh tab="OpenWrt"
+logread -f -e honk-core
+```
+
+Press Ctrl+C to stop following. The systemd journal keeps lines from earlier starts too; read from the last `starting` line.
 
 ## Reload the configuration
 

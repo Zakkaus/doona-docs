@@ -2,7 +2,7 @@ English · [简体中文](../zh-CN/minimal-configuration.md) · [繁體中文](.
 
 # Minimal configuration
 
-This page writes the smallest honk configuration that starts honk and serves doona, then checks it by starting honk by hand. It assumes doona is in `/usr/share/doona` and honk-core is installed, as the install pages leave them.
+This page writes the smallest honk configuration that starts honk and serves doona, then checks it by starting honk by hand. It assumes doona is in `/usr/share/doona` and honk-core is installed, as the [install pages](install.md) leave them.
 
 The configuration is two files. `/etc/honk/config.dae` is the main file. `/etc/honk/config.d/api.dae` turns on the native API that doona talks to. Every connection goes out directly until you add nodes and rules; [Configuration](configuration.md#config) has a fuller example.
 
@@ -189,7 +189,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk keeps running in the foreground. Each line starts with a timestamp; among them you should see:
 
 ```text
-INFO honk_core: honk-core debug.2026.9.26.native-api.4 starting
+INFO honk_core: honk-core debug.2026.9.28.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
@@ -242,7 +242,8 @@ honk prints the reason on a line starting `fatal error, shutting down:` or as an
 | `failed to inspect native UI index.html: No such file or directory`                       | doona is not in `/usr/share/doona`. Repeat the doona steps of the install page.                                                  |
 | `Subscription network owner failed error="subscription HTTP client creation failed"`, then `subscription network startup failed` | CA certificates are missing. Install the `ca-certificates` package (`ca-bundle` on OpenWrt).                     |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | The `password_auth: true` line is missing from `api.dae`.                                                                         |
-| `unknown experimental setting`                                                            | A `native_api` field sits directly under `experimental`, or this honk build has no native API. See [unknown experimental setting](troubleshooting.md#unknown-setting). |
+| `native API setting belongs inside native_api { }`                                        | A `native_api` field sits directly under `experimental`. Move it into `native_api { }`. |
+| `unknown experimental setting`                                                            | `enabled` sits directly under `experimental`, or this honk build has no native API. See [unknown experimental setting](troubleshooting.md#unknown-setting). |
 | `command not found`                                                                       | honk-core is not where the command expects it. Repeat the honk-core install step.                                                |
 
 A clean start does not prove that every value means what you intended: honk accepts some unknown values without an error. For more messages, see [Troubleshooting](troubleshooting.md#troubleshooting).
