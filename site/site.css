@@ -1006,6 +1006,14 @@ body:has(#docs-search[open]) { overflow: hidden; }
 @media (max-width: 600px) {
   .search-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close) {
+    transition: transform 150ms cubic-bezier(0.45, 0, 0.4, 1), background-color 150ms cubic-bezier(0.45, 0, 0.4, 1);
+  }
+  :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close):active {
+    transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   pre { animation: none; }
 }
