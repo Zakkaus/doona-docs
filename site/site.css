@@ -1,23 +1,11 @@
 /* The docs site's one stylesheet. The colour, radius and type tokens are doona's: Rosé Pine Dawn and Moon, its default
-   palette (DEFAULT_PALETTE in src/shell/palettes.ts), copied from src/ui/styles/palettes.css and the role tokens in
-   src/ui/styles/motion.css. Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by
-   default, or the one the theme button stores, which the page head applies as data-theme before the first paint. */
+   palette (DEFAULT_PALETTE in src/shell/palettes.ts), which site/build.mjs writes in from src/ui/styles/palettes.css,
+   and the role tokens copied from src/ui/styles/motion.css. Each colour is a light-dark() pair, so the scheme alone
+   picks the palette: the system's by default, or the one the theme button stores, which the page head applies as
+   data-theme before the first paint. */
 :root {
   color-scheme: light dark;
-  --rp-base: light-dark(#faf4ed, #232136);
-  --rp-surface: light-dark(#fffaf3, #2a273f);
-  --rp-overlay: light-dark(#f2e9e1, #393552);
-  --rp-muted: light-dark(#9893a5, #6e6a86);
-  --rp-subtle: light-dark(#797593, #908caa);
-  --rp-text: light-dark(#464261, #e0def4);
-  --rp-love: light-dark(#b4637a, #eb6f92);
-  --rp-gold: light-dark(#ea9d34, #f6c177);
-  --rp-pine: light-dark(#286983, #3e8fb0);
-  --rp-foam: light-dark(#56949f, #9ccfd8);
-  --rp-iris: light-dark(#907aa9, #c4a7e7);
-  --rp-hl-low: light-dark(#f4ede8, #2a283e);
-  --rp-hl-med: light-dark(#dfdad9, #44415a);
-  --rp-hl-high: light-dark(#cecacd, #56526e);
+  /* palette */
   --rp-elevated:
     0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.4)), 0 2px 6px light-dark(rgba(0, 0, 0, 0.04), transparent),
     0 0 2px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.5));

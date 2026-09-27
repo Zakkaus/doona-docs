@@ -48,6 +48,25 @@ const icons = {
   sun: icon('Lighten')
 };
 
+// site/site.css with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
+// own src/ui/styles/palettes.css in place of the /* palette */ line.
+function stylesheet() {
+  const palettes = readFileSync(join(root, 'src/ui/styles/palettes.css'), 'utf8');
+  const colours = selector => {
+    const start = palettes.indexOf(`${selector} {`);
+    if (start < 0) throw new Error(`src/ui/styles/palettes.css: no ${selector} block`);
+    return new Map([...palettes.slice(start, palettes.indexOf('}', start)).matchAll(/(--rp-[\w-]+):\s*(#[0-9a-f]+);/g)].map(match => [match[1], match[2]]));
+  };
+  const light = colours(":root[data-family='rose-pine']");
+  const dark = colours(":root[data-flavour='moon'][data-scheme='dark']");
+  const unpaired = [...light.keys()].filter(name => !dark.has(name));
+  if (!light.size || unpaired.length) throw new Error(`src/ui/styles/palettes.css: Moon does not set ${unpaired.join(', ') || 'any colour'}`);
+  const css = readFileSync(join(root, 'site/site.css'), 'utf8');
+  const marker = '  /* palette */\n';
+  if (!css.includes(marker)) throw new Error('site/site.css: no /* palette */ line');
+  return css.replace(marker, [...light].map(([name, value]) => `  ${name}: light-dark(${value}, ${dark.get(name)});\n`).join(''));
+}
+
 // Heading text without Markdown, for titles, navigation and the table of contents.
 const plain = inline =>
   inline.children.map(child => (child.type === 'text' || child.type === 'code_inline' ? child.content : child.type === 'softbreak' ? ' ' : '')).join('');
@@ -289,7 +308,7 @@ ${missing.join('\n')}
 `
   });
 
-  files.set('site.css', {from: join(root, 'site/site.css')});
+  files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
   for (const logoFile of ['logo-light.svg', 'logo-dark.svg']) files.set(logoFile, {from: join(docs, logoFile)});
   // The icons above are Adobe Spectrum artwork: the notice and licence travel with them, as in the release archives.
