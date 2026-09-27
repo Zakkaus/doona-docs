@@ -378,12 +378,12 @@ function page(base, origin, locale, parsed, current) {
 </details>
 <main id="content">
 ${body}</main>
-<footer class="foot"><a href="${base}LICENSES/CC-BY-4.0.txt">${text.license}</a><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
 <aside class="toc" aria-labelledby="toc-title">
 <div class="toc-sections"><h2 id="toc-title">${text.onThisPage}</h2>
 <ul>${toc.join('')}</ul></div>
 ${pageActions(base, origin, locale, current.name)}
 </aside>
+<footer class="foot"><a href="${base}LICENSES/CC-BY-4.0.txt">${text.license}</a><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
 </div>
 </div>
 ${searchDialog(base, locale, parsed, current, languages)}

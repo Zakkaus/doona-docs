@@ -362,6 +362,8 @@ describe('page actions', () => {
         expect(link).toContain('class="icon external"');
       }
       expect(aside).toContain(`data-src="/${locale}/configuration.md"`);
+      // Narrow screens hide the outline column but keep the actions, which then follow the article in source order.
+      expect(html.indexOf('<aside class="toc"')).toBeLessThan(html.indexOf('<footer class="foot">'));
     });
   }
 
