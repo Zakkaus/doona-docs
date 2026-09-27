@@ -1,8 +1,15 @@
 version = 1
 
-# The pages, the site build and the checker came from Zakkaus/doona and keep its licence.
+# The site build, the checker and the repository files came from Zakkaus/doona and keep its licence.
 [[annotations]]
-path = ["*", ".github/**", "docs/**", "site/**", "tools/**"]
+path = ["*", ".github/**", "site/**", "tools/**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "doona contributors"
 SPDX-License-Identifier = "GPL-3.0-only"
+
+# The pages are documentation, shared under CC BY 4.0.
+[[annotations]]
+path = ["docs/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "doona contributors"
+SPDX-License-Identifier = "CC-BY-4.0"

@@ -326,7 +326,7 @@ function page(base, origin, locale, parsed, current) {
 </details>
 <main id="content">
 ${body}</main>
-<footer class="foot"><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
+<footer class="foot"><a href="${base}LICENSES/CC-BY-4.0.txt">${text.license}</a><a href="${base}NOTICE.txt">${text.notice}</a><a href="${base}LICENSES/LicenseRef-GitHub-Logos.txt">${text.githubLogos}</a></footer>
 ${toc.length ? `<aside class="toc" aria-labelledby="toc-title">\n<h2 id="toc-title">${text.onThisPage}</h2>\n<ul>${toc.join('')}</ul>\n</aside>` : ''}
 </div>
 </div>
@@ -430,6 +430,7 @@ ${missing.join('\n')}
   // The icons above are Adobe Spectrum artwork and the GitHub mark: their notice and terms travel with them, as in the
   // release archives.
   files.set('NOTICE.txt', {from: join(doona, 'NOTICE')});
+  files.set('LICENSES/CC-BY-4.0.txt', {from: join(root, 'LICENSES/CC-BY-4.0.txt')});
   files.set('LICENSES/Apache-2.0.txt', {from: join(doona, 'LICENSES/Apache-2.0.txt')});
   files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(doona, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
   // GitHub Pages would otherwise run Jekyll over the files.

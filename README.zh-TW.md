@@ -41,4 +41,4 @@ pnpm test                            # 網站腳本與標題 id 的測試
 
 ## 授權
 
-與 doona 相同，採用 GPL-3.0-only。發布的網站另附 doona 的 `NOTICE`，涵蓋其圖示；見 [NOTICE](NOTICE)。
+`docs/` 中的頁面採用 [CC BY 4.0](LICENSES/CC-BY-4.0.txt)；網站建置與檢查工具與 doona 相同，採用 GPL-3.0-only。發布的網站另附 doona 的 `NOTICE`，涵蓋其圖示；見 [NOTICE](NOTICE)。
