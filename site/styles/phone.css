@@ -79,8 +79,8 @@
   .menu nav { padding-top: 16px; }
   main h1 {
     font-size: var(--docs-h1-phone);
-    line-height: 64px;
+    line-height: var(--docs-h1-phone-line);
   }
-  pre { padding: 12px; font-size: 0.75rem; line-height: 18px; }
+  pre { padding: 12px; font-size: 0.75rem; line-height: var(--docs-code-phone-line); }
   main :is(h2, h3) { scroll-margin-top: 80px; }
 }

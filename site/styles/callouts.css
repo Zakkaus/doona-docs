@@ -9,8 +9,8 @@
   border: 2px solid var(--tone);
   border-radius: 10px;
   background: var(--rp-surface);
-  font-size: 1.125rem;
-  line-height: 27px;
+  font-size: var(--docs-body);
+  line-height: var(--docs-callout-line);
 }
 .callout > .icon {
   position: absolute;

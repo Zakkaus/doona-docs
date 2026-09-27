@@ -9,7 +9,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
-  line-height: 18px;
+  line-height: var(--docs-table-line);
 }
 /* A column keeps room for a few words; a table wider than the column scrolls in its box instead of squeezing the
    text into a word a line. */

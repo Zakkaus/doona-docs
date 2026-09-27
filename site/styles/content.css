@@ -1,21 +1,25 @@
 /* The article: headings, paragraphs, lists, links and images. */
+main {
+  font-size: var(--docs-body);
+  line-height: var(--docs-body-line);
+}
 main h1 {
   margin: 0;
   font-size: var(--docs-h1);
-  line-height: 66px;
+  line-height: var(--docs-h1-line);
   font-weight: 800;
 }
 main h2 {
   margin: 48px 0 24px;
-  font-size: 1.75rem;
+  font-size: var(--docs-h2);
   font-weight: 800;
-  line-height: 32px;
+  line-height: var(--docs-h2-line);
 }
 main h3 {
   margin: 32px 0 16px;
-  font-size: 1.375rem;
+  font-size: var(--docs-h3);
   font-weight: 800;
-  line-height: 26px;
+  line-height: var(--docs-h3-line);
 }
 main :is(h2, h3) {
   scroll-margin-top: 24px;
@@ -27,8 +31,8 @@ main ol {
 }
 main h1 + p {
   margin: 8px 0 0;
-  font-size: 1.25rem;
-  line-height: 30px;
+  font-size: var(--docs-lead);
+  line-height: var(--docs-lead-line);
 }
 main ul {
   padding-inline-start: 24px;

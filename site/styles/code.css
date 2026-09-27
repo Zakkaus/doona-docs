@@ -22,7 +22,7 @@ pre {
   overflow-x: auto;
   border-radius: 16px;
   font-size: 0.875rem;
-  line-height: 21px;
+  line-height: var(--docs-code-line);
   font-variant-ligatures: none;
   overflow-wrap: normal;
 }
