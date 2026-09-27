@@ -95,9 +95,13 @@ export function addAssets(files) {
   }
   files.set('logo.svg', {from: join(doona, 'public/logo.svg')});
   // The icons the pages draw are Adobe Spectrum artwork and the GitHub mark: their notice and terms travel with them, as
-  // in the release archives. This repository's NOTICE follows doona's and covers the pages and the fonts.
+  // in the release archives. This repository's NOTICE follows doona's and covers the pages, the fonts and the icons and
+  // logos in site/icons/.
   files.set('NOTICE.txt', {text: readFileSync(join(doona, 'NOTICE'), 'utf8') + '\n' + readFileSync(join(root, 'NOTICE'), 'utf8')});
   files.set('LICENSES/CC-BY-4.0.txt', {from: join(root, 'LICENSES/CC-BY-4.0.txt')});
+  // The distribution logos on the search cards (site/icons/distros.mjs).
+  for (const licence of ['CC0-1.0', 'CC-BY-SA-3.0', 'CC-BY-SA-2.5'])
+    files.set(`LICENSES/${licence}.txt`, {from: join(root, `LICENSES/${licence}.txt`)});
   files.set('LICENSES/Apache-2.0.txt', {from: join(doona, 'LICENSES/Apache-2.0.txt')});
   files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(doona, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
   // GitHub Pages would otherwise run Jekyll over the files.

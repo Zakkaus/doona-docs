@@ -3,7 +3,7 @@
 import {groups} from '../docs.mjs';
 import strings from '../strings.mjs';
 import {escape, pageUrl} from './common.mjs';
-import {icons, logo} from './icons.mjs';
+import {icons, logo, pageIcons} from './icons.mjs';
 
 // Spectrum Chevron UI icon (Apache-2.0), as the reference docs draw it beside a collapsible section.
 const sectionChevron = '<svg class="icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7.965 5.178C7.978 5.118 8 5.061 8 5s-.021-.118-.034-.178c-.01-.05-.01-.102-.03-.15-.023-.058-.068-.107-.104-.16-.03-.042-.047-.09-.084-.127l-.004-.003-.003-.004L3.615.303a.875.875 0 1 0-1.23 1.244L5.88 5 2.385 8.453a.875.875 0 1 0 1.23 1.244L7.74 5.622l.003-.004.004-.003c.037-.038.055-.085.084-.127.036-.053.08-.102.104-.16.02-.048.02-.1.03-.15"/></svg>';
@@ -31,7 +31,7 @@ export function searchDialog(base, locale, parsed, current, languages) {
   const all = `<button type="button" data-group="" aria-pressed="false" hidden>${text.all}</button>`;
   const filters = Object.keys(groups).map(group => `<button type="button" data-group="${group}" aria-pressed="${group === selected}">${text.groups[group]}</button>`);
   const cards = parsed.map(entry => `<a class="search-card" href="${pageUrl(base, locale, entry.name)}" data-group="${groupFor(entry.name)}"${entry.name === current.name ? ' aria-current="page"' : ''}>
-<span class="card-art">${icons.document}</span><span class="card-text"><strong>${escape(entry.title)}</strong><span>${escape(entry.description)}</span></span></a>`);
+<span class="card-art">${pageIcons[entry.name]}</span><span class="card-text"><strong>${escape(entry.title)}</strong><span>${escape(entry.description)}</span></span></a>`);
   return `<dialog id="docs-search" aria-label="${text.search}" data-search-src="${base}${locale}/search.json">
 <div class="search-layout">
 <div class="search-brand"><a class="brand" href="${pageUrl(base, locale, 'index')}">${logo(base)}<span>doona</span></a><p>${escape(parsed[0].title)}</p>

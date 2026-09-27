@@ -128,14 +128,24 @@ body:has(#docs-search[open]) { overflow: hidden; }
 }
 .search-card[aria-current] { outline: 2px solid var(--rp-text); outline-offset: -2px; }
 .card-art {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   aspect-ratio: 1.6;
   border-radius: 8px 8px 0 0;
-  background: linear-gradient(125deg, var(--rp-iris), var(--rp-pine));
+  background: linear-gradient(125deg, var(--card-tint, var(--rp-iris)), var(--rp-pine));
   color: var(--rp-base);
 }
+/* Each section starts its gradient from its own palette colour, so the cards of a query's results tell their sections
+   apart; all of them end in pine. */
+.search-card[data-group='install'] { --card-tint: var(--rp-foam); }
+.search-card[data-group='firstRun'] { --card-tint: var(--rp-rose); }
+.search-card[data-group='guides'] { --card-tint: var(--rp-love); }
+.search-card[data-group='contributing'] { --card-tint: var(--rp-subtle); }
 .card-art .icon { width: 64px; height: 64px; }
+/* A logo fills its whole viewBox, where a Spectrum icon leaves a margin, so logos draw smaller to match. */
+.card-art .logo { width: 48px; height: 48px; }
 .card-text { display: grid; align-content: start; gap: 4px; padding: 12px; font-size: 0.8125rem; line-height: 18px; }
 .card-text strong { font-weight: 600; }
 .search-status { position: absolute; top: 120px; inset-inline-start: 0; margin: 0; }

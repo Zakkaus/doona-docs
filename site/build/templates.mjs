@@ -81,7 +81,7 @@ export function page(base, origin, locale, parsed, current) {
 <ul><li><a href="#content">${escape(current.title)}</a></li>${toc.join('')}</ul>
 </details>
 <div class="actions">
-<a class="demo" href="${demo}" aria-label="${text.demo}">${text.demoLabel}</a>
+<a class="demo" href="${demo}" aria-label="${text.demo}">${icons.demo}<span>${text.demoLabel}</span></a>
 <details class="language" name="docs-menu">
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
 <ul>${languages.join('')}</ul>

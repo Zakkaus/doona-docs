@@ -1,7 +1,14 @@
-// The icons the pages draw, read from doona's own components so the two stay the same, and the app's logo.
+// The icons the pages draw, read from doona's own components so the two stay the same, the Spectrum icons and
+// distribution logos this repository keeps in site/icons/ for what doona does not draw, and the app's logo.
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {doona} from '../docs.mjs';
+import distros from '../icons/distros.mjs';
+import spectrum from '../icons/spectrum.mjs';
+
+const svg = (viewBox, shapes, className = 'icon') =>
+  `<svg class="${className}" viewBox="${viewBox}" aria-hidden="true" focusable="false">${shapes.join('')}</svg>`;
+const paths = list => [list].flat().map(d => `<path fill="currentColor" d="${d}"/>`);
 
 // Only paths and circles are copied, so an icon drawn with any other element fails the build rather than losing that
 // part.
@@ -20,8 +27,10 @@ function icon(name) {
     return `<${tag} fill="currentColor"${values.join('')}/>`;
   });
   if (!viewBox || !shapes.length) throw new Error(`${file}: no viewBox or shape`);
-  return `<svg class="icon" viewBox="${viewBox}" aria-hidden="true" focusable="false">${shapes.join('')}</svg>`;
+  return svg(viewBox, shapes);
 }
+const workflow = name => svg('0 0 20 20', paths(spectrum[name]));
+const logos = (...slugs) => slugs.map(slug => svg('0 0 24 24', paths(distros[slug]), 'icon logo')).join('');
 export const icons = {
   github: icon('GitHub'),
   language: icon('Translate'),
@@ -35,9 +44,30 @@ export const icons = {
   search: icon('Search'),
   close: icon('Close'),
   menu: icon('TextAlignLeft'),
-  document: icon('FileText'),
   info: icon('InfoCircle'),
-  alert: icon('AlertTriangle')
+  alert: icon('AlertTriangle'),
+  demo: workflow('Play')
+};
+
+// The picture on each page's search card: what the page is about, or the logos of the distributions an install page
+// covers.
+export const pageIcons = {
+  index: icon('Home'),
+  requirements: workflow('ListMultiSelect'),
+  'install-debian': logos('debian', 'ubuntu'),
+  'install-fedora': logos('fedora', 'redhat'),
+  'install-arch': logos('archlinux'),
+  'install-gentoo': logos('gentoo'),
+  'install-openwrt': logos('openwrt'),
+  'install-manual': workflow('Prompt'),
+  install: icon('Download'),
+  'minimal-configuration': workflow('Properties'),
+  'service-management': icon('Refresh'),
+  'first-sign-in': workflow('Key'),
+  configuration: workflow('Settings'),
+  features: workflow('Apps'),
+  troubleshooting: workflow('HelpCircle'),
+  development: workflow('Code')
 };
 
 // The app's logo, the same file in both schemes.

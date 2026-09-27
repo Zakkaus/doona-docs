@@ -43,4 +43,4 @@ A page keeps the paths it had in doona: a link to `../screenshots/` or `../../sr
 
 ## License
 
-The pages in `docs/` are licensed under [CC BY 4.0](LICENSES/CC-BY-4.0.txt); the site build and the checker under GPL-3.0-only, as doona. The published site also carries doona's `NOTICE` for its icons; see [NOTICE](NOTICE).
+The pages in `docs/` are licensed under [CC BY 4.0](LICENSES/CC-BY-4.0.txt); the site build and the checker under GPL-3.0-only, as doona. The published site also carries doona's `NOTICE` for its icons, and this repository's for the Spectrum icons and distribution logos in `site/icons/`; see [NOTICE](NOTICE).

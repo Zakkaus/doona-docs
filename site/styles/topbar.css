@@ -59,7 +59,8 @@
   font-size: var(--rp-text-md);
   text-decoration: none;
 }
-/* The demo is a text link ahead of the menus and icon buttons, as React Spectrum's header puts its text links. */
+/* The demo is a link with its icon and label, like the language menu, ahead of the menus and icon buttons, where React
+   Spectrum's header puts its text links. */
 .demo {
   margin-inline-end: 12px;
 }
