@@ -81,12 +81,12 @@ export function page(base, origin, locale, parsed, current) {
 <ul><li><a href="#content">${escape(current.title)}</a></li>${toc.join('')}</ul>
 </details>
 <div class="actions">
+<a class="demo" href="${demo}" aria-label="${text.demo}">${text.demoLabel}</a>
 <details class="language" name="docs-menu">
 <summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary>
 <ul>${languages.join('')}</ul>
 </details>
 <button type="button" class="theme" aria-label="${themeLabels.system}" ${themeData}><span class="scheme">${icons.moon}${icons.sun}</span></button>
-<a class="demo" href="${demo}" aria-label="${text.demo}">${icons.demo}<span>${text.demoLabel}</span></a>
 <a class="github" href="${repository}" aria-label="${text.github}">${icons.github}</a>
 </div>
 <button class="nav-trigger" type="button" aria-label="${text.navigation}" aria-haspopup="dialog" aria-controls="docs-search" hidden>${icons.menu}</button>
