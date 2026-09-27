@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/install-manual.md) · [繁體中文](../zh-TW/install-manual.md)
+English / [简体中文](../zh-CN/install-manual.md) / [繁體中文](../zh-TW/install-manual.md)
 
 # Install on other systems
 

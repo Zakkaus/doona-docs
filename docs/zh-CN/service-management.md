@@ -1,4 +1,4 @@
-[English](../en/service-management.md) · 简体中文 · [繁體中文](../zh-TW/service-management.md)
+[English](../en/service-management.md) / 简体中文 / [繁體中文](../zh-TW/service-management.md)
 
 # 服务管理
 

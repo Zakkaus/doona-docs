@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/first-sign-in.md) · [繁體中文](../zh-TW/first-sign-in.md)
+English / [简体中文](../zh-CN/first-sign-in.md) / [繁體中文](../zh-TW/first-sign-in.md)
 
 # First sign-in
 

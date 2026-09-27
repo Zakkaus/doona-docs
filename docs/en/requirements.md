@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/requirements.md) · [繁體中文](../zh-TW/requirements.md)
+English / [简体中文](../zh-CN/requirements.md) / [繁體中文](../zh-TW/requirements.md)
 
 <a name="requirements"></a>
 

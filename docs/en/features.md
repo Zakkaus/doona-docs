@@ -1,4 +1,4 @@
-English · [简体中文](../zh-CN/features.md) · [繁體中文](../zh-TW/features.md)
+English / [简体中文](../zh-CN/features.md) / [繁體中文](../zh-TW/features.md)
 
 <a name="features"></a>
 

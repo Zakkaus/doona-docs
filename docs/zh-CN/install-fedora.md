@@ -1,4 +1,4 @@
-[English](../en/install-fedora.md) · 简体中文 · [繁體中文](../zh-TW/install-fedora.md)
+[English](../en/install-fedora.md) / 简体中文 / [繁體中文](../zh-TW/install-fedora.md)
 
 # 在 Fedora 或 RHEL 上安装
 
