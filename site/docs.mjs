@@ -1,6 +1,6 @@
 // What the docs build and the docs checker share: the locales, the page order and GitHub's heading ids.
 import {existsSync, readFileSync} from 'node:fs';
-import {dirname, join, relative, resolve} from 'node:path';
+import {dirname, join, relative, resolve, sep} from 'node:path';
 
 export const root = resolve(dirname(new URL(import.meta.url).pathname), '..');
 export const docs = join(root, 'docs');
@@ -22,6 +22,12 @@ export const ownRepository = repositoryOf(root);
 export function locate(absolute) {
   return existsSync(absolute) ? absolute : join(doona, relative(root, absolute));
 }
+
+// doona keeps no screenshots in git: CI renders them into its docs/screenshots before the build, which publishes all
+// of them under screenshots/ (.github/workflows/docs.yml). Without that directory, a link into screenshots/, a path
+// relative to docs/, is left for the deploy to fill and the checks skip it.
+export const screenshots = join(doona, 'docs/screenshots');
+export const awaitsScreenshots = path => !existsSync(screenshots) && path.split(sep).join('/').startsWith('screenshots/');
 
 // In the order of the language line at the top of every page.
 export const locales = ['en', 'zh-CN', 'zh-TW'];

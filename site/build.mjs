@@ -7,9 +7,9 @@
 // from (site/docs.mjs).
 import MarkdownIt from 'markdown-it';
 import {createHash} from 'node:crypto';
-import {copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
+import {copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
-import {docs, doona, groups, locales, locate, ownRepository, pages, repository, root, slugger} from './docs.mjs';
+import {docs, doona, groups, locales, locate, ownRepository, pages, repository, root, screenshots, slugger} from './docs.mjs';
 import {highlight, languages} from './highlight.mjs';
 import strings from './strings.mjs';
 
@@ -508,6 +508,14 @@ ${missing.join('\n')}
 `
   });
 
+  // The README links the screenshots here, including those no page shows.
+  if (existsSync(screenshots)) {
+    for (const entry of readdirSync(screenshots, {recursive: true, withFileTypes: true})) {
+      if (!entry.isFile()) continue;
+      const from = join(entry.parentPath, entry.name);
+      files.set(`screenshots/${relative(screenshots, from).split(sep).join('/')}`, {from});
+    }
+  }
   files.set('site.css', {text: stylesheet()});
   files.set('site.js', {from: join(root, 'site/site.js')});
   for (const name of ['source-sans-3.woff2', 'source-code-pro.woff2', 'LICENSE-SourceSans3.txt', 'LICENSE-SourceCodePro.txt']) {

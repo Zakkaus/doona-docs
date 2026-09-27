@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
-import {groups, locales, pages, slugger} from '../site/docs.mjs';
+import {awaitsScreenshots, groups, locales, pages, slugger} from '../site/docs.mjs';
 
 describe('slugger', () => {
   it('numbers repeated headings as GitHub does', () => {
@@ -368,7 +368,7 @@ describe('Markdown pages', () => {
         const [target, fragment] = link.slice(origin.length).split('#');
         expect(target.startsWith(base), `${path}: ${link}`).toBe(true);
         const published = decodeURI(target.slice(base.length));
-        expect(site.has(published), `${path}: ${link}`).toBe(true);
+        expect(site.has(published) || awaitsScreenshots(published), `${path}: ${link}`).toBe(true);
         if (fragment !== undefined) expect(ids(published.replace(/\.md$/, '.html')).has(fragment), `${path}: ${link}`).toBe(true);
       }
     }

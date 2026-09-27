@@ -1,8 +1,9 @@
 name: Docs
 
-# Builds and checks the site against a doona checkout, which supplies the app's palette, sizes, icons, logo and
-# screenshots. Pull requests stop there; main publishes the site to this repository's gh-pages branch, which GitHub
-# Pages serves. The daily run picks up changes in doona and fails when doona moves an anchor the pages rely on.
+# Builds and checks the site against a doona checkout, which supplies the app's palette, sizes, icons and logo, and
+# renders doona's screenshots into it for the site to publish under screenshots/. Pull requests stop there; main
+# publishes the site to this repository's gh-pages branch, which GitHub Pages serves. The daily run picks up changes in
+# doona and fails when doona moves an anchor the pages rely on.
 on:
   push:
     branches: [main]
@@ -27,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOONA_DIR: doona
+      # doona's README links the screenshots on this site rather than keeping them in git. Rendering them adds about
+      # five minutes, so only the runs that can publish do it; pull requests and the daily run check the pages without.
+      SCREENSHOTS: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
       # A release pins a tag through the DOONA_REF repository variable; otherwise doona's main.
@@ -41,7 +45,43 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            doona/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: Build doona
+        if: env.SCREENSHOTS == 'true'
+        working-directory: doona
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+          echo "PLAYWRIGHT=$(pnpm exec playwright --version | cut -d' ' -f2)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        if: env.SCREENSHOTS == 'true'
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-shell-${{ env.PLAYWRIGHT }}
+      # doona's CJK fonts are split into subsets that load with font-display: optional, so a subset that arrives late
+      # falls back to the system font; the runner has no CJK font of its own.
+      - name: Install Chromium, CJK fonts and the WebP tools
+        if: env.SCREENSHOTS == 'true'
+        working-directory: doona
+        run: |
+          pnpm exec playwright install --only-shell chromium
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends webp fonts-noto-cjk
+      # tools/screenshots.mjs signs in to the mock backend itself, against the build that e2e tests serve on 4177; it
+      # writes docs/screenshots/, which the site build then publishes whole.
+      - name: Render the screenshots
+        if: env.SCREENSHOTS == 'true'
+        working-directory: doona
+        run: |
+          pnpm exec vite preview --host 127.0.0.1 --port 4177 --strictPort > /dev/null &
+          server=$!
+          curl -sf --retry 30 --retry-delay 1 --retry-connrefused -o /dev/null http://127.0.0.1:4177/
+          rm -rf docs/screenshots
+          node tools/screenshots.mjs
+          kill "$server"
       - run: pnpm test
       # The Markdown pages and llms.txt link by full URL on the published site.
       - run: pnpm docs:build

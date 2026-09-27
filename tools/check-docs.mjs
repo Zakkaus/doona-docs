@@ -7,7 +7,7 @@
 // the Markdown pages and llms.txt resolves.
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
-import {anchors, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
+import {anchors, awaitsScreenshots, docs, doona, locales, locate, pages as pageOrder, root, slugger} from '../site/docs.mjs';
 import {render} from '../site/build.mjs';
 
 const failures = [];
@@ -68,7 +68,10 @@ function checkLinks(file) {
 function checkTarget(file, where, resolved, anchor) {
   if (!resolved.startsWith(root)) return fail(file, `${where} does not resolve`);
   const found = locate(resolved);
-  if (!existsSync(found)) return fail(file, `${where} does not resolve`);
+  if (!existsSync(found)) {
+    if (!awaitsScreenshots(relative(docs, resolved))) fail(file, `${where} does not resolve`);
+    return;
+  }
   if (anchor === undefined) return;
   if (!found.endsWith('.md') || statSync(found).isDirectory()) return fail(file, `${where} has an anchor on a file that is not Markdown`);
   if (!page(found).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
@@ -171,7 +174,7 @@ for (const base of ['/doona-docs/', '/']) {
         file = decodeURI(target.slice(base.length).split('?')[0]);
         if (file === '' || file.endsWith('/')) file += 'index.html';
       }
-      if (!site.has(file)) failures.push(`${where} names no file the build writes`);
+      if (!site.has(file) && !awaitsScreenshots(file)) failures.push(`${where} names no file the build writes`);
       else if (fragment !== undefined && !html.get(file)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${file}`);
     }
   }
@@ -192,7 +195,7 @@ for (const base of ['/doona-docs/', '/']) {
       }
       const linked = decodeURI(target.slice(base.length));
       const page = linked.replace(/\.md$/, '.html');
-      if (!site.has(linked)) failures.push(`${where} names no file the build writes`);
+      if (!site.has(linked) && !awaitsScreenshots(linked)) failures.push(`${where} names no file the build writes`);
       else if (fragment !== undefined && !html.get(page)?.ids.has(decodeURIComponent(fragment))) failures.push(`${where} names no id on ${page}`);
     }
   }

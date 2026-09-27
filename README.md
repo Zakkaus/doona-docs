@@ -28,6 +28,8 @@ pnpm test                            # the site script and the heading ids
 
 `DOCS_BASE=/ pnpm docs:build` builds for a domain of its own. CI builds against doona's `main`; the `DOONA_REF` repository variable pins a tag instead.
 
+doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://zakkaus.github.io/doona-docs/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
+
 ## Layout
 
 | Path                | Purpose                                                             |

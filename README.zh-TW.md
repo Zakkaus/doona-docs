@@ -28,6 +28,8 @@ pnpm test                            # 網站腳本與標題 id 的測試
 
 `DOCS_BASE=/ pnpm docs:build` 為獨立網域建置。CI 以 doona 的 `main` 建置；設定儲存庫變數 `DOONA_REF` 可改為固定的 tag。
 
+doona 不在 git 中保存截圖。推送至 `main` 或手動執行工作流程時，CI 在建置前以 doona 的 `tools/screenshots.mjs` 將截圖產生至該 checkout 的 `docs/screenshots/`，建置再將全部截圖發布至 <https://zakkaus.github.io/doona-docs/screenshots/>，doona 的 README 從此處引用。沒有該目錄時，檢查會略過指向截圖的連結。
+
 ## 目錄結構
 
 | 路徑                | 用途                                                     |
