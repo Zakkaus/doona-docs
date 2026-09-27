@@ -66,6 +66,15 @@ describe('link check', () => {
   });
 });
 
+describe('stylesheet', () => {
+  it('lowers light-dark() for Safari 17.0 to 17.4, as doona does', () => {
+    const css = render().get('site.css').text;
+    expect(css).not.toContain('light-dark(');
+    expect(css).toMatch(/--rp-base: var\(--lightningcss-light, #[0-9a-f]+\) var\(--lightningcss-dark, #[0-9a-f]+\)/);
+    expect(css).toMatch(/:root\[data-theme="dark"\] \{\s*--lightningcss-light: ;\s*--lightningcss-dark: initial;/);
+  });
+});
+
 describe('notices', () => {
   it('publishes every licence NOTICE.txt names', () => {
     const site = render();
@@ -543,7 +552,8 @@ describe('page actions', () => {
 
   it('writes the press timing from the app motion tokens', () => {
     const css = site.get('site.css').text;
-    expect(css).toMatch(/--rp-duration: \d+ms;/);
+    // lightningcss writes 150ms as .15s.
+    expect(css).toMatch(/--rp-duration: [\d.]+m?s;/);
     expect(css).toMatch(/--rp-ease: cubic-bezier\(/);
     expect(css).not.toContain('/* sizes */');
   });

@@ -1,8 +1,10 @@
-// The files the site publishes besides its pages: the stylesheet joined from site/styles/, the script, the content
-// hashes the pages version them by, and the fonts, logo, licences and screenshots copied as they are.
+// The files the site publishes besides its pages: the stylesheet joined from site/styles/ and lowered for doona's
+// browsers, the script, the content hashes the pages version them by, and the fonts, logo, licences and screenshots
+// copied as they are.
 import {createHash} from 'node:crypto';
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {join, relative, sep} from 'node:path';
+import {transform} from 'lightningcss';
 import {doona, root, screenshots} from '../docs.mjs';
 
 // The published site.css is the files in site/styles/ joined in this order, which is the cascade order: a later file
@@ -58,9 +60,25 @@ function stylesheet() {
   const missing = [...used].filter(name => !scale.has(name));
   if (missing.length) throw new Error(`src/ui/styles/motion.css: no ${missing.join(', ')}`);
   const sizes = [...scale].filter(([name]) => used.has(name));
-  return css
-    .replace(marker, [...light].map(([name, value]) => `  ${name}: light-dark(${value}, ${dark.get(name)});\n`).join(''))
-    .replace(sizesMarker, sizes.map(([name, value]) => `  ${name}: ${value};\n`).join(''));
+  return lower(
+    css
+      .replace(marker, [...light].map(([name, value]) => `  ${name}: light-dark(${value}, ${dark.get(name)});\n`).join(''))
+      .replace(sizesMarker, sizes.map(([name, value]) => `  ${name}: ${value};\n`).join(''))
+  );
+}
+
+// The sheet lowered by lightningcss for the browsers doona's own CSS targets, the cssTarget in its vite.config.ts, as
+// the app's build does. Safari 17.0 to 17.4 has no light-dark(), so every colour needs the fallback lightningcss writes:
+// a var(--lightningcss-light) and var(--lightningcss-dark) pair that the color-scheme rules switch.
+function lower(css) {
+  const config = readFileSync(join(doona, 'vite.config.ts'), 'utf8');
+  const list = /cssTarget:\s*\[([^\]]*)\]/.exec(config)?.[1];
+  const names = list ? [...list.matchAll(/'([a-z]+)(\d+)'/g)] : [];
+  if (!names.length) throw new Error('vite.config.ts: no cssTarget list of browsers');
+  const targets = Object.fromEntries(names.map(([, browser, major]) => [browser, Number(major) << 16]));
+  const {code, warnings} = transform({filename: 'site.css', code: Buffer.from(css), targets});
+  if (warnings.length) throw new Error(`site.css: ${warnings.map(warning => warning.message).join('; ')}`);
+  return code.toString();
 }
 
 // The published site.js is the files in site/scripts/ joined in this order, one feature each. They run as one module,
