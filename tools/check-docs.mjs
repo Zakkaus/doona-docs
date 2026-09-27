@@ -1,8 +1,8 @@
 // Checks docs/ as GitHub renders it: every relative link and image resolves, every #anchor names an <a name> or a
 // generated heading slug on its target page, docs/anchors.json matches the pages, and the locales have the same pages,
-// anchors and heading levels. The README files are checked for links too, and every anchor the app passes to docsHref
-// is in docs/anchors.json. Then it renders the site (site/build.mjs) for both base paths and checks that every internal
-// link, image and #id in the HTML resolves.
+// anchors and heading levels. The README files are checked for links too, every anchor the app passes to docsHref
+// is in docs/anchors.json, and every GitHub link the app makes into this repository resolves. Then it renders the
+// site (site/build.mjs) for both base paths and checks that every internal link, image and #id in the HTML resolves.
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {anchors, docs, locales, pages as pageOrder, root, slugger} from '../site/docs.mjs';
@@ -59,19 +59,17 @@ function checkLinks(file) {
       if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
       const [path, anchor] = target.split('#');
       const where = `line ${index + 1}: ${target}`;
-      const resolved = path ? resolve(dirname(file), decodeURIComponent(path)) : file;
-      if (!resolved.startsWith(root) || !existsSync(resolved)) {
-        fail(file, `${where} does not resolve`);
-        continue;
-      }
-      if (anchor === undefined) continue;
-      if (!resolved.endsWith('.md') || statSync(resolved).isDirectory()) {
-        fail(file, `${where} has an anchor on a file that is not Markdown`);
-        continue;
-      }
-      if (!page(resolved).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
+      checkTarget(file, where, path ? resolve(dirname(file), decodeURIComponent(path)) : file, anchor);
     }
   });
+}
+
+// A link from file to resolved, a path in the repository, and the #anchor on it if any.
+function checkTarget(file, where, resolved, anchor) {
+  if (!resolved.startsWith(root) || !existsSync(resolved)) return fail(file, `${where} does not resolve`);
+  if (anchor === undefined) return;
+  if (!resolved.endsWith('.md') || statSync(resolved).isDirectory()) return fail(file, `${where} has an anchor on a file that is not Markdown`);
+  if (!page(resolved).ids.has(decodeURIComponent(anchor))) fail(file, `${where} names no anchor or heading on ${relative(root, resolved)}`);
 }
 
 const pageSets = new Map(
@@ -124,11 +122,16 @@ for (const locale of locales) {
 
 for (const name of readdirSync(root).filter(name => /^README.*\.md$/.test(name))) checkLinks(join(root, name));
 
-// Every anchor the app links with docsHref(lang, 'anchor') is in docs/anchors.json.
+// Every anchor the app links with docsHref(lang, 'anchor') is in docs/anchors.json, and every link the app makes to a
+// file in this repository on GitHub, such as README.md#install, names a file and heading that still exist.
 for (const file of readdirSync(join(root, 'src'), {recursive: true}).filter(name => /\.tsx?$/.test(name))) {
   const path = join(root, 'src', file);
-  for (const match of readFileSync(path, 'utf8').matchAll(/docsHref\([^,()]+,\s*'([^']+)'/g)) {
+  const text = readFileSync(path, 'utf8');
+  for (const match of text.matchAll(/docsHref\([^,()]+,\s*'([^']+)'/g)) {
     if (!(match[1] in anchors)) fail(path, `docsHref anchor ${match[1]} is not in docs/anchors.json`);
+  }
+  for (const match of text.matchAll(/github\.com\/Zakkaus\/doona\/(?:blob|tree)\/main\/([^\s'"`#?)]+)(?:#([^\s'"`)]+))?/g)) {
+    checkTarget(path, match[0], resolve(root, decodeURIComponent(match[1])), match[2]);
   }
 }
 
