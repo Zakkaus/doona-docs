@@ -32,9 +32,9 @@ precedence = "override"
 SPDX-FileCopyrightText = "2010, 2012 Adobe Systems Incorporated"
 SPDX-License-Identifier = "OFL-1.1"
 
-# Spectrum icons copied from @react-spectrum/s2, as doona's are.
+# Spectrum icons and illustrations copied from @react-spectrum/s2, as doona's are.
 [[annotations]]
-path = ["site/icons/spectrum.mjs"]
+path = ["site/icons/spectrum.mjs", "site/icons/illustrations.mjs"]
 precedence = "override"
 SPDX-FileCopyrightText = "2024 Adobe"
 SPDX-License-Identifier = "Apache-2.0"

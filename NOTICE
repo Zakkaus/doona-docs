@@ -13,7 +13,8 @@ https://github.com/Zakkaus/doona/blob/main/NOTICE
 Adobe Spectrum icons
 Copyright 2024 Adobe. All rights reserved.
 The Spectrum workflow icons in site/icons/spectrum.mjs and the LinkOut and
-Chevron UI icons in site/build/templates.mjs and site/build/nav.mjs are
+Chevron UI icons in site/build/templates.mjs and site/build/nav.mjs, and the
+BrowserError linear illustration in site/icons/illustrations.mjs, are
 adapted from @react-spectrum/s2 1.7.1. The SVG geometry is unchanged; fills
 use currentColor and the markup around it is local.
 Licensed under the Apache License, Version 2.0; see LICENSES/Apache-2.0.txt:

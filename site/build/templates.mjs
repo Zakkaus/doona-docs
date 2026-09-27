@@ -4,7 +4,7 @@ import {locales, pages, repository} from '../docs.mjs';
 import strings from '../strings.mjs';
 import {assetVersions} from './assets.mjs';
 import {escape, markdownUrl, pageUrl} from './common.mjs';
-import {icons, logo} from './icons.mjs';
+import {icons, illustration, logo} from './icons.mjs';
 import {md} from './markdown.mjs';
 import {navList, searchDialog} from './nav.mjs';
 
@@ -155,12 +155,14 @@ location.replace(${JSON.stringify(base)} + (${chooseLocale})() + '/');
 }
 
 // The 404 page. A page path with no language, such as features.html, goes to that page in the visitor's language; any
-// other path, a page in a language included, is not found. The page shows one language's message, chosen as the root
-// page chooses; without script it shows the first language's, with links home in the others.
+// other path, a page in a language included, is not found. The message is React Spectrum's error page: an
+// IllustratedMessage with the BrowserError illustration, centred in half the viewport, with a link home where its
+// ButtonGroup would be. It shows one language, chosen as the root page chooses; without script it shows the first
+// language's, with links home in the others.
 export function notFoundPage(base) {
   const missing = locales.map(
     (locale, index) =>
-      `<section lang="${locale}"${index ? ' hidden' : ''}>\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<p><a href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a></p>\n</section>`
+      `<section class="illustrated-message" lang="${locale}"${index ? ' hidden' : ''}>\n${illustration('BrowserError')}\n<h1>${strings[locale].notFound}</h1>\n<p>${strings[locale].notFoundText}</p>\n<a class="link-button" href="${pageUrl(base, locale, 'index')}">${strings[locale].home}</a>\n</section>`
   );
   const others = locales
     .slice(1)
@@ -179,8 +181,8 @@ export function notFoundPage(base) {
 </script>
 </head>
 <body>
-<main id="content" class="choose">
-<a class="brand" href="${base}">${logo(base)}<span>doona</span></a>
+<header class="top"><a class="brand" href="${base}">${logo(base)}<span>doona</span></a></header>
+<main id="content" class="not-found">
 ${missing.join('\n')}
 <noscript><ul>${others.join('')}</ul></noscript>
 </main>

@@ -1,0 +1,72 @@
+/* The 404 page: React Spectrum's IllustratedMessage (vertical, size M), centred in half the viewport as on the React
+   Spectrum docs' error page. Its grid rows put 12px between the illustration and the heading, 4px under the heading
+   and 16px above the button group. */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 50vh;
+  padding: 0 16px;
+}
+.illustrated-message {
+  display: grid;
+  justify-items: center;
+  max-width: 380px;
+  text-align: center;
+}
+.illustrated-message[hidden] {
+  display: none;
+}
+.illustration {
+  width: 96px;
+  height: 96px;
+  color: var(--rp-text);
+}
+/* title-xl in bold and body-sm, with S2's line heights: 24px from its Latin formula, 1.5 for body text. */
+.illustrated-message h1 {
+  margin: 12px 0 0;
+  font-size: var(--rp-text-2xl);
+  font-weight: 700;
+  line-height: 24px;
+}
+.illustrated-message p {
+  margin: 4px 0 0;
+  color: var(--rp-subtle-text);
+  font-size: var(--rp-text-md);
+  line-height: 1.5;
+}
+/* The CJK sizes of the same roles, title-cjk-size-xl and body-cjk-size-s, with the CJK line heights. */
+.illustrated-message:lang(zh) h1 {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+.illustrated-message:lang(zh) p {
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+/* A secondary LinkButton, filled as the search filters are. */
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: 16px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--rp-overlay);
+  color: inherit;
+  font: 700 var(--rp-text-md) / 18px var(--docs-sans);
+  text-decoration: none;
+}
+.not-found ul {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--rp-text-md);
+}
+.not-found li a {
+  color: var(--rp-accent-text);
+}
