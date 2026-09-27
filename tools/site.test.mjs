@@ -65,6 +65,111 @@ describe('icons', () => {
   });
 });
 
+// site/site.js over two .tabs boxes as build.mjs renders them, with storage holding `stored`.
+function tabBoxes(labels, stored) {
+  const element = (tag, props = {}) => ({
+    tag,
+    children: [],
+    dataset: {},
+    attributes: {},
+    listeners: {},
+    hidden: false,
+    classList: {contains: name => (props.className ?? '').split(' ').includes(name)},
+    setAttribute(name, value) {
+      this.attributes[name] = String(value);
+    },
+    addEventListener(type, listener) {
+      this.listeners[type] = listener;
+    },
+    append(child) {
+      this.children.push(child);
+    },
+    prepend(child) {
+      this.children.unshift(child);
+    },
+    focus() {
+      focused = this;
+    },
+    ...props
+  });
+  let focused;
+  const saved = [];
+  const boxes = labels.map(set => {
+    const box = element('div', {className: 'tabs'});
+    for (const label of set) {
+      const caption = element('p', {className: 'tab-label'});
+      const panel = element('div', {className: 'tab-panel', querySelector: () => caption});
+      panel.dataset.tab = label;
+      box.append(panel);
+    }
+    return box;
+  });
+  const document = {
+    documentElement: {dataset: {}},
+    addEventListener() {},
+    createElement: tag => element(tag),
+    querySelector: () => null,
+    querySelectorAll: selector => (selector === '.tabs' ? boxes : [])
+  };
+  const localStorage = {getItem: () => stored, setItem: (key, value) => saved.push([key, value])};
+  const script = readFileSync(new URL('../site/site.js', import.meta.url), 'utf8');
+  runInNewContext(script, {document, localStorage, navigator: {}, setTimeout: () => 0, clearTimeout: () => {}});
+  const view = box => {
+    const [list, ...panels] = box.children;
+    return {
+      list,
+      tabs: list.children,
+      panels,
+      get shown() {
+        return panels.filter(panel => !panel.hidden).map(panel => panel.dataset.tab);
+      }
+    };
+  };
+  return {boxes: boxes.map(view), saved, focused: () => focused};
+}
+
+describe('code tabs', () => {
+  it('turns each labelled block into a tab and shows the first', () => {
+    const {boxes} = tabBoxes([['sudo', 'root']], null);
+    const [{list, tabs, panels, shown}] = boxes;
+    expect(list.attributes.role).toBe('tablist');
+    expect(tabs.map(tab => tab.textContent)).toEqual(['sudo', 'root']);
+    expect(shown).toEqual(['sudo']);
+    expect(tabs.map(tab => [tab.attributes['aria-selected'], tab.tabIndex])).toEqual([['true', 0], ['false', -1]]);
+    expect(tabs[1].attributes['aria-controls']).toBe(panels[1].id);
+    expect(panels[1].attributes['aria-labelledby']).toBe(tabs[1].id);
+    expect(panels.every(panel => panel.children.length === 0 && panel.querySelector().hidden)).toBe(true);
+  });
+
+  it('picks a label in every box that has it and stores it', () => {
+    const {boxes, saved} = tabBoxes([['sudo', 'root'], ['sudo', 'root'], ['systemd', 'OpenWrt']], null);
+    boxes[0].tabs[1].listeners.click();
+    expect(boxes.map(box => box.shown)).toEqual([['root'], ['root'], ['systemd']]);
+    expect(saved).toEqual([['doona-docs-tab', 'root']]);
+  });
+
+  it('moves with the arrow keys, Home and End, wrapping at the ends', () => {
+    const {boxes, focused} = tabBoxes([['a', 'b', 'c']], null);
+    const {tabs} = boxes[0];
+    const press = (index, key) => tabs[index].listeners.keydown({key, preventDefault() {}});
+    press(0, 'ArrowLeft');
+    expect(boxes[0].shown).toEqual(['c']);
+    expect(focused()).toBe(tabs[2]);
+    press(2, 'ArrowRight');
+    expect(boxes[0].shown).toEqual(['a']);
+    press(0, 'End');
+    expect(boxes[0].shown).toEqual(['c']);
+    press(2, 'Home');
+    expect(boxes[0].shown).toEqual(['a']);
+    expect(focused()).toBe(tabs[0]);
+  });
+
+  it('opens on the stored label where a box has it', () => {
+    const {boxes} = tabBoxes([['sudo', 'root'], ['systemd', 'OpenWrt']], 'root');
+    expect(boxes.map(box => box.shown)).toEqual([['root'], ['systemd']]);
+  });
+});
+
 // site/site.js with the page's Copy as Markdown button, the fetch that serves its Markdown, and the clipboard.
 function markdownButton(clipboard) {
   const button = {
