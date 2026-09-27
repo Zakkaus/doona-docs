@@ -23,7 +23,7 @@
 | `-stock` 后缀        | 使用系统内存分配器而非 mimalloc，适用于更重视内存占用的小型设备。 |
 
 ```sh
-VERSION=0.3.0-beta.1               # the doona release, without v
+VERSION=0.1.0-beta.8               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -93,7 +93,7 @@ WantedBy=multi-user.target
 - [doona 发布页](https://github.com/Zakkaus/doona/releases)
 
 ```sh
-VERSION=0.3.0-beta.1   # the release you downloaded, without v
+VERSION=0.1.0-beta.8   # the release you downloaded, without v
 sha256sum --ignore-missing -c SHA256SUMS
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
