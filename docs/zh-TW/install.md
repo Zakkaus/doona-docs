@@ -137,7 +137,7 @@ honk 預設會開啟 `<data_dir>/state/honk.db`：`global.store_subscribe` 預�
 http://192.168.1.1:9527/ui/#/settings?api=http://192.168.1.1:9527&token=…
 ```
 
-忘記管理員密碼時，請先停止 honk，再執行 `sudo honk-core admin reset`；下次啟動時會重新進入首次設定。
+忘記管理員密碼時，請先停止 honk，再執行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上執行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`）；下次啟動時會重新進入首次設定。
 
 <a name="other-origin"></a>
 

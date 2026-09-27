@@ -137,7 +137,7 @@ With `password_auth: true`, as in this example, honk does not start when the dat
 http://192.168.1.1:9527/ui/#/settings?api=http://192.168.1.1:9527&token=…
 ```
 
-To replace a forgotten administrator, stop honk and run `sudo honk-core admin reset`; the next start opens setup again.
+To replace a forgotten administrator, stop honk and run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`); the next start opens setup again.
 
 <a name="other-origin"></a>
 

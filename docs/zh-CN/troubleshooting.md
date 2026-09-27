@@ -93,7 +93,7 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 
 - 首次设置只能在网关本机或私有网络中的客户端上完成。
 - 设置中显示“网络连接失败”或“网络或跨域请求失败”：无法通过 `listen` 地址访问 honk，或 doona 所在来源未列入 `allow_origins` 与 `allowed_hosts`。
-- 忘记密码：停止 honk，执行 `sudo honk-core admin reset`，再启动 honk 重新设置。
+- 忘记密码：停止 honk，执行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上执行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再启动 honk 重新设置。
 - HTTPS 页面无法访问 HTTP API，请参阅[从其他来源打开 doona](install.md#other-origin)。
 
 <a name="read-only"></a>
