@@ -18,7 +18,8 @@
 | 策略：編輯群組                     | 群組卡片提供「編輯」，儲存後生效。                                                       | `config_write: true`；群組位於主檔案，且主檔案不含密鑰                                                                         |
 | 節點：新增節點與訂閱               | 節點頁提供「貼上節點連結」與「新增訂閱」。                                               | `config_write: true`；主檔案不含密鑰                                                                                           |
 | 節點：重新整理訂閱                 | 每個訂閱列都有「重新整理」。                                                             | 存在 `subscription` 項目，且 honk 的訂閱服務正在執行                                                                           |
-| 設定：地理資料來源與更新           | 地理資料卡片列出來源，「更新」按鈕可用。                                                 | honk `debug.2026.9.26.native-api.1` 或更新版本；狀態資料庫；`config_write: true`；`data_dir` 中有 `geosite.dat` 與 `geoip.dat` |
+| 設定：地理資料來源                 | 地理資料卡片列出可編輯的來源。                                                           | 狀態資料庫                                                                                                                     |
+| 設定：地理資料更新                 | 地理資料卡片的「更新」按鈕可用。                                                         | `config_write: true`；`data_dir` 中有 `geosite.dat` 與 `geoip.dat`；狀態資料庫，或同時設定 `geosite_download_url` 與 `geoip_download_url` |
 | 設定：後端選項                     | 後端選項卡片可將流程記錄、日誌記錄與 DNS 記錄設為隨面板、常開或關閉。                    | `record_flows`、`record_logs`、`record_dns_log`                                                                                |
 | 活動：流量與記憶體歷史             | 歷史圖表在最多 10 分鐘內逐步填滿。                                                       | `record_traffic`、`record_memory`                                                                                              |
 | 日誌                               | 開啟日誌頁時持續出現日誌。                                                               | `record_logs`                                                                                                                  |
@@ -38,7 +39,7 @@
 - 缺少 `config_write: true`。`native_api` 的欄位直接寫在 `experimental` 下時，honk 會以 [`unknown experimental setting`](troubleshooting.md#unknown-setting) 拒絕啟動。
 - 既沒有 `password_auth: true`，也沒有 `secret`。此時若設定了 `enabled: true`，honk 會拒絕啟動。
 - 檔案包含密鑰或與密鑰相同的文字，因此 doona 將其顯示為[唯讀](troubleshooting.md#read-only)。
-- honk 早於 `debug.2026.9.26.native-api.1`，因此地理資料卡片沒有來源設定。
+- honk 是早期的 `feat/native-api` 建置，因此地理資料卡片沒有來源設定。請安裝 doona 發行版本附帶的建置，見 [honk 版本](requirements.md#honk-version)。
 - Token 模式下狀態資料庫未能開啟，因此地理資料來源卡片被隱藏，詳見[狀態資料庫問題](troubleshooting.md#state-db)。
 - 僅在以 `--store db` 執行時出現，本文件不使用此模式：honk 未能記錄的修訂會阻止後續寫入，直到下一次成功啟用組態。
 

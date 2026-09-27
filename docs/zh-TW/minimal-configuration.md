@@ -189,7 +189,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前景持續運作。每行以時間戳開頭，其中應包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.9.28.native-api.1 starting
+INFO honk_core: honk-core debug.2026.9.28.native-api.2 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected

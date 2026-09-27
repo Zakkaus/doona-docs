@@ -60,7 +60,7 @@ state database is locked by `honk-core admin reset`
 state database is corrupt
 ```
 
-1. unavailable：`data_dir` 必須存在，且執行 honk 的使用者可寫入；使用[安裝](install.md#install)中的 systemd 單元時該使用者為 root。`state/` 由 honk 自行建立。
+1. unavailable：`data_dir` 不存在時由 honk 建立，`state/` 也由 honk 在其中建立。執行 honk 的使用者必須能在父目錄中建立 `data_dir`，並能寫入該目錄；使用[安裝](install.md#install)中的 systemd 單元時該使用者為 root。
 2. unsafe：`state/` 與 `honk.db` 必須屬於該使用者，且不授予群組或其他使用者任何權限。`honk.db` 必須是一般檔案，不能是符號連結，也不能在 honk 開啟時被替換。
 3. locked：等待 `honk-core admin reset` 執行完畢。
 4. corrupt：設定 `password_auth: true` 時 honk 會結束。Token 模式下 honk 會將檔案移至 `honk.db.corrupt` 並建立新的資料庫；若已存在較早的 `.corrupt` 檔案，honk 會保留兩者，並在該檔案刪除之前不使用資料庫執行。

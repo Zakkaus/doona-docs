@@ -30,7 +30,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.2
 ```
 
 To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf`. `native-api` is a default feature; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
@@ -123,7 +123,7 @@ honk is ready when the log shows `honk-core is running`.
 
 ### State database
 
-honk opens `<data_dir>/state/honk.db` by default: `global.store_subscribe` is on unless turned off, and `native_api` is enabled here. There is no switch to add. The database keeps the administrator account, the geodata sources and other state honk persists. honk creates `state/` and `honk.db` itself; `/var/lib/honk` must exist and be writable by root.
+honk opens `<data_dir>/state/honk.db` by default: `global.store_subscribe` is on unless turned off, and `native_api` is enabled here. There is no switch to add. The database keeps the administrator account, the geodata sources and other state honk persists. honk creates `state/` and `honk.db` itself, and creates `/var/lib/honk` when it is missing. The user honk runs as, root here, must be able to create that directory in `/var/lib` and write to it.
 
 With `password_auth: true`, as in this example, honk does not start when the database cannot be opened, so a running honk has it open. In token mode honk starts without it and logs a warning; a missing state database then means it failed to open. Either way, [State database problems](troubleshooting.md#state-db) explains the log messages.
 

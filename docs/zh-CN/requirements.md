@@ -48,9 +48,9 @@ mountpoint /sys/fs/bpf
 
 ## honk 版本
 
-- 只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，即滚动发布的 `debug` 版本，目前由标签 `debug.2026.9.28.native-api.1`（提交 `3603894a`）构建。每个 doona 发行版附带发行时的构建，其 `HONK-SOURCE.txt` 注明标签与提交。
-- 由 daeuniverse/honk main 分支构建的版本（例如 `debug.2026.9.24.1`）没有原生 API。honk 会以 `unknown experimental setting` 拒绝所有 `native_api` 设置，访问 `/api` 与 `/ui/` 返回 404。
-- 地理数据来源设置需要 `debug.2026.9.26.native-api.1` 或更高版本。`debug.2026.9.24.native-api.*` 可以更新地理数据，但不能设置来源。
+- 只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，即滚动发布的 `debug` 版本，目前由标签 `debug.2026.9.28.native-api.2`（提交 `7449f4e2`）构建。每个 doona 发行版附带发行时的构建，其 `HONK-SOURCE.txt` 注明标签与提交。
+- 由 daeuniverse/honk main 分支构建的版本没有原生 API。honk 会以 `unknown experimental setting` 拒绝所有 `native_api` 设置，访问 `/api` 与 `/ui/` 返回 404。
+- 早期的 `feat/native-api` 构建可以更新地理数据，但不能设置来源。每个 doona 发行版附带的构建两者都支持。
 
 执行 `honk-core --version` 查看已安装二进制文件的版本；正在运行的版本请查看 doona 概览页的“引擎”卡片或侧边导航栏底部。
 
