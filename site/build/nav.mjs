@@ -31,16 +31,18 @@ export function searchDialog(base, locale, parsed, current, languages) {
   const selected = groupFor(current.name);
   const all = `<button type="button" data-group="" aria-pressed="false" hidden>${text.all}</button>`;
   const filters = Object.keys(groups).map(group => `<button type="button" data-group="${group}" aria-pressed="${group === selected}">${text.groups[group]}</button>`);
-  const cards = parsed.map(entry => `<a class="search-card" href="${pageUrl(base, locale, entry.name)}" data-group="${groupFor(entry.name)}"${entry.name === current.name ? ' aria-current="page"' : ''}>
+  // The cards are options of a listbox: focus stays in the search field, which points at the active card with
+  // aria-activedescendant, as React Aria's Autocomplete does.
+  const cards = parsed.map(entry => `<a class="search-card" href="${pageUrl(base, locale, entry.name)}" id="result-${entry.name}" role="option" tabindex="-1" data-group="${groupFor(entry.name)}"${entry.name === current.name ? ' aria-current="page"' : ''}>
 <span class="card-art">${pageIcons[entry.name]}</span><span class="card-text"><strong>${escape(entry.title)}</strong><span>${escape(entry.description)}</span></span></a>`);
   return `<dialog id="docs-search" aria-label="${text.search}" data-search-src="${base}${locale}/search.json">
 <div class="search-layout">
 <div class="search-brand"><a class="brand" href="${pageUrl(base, locale, 'index')}">${logo(base)}<span>doona</span></a><p>${escape(parsed[0].title)}</p>
 <details class="language" name="docs-menu"><summary aria-label="${text.languageMenu}">${icons.language}<span>${text.language}</span>${icons.chevron}</summary><ul>${languages.join('')}</ul></details></div>
 <div class="search-content">
-<div class="search-field">${icons.search}<input type="search" aria-label="${text.search}" placeholder="${text.search}" autocomplete="off" aria-controls="search-results"></div>
+<div class="search-field">${icons.search}<input type="search" aria-label="${text.search}" placeholder="${text.search}" autocomplete="off" aria-autocomplete="list" aria-controls="search-results"></div>
 <div class="search-filters" aria-label="${text.pages}">${all}${filters.join('')}</div>
-<nav class="search-cards" id="search-results" aria-label="${text.pages}">${cards.join('')}</nav>
+<div class="search-cards" id="search-results" role="listbox" aria-label="${text.pages}">${cards.join('')}</div>
 <p class="search-status" role="status" data-loading="${text.searchLoading}" data-empty="${text.noResults}" data-failed="${text.searchFailed}" hidden></p>
 </div>
 <button class="search-close" type="button" aria-label="${text.close}">${icons.close}</button>
