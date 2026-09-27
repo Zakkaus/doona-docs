@@ -99,7 +99,9 @@ export function addAssets(files) {
   // in the release archives. This repository's NOTICE follows doona's and covers the pages, the fonts and the icons and
   // logos in site/icons/.
   files.set('NOTICE.txt', {text: readFileSync(join(doona, 'NOTICE'), 'utf8') + '\n' + readFileSync(join(root, 'NOTICE'), 'utf8')});
-  files.set('LICENSES/CC-BY-4.0.txt', {from: join(root, 'LICENSES/CC-BY-4.0.txt')});
+  // The terms of the pages, of site.js and the rest of this repository, and of the fonts, under the names NOTICE gives
+  // them. tools/check-docs.mjs holds every file NOTICE.txt names (noticeFiles) to one the build writes.
+  for (const licence of ['LICENSES/CC-BY-4.0.txt', 'LICENSE', 'LICENSES/OFL-1.1.txt']) files.set(licence, {from: join(root, licence)});
   // The distribution logos on the search cards (site/icons/distros.mjs).
   for (const licence of ['CC0-1.0', 'CC-BY-SA-3.0', 'CC-BY-SA-2.5'])
     files.set(`LICENSES/${licence}.txt`, {from: join(root, `LICENSES/${licence}.txt`)});
@@ -108,3 +110,7 @@ export function addAssets(files) {
   // GitHub Pages would otherwise run Jekyll over the files.
   files.set('.nojekyll', {text: ''});
 }
+
+// The files a notice names by path, such as LICENSE, LICENSES/OFL-1.1.txt and fonts/LICENSE-SourceSans3.txt, and not
+// the paths in its URLs or in this repository's sources (site/fonts/README.md).
+export const noticeFiles = text => [...new Set([...text.matchAll(/(?<![\w/:.-])((?:LICENSES|fonts)\/[\w.-]*\w|LICENSE)(?![\w-])/g)].map(match => match[1]))];

@@ -2,7 +2,7 @@ import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
 import {frontMatter} from '../site/build/markdown.mjs';
-import {script as siteScript} from '../site/build/assets.mjs';
+import {noticeFiles, script as siteScript} from '../site/build/assets.mjs';
 import {join} from 'node:path';
 import {awaitsScreenshots, docs, groups, locales, pages, repository, slugger} from '../site/docs.mjs';
 import {linkFailures} from './links.mjs';
@@ -63,6 +63,22 @@ describe('link check', () => {
 
   it('accepts a page, a file of this repository and a link elsewhere', () => {
     expect(failures('[a](install.md#doona) [b](../../LICENSE) [c](https://example.org/x)')).toEqual([]);
+  });
+});
+
+describe('notices', () => {
+  it('publishes every licence NOTICE.txt names', () => {
+    const site = render();
+    const named = noticeFiles(site.get('NOTICE.txt').text);
+    expect(named).toEqual(expect.arrayContaining(['LICENSE', 'LICENSES/OFL-1.1.txt', 'fonts/LICENSE-SourceSans3.txt']));
+    expect(named.filter(name => !site.has(name))).toEqual([]);
+  });
+
+  it('reads paths, not URLs or source paths', () => {
+    expect(noticeFiles('see LICENSE. https://www.apache.org/licenses/LICENSE-2.0 site/fonts/README.md LICENSES/. fonts/LICENSE-A.txt.')).toEqual([
+      'LICENSE',
+      'fonts/LICENSE-A.txt'
+    ]);
   });
 });
 
