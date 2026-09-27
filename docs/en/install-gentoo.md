@@ -1,0 +1,192 @@
+English · [简体中文](../zh-CN/install-gentoo.md) · [繁體中文](../zh-TW/install-gentoo.md)
+
+# Install on Gentoo
+
+This page installs doona with Portage from the ebuild in doona’s repository, and honk-core from the same doona release. No ebuild repository carries doona yet, so the ebuild goes into a local repository. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+
+## Before you start
+
+- Linux 6.12 or later and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
+- A user account with sudo, or a root shell. Commands that need root have a sudo tab and a root tab; pick the one that matches your shell.
+- `net-misc/curl` and `app-misc/ca-certificates`, which a stage3 already contains. honk stops at startup without CA certificates.
+- Access to github.com.
+- Run every step in the same terminal: later steps use the `VERSION`, `PV`, `BASE` and `TARGET` variables that earlier steps set.
+
+## 1. Create a local repository
+
+Skip this step if you already have a local ebuild repository; use its path in step 2 instead of `/var/db/repos/local`.
+
+```sh tab="sudo"
+sudo mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
+echo local | sudo tee /var/db/repos/local/profiles/repo_name
+printf 'masters = gentoo\nauto-sync = false\n' | sudo tee /var/db/repos/local/metadata/layout.conf
+printf '[local]\nlocation = /var/db/repos/local\n' | sudo tee /etc/portage/repos.conf/local.conf
+portageq get_repos /
+```
+
+```sh tab="root"
+mkdir -p /var/db/repos/local/metadata /var/db/repos/local/profiles /etc/portage/repos.conf
+echo local > /var/db/repos/local/profiles/repo_name
+printf 'masters = gentoo\nauto-sync = false\n' > /var/db/repos/local/metadata/layout.conf
+printf '[local]\nlocation = /var/db/repos/local\n' > /etc/portage/repos.conf/local.conf
+portageq get_repos /
+```
+
+The last command lists `local` next to `gentoo`.
+
+## 2. Add the doona ebuild
+
+Set the release version and its Gentoo form, then download the ebuild and `metadata.xml` from that release tag.
+
+```sh tab="sudo"
+VERSION=0.1.0-beta.8
+PV=0.1.0_beta8
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+sudo mkdir -p /var/db/repos/local/net-proxy/doona
+cd /var/db/repos/local/net-proxy/doona
+sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+cd -
+```
+
+```sh tab="root"
+VERSION=0.1.0-beta.8
+PV=0.1.0_beta8
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+mkdir -p /var/db/repos/local/net-proxy/doona
+cd /var/db/repos/local/net-proxy/doona
+curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+cd -
+```
+
+## 3. Download and verify the doona archives
+
+The ebuild installs the release’s program archive and, with the default `fonts` USE flag, its font archive. Download both with `SHA256SUMS` and check them.
+
+```sh
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
+```
+
+You should see:
+
+```text
+doona-0.1.0-beta.8.tar.gz: OK
+doona-fonts-0.1.0-beta.8.tar.gz: OK
+```
+
+## 4. Hand the archives to Portage
+
+Copy the checked archives into the distfiles directory under the names the ebuild expects, then write the repository’s `Manifest` from them.
+
+```sh tab="sudo"
+DISTDIR=$(portageq distdir)
+sudo cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
+sudo cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
+sudo ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+```
+
+```sh tab="root"
+DISTDIR=$(portageq distdir)
+cp "doona-${VERSION}.tar.gz" "$DISTDIR/doona-$PV.tar.gz"
+cp "doona-fonts-${VERSION}.tar.gz" "$DISTDIR/doona-$PV-fonts.tar.gz"
+ebuild /var/db/repos/local/net-proxy/doona/doona-$PV.ebuild manifest
+```
+
+The last command prints `>>> Creating Manifest for /var/db/repos/local/net-proxy/doona`.
+
+## 5. Install doona
+
+The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
+
+```sh tab="sudo"
+sudo mkdir -p /etc/portage/package.accept_keywords
+echo 'net-proxy/doona ~amd64' | sudo tee /etc/portage/package.accept_keywords/doona
+sudo emerge --ask net-proxy/doona
+ls -l /usr/share/doona/index.html
+```
+
+```sh tab="root"
+mkdir -p /etc/portage/package.accept_keywords
+echo 'net-proxy/doona ~amd64' > /etc/portage/package.accept_keywords/doona
+emerge --ask net-proxy/doona
+ls -l /usr/share/doona/index.html
+```
+
+Portage ends with `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`, and `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files; it installs no service. Set `USE=-fonts` for `net-proxy/doona` to leave out the Noto Sans TC and SC fonts.
+
+## 6. Choose the honk-core build
+
+```sh
+uname -m
+```
+
+The release carries eight honk-core archives, named `honk-core-debug-<target>.tar.gz`. Build the target from the machine type and the C library:
+
+| `uname -m` prints | Target starts with            |
+| ----------------- | ----------------------------- |
+| `x86_64`          | `x86_64-unknown-linux-`       |
+| `aarch64`         | `aarch64-unknown-linux-`      |
+
+| Target ends with | Choose it when                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `musl`           | Unsure, or the system uses musl. A static binary that runs on any Linux.                                          |
+| `gnu`            | The system has glibc 2.39 or later. On an older glibc it stops with `GLIBC_2.38' not found`.                      |
+| `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
+
+For example, `x86_64-unknown-linux-musl`, `aarch64-unknown-linux-gnu` or `x86_64-unknown-linux-musl-stock`.
+
+## 7. Download and verify honk-core
+
+Set `TARGET` to the build you chose, then download it from the same release and check it against the same `SHA256SUMS`.
+
+```sh
+TARGET=x86_64-unknown-linux-musl
+curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz"
+grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
+```
+
+You should see:
+
+```text
+honk-core-debug-x86_64-unknown-linux-musl.tar.gz: OK
+```
+
+## 8. Install honk-core
+
+The archive holds one directory with the `honk-core` binary. Install it as `/usr/local/bin/honk-core`, the path the service in [Service management](service-management.md) starts.
+
+```sh tab="sudo"
+tar -xzf honk-core-debug-$TARGET.tar.gz
+sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
+/usr/local/bin/honk-core --version
+```
+
+```sh tab="root"
+tar -xzf honk-core-debug-$TARGET.tar.gz
+install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
+/usr/local/bin/honk-core --version
+```
+
+The last command prints the honk build, for example:
+
+```text
+honk-core debug.2026.9.26.native-api.4
+```
+
+`HONK-SOURCE.txt` in the same release names the build it carries.
+
+Next: [Minimal configuration](minimal-configuration.md). The service there is a systemd unit; doona and honk ship no OpenRC script.
+
+## If it doesn’t work
+
+| You see                                                           | Cause and fix                                                                                              |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `curl: (22) The requested URL returned error: 404`                | The version or file name is wrong. Check `VERSION` and `PV` against the [releases](https://github.com/Zakkaus/doona/releases). |
+| `sha256sum: 'standard input': no properly formatted checksum lines found` | `grep` found no line for that file: `VERSION` or `TARGET` was not set in this terminal, or it has a typo. |
+| `FAILED` and `WARNING: 1 computed checksum did NOT match`         | The download is damaged or incomplete. Delete the file and download it again.                              |
+| `emerge` finds no `net-proxy/doona`                               | `portageq get_repos /` does not list `local`: check the three files from step 1.                           |
+| `emerge` reports the package as masked by the `~amd64` keyword    | The keyword in `/etc/portage/package.accept_keywords/doona` does not match your architecture.              |
+| `version 'GLIBC_2.38' not found`                                  | The `gnu` build needs a newer glibc. Use the `musl` build.                                                 |
+
+For problems after installation, see [Troubleshooting](troubleshooting.md#troubleshooting).
