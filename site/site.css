@@ -1,0 +1,482 @@
+/* The docs site's one stylesheet. The colour, radius and type tokens are doona's: Rosé Pine Dawn and Moon, its default
+   palette (DEFAULT_PALETTE in src/shell/palettes.ts), copied from src/ui/styles/palettes.css and the role tokens in
+   src/ui/styles/motion.css. Light or dark follows the system. */
+:root {
+  color-scheme: light;
+  --rp-base: #faf4ed;
+  --rp-surface: #fffaf3;
+  --rp-overlay: #f2e9e1;
+  --rp-subtle: #797593;
+  --rp-text: #464261;
+  --rp-love: #b4637a;
+  --rp-gold: #ea9d34;
+  --rp-pine: #286983;
+  --rp-foam: #56949f;
+  --rp-iris: #907aa9;
+  --rp-hl-low: #f4ede8;
+  --rp-hl-med: #dfdad9;
+  --rp-hl-high: #cecacd;
+  --rp-elevated: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.12);
+  --rp-accent: var(--rp-pine);
+  --rp-accent-text: var(--rp-accent);
+  --rp-negative: var(--rp-love);
+  --rp-positive: var(--rp-foam);
+  --rp-notice: var(--rp-gold);
+  --rp-info: var(--rp-pine);
+  --rp-negative-text: var(--rp-text);
+  --rp-notice-text: var(--rp-text);
+  --rp-positive-text: var(--rp-text);
+  --rp-info-text: var(--rp-info);
+  --rp-line: var(--rp-hl-med);
+  --rp-selected: color-mix(in srgb, var(--rp-accent) 10%, var(--rp-overlay));
+  --rp-r-md: 8px;
+  --rp-r-lg: 10px;
+  --rp-r-xl: 16px;
+  --rp-text-sm: 13px;
+  --rp-text-md: 14px;
+  --rp-text-lg: 16px;
+  --rp-text-xl: 18px;
+  --rp-text-2xl: 20px;
+  --rp-text-4xl: 24px;
+  --rp-text-5xl: 28px;
+  /* The docs' own reading sizes, above the app's scale. */
+  --docs-h1: 40px;
+  --docs-h1-phone: 32px;
+  --docs-top: 56px;
+  --docs-sans: 'Noto Sans TC', system-ui, sans-serif;
+  --docs-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono', monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --rp-base: #232136;
+    --rp-surface: #2a273f;
+    --rp-overlay: #393552;
+    --rp-subtle: #908caa;
+    --rp-text: #e0def4;
+    --rp-love: #eb6f92;
+    --rp-gold: #f6c177;
+    --rp-pine: #3e8fb0;
+    --rp-foam: #9ccfd8;
+    --rp-iris: #c4a7e7;
+    --rp-hl-low: #2a283e;
+    --rp-hl-med: #44415a;
+    --rp-hl-high: #56526e;
+    --rp-elevated: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 2px rgba(0, 0, 0, 0.5);
+    --rp-accent-text: var(--rp-text);
+    --rp-negative-text: var(--rp-negative);
+    --rp-notice-text: var(--rp-notice);
+    --rp-positive-text: var(--rp-positive);
+    --rp-info-text: var(--rp-text);
+  }
+}
+/* Simplified Chinese prefers the SC glyph forms, as in the app. */
+:root:lang(zh-CN) {
+  --docs-sans: 'Noto Sans SC', 'Noto Sans TC', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--rp-base);
+  color: var(--rp-text);
+  font-family: var(--docs-sans);
+  font-size: var(--rp-text-lg);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--rp-accent);
+  outline-offset: 2px;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+summary {
+  list-style: none;
+  cursor: pointer;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary .icon:last-child {
+  width: 16px;
+  height: 16px;
+}
+details[open] > summary .icon:last-child {
+  transform: rotate(180deg);
+}
+
+.skip {
+  position: absolute;
+  inset-inline-start: 8px;
+  top: -100px;
+  z-index: 20;
+  padding: 8px 12px;
+  border-radius: var(--rp-r-md);
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.skip:focus {
+  top: 8px;
+}
+
+/* Top bar */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--docs-top);
+  padding: 0 24px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--rp-text-xl);
+  font-weight: 700;
+  text-decoration: none;
+}
+.brand img {
+  display: block;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.language {
+  position: relative;
+}
+.language > summary,
+.github {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: var(--rp-r-md);
+  font-size: var(--rp-text-md);
+  text-decoration: none;
+}
+.language ul {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  min-width: 160px;
+  padding: 4px;
+  border-radius: var(--rp-r-md);
+  background: var(--rp-surface);
+  box-shadow: var(--rp-elevated);
+}
+.language li a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: var(--rp-r-md);
+  font-size: var(--rp-text-md);
+  text-decoration: none;
+}
+.language a[aria-current] {
+  font-weight: 700;
+  background: var(--rp-selected);
+}
+
+/* Three columns: pages, the page itself, its sections. */
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  padding-inline-end: 12px;
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 8px 16px 24px 24px;
+}
+.sidebar a,
+.menu nav a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: var(--rp-r-md);
+  font-size: var(--rp-text-md);
+  line-height: 20px;
+  text-decoration: none;
+}
+.sidebar a[aria-current],
+.menu nav a[aria-current] {
+  font-weight: 700;
+  background: var(--rp-selected);
+}
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 768px) 200px;
+  justify-content: center;
+  column-gap: 64px;
+  min-height: calc(100vh - var(--docs-top));
+  padding: 40px 40px 96px;
+  border-radius: var(--rp-r-xl) var(--rp-r-xl) 0 0;
+  background: var(--rp-surface);
+}
+.panel > main {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.menu {
+  display: none;
+}
+.toc {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding-top: 8px;
+  font-size: var(--rp-text-sm);
+  line-height: 18px;
+}
+.toc h2 {
+  margin: 0 0 8px;
+  font-size: var(--rp-text-md);
+}
+.toc a {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+}
+.toc .h3 a {
+  padding-inline-start: 12px;
+}
+/* A touch leaves :hover stuck on the tapped item, so only a fine pointer highlights it; there is no script to set
+   data-hovered here. */
+/* stylelint-disable selector-pseudo-class-disallowed-list -- guarded by the media query */
+@media (hover: hover) and (pointer: fine) {
+  .language > summary:hover,
+  .github:hover,
+  .language li a:hover,
+  .sidebar a:hover,
+  .menu nav a:hover {
+    background: var(--rp-overlay);
+  }
+  .toc a:hover {
+    text-decoration: underline;
+  }
+}
+/* stylelint-enable selector-pseudo-class-disallowed-list */
+
+/* Page content */
+main h1 {
+  margin: 0 0 24px;
+  font-size: var(--docs-h1);
+  line-height: 1.2;
+  font-weight: 800;
+}
+main h2 {
+  margin: 48px 0 16px;
+  font-size: var(--rp-text-5xl);
+  line-height: 1.3;
+}
+main h3 {
+  margin: 32px 0 12px;
+  font-size: var(--rp-text-2xl);
+  line-height: 1.4;
+}
+main :is(h2, h3) {
+  scroll-margin-top: 24px;
+}
+main p,
+main ul,
+main ol {
+  margin: 0 0 16px;
+}
+main ul {
+  padding-inline-start: 24px;
+  list-style: disc;
+}
+main ol {
+  padding-inline-start: 24px;
+}
+main li + li {
+  margin-top: 4px;
+}
+main a {
+  color: var(--rp-accent-text);
+  text-underline-offset: 2px;
+}
+main img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0;
+  border-radius: var(--rp-r-lg);
+}
+code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--rp-overlay);
+  font-family: var(--docs-mono);
+  font-size: 0.875em;
+}
+pre {
+  margin: 0 0 16px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  border-radius: var(--rp-r-lg);
+  background: var(--rp-overlay);
+  font-size: var(--rp-text-md);
+  line-height: 1.6;
+  overflow-wrap: normal;
+}
+pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+.table {
+  margin: 0 0 16px;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--rp-text-md);
+  line-height: 1.6;
+}
+th,
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rp-line);
+  text-align: start;
+  vertical-align: top;
+}
+th {
+  font-weight: 700;
+}
+.callout {
+  --tone: var(--rp-hl-high);
+  --tone-text: var(--rp-text);
+
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-inline-start: 4px solid var(--tone);
+  border-radius: var(--rp-r-md);
+  background: color-mix(in srgb, var(--tone) 10%, var(--rp-surface));
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+.callout-title {
+  color: var(--tone-text);
+  font-weight: 700;
+}
+.callout.note {
+  --tone: var(--rp-info);
+  --tone-text: var(--rp-info-text);
+}
+.callout.tip {
+  --tone: var(--rp-positive);
+  --tone-text: var(--rp-positive-text);
+}
+.callout.important {
+  --tone: var(--rp-iris);
+}
+.callout.warning {
+  --tone: var(--rp-notice);
+  --tone-text: var(--rp-notice-text);
+}
+.callout.caution {
+  --tone: var(--rp-negative);
+  --tone-text: var(--rp-negative-text);
+}
+
+/* The language chooser at the root and the 404 page. */
+.choose {
+  max-width: 480px;
+  margin: 12vh auto;
+  padding: 0 16px;
+}
+.choose h1 {
+  margin: 32px 0 8px;
+  font-size: var(--rp-text-2xl);
+}
+.choose p {
+  margin: 0 0 8px;
+}
+.choose ul {
+  margin-top: 24px;
+}
+.choose li a {
+  color: var(--rp-accent-text);
+}
+
+@media (max-width: 1179px) {
+  .panel {
+    grid-template-columns: minmax(0, 768px);
+  }
+  .toc {
+    display: none;
+  }
+}
+/* Phones: the pages move into a menu above the content, and the panel runs edge to edge. */
+@media (max-width: 767px) {
+  .top {
+    padding: 0 16px;
+  }
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline-end: 0;
+  }
+  .sidebar {
+    display: none;
+  }
+  .panel {
+    display: block;
+    padding: 16px 16px 64px;
+    border-radius: 0;
+  }
+  .menu {
+    display: block;
+    margin-bottom: 24px;
+  }
+  .menu > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: var(--rp-r-md);
+    background: var(--rp-overlay);
+    font-size: var(--rp-text-md);
+  }
+  .menu > summary span {
+    flex: 1;
+  }
+  .menu nav {
+    padding-top: 4px;
+  }
+  main h1 {
+    font-size: var(--docs-h1-phone);
+  }
+  main h2 {
+    font-size: var(--rp-text-4xl);
+  }
+}
