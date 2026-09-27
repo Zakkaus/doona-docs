@@ -8,7 +8,7 @@
 
 English · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
-[Read the docs](https://zakkaus.github.io/doona-docs/) • [Build](#build) • [Layout](#layout)
+[Read the docs](https://zakkaus.github.io/doona-docs/) • [Build](#build) • [Layout](#layout) • [Contributing](.github/CONTRIBUTING.md)
 
 </div>
 
