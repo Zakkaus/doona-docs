@@ -1,7 +1,8 @@
 // Checks docs/ as GitHub renders it: every relative link and image resolves, every #anchor names an <a name> or a
 // generated heading slug on its target page, docs/anchors.json matches the pages, and the locales have the same pages,
-// anchors and heading levels. The README files are checked for links too. Then it renders the site (site/build.mjs)
-// for both base paths and checks that every internal link, image and #id in the HTML resolves.
+// anchors and heading levels. The README files are checked for links too, and every anchor the app passes to docsHref
+// is in docs/anchors.json. Then it renders the site (site/build.mjs) for both base paths and checks that every internal
+// link, image and #id in the HTML resolves.
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {anchors, docs, locales, pages as pageOrder, root, slugger} from '../site/docs.mjs';
@@ -122,6 +123,14 @@ for (const locale of locales) {
 }
 
 for (const name of readdirSync(root).filter(name => /^README.*\.md$/.test(name))) checkLinks(join(root, name));
+
+// Every anchor the app links with docsHref(lang, 'anchor') is in docs/anchors.json.
+for (const file of readdirSync(join(root, 'src'), {recursive: true}).filter(name => /\.tsx?$/.test(name))) {
+  const path = join(root, 'src', file);
+  for (const match of readFileSync(path, 'utf8').matchAll(/docsHref\([^,()]+,\s*'([^']+)'/g)) {
+    if (!(match[1] in anchors)) fail(path, `docsHref anchor ${match[1]} is not in docs/anchors.json`);
+  }
+}
 
 // The generated site, for github.io and for a domain of its own: every internal href and src names a file the build
 // writes, every #fragment an id on that page, and no page repeats an id.
