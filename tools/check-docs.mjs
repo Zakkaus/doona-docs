@@ -11,15 +11,15 @@ import {render} from '../site/build.mjs';
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
 
-// Prose lines outside fenced code blocks, with inline code removed so a literal `[x](y)` is not read as a link.
-function proseLines(text) {
+// The lines of a Markdown text, with fenced code blocks and their fences blanked.
+function unfenced(text) {
   let fenced = false;
   return text.split('\n').map(line => {
     if (/^\s*(```|~~~)/.test(line)) {
       fenced = !fenced;
       return '';
     }
-    return fenced ? '' : line.replace(/`[^`]*`/g, '');
+    return fenced ? '' : line;
   });
 }
 
@@ -27,13 +27,11 @@ const pages = new Map();
 function page(file) {
   if (!pages.has(file)) {
     const raw = readFileSync(file, 'utf8');
-    // Headings are read from the raw text: inline code in a heading still counts toward its slug.
-    let fenced = false;
-    const headingLines = raw.split('\n').filter(line => {
-      if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
-      return !fenced && /^#{1,6}\s/.test(line);
-    });
-    const lines = proseLines(raw);
+    const outside = unfenced(raw);
+    // Headings keep their inline code, which counts toward the slug. Prose drops it, so a literal `[x](y)` is not read
+    // as a link.
+    const headingLines = outside.filter(line => /^#{1,6}\s/.test(line));
+    const lines = outside.map(line => line.replace(/`[^`]*`/g, ''));
     const names = [...raw.matchAll(/<a name="([^"]+)"><\/a>/g)].map(match => match[1]);
     pages.set(file, {
       lines,
