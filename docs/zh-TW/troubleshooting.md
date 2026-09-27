@@ -6,11 +6,16 @@
 
 <a name="unknown-setting"></a>
 
-## unknown experimental setting
+## native_api 設定寫在 native_api { } 之外
 
-`native_api` 的欄位直接寫在 `experimental` 下，honk 因此拒絕此組態。請將欄位移入 `native_api { }`。
+`native_api` 的欄位直接寫在 `experimental` 下，honk 因此拒絕此組態。`fatal error, shutting down:` 一行會列出設定路徑與訊息，例如 `experimental.ui: native API setting belongs inside native_api { }`。`enabled` 與 `secret` 也屬於其他組態區塊，因此 honk 對這兩個欄位只回報 `unknown experimental setting`。請將欄位移入 `native_api { }`。
 
 ```dae
+# Wrong: "native API setting belongs inside native_api { }"
+experimental {
+    ui: '/usr/share/doona'
+}
+
 # Wrong: "unknown experimental setting"
 experimental {
     enabled: true
@@ -20,11 +25,13 @@ experimental {
 experimental {
     native_api {
         enabled: true
+        password_auth: true
+        ui: '/usr/share/doona'
     }
 }
 ```
 
-由 main 分支建置的 honk 會以同樣方式拒絕所有 `native_api` 設定，即使它們位於 `native_api { }` 中。請執行 `honk-core --version` 檢查版本並安裝 `debug` 版本，詳見 [honk 版本](requirements.md#honk-version)。
+由 main 分支建置的 honk 沒有原生 API，會以 `unknown experimental setting` 拒絕整個 `native_api { }` 組態區塊。請執行 `honk-core --version` 檢查版本並安裝 `debug` 版本，詳見 [honk 版本](requirements.md#honk-version)。
 
 ## honk 拒絕 native_api 組態區塊
 

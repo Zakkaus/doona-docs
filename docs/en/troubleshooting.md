@@ -6,11 +6,16 @@ English · [简体中文](../zh-CN/troubleshooting.md) · [繁體中文](../zh-T
 
 <a name="unknown-setting"></a>
 
-## unknown experimental setting
+## native_api settings outside native_api { }
 
-honk refuses the configuration because a `native_api` field sits directly under `experimental`. Move it into `native_api { }`.
+honk refuses the configuration because a `native_api` field sits directly under `experimental`. The `fatal error, shutting down:` line names the setting and the message, such as `experimental.ui: native API setting belongs inside native_api { }`. `enabled` and `secret` also belong to other blocks, so for them honk reports only `unknown experimental setting`. Move the field into `native_api { }`.
 
 ```dae
+# Wrong: "native API setting belongs inside native_api { }"
+experimental {
+    ui: '/usr/share/doona'
+}
+
 # Wrong: "unknown experimental setting"
 experimental {
     enabled: true
@@ -20,11 +25,13 @@ experimental {
 experimental {
     native_api {
         enabled: true
+        password_auth: true
+        ui: '/usr/share/doona'
     }
 }
 ```
 
-A build from main rejects every `native_api` setting this way, even inside `native_api { }`. Check `honk-core --version` and install the `debug` build; see [honk version](requirements.md#honk-version).
+A build from main has no native API and rejects the `native_api { }` block itself with `unknown experimental setting`. Check `honk-core --version` and install the `debug` build; see [honk version](requirements.md#honk-version).
 
 ## honk refuses the native_api block
 
