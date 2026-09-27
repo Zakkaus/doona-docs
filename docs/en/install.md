@@ -133,7 +133,7 @@ To replace a forgotten administrator, stop honk and run `sudo honk-core admin re
 
 ### doona on another origin
 
-When doona is served elsewhere, the browser sends cross-origin requests, and honk accepts only origins listed in `allow_origins` and hosts listed in `allowed_hosts`. In Settings, enter the server root, such as `http://192.168.1.1:9527`, without `/api/v1`. Test Connection checks discovery before saving, and saving reloads the page.
+When doona is served elsewhere, the browser sends cross-origin requests, and honk accepts only origins listed in `allow_origins` and hosts listed in `allowed_hosts`. In Settings, enter the server root, such as `http://192.168.1.1:9527`, without `/api/v1`. Test connection checks discovery before saving, and saving reloads the page.
 
 A page loaded over HTTPS cannot call an API over plain HTTP; browsers block it as mixed content. Open doona from honk at `/ui/`, or put honk behind a TLS reverse proxy.
 
