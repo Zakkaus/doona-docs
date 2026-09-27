@@ -28,6 +28,7 @@ export default {
     viewMarkdown: 'View as Markdown',
     markdownMenu: 'Markdown options',
     openIn: 'Open in {app}',
+    // The prompt follows the one in the React Spectrum docs' Markdown menu (packages/dev/s2-docs/src/MarkdownMenu.tsx).
     markdownPrompt: 'Answer questions about the following doona documentation page: {page}\nMarkdown source: {markdown}',
     theme: 'Theme: {theme}',
     system: 'System',

@@ -10,9 +10,15 @@ doona's palette and sizes, its logo, and the icons in its src/ui/icons. Their
 terms travel with the site as NOTICE.txt and LICENSES/, copied from doona:
 https://github.com/Zakkaus/doona/blob/main/NOTICE
 
-The Spectrum icons in site/icons/spectrum.mjs are adapted from
-@react-spectrum/s2 like doona's, under the same Apache License 2.0; see
-LICENSES/Apache-2.0.txt.
+Adobe Spectrum icons
+Copyright 2024 Adobe. All rights reserved.
+The Spectrum workflow icons in site/icons/spectrum.mjs and the LinkOut and
+Chevron UI icons in site/build/templates.mjs and site/build/nav.mjs are
+adapted from @react-spectrum/s2 1.7.1. The SVG geometry is unchanged; fills
+use currentColor and the markup around it is local.
+Licensed under the Apache License, Version 2.0; see LICENSES/Apache-2.0.txt:
+https://www.apache.org/licenses/LICENSE-2.0
+Source: https://github.com/adobe/react-spectrum
 
 Distribution logos from Simple Icons (CC0-1.0). The marks belong to their
 owners and identify the distributions the pages cover. Simple Icons records
@@ -20,7 +26,12 @@ its own licence for three of them: the Debian logo is CC BY-SA 3.0, the Gentoo
 logo CC BY-SA 2.5, and the Fedora logo follows the Fedora Project's brand
 terms. See site/icons/distros.mjs and LICENSES/.
 
-The site serves Source Sans 3 and Source Code Pro font files under the SIL
-Open Font License 1.1. Copyright Adobe, with Reserved Font Name 'Source'.
-Their original license notices are published in fonts/LICENSE-SourceSans3.txt
-and fonts/LICENSE-SourceCodePro.txt. See site/fonts/README.md for source revisions.
+Source Sans 3 and Source Code Pro
+Source Sans 3: Copyright 2010-2020 Adobe (http://www.adobe.com/), with
+Reserved Font Name 'Source'.
+Source Code Pro: Copyright 2010, 2012 Adobe Systems Incorporated
+(http://www.adobe.com/), with Reserved Font Name 'Source'.
+The site serves their Google Fonts Latin WOFF2 subsets, unmodified, under the
+SIL Open Font License 1.1; see LICENSES/OFL-1.1.txt. Their original license
+notices are published in fonts/LICENSE-SourceSans3.txt and
+fonts/LICENSE-SourceCodePro.txt. See site/fonts/README.md for source revisions.

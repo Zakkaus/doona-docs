@@ -39,6 +39,13 @@ precedence = "override"
 SPDX-FileCopyrightText = "2024 Adobe"
 SPDX-License-Identifier = "Apache-2.0"
 
+# Two Spectrum UI icons (LinkOut, Chevron) from @react-spectrum/s2 are inlined in these build files.
+[[annotations]]
+path = ["site/build/templates.mjs", "site/build/nav.mjs"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["doona contributors", "2024 Adobe"]
+SPDX-License-Identifier = "GPL-3.0-only AND Apache-2.0"
+
 # Distribution logos from Simple Icons; the file names each logo's own licence where Simple Icons records one.
 [[annotations]]
 path = ["site/icons/distros.mjs"]

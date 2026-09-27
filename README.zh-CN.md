@@ -41,6 +41,10 @@ doona 不在 git 中保存截图。推送到 `main` 或手动运行工作流时�
 
 页面沿用在 doona 时的路径：指向 `../screenshots/` 或 `../../src/` 的链接代表 doona 的文件，站点会复制该文件或链接到 GitHub 上的文件。
 
+## 致谢
+
+站点设计参照 Adobe 的 React Spectrum 与 Spectrum 2 文档。Spectrum 图标版权归 Adobe 所有，采用 Apache License 2.0。Source Sans 3 与 Source Code Pro 字体版权归 Adobe 所有，采用 SIL Open Font License 1.1。完整声明见 [NOTICE](NOTICE)。
+
 ## 许可证
 
 `docs/` 中的页面采用 [CC BY 4.0](LICENSES/CC-BY-4.0.txt)；站点构建与检查工具与 doona 相同，采用 GPL-3.0-only。发布的站点另附 doona 的 `NOTICE`，涵盖其图标；见 [NOTICE](NOTICE)。
