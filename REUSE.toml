@@ -1,0 +1,8 @@
+version = 1
+
+# The pages, the site build and the checker came from Zakkaus/doona and keep its licence.
+[[annotations]]
+path = ["*", ".github/**", "docs/**", "site/**", "tools/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "doona contributors"
+SPDX-License-Identifier = "GPL-3.0-only"

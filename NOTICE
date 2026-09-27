@@ -1,0 +1,11 @@
+doona-docs
+Copyright doona contributors
+Licensed under the GNU General Public License, version 3 only; see LICENSE.
+
+The pages, the site build and the checker were moved here from Zakkaus/doona
+and keep its licence.
+
+The published site also carries files the build reads from a doona checkout:
+doona's palette and sizes, its logo, and the icons in its src/ui/icons. Their
+terms travel with the site as NOTICE.txt and LICENSES/, copied from doona:
+https://github.com/Zakkaus/doona/blob/main/NOTICE
