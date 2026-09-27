@@ -1,6 +1,7 @@
 import {runInNewContext} from 'node:vm';
 import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
+import {frontMatter} from '../site/build/markdown.mjs';
 import {script as siteScript} from '../site/build/assets.mjs';
 import {awaitsScreenshots, groups, locales, pages, slugger} from '../site/docs.mjs';
 
@@ -489,8 +490,36 @@ describe('documentation search', () => {
         expect(site.has(entry.url.slice('/docs/'.length).replace(/\/$/, '/index.html'))).toBe(true);
         expect(entry.text).not.toMatch(/<script|<svg|<a /);
         expect(entry.text.length).toBeGreaterThan(entry.title.length);
+        expect(Array.isArray(entry.headings) && Array.isArray(entry.keywords)).toBe(true);
       }
+      const configuration = index.find(entry => entry.url.endsWith('/configuration.html'));
+      expect(configuration.headings.length).toBeGreaterThan(0);
+      expect(configuration.headings).not.toContain(configuration.title);
     }
+  });
+
+  it('reads keywords from front matter and leaves a page without it as it is', () => {
+    expect(frontMatter('---\nkeywords: DNS, routing ,\n---\n\n[en](x)\n')).toEqual({keywords: ['DNS', 'routing'], body: '[en](x)\n'});
+    expect(frontMatter('[en](x)\n\n---\n')).toEqual({keywords: [], body: '[en](x)\n\n---\n'});
+  });
+
+  it('ranks a title prefix, then a title, a heading, a keyword and the text', () => {
+    const context = {document: {documentElement: {dataset: {}}, addEventListener() {}, querySelector: () => null, querySelectorAll: () => []}, localStorage: {getItem: () => null}, navigator: {}};
+    runInNewContext(siteScript(), context);
+    const entry = (title, headings = [], keywords = [], text = '') => ({title, headings, keywords, text: `${title} ${headings.join(' ')} ${text}`});
+    const entries = [
+      entry('troubleshooting', [], [], 'the dns server'),
+      entry('routing', [], ['dns']),
+      entry('configuration', ['dns upstreams']),
+      entry('about dns'),
+      entry('dns'),
+      entry('features')
+    ];
+    const ranked = entries
+      .map(page => [page.title, context.searchRank(page, 'dns')])
+      .filter(([, rank]) => rank < Infinity)
+      .sort((a, b) => a[1] - b[1]);
+    expect(ranked.map(([title]) => title)).toEqual(['dns', 'about dns', 'configuration', 'routing', 'troubleshooting']);
   });
   it('renders one localized modal shared by search and phone navigation', () => {
     for (const locale of locales) {

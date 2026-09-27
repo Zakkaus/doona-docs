@@ -68,9 +68,18 @@ export function rewrite(base, files, target, file, origin) {
   return (origin ?? '') + base + encodeURI(parts.join('/')) + suffix;
 }
 
+// Optional front matter holding one line, `keywords: a, b`, which search ranks below the title and headings. GitHub
+// shows it as a table above the page.
+export function frontMatter(source) {
+  const front = /^---\nkeywords:(.*)\n---\n+/.exec(source);
+  const keywords = front ? front[1].split(',').map(keyword => keyword.trim()).filter(Boolean) : [];
+  return {keywords, body: front ? source.slice(front[0].length) : source};
+}
+
 export function parse(base, files, locale, name) {
   const file = join(docs, locale, `${name}.md`);
-  const tokens = md.parse(readFileSync(file, 'utf8'), {});
+  const {keywords, body} = frontMatter(readFileSync(file, 'utf8'));
+  const tokens = md.parse(body, {});
 
   // The first paragraph links the page in the other languages for readers on GitHub; the top bar does that here.
   const others = locales.filter(other => other !== locale).map(other => `../${other}/${name}.md`);
@@ -151,5 +160,5 @@ export function parse(base, files, locale, name) {
   const h1 = tokens.findIndex(token => token.tag === 'h1');
   const lead = tokens[h1 + 3]?.type === 'paragraph_open' ? plain(tokens[h1 + 4]) : '';
   const description = /^[^]*?(?:[.!?](?=\s|$)|[。！？])/u.exec(lead)?.[0] ?? lead;
-  return {name, title, description, toc, tokens};
+  return {name, title, description, keywords, toc, tokens};
 }

@@ -1,5 +1,19 @@
 // The search dialog, which is also the phone navigation: its triggers and Ctrl K, the section filters, the query over
 // the locale's search.json, and arrow keys over the page cards.
+
+// Where a page ranks for a query, best first: its title starts with the query, its title holds it, a section heading,
+// a keyword, then its text. The entry and the query are normalized; Infinity is no match.
+function searchRank(entry, query) {
+  const tier = [
+    entry.title.startsWith(query),
+    entry.title.includes(query),
+    entry.headings.some(heading => heading.includes(query)),
+    entry.keywords.some(keyword => keyword.includes(query)),
+    entry.text.includes(query)
+  ].indexOf(true);
+  return tier < 0 ? Infinity : tier;
+}
+
 const search = document.querySelector('#docs-search');
 if (search) {
   const input = search.querySelector('input');
@@ -15,6 +29,7 @@ if (search) {
   const initialGroup = filters.querySelector('[aria-pressed="true"]').dataset.group;
   let selectedGroup = initialGroup;
   let matching;
+  const pageOrder = [...cards.children];
   const group = value => {
     selectedGroup = value;
     for (const button of filters.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.group === value));
@@ -67,6 +82,7 @@ if (search) {
     message.hidden = true;
     if (!query) {
       cards.removeAttribute('aria-busy');
+      cards.append(...pageOrder);
       group(initialGroup);
       return;
     }
@@ -76,10 +92,20 @@ if (search) {
     message.textContent = message.dataset.loading;
     message.hidden = false;
     try {
-      loading ??= fetch(search.dataset.searchSrc).then(response => {
-        if (!response.ok) throw new Error(response.statusText);
-        return response.json();
-      });
+      loading ??= fetch(search.dataset.searchSrc)
+        .then(response => {
+          if (!response.ok) throw new Error(response.statusText);
+          return response.json();
+        })
+        .then(entries =>
+          entries.map(entry => ({
+            url: entry.url,
+            title: normalize(entry.title),
+            headings: entry.headings.map(normalize),
+            keywords: entry.keywords.map(normalize),
+            text: normalize(entry.text)
+          }))
+        );
       index ??= await loading;
     } catch {
       loading = undefined;
@@ -92,8 +118,14 @@ if (search) {
     if (request !== revision) return;
     cards.removeAttribute('aria-busy');
     message.hidden = true;
-    const matches = index.filter(entry => normalize(entry.text).includes(query));
-    matching = new Set(matches.map(entry => entry.url));
+    // A stable sort keeps the page order within a rank.
+    const ranked = index
+      .map(entry => ({url: entry.url, rank: searchRank(entry, query)}))
+      .filter(entry => entry.rank < Infinity)
+      .sort((a, b) => a.rank - b.rank);
+    matching = new Set(ranked.map(entry => entry.url));
+    const cardFor = new Map(pageOrder.map(card => [card.getAttribute('href'), card]));
+    cards.append(...ranked.map(entry => cardFor.get(entry.url)));
     group(selectedGroup);
   });
   search.addEventListener('keydown', event => {
