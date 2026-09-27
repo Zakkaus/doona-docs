@@ -24,6 +24,7 @@ const styleFiles = [
   'tables',
   'callouts',
   'chooser',
+  'not-found',
   'phone',
   'search',
   'motion',

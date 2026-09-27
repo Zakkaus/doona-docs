@@ -27,5 +27,8 @@
   .md-menu li a:hover {
     background: var(--rp-overlay);
   }
+  .link-button:hover {
+    background: var(--rp-hl-med);
+  }
 }
 /* stylelint-enable selector-pseudo-class-disallowed-list */

@@ -445,15 +445,18 @@ describe('404 page', () => {
 
   it('shows one heading, in the visitor language, with the other languages linked without script', () => {
     const html = render().get('404.html').text;
-    const shown = [...html.matchAll(/<section lang="([^"]+)"( hidden)?>\n<h1>/g)].filter(match => !match[2]);
-    expect(shown.map(match => match[1])).toEqual(['en']);
+    const sections = [...html.matchAll(/<section class="illustrated-message" lang="([^"]+)"( hidden)?>\n(<svg class="illustration"[^]*?<\/svg>)\n<h1>([^<]+)<\/h1>/g)];
+    expect(sections.map(match => match[1])).toEqual(locales);
+    expect(sections.filter(match => !match[2]).map(match => match[4])).toEqual(['Error 404: Page not found']);
+    expect(html.match(/<h1>/g)).toHaveLength(locales.length);
+    expect(sections[0][3]).toContain('aria-hidden="true"');
     const noscript = /<noscript>([^]*?)<\/noscript>/.exec(html)[1];
     expect([...noscript.matchAll(/hreflang="([^"]+)"/g)].map(match => match[1])).toEqual(locales.slice(1));
     const script = [...html.matchAll(/<script>\n([^]*?)<\/script>/g)].map(match => match[1]).find(text => text.includes('section[lang]'));
-    const sections = locales.map(lang => ({lang, hidden: lang !== 'en', querySelector: () => ({textContent: `title ${lang}`})}));
-    const document = {documentElement: {}, querySelectorAll: () => sections};
+    const fake = locales.map(lang => ({lang, hidden: lang !== 'en', querySelector: () => ({textContent: `title ${lang}`})}));
+    const document = {documentElement: {}, querySelectorAll: () => fake};
     runInNewContext(script, {document, localStorage: {getItem: () => null}, navigator: {languages: ['zh-HK']}});
-    expect(sections.filter(section => !section.hidden).map(section => section.lang)).toEqual(['zh-TW']);
+    expect(fake.filter(section => !section.hidden).map(section => section.lang)).toEqual(['zh-TW']);
     expect([document.title, document.documentElement.lang]).toEqual(['title zh-TW', 'zh-TW']);
   });
 

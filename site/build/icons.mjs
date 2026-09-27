@@ -1,9 +1,11 @@
 // The icons the pages draw, read from doona's own components so the two stay the same, the Spectrum icons and
-// distribution logos this repository keeps in site/icons/ for what doona does not draw, and the app's logo.
+// distribution logos this repository keeps in site/icons/ for what doona does not draw, a Spectrum illustration, and
+// the app's logo.
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {doona} from '../docs.mjs';
 import distros from '../icons/distros.mjs';
+import illustrations from '../icons/illustrations.mjs';
 import spectrum from '../icons/spectrum.mjs';
 
 const svg = (viewBox, shapes, className = 'icon') =>
@@ -69,6 +71,10 @@ export const pageIcons = {
   troubleshooting: workflow('HelpCircle'),
   development: workflow('Code')
 };
+
+// A Spectrum illustration at the 96px size of IllustratedMessage.
+export const illustration = name =>
+  `<svg class="illustration" viewBox="0 0 96 96" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="${illustrations[name]}"/></svg>`;
 
 // The app's logo, the same file in both schemes.
 export const logo = base => `<img src="${base}logo.svg" alt="" width="28" height="28">`;

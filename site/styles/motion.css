@@ -1,9 +1,9 @@
 /* The pressed state of the buttons, and the transitions, which run only when the visitor allows motion. */
-:is(.theme, .demo, .github, .language > summary, .nav-trigger, .search-close, .copy):active {
+:is(.theme, .demo, .github, .language > summary, .nav-trigger, .search-close, .copy, .link-button):active {
   background: var(--rp-hl-med);
 }
 @media (prefers-reduced-motion: no-preference) {
-  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close) {
+  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close, .link-button) {
     transition:
       transform var(--rp-duration) var(--rp-ease),
       background-color var(--rp-duration) var(--rp-ease);
@@ -14,7 +14,7 @@
   .nav-group > .group .icon {
     transition: transform var(--rp-duration) var(--rp-ease);
   }
-  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close):active {
+  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close, .link-button):active {
     transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);
   }
 }
