@@ -85,7 +85,7 @@ describe('icons', () => {
     const cards = [...page.matchAll(/<a class="search-card" href="[^"]*\/(?:([\w-]+)\.html)?"[^]*?<span class="card-art">([^]*?)<\/span><span class="card-text">/g)];
     expect(cards.map(([, name]) => name ?? 'index')).toEqual(pages);
     for (const [, name, art] of cards) {
-      expect(art, name).toMatch(/^(<svg class="icon[^"]*" viewBox="[^"]+" aria-hidden="true" focusable="false"><path fill="currentColor" d="[^"]+"\/>(<path[^>]+\/>)*<\/svg>)+$/);
+      expect(art, name).toMatch(/^<svg class="icon[^"]*" viewBox="[^"]+" aria-hidden="true" focusable="false"><path fill="currentColor" d="[^"]+"\/>(<path[^>]+\/>)*<\/svg>$/);
     }
   });
 

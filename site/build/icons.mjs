@@ -30,7 +30,7 @@ function icon(name) {
   return svg(viewBox, shapes);
 }
 const workflow = name => svg('0 0 20 20', paths(spectrum[name]));
-const logos = (...slugs) => slugs.map(slug => svg('0 0 24 24', paths(distros[slug]), 'icon logo')).join('');
+const distro = slug => svg('0 0 24 24', paths(distros[slug]), 'icon logo');
 export const icons = {
   github: icon('GitHub'),
   language: icon('Translate'),
@@ -49,16 +49,16 @@ export const icons = {
   demo: workflow('Play')
 };
 
-// The picture on each page's search card: what the page is about, or the logos of the distributions an install page
+// The picture on each page's search card: what the page is about, or the logo of the distribution an install page
 // covers.
 export const pageIcons = {
   index: icon('Home'),
   requirements: workflow('ListMultiSelect'),
-  'install-debian': logos('debian', 'ubuntu'),
-  'install-fedora': logos('fedora', 'redhat'),
-  'install-arch': logos('archlinux'),
-  'install-gentoo': logos('gentoo'),
-  'install-openwrt': logos('openwrt'),
+  'install-debian': distro('debian'),
+  'install-fedora': distro('fedora'),
+  'install-arch': distro('archlinux'),
+  'install-gentoo': distro('gentoo'),
+  'install-openwrt': distro('openwrt'),
   'install-manual': workflow('Prompt'),
   install: icon('Download'),
   'minimal-configuration': workflow('Properties'),

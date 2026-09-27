@@ -128,10 +128,8 @@ body:has(#docs-search[open]) { overflow: hidden; }
 }
 .search-card[aria-current] { outline: 2px solid var(--rp-text); outline-offset: -2px; }
 .card-art {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
+  display: grid;
+  place-items: center;
   aspect-ratio: 1.6;
   border-radius: 8px 8px 0 0;
   background: linear-gradient(125deg, var(--card-tint, var(--rp-iris)), var(--rp-pine));
@@ -144,7 +142,7 @@ body:has(#docs-search[open]) { overflow: hidden; }
 .search-card[data-group='guides'] { --card-tint: var(--rp-love); }
 .search-card[data-group='contributing'] { --card-tint: var(--rp-subtle); }
 .card-art .icon { width: 64px; height: 64px; }
-/* A logo fills its whole viewBox, where a Spectrum icon leaves a margin, so logos draw smaller to match. */
+/* A logo fills its whole viewBox, where a Spectrum icon leaves a margin, so a logo draws smaller to match. */
 .card-art .logo { width: 48px; height: 48px; }
 .card-text { display: grid; align-content: start; gap: 4px; padding: 12px; font-size: 0.8125rem; line-height: 18px; }
 .card-text strong { font-weight: 600; }
