@@ -27,8 +27,14 @@ export function slugger() {
       .toLowerCase()
       .replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, '')
       .replace(/ /g, '-');
-    const count = seen.get(base) ?? 0;
-    seen.set(base, count + 1);
-    return count ? `${base}-${count}` : base;
+    // A numbered id can be taken by a heading whose own text ends in that number, so count on until one is free.
+    let id = base;
+    while (seen.has(id)) {
+      const count = seen.get(base) + 1;
+      seen.set(base, count);
+      id = `${base}-${count}`;
+    }
+    seen.set(id, 0);
+    return id;
   };
 }
