@@ -744,3 +744,50 @@ th {
     font-size: var(--rp-text-4xl);
   }
 }
+/* Tabs over alternative forms of one code block. Without site.js every block shows under its .tab-label. */
+.tabs {
+  margin: 0 0 16px;
+}
+.tabs .code {
+  margin: 0;
+}
+.tab-panel + .tab-panel {
+  margin-top: 12px;
+}
+.tabs:has(> .tablist) > .tab-panel {
+  margin-top: 0;
+}
+.tab-label {
+  margin: 0 0 4px;
+  color: var(--rp-subtle);
+  font-size: var(--rp-text-sm);
+}
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.tablist > [role='tab'] {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--rp-r-md);
+  background: none;
+  color: var(--rp-subtle);
+  font: inherit;
+  font-size: var(--rp-text-sm);
+  cursor: pointer;
+}
+.tablist > [role='tab']:hover {
+  color: var(--rp-text);
+}
+.tablist > [role='tab'][aria-selected='true'] {
+  border-color: var(--rp-line);
+  background: var(--rp-selected);
+  color: var(--rp-accent-text);
+  font-weight: 600;
+}
+.tab-panel[hidden] {
+  display: none;
+}

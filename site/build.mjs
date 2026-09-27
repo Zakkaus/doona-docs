@@ -22,12 +22,20 @@ md.renderer.rules.blockquote_open = (tokens, index, options, env, self) => {
   const title = alert ? `<p class="callout-title">${strings[env.locale][alert]}</p>\n` : '';
   return self.renderToken(tokens, index, options) + title;
 };
+// A fence's info is its language, optionally followed by tab="label".
+const fenceInfo = info => /^(\S+)(?:\s+tab="([^"]+)")?$/.exec(info.trim())?.slice(1) ?? [info.trim()];
+
 // parse() has checked the fence's language. site.js shows the copy button where the clipboard can be written.
+// Adjacent fences with a tab label, such as the sudo and root forms of one command, render as one .tabs box in which
+// every block keeps its label, which is how they read without site.js; site.js turns the labels into tabs.
 md.renderer.rules.fence = (tokens, index, options, env) => {
   const token = tokens[index];
-  const language = token.info.trim();
+  const [language, tab] = fenceInfo(token.info);
   const copy = `<button type="button" class="copy" aria-label="${strings[env.locale].copy}" hidden>${icons.copy}${icons.copied}</button>`;
-  return `<div class="code"><pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
+  const code = `<div class="code"><pre><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
+  if (!tab) return code;
+  const panel = `<div class="tab-panel" data-tab="${escape(tab)}"><p class="tab-label">${escape(tab)}</p>\n${code}</div>\n`;
+  return `${token.meta.first ? '<div class="tabs">\n' : ''}${panel}${token.meta.last ? '</div>\n' : ''}`;
 };
 
 const escape = text => text.replace(/[&<>"]/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[char]);
@@ -153,8 +161,18 @@ function parse(base, files, locale, name) {
       index -= 2;
       continue;
     }
-    if (token.type === 'fence' && !languages.includes(token.info.trim()))
-      throw new Error(`${file}: a code block needs one of ${languages.join(', ')} after its fence, not "${token.info.trim()}"`);
+    if (token.type === 'fence') {
+      const [language, tab] = fenceInfo(token.info);
+      if (!languages.includes(language))
+        throw new Error(`${file}: a code block needs one of ${languages.join(', ')} after its fence, not "${token.info.trim()}"`);
+      if (tab) {
+        const previous = tokens[index - 1];
+        const next = tokens[index + 1];
+        const joined = token => token?.type === 'fence' && Boolean(fenceInfo(token.info)[1]);
+        token.meta = {first: !joined(previous), last: !joined(next)};
+        if (token.meta.first && token.meta.last) throw new Error(`${file}: the code block tab="${tab}" has no other tab next to it`);
+      }
+    }
     if (token.type === 'heading_open') {
       const inline = tokens[index + 1];
       // Every heading counts toward GitHub's numbering of repeated slugs, the h1 included. The h1 keeps only an
