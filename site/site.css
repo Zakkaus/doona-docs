@@ -191,6 +191,7 @@ details[open] > summary .icon:last-child {
 }
 .language > summary,
 .theme,
+.demo,
 .github {
   display: inline-flex;
   align-items: center;
@@ -405,6 +406,7 @@ details[open] > summary .icon:last-child {
 @media (hover: hover) and (pointer: fine) {
   .language > summary:hover,
   .theme:hover,
+  .demo:hover,
   .github:hover,
   .language li a:hover {
     background: var(--rp-overlay);
@@ -870,6 +872,7 @@ tr:last-child td { border-bottom: 0; }
     margin-inline-end: 0;
   }
   .top .language { display: none; }
+  .top .demo,
   .top .github { display: none; }
   .top .search-trigger { display: none; }
   .layout {
@@ -1076,7 +1079,7 @@ body:has(#docs-search[open]) { overflow: hidden; }
   .search-card:hover { outline: 2px solid var(--rp-hl-high); outline-offset: -2px; }
 }
 .search-card:focus-visible { outline: 2px solid var(--rp-accent); outline-offset: 2px; }
-:is(.theme, .github, .language > summary, .nav-trigger, .search-close, .copy):active {
+:is(.theme, .demo, .github, .language > summary, .nav-trigger, .search-close, .copy):active {
   background: var(--rp-hl-med);
 }
 @media (max-width: 1199px) {
@@ -1110,7 +1113,7 @@ body:has(#docs-search[open]) { overflow: hidden; }
   .search-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: no-preference) {
-  :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close) {
+  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close) {
     transition:
       transform var(--rp-duration) var(--rp-ease),
       background-color var(--rp-duration) var(--rp-ease);
@@ -1121,7 +1124,7 @@ body:has(#docs-search[open]) { overflow: hidden; }
   .nav-group > .group .icon {
     transition: transform var(--rp-duration) var(--rp-ease);
   }
-  :is(.md-copy, .md-more, .copy, .theme, .github, .nav-trigger, .search-close):active {
+  :is(.md-copy, .md-more, .copy, .theme, .demo, .github, .nav-trigger, .search-close):active {
     transform: perspective(var(--docs-press-depth, 32px)) translateZ(-2px);
   }
 }
