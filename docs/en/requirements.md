@@ -12,6 +12,7 @@ honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link an
 - The kernel options below. Desktop and server distributions usually enable them; OpenWrt, Armbian and VyOS need checking.
 - cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
 - bpffs mounted at `/sys/fs/bpf`.
+- CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
 
 ```sh
 uname -r
@@ -49,15 +50,15 @@ mountpoint /sys/fs/bpf
 ## honk version
 
 - Only builds from the `feat/native-api` branch of Glassyiris/honk have the native API: the rolling `debug` release, currently built from tag `debug.2026.9.26.native-api.4` (commit `5d8f32c1`). Each doona release attaches the build current when it was made; its `HONK-SOURCE.txt` names the tag and commit.
-- Builds from main, such as `debug.2026.9.24.1`, have no native API. honk rejects every `native_api` setting as “unknown experimental setting”, and `/api` and `/ui/` answer 404.
+- Builds of daeuniverse/honk main, such as `debug.2026.9.24.1`, have no native API. honk rejects every `native_api` setting as “unknown experimental setting”, and `/api` and `/ui/` answer 404.
 - Geodata source settings need `debug.2026.9.26.native-api.1` or later. `debug.2026.9.24.native-api.*` builds update geodata but have no configurable sources.
 
 Run `honk-core --version` to check the installed binary. To check the running version, use the Engine card on Overview or the bottom of the side navigation.
 
 ## Browser and build
 
-| Component | Requirement                                                                                                                                         |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Backend   | An engine implementing the native API contract pinned in [SOURCE.md](../../contract/api-standardize/SOURCE.md), with its API listener enabled       |
-| Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Automated tests use Chromium |
-| Build     | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives          |
+| Component | Requirement                                                                                                                                                             |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Backend   | An engine implementing the native API contract pinned in [SOURCE.md](../../contract/api-standardize/SOURCE.md), with its API listener enabled                           |
+| Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Automated tests use Chromium, and CI adds WebKit |
+| Build     | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives                              |

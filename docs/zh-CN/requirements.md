@@ -12,6 +12,7 @@ honk 只能在 Linux 上以 `root` 身份运行。它会加载 eBPF 程序、创
 - 下列内核选项。桌面与服务器发行版通常已启用；OpenWrt、Armbian 与 VyOS 需要逐项检查。
 - `pname(...)` 规则需要 cgroup v2。缺少 cgroup v2 时 honk 仍可启动，但按进程名分流不可用。
 - bpffs 挂载于 `/sys/fs/bpf`。
+- CA 证书，例如 `ca-certificates` 软件包。缺少时 honk 会以 `subscription network startup failed` 退出。
 
 ```sh
 uname -r
@@ -49,15 +50,15 @@ mountpoint /sys/fs/bpf
 ## honk 版本
 
 - 只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，即滚动发布的 `debug` 版本，目前由标签 `debug.2026.9.26.native-api.4`（提交 `5d8f32c1`）构建。每个 doona 发行版附带发行时的构建，其 `HONK-SOURCE.txt` 注明标签与提交。
-- 由 main 分支构建的版本（例如 `debug.2026.9.24.1`）没有原生 API。honk 会以 `unknown experimental setting` 拒绝所有 `native_api` 设置，访问 `/api` 与 `/ui/` 返回 404。
+- 由 daeuniverse/honk main 分支构建的版本（例如 `debug.2026.9.24.1`）没有原生 API。honk 会以 `unknown experimental setting` 拒绝所有 `native_api` 设置，访问 `/api` 与 `/ui/` 返回 404。
 - 地理数据来源设置需要 `debug.2026.9.26.native-api.1` 或更高版本。`debug.2026.9.24.native-api.*` 可以更新地理数据，但不能设置来源。
 
 执行 `honk-core --version` 查看已安装二进制文件的版本；正在运行的版本请查看 doona 概览页的“引擎”卡片或侧边导航栏底部。
 
 ## 浏览器与构建
 
-| 组件   | 要求                                                                                                                          |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| 后端   | 实现 [SOURCE.md](../../contract/api-standardize/SOURCE.md) 所钉契约并启用 API 监听的引擎                                      |
-| 浏览器 | Chrome 或 Edge 120、Firefox 121、Safari 17 及以后。这些是 CSS 构建目标；JavaScript 构建目标是 ES2022。自动化测试只用 Chromium |
-| 构建   | 仅从源码构建 doona 时需要 Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` 与 pnpm 11.15.1；打包需要 GNU tar、gzip 与 sha256sum     |
+| 组件   | 要求                                                                                                                                          |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 后端   | 实现 [SOURCE.md](../../contract/api-standardize/SOURCE.md) 所钉契约并启用 API 监听的引擎                                                      |
+| 浏览器 | Chrome 或 Edge 120、Firefox 121、Safari 17 及以后。这些是 CSS 构建目标；JavaScript 构建目标是 ES2022。自动化测试使用 Chromium，CI 另加 WebKit |
+| 构建   | 仅从源码构建 doona 时需要 Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` 与 pnpm 11.15.1；打包需要 GNU tar、gzip 与 sha256sum                     |

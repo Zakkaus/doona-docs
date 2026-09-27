@@ -70,7 +70,7 @@ dns {
 
 - `lan_interface`：将示例中的 `br-lan` 改为局域网客户端连接网关所用的网卡；只代理网关自身流量时删除此项。`wan_interface: auto` 同时处理网关自身的流量。
 - `data_dir`：运行时根目录，默认为 `/var/lib/honk`，存放地理数据文件与状态数据库 `state/honk.db`。
-- `bootstrap_resolver`：直接解析代理服务器与地理数据下载地址的域名，避免被 honk 拦截。下载地址使用域名时必须设置此项。
+- `bootstrap_resolver`：直接解析代理服务器与地理数据下载地址的域名，避免被 honk 拦截。直接下载且地址使用域名时必须设置此项；下载默认按路由规则转发。
 - `subscription` 与 `node`：替换为自己的订阅与节点。之后可在 doona 的节点页继续添加。
 - `group proxy`：包含订阅中的节点与静态节点；`min_moving_avg` 选择延迟最低的成员。
 - `routing`：私有地址优先以 `direct(must)` 直连，中国大陆域名与 IP 地址直连，其余流量经由 `proxy`。

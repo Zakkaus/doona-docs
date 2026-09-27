@@ -27,13 +27,13 @@ VERSION=0.1.0-beta.8               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
-sha256sum --ignore-missing -c SHA256SUMS
+grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 honk-core --version   # prints the tag the build came from, such as debug.2026.9.26.native-api.4
 ```
 
-如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，并启用 `native-api` 特性构建 `honk-core`。
+如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，按 honk 快速入门的步骤构建：先构建 eBPF 对象，再执行 `cargo build --release -p honk-core --features ebpf`。`native-api` 是默认特性；未启用 `ebpf` 时 honk 没有数据路径。发布页同时附有该提交的源码包 `honk-source-<commit>.tar.gz`。
 
 二进制文件已内置 eBPF 对象，无需单独安装该对象。
 
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ```sh
 VERSION=0.1.0-beta.8   # the release you downloaded, without v
-sha256sum --ignore-missing -c SHA256SUMS
+grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
 # Optional Noto Sans TC and SC fonts:
@@ -128,7 +128,7 @@ honk 默认会打开 `<data_dir>/state/honk.db`：`global.store_subscribe` 默�
 ### 首次登录
 
 1. 打开 `http://192.168.1.1:9527/ui/`，即 `listen` 地址。doona 会在同一来源找到 API，并将其保存为后端。
-2. 密码模式：登录对话框提供首次设置。请在网关本机或局域网设备上创建管理员，然后登录。
+2. 密码模式：登录页面显示“创建管理员”。请在网关本机或局域网设备上创建管理员，然后登录。
 3. Token 模式：输入 `secret` 作为 Token，或打开配对链接。doona 加载后会从地址栏移除 Token。
 
 ```text
@@ -165,7 +165,7 @@ sudo systemctl restart honk-core   # needed for native_api, interfaces, data_dir
 sudo journalctl -u honk-core -e    # look for applied or rejected
 ```
 
-重载会重新读取配置，并在日志中记录 `applied` 或 `rejected`。修改 `native_api`、网卡、TPROXY 设置、`data_dir`、NFQUEUE 开关、DNS 监听或 Clash API 监听后需要重启。doona 的配置页在应用后会自动重载。
+重载会重新读取配置，并在日志中记录 `applied` 或 `rejected`。修改 `native_api`、网卡、TPROXY 设置、`data_dir`、`log_level`、健康检查设置、NFQUEUE 开关、DNS 监听或 Clash API 监听后需要重启；被拒绝的重载会在日志中列出这些字段。doona 的配置页在应用后会自动重载。
 
 ### 更新 honk
 

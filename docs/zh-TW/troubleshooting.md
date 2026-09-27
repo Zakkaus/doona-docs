@@ -31,6 +31,7 @@ experimental {
 - `configuration administration requires a bearer secret or password login`：`config_write: true` 需要 `password_auth: true` 或 `secret`。
 - `password login requires an empty secret; a configured secret selects token mode`：兩者只能保留一個。
 - `password login cannot be combined with anonymous loopback`：刪除 `allow_anonymous_loopback`。
+- `native API requires a secret, password login, or explicitly anonymous loopback`：`enabled: true` 需要 `password_auth: true` 或 `secret`。
 
 <a name="state-db"></a>
 
@@ -75,9 +76,9 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 從 `journalctl -u honk-core -b` 的本次開機日誌中找到最近一筆 `honk-core <版本> starting`，再與 [honk 版本](requirements.md#honk-version)對照。
 
 - 無法連線到 `listen` 位址：honk 未執行、`enabled` 不是 `true`，或 `listen` 指向其他位址。`enabled: false` 時監聽不會啟動。
-- `/api` 回傳 404：該位址上的服務沒有原生 API，例如由 main 分支建置的 honk。doona 的登入對話框此時顯示「此 honk 建置沒有提供原生 API」。請安裝 `debug` 版本。
+- `/api` 回傳 404：該位址上的服務沒有原生 API，例如由 main 分支建置的 honk。doona 的登入頁面此時顯示「此 honk 建置沒有提供原生 API」。請安裝 `debug` 版本。
 - 只有 `/ui/` 回傳 404：原生 API 正在執行，但 `ui` 為空。
-- honk 啟動時以 `failed to inspect native UI directory` 或 `native UI index.html must be a regular file` 結束：請依[安裝 doona 並啟動](install.md#doona)將 doona 解壓縮到 `ui` 目錄。
+- honk 啟動時以 `failed to inspect native UI directory`、`failed to inspect native UI index.html` 或 `native UI index.html must be a regular file` 結束：請依[安裝 doona 並啟動](install.md#doona)將 doona 解壓縮到 `ui` 目錄。
 
 <a name="sign-in"></a>
 

@@ -70,7 +70,7 @@ dns {
 
 - `lan_interface`: replace `br-lan` with the interface LAN clients use to reach the gateway. Remove this field to proxy only the gateway’s own traffic. `wan_interface: auto` also covers the gateway’s own traffic.
 - `data_dir`: the runtime root, `/var/lib/honk` by default. It holds the geodata files and the state database `state/honk.db`.
-- `bootstrap_resolver`: resolves proxy server names and geodata download hosts without honk intercepting the query. A download URL with a hostname needs it.
+- `bootstrap_resolver`: resolves proxy server names and geodata download hosts without honk intercepting the query. A direct download from a URL with a hostname needs it; by default downloads follow the routing rules.
 - `subscription` and `node`: replace them with your own. doona’s Nodes page adds more later.
 - `group proxy`: the subscription’s nodes plus the static node; `min_moving_avg` selects the member with the lowest latency.
 - `routing`: private destinations first with `direct(must)`, then Chinese mainland domains and IP addresses directly, everything else through `proxy`.

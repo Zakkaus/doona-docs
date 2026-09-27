@@ -27,13 +27,13 @@ VERSION=0.1.0-beta.8               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
-sha256sum --ignore-missing -c SHA256SUMS
+grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 honk-core --version   # prints the tag the build came from, such as debug.2026.9.26.native-api.4
 ```
 
-To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build `honk-core` with the `native-api` feature.
+To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf`. `native-api` is a default feature; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
 
 The binary embeds the eBPF object; no separate object file is needed.
 
@@ -94,7 +94,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 
 ```sh
 VERSION=0.1.0-beta.8   # the release you downloaded, without v
-sha256sum --ignore-missing -c SHA256SUMS
+grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
 # Optional Noto Sans TC and SC fonts:
@@ -128,7 +128,7 @@ With `password_auth: true`, as in this example, honk does not start when the dat
 ### First sign-in
 
 1. Open `http://192.168.1.1:9527/ui/`, the `listen` address. doona finds the API on the same origin and saves it as a backend.
-2. Password mode: the sign-in dialog offers first-time setup. Create the administrator from the gateway or a device on the LAN, then sign in.
+2. Password mode: the sign-in page shows Create the administrator. Create the administrator from the gateway or a device on the LAN, then sign in.
 3. Token mode: enter the `secret` as the token, or open a pairing link. doona removes the token from the address bar after loading.
 
 ```text
@@ -165,7 +165,7 @@ sudo systemctl restart honk-core   # needed for native_api, interfaces, data_dir
 sudo journalctl -u honk-core -e    # look for applied or rejected
 ```
 
-A reload re-reads the configuration and logs `applied` or `rejected`. Changes to `native_api`, interfaces, TPROXY settings, `data_dir`, the NFQUEUE switch, the DNS listener or the Clash API listener need a restart. doona’s Configuration page reloads by itself after saving.
+A reload re-reads the configuration and logs `applied` or `rejected`. Changes to `native_api`, interfaces, TPROXY settings, `data_dir`, `log_level`, health-check settings, the NFQUEUE switch, the DNS listener or the Clash API listener need a restart; a rejected reload names the fields in the log. doona’s Configuration page reloads by itself after saving.
 
 ### Update honk
 

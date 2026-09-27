@@ -31,6 +31,7 @@ A build from main rejects every `native_api` setting this way, even inside `nati
 - “configuration administration requires a bearer secret or password login”: `config_write: true` needs `password_auth: true` or `secret`.
 - “password login requires an empty secret; a configured secret selects token mode”: remove one of the two.
 - “password login cannot be combined with anonymous loopback”: remove `allow_anonymous_loopback`.
+- “native API requires a secret, password login, or explicitly anonymous loopback”: `enabled: true` needs `password_auth: true` or `secret`.
 
 <a name="state-db"></a>
 
@@ -75,9 +76,9 @@ honk rejects kernels older than 6.12 before attaching. When the verifier rejects
 Find the latest `honk-core <version> starting` line in the current boot’s `journalctl -u honk-core -b` log, then compare it with [honk version](requirements.md#honk-version).
 
 - The connection to the `listen` address fails: honk is not running, `enabled` is not `true`, or `listen` names another address. With `enabled: false` the listener does not start.
-- `/api` returns 404: the server at that address has no native API, such as a honk build from main. doona’s sign-in dialog then says “This honk build has no native API”. Install the `debug` build.
+- `/api` returns 404: the server at that address has no native API, such as a honk build from main. doona’s sign-in page then says “This honk build has no native API”. Install the `debug` build.
 - `/ui/` alone returns 404: the native API runs, but `ui` is empty.
-- honk stops at startup with “failed to inspect native UI directory” or “native UI index.html must be a regular file”: extract doona into the `ui` directory, as in [Install doona and start](install.md#doona).
+- honk stops at startup with “failed to inspect native UI directory”, “failed to inspect native UI index.html” or “native UI index.html must be a regular file”: extract doona into the `ui` directory, as in [Install doona and start](install.md#doona).
 
 <a name="sign-in"></a>
 
