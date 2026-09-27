@@ -365,3 +365,31 @@ describe('page actions', () => {
     });
   }
 });
+
+describe('documentation search', () => {
+  const site = render({base: '/docs/'});
+  it('publishes a separate search index for each locale', () => {
+    for (const locale of locales) {
+      const index = JSON.parse(site.get(`${locale}/search.json`).text);
+      expect(index.map(entry => entry.title)).toHaveLength(pages.length);
+      for (const entry of index) {
+        expect(entry.url).toMatch(new RegExp(`^/docs/${locale}/`));
+        expect(site.has(entry.url.slice('/docs/'.length).replace(/\/$/, '/index.html'))).toBe(true);
+        expect(entry.text).not.toMatch(/<script|<svg|<a /);
+        expect(entry.text.length).toBeGreaterThan(entry.title.length);
+      }
+    }
+  });
+  it('renders one localized modal shared by search and phone navigation', () => {
+    for (const locale of locales) {
+      const html = site.get(`${locale}/index.html`).text;
+      expect(html.match(/<dialog /g)).toHaveLength(1);
+      expect(html).toContain(`data-search-src="/docs/${locale}/search.json"`);
+      expect(html).toContain('id="docs-search"');
+      expect(html).toContain('aria-controls="docs-search"');
+      expect(html).toContain('type="search"');
+      expect(html).toContain('class="search-trigger"');
+      expect(html).toContain('class="nav-trigger"');
+    }
+  });
+});
