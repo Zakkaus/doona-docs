@@ -8,6 +8,7 @@ const boxes = [...document.querySelectorAll('.tabs')].map((box, boxIndex) => {
   const list = document.createElement('div');
   list.className = 'tablist';
   list.setAttribute('role', 'tablist');
+  list.setAttribute('aria-label', box.dataset.label);
   const tabs = panels.map((panel, index) => {
     const tab = document.createElement('button');
     tab.type = 'button';

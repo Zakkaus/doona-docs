@@ -25,7 +25,8 @@ const fenceInfo = info => /^(\S+)(?:\s+tab="([^"]+)")?$/.exec(info.trim())?.slic
 
 // parse() has checked the fence's language. site.js shows the copy button where the clipboard can be written.
 // Adjacent fences with a tab label, such as the sudo and root forms of one command, render as one .tabs box in which
-// every block keeps its label, which is how they read without site.js; site.js turns the labels into tabs.
+// every block keeps its label, which is how they read without site.js; site.js turns the labels into tabs and names the
+// tab list with data-label.
 md.renderer.rules.fence = (tokens, index, options, env) => {
   const token = tokens[index];
   const [language, tab] = fenceInfo(token.info);
@@ -33,7 +34,7 @@ md.renderer.rules.fence = (tokens, index, options, env) => {
   const code = `<div class="code"><pre tabindex="0"><code class="language-${language}">${highlight(token.content, language)}</code></pre>${copy}</div>\n`;
   if (!tab) return code;
   const panel = `<div class="tab-panel" data-tab="${escape(tab)}"><p class="tab-label">${escape(tab)}</p>\n${code}</div>\n`;
-  return `${token.meta.first ? '<div class="tabs">\n' : ''}${panel}${token.meta.last ? '</div>\n' : ''}`;
+  return `${token.meta.first ? `<div class="tabs" data-label="${strings[env.locale].codeTabs}">\n` : ''}${panel}${token.meta.last ? '</div>\n' : ''}`;
 };
 
 // Heading text without Markdown, for titles, navigation and the table of contents.
