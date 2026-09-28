@@ -38,7 +38,7 @@ export const icons = {
   language: icon('Translate'),
   chevron: icon('ChevronDown'),
   pages: icon('ListBulleted'),
-  copy: icon('Copy'),
+  copy: workflow('Copy'),
   copied: icon('Checkmark'),
   moon: icon('Contrast'),
   sun: icon('Lighten'),
