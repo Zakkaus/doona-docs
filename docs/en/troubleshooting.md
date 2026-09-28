@@ -72,7 +72,7 @@ state database is corrupt
 
 ## Geodata sources cannot be edited, or auto-update never runs
 
-honk is running without its state database, which keeps the sources and the update schedule. doona does not show this yet; the `degradations` list on `/api/v1/runtime` does. `<listen>` is the `listen` address and `<token>` the `secret`.
+honk is running without its state database, which keeps the sources and the update schedule. From doona beta.9, the Datapath card on Overview warns that the state database is unavailable, even when the datapath itself cannot be read. The `degradations` list on `/api/v1/runtime` shows it too; `<listen>` is the `listen` address and `<token>` the `secret`:
 
 ```sh
 curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
@@ -100,12 +100,12 @@ On OpenWrt `/var` is in memory, so the default `/var/lib/honk` loses the databas
 
 ## Geodata update fails with checksum_unavailable
 
-The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. The usual causes are a timeout, because current builds give the file and its checksum one 30-second deadline, rate limiting (HTTP 403 or 429), or a route that fails on the second request. Try again, or use a faster route or a closer mirror.
+The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. In the beta.9 build, file downloads time out after 30 seconds without progress or 10 minutes in all; the checksum request has its own 10-second deadline. HTTP 403 or 429 or a failed route also stops the checksum request. Use another mirror, or turn off Verify checksum only for a trusted mirror whose checksum URL is known to fail.
 
 | Stage                  | Meaning                                                                 | What to try                                                        |
 | ---------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `checksum_mismatch`    | The file does not match its `.sha256sum`.                               | Try again; if it repeats, use another mirror.                      |
-| `download_timeout`     | The download did not finish within 30 seconds.                          | Use a faster route or a closer mirror.                             |
+| `checksum_mismatch`    | The file does not match its `.sha256sum`.                               | Try another mirror; turn verification off only if a trusted mirror's checksum file is known to be wrong. |
+| `download_timeout`     | A file download made no progress for 30 seconds or took over 10 minutes. | Use a faster route or a closer mirror. |
 | `http_status_rejected` | The server answered with a status other than 200 or 404, redirects included. | Use the final URL; after 403 or 429, wait and try again.      |
 | `http_not_found`       | The file URL returned 404.                                              | Check the URL.                                                     |
 | `connection_failed`    | honk could not connect to the server or the node.                      | Check the node, or `bootstrap_resolver` for a direct download.     |
@@ -174,7 +174,7 @@ journalctl -u honk-core -b       # systemd
 
 ## Connections or Rules stay empty
 
-With Flow recording set to With panel, honk records flows only while a client asks for them. doona releases after 0.1.0-beta.8 ask while Connections or Rules is open. With 0.1.0-beta.8 or older, set Flow recording to Always in Settings.
+With Flow recording set to On flow demand, honk records flows only when a client asks for them. In beta.9, doona requests flows while Connections or Rules is open; recording continues for 60 seconds after the last request. If an older build (beta.8 or earlier) shows no flows, set Flow recording to Always in Settings.
 
 ## doona shows the old version after an upgrade
 

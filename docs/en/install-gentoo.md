@@ -45,8 +45,8 @@ The last command lists `local` next to `gentoo`.
 Set the release version and its Gentoo form, then download the ebuild and `metadata.xml` from that release tag.
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.8
-PV=0.1.0_beta8
+VERSION=0.1.0-beta.9
+PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -55,8 +55,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.8
-PV=0.1.0_beta8
+VERSION=0.1.0-beta.9
+PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -77,8 +77,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.8.tar.gz: OK
-doona-fonts-0.1.0-beta.8.tar.gz: OK
+doona-0.1.0-beta.9.tar.gz: OK
+doona-fonts-0.1.0-beta.9.tar.gz: OK
 ```
 
 ## 4. Hand the archives to Portage
@@ -177,7 +177,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

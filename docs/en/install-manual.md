@@ -17,7 +17,7 @@ This page installs doona and honk-core from the release archives on a Linux syst
 Set the release version, then download the program archive and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.8
+VERSION=0.1.0-beta.9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -33,7 +33,7 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.8.tar.gz: OK
+doona-0.1.0-beta.9.tar.gz: OK
 ```
 
 ## 3. Install doona
@@ -124,7 +124,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

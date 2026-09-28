@@ -110,7 +110,7 @@ chmod 0755 /etc/init.d/honk-core
 
 Do not add `NoNewPrivileges=yes`, capability limits or a read-only `/proc/sys` to the unit: honk needs BPF, network administration, namespace, mount and sysctl privileges at startup.
 
-On OpenWrt, `MIMALLOC_PURGE_DELAY=0` makes honk return freed memory to the system at once. Without it, a router with 256 MB keeps about 120 MB after a geodata update and runs out of memory on the next one.
+On OpenWrt, `MIMALLOC_PURGE_DELAY=0` makes honk return freed memory to the system at once. Without it, a build before `debug.2026.9.28.native-api.4` on a router with 256 MB keeps about 120 MB after a geodata update and runs out of memory on the next one.
 
 ## 2. Start honk and start it at boot
 

@@ -13,7 +13,7 @@ honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link an
 - cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
 - bpffs mounted at `/sys/fs/bpf`.
 - CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
-- With `geoip` rules, use at least 512 MB RAM: a geodata update currently needs about 140 MB more.
+- With `geoip` rules on a honk build before `debug.2026.9.28.native-api.4`, use at least 512 MB RAM: a geodata update needs about 140 MB more. From that build on, honk no longer holds extra copies of the geodata during an update.
 
 ```sh
 uname -r
@@ -33,6 +33,7 @@ CONFIG_NET_NS=y
 CONFIG_NF_TABLES=y|m
 CONFIG_NF_TABLES_INET=y
 CONFIG_NETFILTER_NETLINK_QUEUE=y|m
+CONFIG_NFT_QUEUE=y|m
 ```
 
 Mount bpffs if the system does not:
@@ -49,9 +50,9 @@ mountpoint /sys/fs/bpf
 
 ## honk version
 
-- Only builds from the `feat/native-api` branch of Glassyiris/honk have the native API: the rolling `debug` release, currently built from tag `debug.2026.9.28.native-api.2` (commit `7449f4e2`). Each doona release attaches the build current when it was made; its `HONK-SOURCE.txt` names the tag and commit.
+- Only builds from the `feat/native-api` branch of Glassyiris/honk have the native API. doona beta.9 attaches `debug.2026.9.28.native-api.4` (commit `3ff52762`) from honk's rolling `debug` release. `HONK-SOURCE.txt` in each doona release from beta.8 onward names its honk tag and commit.
 - Builds of daeuniverse/honk main have no native API. honk rejects every `native_api` setting as “unknown experimental setting”, and `/api` and `/ui/` answer 404.
-- Early `feat/native-api` builds update geodata but have no configurable sources. The build attached to each doona release has both.
+- Early `feat/native-api` builds update geodata but have no configurable sources. The builds attached to doona beta.8 and beta.9 have both.
 
 Run `honk-core --version` to check the installed binary. To check the running version, use the Engine card on Overview or the bottom of the side navigation.
 

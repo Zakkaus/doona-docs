@@ -13,7 +13,7 @@ honk 只能在 Linux 上以 `root` 身份运行。它会加载 eBPF 程序、创
 - `pname(...)` 规则需要 cgroup v2。缺少 cgroup v2 时 honk 仍可启动，但按进程名分流不可用。
 - bpffs 挂载于 `/sys/fs/bpf`。
 - CA 证书，例如 `ca-certificates` 软件包。缺少时 honk 会以 `subscription network startup failed` 退出。
-- 使用 `geoip` 规则时建议至少 512 MB 内存：目前地理数据更新时会多用约 140 MB。
+- 在 `debug.2026.9.28.native-api.4` 之前的 honk 构建上使用 `geoip` 规则时，建议至少 512 MB 内存：地理数据更新时会多用约 140 MB。从该构建起，honk 更新地理数据时不再保留额外副本。
 
 ```sh
 uname -r
@@ -33,6 +33,7 @@ CONFIG_NET_NS=y
 CONFIG_NF_TABLES=y|m
 CONFIG_NF_TABLES_INET=y
 CONFIG_NETFILTER_NETLINK_QUEUE=y|m
+CONFIG_NFT_QUEUE=y|m
 ```
 
 系统未自动挂载 bpffs 时，执行：
@@ -49,9 +50,9 @@ mountpoint /sys/fs/bpf
 
 ## honk 版本
 
-- 只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，即滚动发布的 `debug` 版本，目前由标签 `debug.2026.9.28.native-api.2`（提交 `7449f4e2`）构建。每个 doona 发行版附带发行时的构建，其 `HONK-SOURCE.txt` 注明标签与提交。
+- 只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API。doona beta.9 附带 honk 滚动 `debug` 发布版本中的 `debug.2026.9.28.native-api.4`（提交 `3ff52762`）。从 beta.8 起，每个 doona 发行版的 `HONK-SOURCE.txt` 注明其 honk 标签与提交。
 - 由 daeuniverse/honk main 分支构建的版本没有原生 API。honk 会以 `unknown experimental setting` 拒绝所有 `native_api` 设置，访问 `/api` 与 `/ui/` 返回 404。
-- 早期的 `feat/native-api` 构建可以更新地理数据，但不能设置来源。每个 doona 发行版附带的构建两者都支持。
+- 早期的 `feat/native-api` 构建可以更新地理数据，但不能设置来源。doona beta.8 和 beta.9 附带的构建两者都支持。
 
 执行 `honk-core --version` 查看已安装二进制文件的版本；正在运行的版本请查看 doona 概览页的“引擎”卡片或侧边导航栏底部。
 
