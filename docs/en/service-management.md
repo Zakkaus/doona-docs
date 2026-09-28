@@ -94,6 +94,7 @@ start_service() {
 	procd_open_instance
 	procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
 	procd_set_param limits nofile="1048576 1048576"
+	procd_set_param env MIMALLOC_PURGE_DELAY=0
 	procd_set_param respawn
 	procd_set_param stdout 1
 	procd_set_param stderr 1
@@ -108,6 +109,8 @@ chmod 0755 /etc/init.d/honk-core
 ```
 
 Do not add `NoNewPrivileges=yes`, capability limits or a read-only `/proc/sys` to the unit: honk needs BPF, network administration, namespace, mount and sysctl privileges at startup.
+
+On OpenWrt, `MIMALLOC_PURGE_DELAY=0` makes honk return freed memory to the system at once. Without it, a router with 256 MB keeps about 120 MB after a geodata update and runs out of memory on the next one.
 
 ## 2. Start honk and start it at boot
 

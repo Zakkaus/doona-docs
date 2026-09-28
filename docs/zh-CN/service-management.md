@@ -94,6 +94,7 @@ start_service() {
 	procd_open_instance
 	procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
 	procd_set_param limits nofile="1048576 1048576"
+	procd_set_param env MIMALLOC_PURGE_DELAY=0
 	procd_set_param respawn
 	procd_set_param stdout 1
 	procd_set_param stderr 1
@@ -108,6 +109,8 @@ chmod 0755 /etc/init.d/honk-core
 ```
 
 不要在单元中加入 `NoNewPrivileges=yes`、能力限制或只读的 `/proc/sys`：honk 启动时需要 BPF、网络管理、命名空间、挂载与 sysctl 权限。
+
+在 OpenWrt 上，`MIMALLOC_PURGE_DELAY=0` 让 honk 立即把释放的内存还给系统。不设置时，256 MB 内存的路由器在一次地理数据更新后仍占用约 120 MB，下一次更新会因内存不足被终止。
 
 ## 2. 启动 honk 并设为开机启动
 
