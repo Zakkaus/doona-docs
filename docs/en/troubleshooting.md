@@ -68,6 +68,54 @@ state database is corrupt
 
 “another honk-core has the state database open” and “state database has a foreign application id or a newer schema” always stop startup: stop the other instance, or run the honk build that wrote the database.
 
+<a name="geodata-sources"></a>
+
+## Geodata sources cannot be edited, or auto-update never runs
+
+honk is running without its state database, which keeps the sources and the update schedule. doona does not show this yet; the `degradations` list on `/api/v1/runtime` does. `<listen>` is the `listen` address and `<token>` the `secret`.
+
+```sh
+curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
+```
+
+An entry with `persistence_unavailable` confirms it, and its `reason` names the cause; see [State database problems](#state-db). Until it is fixed, Update downloads from `geosite_download_url` and `geoip_download_url` in `native_api`, and runs only when you press it.
+
+<a name="state-unsafe"></a>
+
+## persistence_unavailable with reason unsafe
+
+honk refuses `state/` in the data directory or `honk.db` in it. Both must belong to the user honk runs as, grant no group or other permissions, and not be symbolic links. The data directory is the `--data-dir` value that `ps w | grep '[h]onk-core'` shows, otherwise `data_dir` in the configuration, `/var/lib/honk` by default.
+
+```sh
+ls -ld /var/lib/honk/state /var/lib/honk/state/honk.db
+chmod 700 /var/lib/honk/state
+chmod 600 /var/lib/honk/state/honk.db
+```
+
+Change only these two, not recursively; `/etc/honk` and `config.d/` are not involved. If `ls` shows another owner, `chown` both to the user honk runs as. Then restart honk.
+
+On OpenWrt `/var` is in memory, so the default `/var/lib/honk` loses the database at every reboot. Keep the data in `/etc/honk/data`, as in [Minimal configuration](minimal-configuration.md).
+
+<a name="geodata-update"></a>
+
+## Geodata update fails with checksum_unavailable
+
+The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. The usual causes are a timeout, because current builds give the file and its checksum one 30-second deadline, rate limiting (HTTP 403 or 429), or a route that fails on the second request. Try again, or use a faster route or a closer mirror.
+
+| Stage                  | Meaning                                                                 | What to try                                                        |
+| ---------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `checksum_mismatch`    | The file does not match its `.sha256sum`.                               | Try again; if it repeats, use another mirror.                      |
+| `download_timeout`     | The download did not finish within 30 seconds.                          | Use a faster route or a closer mirror.                             |
+| `http_status_rejected` | The server answered with a status other than 200 or 404, redirects included. | Use the final URL; after 403 or 429, wait and try again.      |
+| `http_not_found`       | The file URL returned 404.                                              | Check the URL.                                                     |
+| `connection_failed`    | honk could not connect to the server or the node.                      | Check the node, or `bootstrap_resolver` for a direct download.     |
+| `tls_failed`           | The TLS handshake or certificate check failed.                          | Check the gateway's clock and the URL's host name.                 |
+| `group_unavailable`    | The group the download is routed through has no usable node.            | Check the group on the Policies page.                              |
+| `route_blocked`        | The routing rules send the download host to `block`.                    | Change the rule that matches the host.                             |
+| `destination_rejected` | The URL's address or port is not allowed for downloads.                 | Use a public address on port 80 or 443.                            |
+| `asset_too_large`      | The file exceeds honk's size limit.                                     | Check that the URL points at a geodata file.                       |
+| `invalid_source`       | The URL is not a valid HTTP or HTTPS URL.                               | Correct the URL.                                                   |
+
 ## Pinning a map fails with Invalid argument
 
 `/sys/fs/bpf` is not bpffs. Mount it as shown in [Requirements](requirements.md#requirements).
@@ -109,3 +157,25 @@ doona marks a source read-only when any of these holds:
 - Only with `--store db`, which this guide does not use: an activated revision could not be recorded, which blocks writes.
 
 Move every secret into `config.d/api.dae`, and restart honk after changing `native_api`.
+
+## Startup messages are missing from Logs and Events
+
+Log recording in Settings defaults to With panel, which records only while doona is connected. Read the system log instead:
+
+```sh
+logread -e honk                  # OpenWrt
+journalctl -u honk-core -b       # systemd
+docker logs <container>          # Docker
+```
+
+## Connections or Rules stay empty
+
+With Flow recording set to With panel, honk records flows only while a client asks for them. doona releases after 0.1.0-beta.8 ask while Connections or Rules is open. With 0.1.0-beta.8 or older, set Flow recording to Always in Settings.
+
+## doona shows the old version after an upgrade
+
+The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
+
+## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
+
+doona before 0.1.0-beta.8 needs a secure context for this call, which plain HTTP on the LAN is not. Upgrade doona to 0.1.0-beta.8 or later.

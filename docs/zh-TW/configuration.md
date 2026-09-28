@@ -143,6 +143,8 @@ experimental {
 
 `native_api` 的每個欄位都需要重新啟動才會生效。重載會拒絕這些欄位的變更，並保留執行中的監聽。
 
+地理資料問題請參閱[來源無法編輯](troubleshooting.md#geodata-sources)、[reason 為 unsafe](troubleshooting.md#state-unsafe)與[更新失敗](troubleshooting.md#geodata-update)。
+
 ## 安裝組態檔案
 
 ```sh
