@@ -91,6 +91,7 @@ include {
 global {
     wan_interface: auto
     data_dir: '/etc/honk/data'
+    bootstrap_resolver: '127.0.0.1:53'
 }
 
 routing {
@@ -105,6 +106,8 @@ EOF
 | `wan_interface: auto`          | Attaches honk to the interface of the IPv4 default route, so honk handles the gateway’s own traffic.                                   |
 | `data_dir: '/etc/honk/data'`   | OpenWrt only. Where honk keeps geodata and its state database, including the administrator account. Elsewhere the default, `/var/lib/honk`, applies. |
 | `routing { fallback: direct }` | Sends every connection directly, without a proxy. Nodes, groups and rules come later, from doona or [Configuration](configuration.md#config). |
+
+On OpenWrt, `bootstrap_resolver: '127.0.0.1:53'` uses dnsmasq to resolve hosts for direct downloads. Geodata URLs must not redirect: use a final URL such as `raw.githubusercontent.com`, not a GitHub release URL.
 
 The file sets no `lan_interface`, so devices on the LAN are not routed through honk yet. [Configuration](configuration.md#config) shows how to add it.
 
@@ -158,6 +161,8 @@ cat /etc/honk/config.d/api.dae
 ```
 
 The printed file shows your address on the `listen` line, such as `listen: '192.168.1.1:9527'`.
+
+Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless you add `allowed_hosts: 'openwrt.lan'` inside `native_api` and restart honk.
 
 | Line                         | What it does                                                                                                                                  |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |

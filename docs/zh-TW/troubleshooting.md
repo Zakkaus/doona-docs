@@ -124,6 +124,10 @@ OpenWrt 的 `/var` 位於記憶體中，因此預設的 `/var/lib/honk` 每次�
 
 honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分流程式時，請使用啟用 BPF 與 BTF 的 Linux 6.12 或更新版本，並保留完整的驗證器日誌以便回報。
 
+## 停止 OpenWrt 防火牆會刪除 honk 的 nft 表
+
+`service firewall stop` 會刪除 honk 的 nft 表，NFQUEUE staging 隨之失效。重新啟動防火牆後，執行 `/etc/init.d/honk-core restart`。`fw4 reload` 和 `service firewall restart` 不會刪除該表。
+
 <a name="no-native-api"></a>
 
 ## 沒有原生 API，或 /api、/ui/ 回傳 404
@@ -141,6 +145,7 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 
 - 首次設定只能在閘道器本機或私有網路中的用戶端完成。
 - 設定中顯示「網路連線失敗」或「網路或跨網域請求失敗」：無法透過 `listen` 位址存取 honk，或 doona 所在來源未列入 `allow_origins` 與 `allowed_hosts`。
+- 透過 `openwrt.lan` 存取 API 時，若主機名稱不在 `native_api` 的 `allowed_hosts` 中，會回傳 403。請改用區域網路 IP，或在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan'` 並重新啟動 honk。
 - 忘記密碼：停止 honk，執行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上執行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再啟動 honk 重新設定。
 - HTTPS 頁面無法存取 HTTP API，請參閱[從其他來源開啟 doona](install.md#other-origin)。
 

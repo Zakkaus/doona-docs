@@ -91,6 +91,7 @@ include {
 global {
     wan_interface: auto
     data_dir: '/etc/honk/data'
+    bootstrap_resolver: '127.0.0.1:53'
 }
 
 routing {
@@ -105,6 +106,8 @@ EOF
 | `wan_interface: auto`          | 把 honk 挂到 IPv4 默认路由所在的接口上，由 honk 处理网关自身的流量。                                         |
 | `data_dir: '/etc/honk/data'`   | 仅用于 OpenWrt。honk 存放地理数据与状态数据库（包括管理员账户）的目录。其他系统使用默认值 `/var/lib/honk`。  |
 | `routing { fallback: direct }` | 所有连接都直接发出，不经过代理。节点、分组与规则稍后在 doona 或按[配置](configuration.md#config)一页加入。   |
+
+在 OpenWrt 上，`bootstrap_resolver: '127.0.0.1:53'` 使用 dnsmasq 解析直连下载地址的域名。地理数据地址不得重定向：使用 `raw.githubusercontent.com` 等最终地址，不要使用 GitHub 发布版本的地址。
 
 该文件没有设置 `lan_interface`，因此局域网设备的流量暂时不经过 honk。加入方法见[配置](configuration.md#config)。
 
@@ -158,6 +161,8 @@ cat /etc/honk/config.d/api.dae
 ```
 
 输出的文件中，`listen` 一行应为你的地址，例如 `listen: '192.168.1.1:9527'`。
+
+访问 API 时请使用局域网 IP。使用 `openwrt.lan` 等主机名时，须在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan'` 并重启 honk，否则会返回 403。
 
 | 行                           | 作用                                                                                                                     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |

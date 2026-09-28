@@ -13,6 +13,7 @@ honk 只能在 Linux 上以 `root` 身份运行。它会加载 eBPF 程序、创
 - `pname(...)` 规则需要 cgroup v2。缺少 cgroup v2 时 honk 仍可启动，但按进程名分流不可用。
 - bpffs 挂载于 `/sys/fs/bpf`。
 - CA 证书，例如 `ca-certificates` 软件包。缺少时 honk 会以 `subscription network startup failed` 退出。
+- 使用 `geoip` 规则时建议至少 512 MB 内存：目前地理数据更新时会多用约 140 MB。
 
 ```sh
 uname -r

@@ -13,6 +13,7 @@ honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link an
 - cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
 - bpffs mounted at `/sys/fs/bpf`.
 - CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
+- With `geoip` rules, use at least 512 MB RAM: a geodata update currently needs about 140 MB more.
 
 ```sh
 uname -r
