@@ -17,7 +17,7 @@ Open this address in the browser, with your address in place of `192.168.1.1`:
 http://192.168.1.1:9527/ui/
 ```
 
-doona finds honk’s API at the same address and saves it as its backend. Because no administrator exists yet, it shows a page titled Create the administrator with the fields Username, Password and Confirm password.
+doona finds honk’s API at the same address and saves it as its backend. Because no administrator exists yet, it shows a page titled Create the administrator with the fields Username, Password and Confirm password. The page also has language, palette and theme controls.
 
 ## 2. Create the administrator
 
@@ -32,7 +32,7 @@ doona signs you in and opens the Activity page. honk keeps the account in its st
 Select Overview in the side navigation. With honk running, it shows:
 
 - Running at the top of the page.
-- The Engine card: under Engine, `honk` and the version `honk-core --version` printed, such as `honk debug.2026.9.28.native-api.2`; under API, `dae/honk-native v1 (draft)`; under Build, the honk commit and the build target you installed.
+- The Engine card: under Engine, `honk` and the version `honk-core --version` printed, such as `honk debug.2026.9.28.native-api.4`; under API, `dae/honk-native v1 (draft)`; under Build, the honk commit and the build target you installed.
 - The Backend features card, listing what this honk provides, such as Connections, Logs and Configuration.
 
 The bottom of the side navigation shows the same honk version. Traffic counters stay at 0 until traffic passes through honk.

@@ -30,7 +30,7 @@ apt install curl ca-certificates
 设置发布版本号，然后把软件包与校验和文件下载到当前目录。
 
 ```sh
-VERSION=0.1.0-beta.8
+VERSION=0.1.0-beta.9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -44,7 +44,7 @@ grep " doona_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona_0.1.0-beta.8-1_all.deb: OK
+doona_0.1.0-beta.9-1_all.deb: OK
 ```
 
 ## 4. 安装 doona
@@ -131,7 +131,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。

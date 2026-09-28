@@ -133,7 +133,7 @@ experimental {
 | `secret`                                     | `''`               | Token 模式，doona 会要求输入此 Token。不能与 `password_auth` 同时使用。                            |
 | `config_write`                               | `false`            | 编辑与新建配置文件，管理节点、订阅、组与规则，以及更新地理数据。需要 `password_auth` 或 `secret`。 |
 | `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目录中必须有 `index.html`；目录不存在时 honk 无法启动。                      |
-| `record_flows`                               | `true`             | 规则页的流程记录。设为 `false` 时运行时开关也无法开启。                                            |
+| `record_flows`                               | `true`             | 连接页和规则页按需显示流程记录。设为 `false` 时运行时开关也无法开启。                               |
 | `record_traffic`                             | `true`             | 流量历史图表。                                                                                     |
 | `record_memory`                              | `true`             | 内存历史图表。                                                                                     |
 | `record_logs`                                | `true`             | 日志页。                                                                                           |
@@ -142,6 +142,8 @@ experimental {
 | `allow_origins`、`allowed_hosts`             | 空                 | 从其他来源或经由反向代理打开 doona。                                                               |
 
 `native_api` 的每个字段都需要重启才能生效。重载会拒绝对这些字段的修改，并保留正在运行的监听。
+
+状态数据库可用时，设置页会把地理数据来源、更新计划和“SHA-256 校验”保存在数据库中，而不是写入 `native_api`。默认开启校验；`.sha256sum` 返回 404 时，未经校验的文件本就可以加载。仅当可信镜像的`.sha256sum` 地址返回其他错误时才关闭；参阅[更新失败](troubleshooting.md#geodata-update)。
 
 地理数据问题请参阅[来源无法编辑](troubleshooting.md#geodata-sources)、[reason 为 unsafe](troubleshooting.md#state-unsafe)与[更新失败](troubleshooting.md#geodata-update)。
 

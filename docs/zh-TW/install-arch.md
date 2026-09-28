@@ -28,8 +28,8 @@ pacman -Syu --needed curl ca-certificates
 設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。Arch 套件名稱中的預發行版本號去掉了 `-` 與 `.`，`PKGVER` 儲存這種寫法。
 
 ```sh
-VERSION=0.1.0-beta.8
-PKGVER=0.1.0beta8
+VERSION=0.1.0-beta.9
+PKGVER=0.1.0beta9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
 ```
@@ -43,7 +43,7 @@ grep " doona-${PKGVER}-1-any.pkg.tar.zst\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0beta8-1-any.pkg.tar.zst: OK
+doona-0.1.0beta9-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. 安裝 doona
@@ -130,7 +130,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

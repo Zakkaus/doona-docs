@@ -17,7 +17,7 @@
 設定發行版本號，然後把程式封存檔與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.8
+VERSION=0.1.0-beta.9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -33,7 +33,7 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.8.tar.gz: OK
+doona-0.1.0-beta.9.tar.gz: OK
 ```
 
 ## 3. 安裝 doona
@@ -124,7 +124,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

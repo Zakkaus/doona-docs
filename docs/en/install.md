@@ -23,14 +23,14 @@ Each doona release attaches honk-core builds with the native API, and `HONK-SOUR
 | `-stock` suffix      | The system allocator instead of mimalloc, for small devices where memory use matters more than throughput. |
 
 ```sh
-VERSION=0.1.0-beta.8               # the doona release, without v
+VERSION=0.1.0-beta.9               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.2
+honk-core --version   # prints the tag the build came from, such as debug.2026.9.28.native-api.4
 ```
 
 To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf`. `native-api` is a default feature; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
@@ -93,7 +93,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 - [doona releases](https://github.com/Zakkaus/doona/releases)
 
 ```sh
-VERSION=0.1.0-beta.8   # the doona release, without v
+VERSION=0.1.0-beta.9   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -

@@ -45,8 +45,8 @@ portageq get_repos /
 设置发布版本号及其 Gentoo 写法，然后从该发布版本的标签下载 ebuild 与 `metadata.xml`。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.8
-PV=0.1.0_beta8
+VERSION=0.1.0-beta.9
+PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -55,8 +55,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.8
-PV=0.1.0_beta8
+VERSION=0.1.0-beta.9
+PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -77,8 +77,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.8.tar.gz: OK
-doona-fonts-0.1.0-beta.8.tar.gz: OK
+doona-0.1.0-beta.9.tar.gz: OK
+doona-fonts-0.1.0-beta.9.tar.gz: OK
 ```
 
 ## 4. 把归档文件交给 Portage
@@ -177,7 +177,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。

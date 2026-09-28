@@ -123,8 +123,8 @@ export function addAssets(files) {
   // The distribution logos on the search cards (site/icons/distros.mjs).
   for (const licence of ['CC0-1.0', 'CC-BY-SA-3.0', 'CC-BY-SA-2.5'])
     files.set(`LICENSES/${licence}.txt`, {from: join(root, `LICENSES/${licence}.txt`)});
-  files.set('LICENSES/Apache-2.0.txt', {from: join(doona, 'LICENSES/Apache-2.0.txt')});
-  files.set('LICENSES/LicenseRef-GitHub-Logos.txt', {from: join(doona, 'LICENSES/LicenseRef-GitHub-Logos.txt')});
+  for (const licence of ['Apache-2.0', 'LicenseRef-GitHub-Logos', 'CC-BY-3.0', 'CC-BY-SA-4.0'])
+    files.set(`LICENSES/${licence}.txt`, {from: join(doona, `LICENSES/${licence}.txt`)});
   // GitHub Pages would otherwise run Jekyll over the files.
   files.set('.nojekyll', {text: ''});
 }

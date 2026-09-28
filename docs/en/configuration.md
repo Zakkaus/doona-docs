@@ -133,7 +133,7 @@ experimental {
 | `secret`                                     | `''`               | Token mode: doona asks for this token. Cannot be combined with `password_auth`.                                                         |
 | `config_write`                               | `false`            | Editing and adding sources, managing nodes, subscriptions, groups and rules, and geodata updates. Requires `password_auth` or `secret`. |
 | `ui`                                         | `''`               | Serves doona at `/ui/`. The directory must hold `index.html`; a missing directory stops startup.                                        |
-| `record_flows`                               | `true`             | Flow records on the Rules page. `false` also disables the runtime switch.                                                               |
+| `record_flows`                               | `true`             | Flow records on Connections and Rules, on demand in beta.9. `false` also disables the runtime switch.                         |
 | `record_traffic`                             | `true`             | Traffic history charts.                                                                                                                 |
 | `record_memory`                              | `true`             | Memory history charts.                                                                                                                  |
 | `record_logs`                                | `true`             | The Logs page.                                                                                                                          |
@@ -142,6 +142,8 @@ experimental {
 | `allow_origins`, `allowed_hosts`             | empty              | doona served from another origin or through a reverse proxy.                                                                            |
 
 Every `native_api` field needs a restart. A reload rejects a change to one and keeps the running listener.
+
+With the state database open, Settings stores geodata sources, the update schedule and Verify checksum in that database, not in `native_api`. The switch is on by default; a 404 for a missing `.sha256sum` already allows an unverified file. Turn it off only for a trusted mirror whose checksum URL returns another error; see [update failures](troubleshooting.md#geodata-update).
 
 For geodata problems, see [sources cannot be edited](troubleshooting.md#geodata-sources), [reason unsafe](troubleshooting.md#state-unsafe) and [update failures](troubleshooting.md#geodata-update).
 

@@ -18,18 +18,22 @@ The [example configuration](configuration.md#config) sets the options used by th
 | Policies: edit groups                        | A group card offers Edit, and saving applies it.                                                               | `config_write: true`; the group is in the main file, which contains no secret                                                       |
 | Nodes: add nodes and subscriptions           | The Nodes page offers Paste node link and Add subscription.                                                    | `config_write: true`; the main file contains no secret                                                                              |
 | Nodes: refresh subscriptions                 | Each subscription row has Refresh.                                                                             | A `subscription` entry, and honk’s subscription service running                                                                     |
-| Settings: geodata sources                    | The Geodata card lists sources you can edit.                                                                   | The state database                                                                                                                  |
+| Settings: geodata sources                    | The Geodata card lists sources you can edit.                                                                   | The state database                                                                                                                |
 | Settings: geodata Update                     | Update on the Geodata card is enabled.                                                                         | `config_write: true`; `geosite.dat` and `geoip.dat` in `data_dir`; the state database, or both `geosite_download_url` and `geoip_download_url` |
-| Settings: backend options                    | The Backend options card sets Flow recording, Log recording and DNS log to With panel, Always or Off.          | `record_flows`, `record_logs`, `record_dns_log`                                                                                     |
+| Settings: backend options                    | The Backend options card sets Flow recording to On flow demand, Always or Off, and Log recording and DNS log to With panel, Always or Off. | `record_flows`, `record_logs`, `record_dns_log`                                                                                   |
+| Settings: geodata checksum                   | Verify checksum can be turned off for a trusted mirror that returns an error for its `.sha256sum` URL.         | A backend that offers `verify_checksum` and the state database                                                                    |
 | Activity: traffic and memory history         | The history charts fill over up to 10 minutes.                                                                 | `record_traffic`, `record_memory`                                                                                                   |
 | Logs                                         | Log lines appear while the page is open.                                                                       | `record_logs`                                                                                                                       |
 | DNS: queries, cache and log                  | Queries and the cache are listed; the log fills while the page is open.                                        | `record_dns_log` for the log; the `dns` section                                                                                     |
-| Connections: close                           | Rows can be closed one by one or all at once.                                                                  | `enabled: true`                                                                                                                     |
-| Rules: rule list, flows and Trace simulation | Rules show hits, flow records appear, and Trace simulation explains a chosen target.                           | `record_flows` for flows; the `routing` section                                                                                     |
+| Connections: close and edit matched rule     | Close connections, or open a writable matched rule on Rules to change only its outbound.                        | `enabled: true`; editing needs `rules` and a writable source                                                                       |
+| Rules: routing and DNS rules, flows, Trace   | Edit routing rules and DNS request and response rules; view hits, flows and Trace simulation.                    | `routing` for routing rules; `record_flows` for flows; a backend that lists DNS rules for the DNS rules tab; `config_write: true` and a writable source for edits |
+| DNS: create a rule from a resolution          | A resolution record can open a new DNS request rule for the domain and its subdomains.                           | A backend that lists DNS rules and a writable configuration                                                                      |
+| Policies: check settings                     | Edit a group's tolerance and idle timeout when the backend marks them changeable.                               | `groups` and the fields in `mutable_config`                                                                                       |
+| Overview: runtime degradations               | The Datapath card warns when honk continues with a reduced feature after a recovered failure.                   | `runtime.degradations`                                                                                                             |
 | Latency tests                                | Test on a node and Test all on a group show latency.                                                           | `enabled: true`; a private target also needs `probe_allowed_cidrs`                                                                  |
 | Events                                       | The Events page shows the event stream.                                                                        | `enabled: true`                                                                                                                     |
 
-In the default With panel mode, flow recording runs on demand, and log recording and the DNS log run only while a panel is attached. A recorder that is allowed but idle is normal.
+In the default On flow demand mode, Connections and Rules request flows while open; recording continues for 60 seconds after the last request. Log recording and the DNS log run while a panel is attached. A recorder that is allowed but idle is normal.
 
 <a name="still-missing"></a>
 
@@ -48,8 +52,8 @@ In the default With panel mode, flow recording runs on demand, and log recording
 The activity page shows the running engine. The usual route through the rest:
 
 1. Nodes: add a subscription (a name and its URL) or paste share links; nodes appear with their protocol, latency and groups. Set how often a subscription refreshes, test a node, or add it to a group from its row.
-2. Policies: each group is a card with its members' latency. Pick a member of a selector group, pin one in an automatic group and release it again, test them all, or edit the group's policy and filters.
-3. Rules: the routing dictionary in evaluation order with the flows each rule decided. Add a rule from a kind and its values (a domain suffix, a geosite category, a port, a process name) or as an expression, before any rule or at the end.
+2. Policies: each group is a card with its members' latency. Pick a member of a selector group, pin one in an automatic group and release it again, test them all, or edit the group's policy, filters, tolerance and idle timeout where available.
+3. Rules: the routing dictionary in evaluation order with the flows each rule decided. Add a rule from a kind and its values (a domain suffix, a geosite category, a port, a process name) or as an expression, before any rule or at the end. The DNS rules tab edits DNS request and response rules the same way. A connection can open its matched rule to change the outbound, and a DNS resolution can start a request rule for its domain.
 4. Configuration: the accepted sources with their diagnostics. Edit a file in place, validate, save and reload; a quick setup covers the main file's common settings.
 
 Every configuration-source write goes through the engine. doona sends the hash it read the source at (`If-Match`); a file changed on disk answers 412 and nothing is written. The engine validates the whole source set before saving and reloading, and a failed reload keeps the previous generation active. Dry-run validation never writes, and redacted text is never written back. Runtime settings and group selection are separate endpoints with their own checks.
@@ -63,11 +67,11 @@ Every configuration-source write goes through the engine. doona sends the hash i
 | Page          | Shows                                                                                                                                                                                        | Needs                               |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | Activity      | Outbound mode, traffic and memory, active connections, node latency, outbound usage, top clients and notifications                                                                           | —                                   |
-| Overview      | Engine and eBPF state, traffic counters, backend capabilities, and the status as JSON                                                                                                        | `runtime`                           |
-| Connections   | Live connections with source, destination, rule, chain and traffic; close one or all; filters from the URL                                                                                   | `connections`                       |
-| DNS           | Queries with their answers, the cache, and the log; a flush                                                                                                                                  | `dns_query`, `dns_log`, `dns_cache` |
-| Policies      | Groups, their members and health; selection, pinning, probing and editing                                                                                                                    | `groups`                            |
-| Rules         | A routing tree from rules (or devices) through outbounds to the nodes they select, the rule list with hits, the flow log with a rule one click away, and a routing trace for a chosen target | `rules`, `flows`, `routing_trace`   |
+| Overview      | Engine and eBPF state, traffic counters, backend capabilities, runtime degradations and status as JSON                                                                        | `runtime`                           |
+| Connections   | Live connections with source, destination, rule, chain and traffic; close one or all, or edit a matched rule; URL filters                                                     | `connections`                       |
+| DNS           | Queries and their answers, the cache and resolution log; create a DNS request rule from a resolution; flush                                                                                | `dns_query`, `dns_log`, `dns_cache` |
+| Policies      | Groups, their members and health; selection, pinning, probing, editing and check settings                                                                                     | `groups`                            |
+| Rules         | Routing and DNS rules, the routing map, flow records and Trace simulation; DNS rules appear only when the backend lists them                                                   | `rules`, `flows`, `routing_trace`   |
 | Nodes         | Subscriptions and their refresh interval, inline nodes, add and remove, probe and join a group                                                                                               | `nodes`, `providers`                |
 | Configuration | Sources with diagnostics, an editor with validation, quick setup and export                                                                                                                  | `config`                            |
 | Events        | The backend event stream                                                                                                                                                                     | `events`                            |
@@ -77,6 +81,25 @@ Every configuration-source write goes through the engine. doona sends the hash i
 Every page remains in navigation. A page is marked unavailable only when every resource listed for it in [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) is unavailable; opening it shows an unavailable notice. `Ctrl K` (`⌘ K` on macOS) searches pages, connections, nodes, groups, subscriptions, rules and sources from anywhere.
 
 ![The rules page](../screenshots/en/rules-light.webp)
+
+## Theme gallery
+
+![Every palette in light and dark](../screenshots/palettes.webp)
+
+| Palette | Light | Dark |
+| ------- | ----- | ---- |
+| Rosé Pine Dawn / Main | [Dawn](../screenshots/en/theme-rose-pine-light.webp) | [Main](../screenshots/en/theme-rose-pine-main-dark.webp) |
+| Rosé Pine Dawn / Moon | [Dawn](../screenshots/en/theme-rose-pine-light.webp) | [Moon](../screenshots/en/theme-rose-pine-dark.webp) |
+| Catppuccin Latte / Frappé | [Latte](../screenshots/en/theme-catppuccin-light.webp) | [Frappé](../screenshots/en/theme-catppuccin-frappe-dark.webp) |
+| Catppuccin Latte / Macchiato | [Latte](../screenshots/en/theme-catppuccin-light.webp) | [Macchiato](../screenshots/en/theme-catppuccin-macchiato-dark.webp) |
+| Catppuccin Latte / Mocha | [Latte](../screenshots/en/theme-catppuccin-light.webp) | [Mocha](../screenshots/en/theme-catppuccin-dark.webp) |
+| Nord | [Snow Storm](../screenshots/en/theme-nord-light.webp) | [Polar Night](../screenshots/en/theme-nord-dark.webp) |
+| Kary Pro Colors | [Light](../screenshots/en/theme-kary-light.webp) | [Dark](../screenshots/en/theme-kary-dark.webp) |
+| Ant Design | [Default](../screenshots/en/theme-antd-light.webp) | [Dark](../screenshots/en/theme-antd-dark.webp) |
+| Arco Design | [Light](../screenshots/en/theme-arco-light.webp) | [Dark](../screenshots/en/theme-arco-dark.webp) |
+| Semi Design | [Light](../screenshots/en/theme-semi-light.webp) | [Dark](../screenshots/en/theme-semi-dark.webp) |
+| Glass | [Light](../screenshots/en/theme-glass-light.webp) | [Dark](../screenshots/en/theme-glass-dark.webp) |
+| China | [Clock-in](../screenshots/en/theme-qiangguo-light.webp) | [All-nighter](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## Settings stored in the browser
 

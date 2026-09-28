@@ -35,7 +35,7 @@ Work in `/tmp`, which is in memory and is cleared at reboot. Set the release ver
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.8
+VERSION=0.1.0-beta.9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -49,7 +49,7 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.8.tar.gz: OK
+doona-0.1.0-beta.9.tar.gz: OK
 ```
 
 ## 4. Install doona
@@ -110,7 +110,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.2
+honk-core debug.2026.9.28.native-api.4
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
