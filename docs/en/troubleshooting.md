@@ -165,7 +165,6 @@ Log recording in Settings defaults to With panel, which records only while doona
 ```sh
 logread -e honk                  # OpenWrt
 journalctl -u honk-core -b       # systemd
-docker logs <container>          # Docker
 ```
 
 ## Connections or Rules stay empty

@@ -165,7 +165,6 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 ```sh
 logread -e honk                  # OpenWrt
 journalctl -u honk-core -b       # systemd
-docker logs <container>          # Docker
 ```
 
 ## 「連線」或「規則」頁保持空白
