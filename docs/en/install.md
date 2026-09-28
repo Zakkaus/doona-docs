@@ -22,7 +22,7 @@ Each doona release attaches honk-core builds with the native API, and `HONK-SOUR
 | no suffix            | mimalloc, the default; faster for QUIC.                                                                    |
 | `-stock` suffix      | The system allocator instead of mimalloc, for small devices where memory use matters more than throughput. |
 
-To run the download, checksum and install steps one at a time, follow [Install on other systems](install-manual.md).
+For separate honk-core download, verification and installation commands, complete step 1, then follow steps 4–6 of [Install on other systems](install-manual.md).
 
 ```sh
 VERSION=0.1.0-beta.9               # the doona release, without v

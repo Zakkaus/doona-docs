@@ -22,7 +22,7 @@
 | 无后缀               | 使用 mimalloc，为默认构建，QUIC 性能更好。                        |
 | `-stock` 后缀        | 使用系统内存分配器而非 mimalloc，适用于更重视内存占用的小型设备。 |
 
-如需逐步执行下载、校验与安装，请按[在其他系统上安装](install-manual.md)中的分步说明操作。
+如需分别下载、校验和安装 honk-core，请先完成[在其他系统上安装](install-manual.md)的第 1 步，再按第 4 至 6 步操作。
 
 ```sh
 VERSION=0.1.0-beta.9               # the doona release, without v

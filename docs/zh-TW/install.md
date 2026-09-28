@@ -22,7 +22,7 @@
 | 無後綴               | 使用 mimalloc，為預設建置，QUIC 效能較佳。                            |
 | `-stock` 後綴        | 使用系統記憶體配置器而非 mimalloc，適用於較重視記憶體用量的小型裝置。 |
 
-如需逐步執行下載、驗證與安裝，請依[在其他系統上安裝](install-manual.md)中的分步說明操作。
+如需分別下載、驗證與安裝 honk-core，請先完成[在其他系統上安裝](install-manual.md)的第 1 步，再依第 4 至 6 步操作。
 
 ```sh
 VERSION=0.1.0-beta.9               # the doona release, without v
