@@ -35,19 +35,19 @@ const styleFiles = [
 export const styles = () => styleFiles.map(name => readFileSync(join(root, `site/styles/${name}.css`), 'utf8')).join('\n');
 
 // The stylesheet with Rosé Pine Dawn and Moon, doona's default palette, written in as light-dark() pairs from the app's
-// own src/ui/styles/palettes.css in place of the /* palette */ line, and the radii, type sizes, duration and easing the
-// sheet uses written in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
+// own src/ui/styles/palettes/rose-pine.css in place of the /* palette */ line, and the radii, type sizes, duration and
+// easing the sheet uses written in from src/ui/styles/motion.css, in that file's order, in place of the /* sizes */ line.
 function stylesheet() {
-  const palettes = readFileSync(join(doona, 'src/ui/styles/palettes.css'), 'utf8');
+  const palettes = readFileSync(join(doona, 'src/ui/styles/palettes/rose-pine.css'), 'utf8');
   const colours = selector => {
     const start = palettes.indexOf(`${selector} {`);
-    if (start < 0) throw new Error(`src/ui/styles/palettes.css: no ${selector} block`);
+    if (start < 0) throw new Error(`src/ui/styles/palettes/rose-pine.css: no ${selector} block`);
     return new Map([...palettes.slice(start, palettes.indexOf('}', start)).matchAll(/(--rp-[\w-]+):\s*(#[0-9a-f]+);/g)].map(match => [match[1], match[2]]));
   };
   const light = colours(":root[data-family='rose-pine']");
   const dark = colours(":root[data-flavour='moon'][data-scheme='dark']");
   const unpaired = [...light.keys()].filter(name => !dark.has(name));
-  if (!light.size || unpaired.length) throw new Error(`src/ui/styles/palettes.css: Moon does not set ${unpaired.join(', ') || 'any colour'}`);
+  if (!light.size || unpaired.length) throw new Error(`src/ui/styles/palettes/rose-pine.css: Moon does not set ${unpaired.join(', ') || 'any colour'}`);
   const css = styles();
   const marker = '  /* palette */\n';
   if (!css.includes(marker)) throw new Error('site/styles/tokens.css: no /* palette */ line');

@@ -1,7 +1,7 @@
 /* The design tokens. The docs site's palette comes from doona; document geometry follows the Spectrum docs.
    site/build/assets.mjs writes in Rosé Pine Dawn and Moon, its default palette (DEFAULT_PALETTE in
-   src/shell/palettes.ts), from src/ui/styles/palettes.css, in place of the palette marker below, and the radii and type
-   sizes the stylesheet uses from src/ui/styles/motion.css in place of the sizes marker; the role tokens are copied
+   src/shell/palettes.ts), from src/ui/styles/palettes/rose-pine.css, in place of the palette marker below, and the radii
+   and type sizes the stylesheet uses from src/ui/styles/motion.css in place of the sizes marker; the role tokens are copied
    from motion.css.
    Each colour is a light-dark() pair, so the scheme alone picks the palette: the system's by default, or the one the
    theme button stores, which the page head applies as data-theme before the first paint. */

@@ -9,7 +9,7 @@ export const docs = join(root, 'docs');
 // and the pages link its screenshots and source files. DOONA_DIR names it, relative to this repository; the default is
 // a checkout next to this one.
 export const doona = resolve(root, process.env.DOONA_DIR || '../doona');
-if (!existsSync(join(doona, 'src/ui/styles/palettes.css')))
+if (!existsSync(join(doona, 'src/ui/styles/palettes/rose-pine.css')))
   throw new Error(`${doona} is not a doona checkout: clone Zakkaus/doona there or point DOONA_DIR at one`);
 
 const repositoryOf = dir => JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).repository.url.replace(/\.git$/, '');
