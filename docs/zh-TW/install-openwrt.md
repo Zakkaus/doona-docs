@@ -14,6 +14,12 @@
 - 能夠連線到 github.com。
 - 所有步驟都在同一個 shell 中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
 
+安裝 honk 前先安裝核心模組。缺少 `kmod-veth` 時 honk 無法啟動。缺少 `kmod-nft-queue` 時，honk 會停用 NFQUEUE staging，只在啟動日誌中留下一條警告。`kmod-sched-core` 提供入口排程器。
+
+```sh
+apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
 ## 1. 安裝 curl 與 CA 憑證
 
 honk 透過 HTTPS 下載訂閱與地理資料，缺少 CA 憑證時會在啟動階段結束。OpenWrt 25.12 已包含 `ca-bundle`；下面的命令保留它並安裝 curl。
@@ -98,7 +104,7 @@ tar -xzf honk-core-debug-$TARGET.tar.gz
 cp honk-core-debug-$TARGET/honk-core /usr/bin/honk-core
 chmod 0755 /usr/bin/honk-core
 honk-core --version
-rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz
+rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz SHA256SUMS
 ```
 
 `honk-core --version` 輸出 honk 的建置版本，例如：
@@ -110,6 +116,27 @@ honk-core debug.2026.9.28.native-api.2
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
 下一步：[最小組態](minimal-configuration.md)。該頁凡是提供「OpenWrt」分頁的地方，都選擇它。
+
+## 系統升級時保留 honk
+
+依[服務管理](service-management.md)建立服務後，在升級前將組態目錄和啟動指令碼加入 OpenWrt 的備份清單：
+
+```sh
+printf '%s\n' '/etc/honk/' '/etc/init.d/honk-core' >> /etc/sysupgrade.conf
+```
+
+系統升級不會保留核心模組、`/usr/share/doona` 或 `/usr/bin/honk-core`。升級後執行 `apk update` 並重新安裝模組：
+
+```sh
+apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+重新執行上文第 1 至 7 步，重新安裝 doona 與 honk-core，然後恢復服務的開機自動啟動並啟動服務：
+
+```sh
+/etc/init.d/honk-core enable
+/etc/init.d/honk-core start
+```
 
 ## 遇到問題時
 

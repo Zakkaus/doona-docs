@@ -14,6 +14,12 @@ The release’s `.ipk` package does not fit either current OpenWrt series. OpenW
 - Access to github.com.
 - Run every step in the same shell: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
+Install the kernel modules before installing honk. honk cannot start without `kmod-veth`. Without `kmod-nft-queue`, honk starts with NFQUEUE staging disabled and only logs a warning at startup. `kmod-sched-core` provides the ingress scheduler.
+
+```sh
+apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
 ## 1. Install curl and CA certificates
 
 honk downloads subscriptions and geodata over HTTPS and stops at startup without CA certificates. OpenWrt 25.12 includes `ca-bundle`; the command keeps it and adds curl.
@@ -98,7 +104,7 @@ tar -xzf honk-core-debug-$TARGET.tar.gz
 cp honk-core-debug-$TARGET/honk-core /usr/bin/honk-core
 chmod 0755 /usr/bin/honk-core
 honk-core --version
-rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz
+rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz SHA256SUMS
 ```
 
 `honk-core --version` prints the honk build, for example:
@@ -110,6 +116,27 @@ honk-core debug.2026.9.28.native-api.2
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
 Next: [Minimal configuration](minimal-configuration.md). Take the OpenWrt tab there wherever one is offered.
+
+## Keep honk across sysupgrade
+
+After creating the service in [Service management](service-management.md), add its configuration and init script to OpenWrt’s backup list before sysupgrade:
+
+```sh
+printf '%s\n' '/etc/honk/' '/etc/init.d/honk-core' >> /etc/sysupgrade.conf
+```
+
+Sysupgrade does not preserve the kernel modules, `/usr/share/doona` or `/usr/bin/honk-core`. After upgrading, run `apk update` and reinstall the modules:
+
+```sh
+apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+Repeat steps 1–7 above to reinstall doona and honk-core, then restore the service’s boot link and start it:
+
+```sh
+/etc/init.d/honk-core enable
+/etc/init.d/honk-core start
+```
 
 ## If it doesn’t work
 

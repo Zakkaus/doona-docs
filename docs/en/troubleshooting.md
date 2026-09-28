@@ -124,6 +124,10 @@ The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a 
 
 honk rejects kernels older than 6.12 before attaching. When the verifier rejects compiled routing, use Linux 6.12 or later with BPF and BTF, and keep the full verifier log for a report.
 
+## OpenWrt firewall stop removes honk’s nft table
+
+`service firewall stop` deletes honk’s nft table, which turns off NFQUEUE staging. After starting the firewall again, restart honk with `/etc/init.d/honk-core restart`. `fw4 reload` and `service firewall restart` leave the table intact.
+
 <a name="no-native-api"></a>
 
 ## No native API, or 404 on /api or /ui/
@@ -141,6 +145,7 @@ Find the latest `honk-core <version> starting` line in the current boot’s `jou
 
 - First-time setup works only from the gateway or a private-network client.
 - “Network connection failed” or “Network or CORS request failed” in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
+- A request to the API through `openwrt.lan` returns 403 unless the hostname is in `native_api { allowed_hosts }`. Use the LAN IP instead, or add `allowed_hosts: 'openwrt.lan'` inside `native_api` and restart honk.
 - A forgotten password: stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), and start honk to set up again.
 - An HTTPS page cannot reach an HTTP API; see [doona on another origin](install.md#other-origin).
 
