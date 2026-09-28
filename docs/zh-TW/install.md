@@ -22,6 +22,8 @@
 | 無後綴               | 使用 mimalloc，為預設建置，QUIC 效能較佳。                            |
 | `-stock` 後綴        | 使用系統記憶體配置器而非 mimalloc，適用於較重視記憶體用量的小型裝置。 |
 
+如需分別下載、驗證與安裝 honk-core，請先完成[在其他系統上安裝](install-manual.md)的第 1 步，再依第 4 至 6 步操作。
+
 ```sh
 VERSION=0.1.0-beta.9               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
@@ -91,6 +93,8 @@ WantedBy=multi-user.target
 同時下載 doona 發布套件與 `SHA256SUMS`，再將套件解壓縮到 `/usr/share/doona`，也就是 `ui` 指定的目錄。最後一個指令必須列出 `index.html`，否則 honk 無法啟動。
 
 - [doona 發布頁](https://github.com/Zakkaus/doona/releases)
+
+如需逐步下載、驗證並解壓縮程式與選用字型，請依[在其他系統上安裝](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
 VERSION=0.1.0-beta.9   # the doona release, without v

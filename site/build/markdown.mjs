@@ -13,7 +13,12 @@ import {icons} from './icons.mjs';
 const alerts = ['note', 'tip', 'important', 'warning', 'caution'];
 
 export const md = new MarkdownIt({html: true});
-md.renderer.rules.table_open = (tokens, index, options, env) => `<div class="table" role="region" aria-label="${strings[env.locale].table}" tabindex="0"><table>\n`;
+md.renderer.rules.table_open = (tokens, index, options, env) => {
+  const headers = tokens.slice(index + 1, tokens.findIndex((token, position) => position > index && token.type === 'thead_close'))
+    .filter(token => token.type === 'inline').map(plain);
+  const kind = headers.length === 2 && headers[0] === strings[env.locale].symptomHeader ? ' table--symptoms' : '';
+  return `<div class="table${kind}" role="region" aria-label="${strings[env.locale].table}" tabindex="0"><table>\n`;
+};
 md.renderer.rules.table_close = () => '</table></div>\n';
 md.renderer.rules.blockquote_open = (tokens, index, options, env, self) => {
   const alert = tokens[index].meta?.alert;

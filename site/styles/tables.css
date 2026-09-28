@@ -27,3 +27,40 @@ th {
   background: var(--rp-overlay);
 }
 tr:last-child td { border-bottom: 0; }
+
+/* Give each symptom and its fix the full article width on phones. Keep the table headers available to screen readers. */
+@media (max-width: 600px) {
+  .table--symptoms table,
+  .table--symptoms tbody,
+  .table--symptoms tr,
+  .table--symptoms td {
+    display: block;
+    width: 100%;
+  }
+  .table--symptoms thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .table--symptoms tr {
+    border-bottom: 1px solid var(--rp-line);
+  }
+  .table--symptoms tbody tr:last-child { border-bottom: 0; }
+  .table--symptoms td {
+    min-width: 0;
+    border-bottom: 0;
+  }
+  .table--symptoms td:first-child {
+    padding-block: 12px 8px;
+    background: var(--rp-overlay);
+  }
+  .table--symptoms td + td { padding-block: 8px 12px; }
+  .table--symptoms td code {
+    overflow-wrap: break-word;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+}
