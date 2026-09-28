@@ -165,7 +165,6 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 ```sh
 logread -e honk                  # OpenWrt
 journalctl -u honk-core -b       # systemd
-docker logs <container>          # Docker
 ```
 
 ## “连接”或“规则”页一直为空
