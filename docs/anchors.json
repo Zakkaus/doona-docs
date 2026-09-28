@@ -12,6 +12,9 @@
   "troubleshooting": "troubleshooting",
   "unknown-setting": "troubleshooting",
   "state-db": "troubleshooting",
+  "geodata-sources": "troubleshooting",
+  "state-unsafe": "troubleshooting",
+  "geodata-update": "troubleshooting",
   "no-native-api": "troubleshooting",
   "sign-in": "troubleshooting",
   "read-only": "troubleshooting"

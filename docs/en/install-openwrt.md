@@ -119,4 +119,6 @@ Next: [Minimal configuration](minimal-configuration.md). Take the OpenWrt tab th
 | `sha256sum: WARNING: 1 of 1 computed checksums did NOT match`     | The download is damaged or incomplete. Delete the file and download it again.                              |
 | `sha256sum: -: no checksum lines found`                           | `grep` found no line for that file: `VERSION` or `TARGET` was not set in this shell, or it has a typo.     |
 
+If honk reports `persistence_unavailable` with reason `unsafe`, see [Troubleshooting](troubleshooting.md#state-unsafe).
+
 For problems after installation, see [Troubleshooting](troubleshooting.md#troubleshooting).

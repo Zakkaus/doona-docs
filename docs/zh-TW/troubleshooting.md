@@ -68,6 +68,54 @@ state database is corrupt
 
 `another honk-core has the state database open` 與 `state database has a foreign application id or a newer schema` 一律會阻止啟動：請停止另一個執行個體，或使用寫入該資料庫的 honk 版本。
 
+<a name="geodata-sources"></a>
+
+## 地理資料來源無法編輯，或自動更新從未執行
+
+honk 正在沒有狀態資料庫的情況下執行，而來源與更新排程都存在該資料庫中。doona 目前不顯示此狀態，`/api/v1/runtime` 的 `degradations` 清單會列出。`<listen>` 為 `listen` 位址，`<token>` 為 `secret`。
+
+```sh
+curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
+```
+
+出現 `persistence_unavailable` 項目即可確認，其 `reason` 指出原因，請參閱[狀態資料庫問題](#state-db)。修正之前，「更新」從 `native_api` 中的 `geosite_download_url` 與 `geoip_download_url` 下載，且只在手動按下時執行。
+
+<a name="state-unsafe"></a>
+
+## persistence_unavailable 的 reason 為 unsafe
+
+honk 拒絕使用資料目錄中的 `state/` 或其中的 `honk.db`。兩者都必須屬於執行 honk 的使用者，不授予群組或其他使用者任何權限，且不能是符號連結。資料目錄為 `ps w | grep '[h]onk-core'` 顯示的 `--data-dir` 值；沒有此參數時為組態中的 `data_dir`，預設為 `/var/lib/honk`。
+
+```sh
+ls -ld /var/lib/honk/state /var/lib/honk/state/honk.db
+chmod 700 /var/lib/honk/state
+chmod 600 /var/lib/honk/state/honk.db
+```
+
+只變更這兩項，不要遞迴變更；`/etc/honk` 與 `config.d/` 不受影響。若 `ls` 顯示擁有者不同，請以 `chown` 將兩者改為執行 honk 的使用者。之後重新啟動 honk。
+
+OpenWrt 的 `/var` 位於記憶體中，因此預設的 `/var/lib/honk` 每次重新開機都會遺失資料庫。請依[最小組態](minimal-configuration.md)將資料存放在 `/etc/honk/data`。
+
+<a name="geodata-update"></a>
+
+## 地理資料更新失敗並顯示 checksum_unavailable
+
+檔案已下載，但無法取得 `<url>.sha256sum`。404 不算失敗：honk 會保留未經驗證的檔案。常見原因有逾時（目前的版本中檔案與校驗和共用一個 30 秒期限）、速率限制（HTTP 403 或 429），或路由在第二次請求時失敗。請重試，或改用較快的路由或較近的鏡像站。
+
+| 階段                   | 意義                                                   | 處理方式                                                   |
+| ---------------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
+| `checksum_mismatch`    | 檔案與其 `.sha256sum` 不符。                           | 重試；若重複出現，改用其他鏡像站。                         |
+| `download_timeout`     | 下載未在 30 秒內完成。                                 | 改用較快的路由或較近的鏡像站。                             |
+| `http_status_rejected` | 伺服器回應 200 與 404 以外的狀態碼，包括重新導向。     | 改用最終網址；遇到 403 或 429 時稍後重試。                 |
+| `http_not_found`       | 檔案網址回應 404。                                     | 檢查網址。                                                 |
+| `connection_failed`    | honk 無法連線到伺服器或節點。                          | 檢查節點；直接下載時檢查 `bootstrap_resolver`。            |
+| `tls_failed`           | TLS 交握或憑證檢查失敗。                               | 檢查閘道器的時鐘與網址的主機名稱。                         |
+| `group_unavailable`    | 下載所經的群組沒有可用節點。                           | 在「策略」頁檢查該群組。                                   |
+| `route_blocked`        | 路由規則將下載主機導向 `block`。                       | 修改符合該主機的規則。                                     |
+| `destination_rejected` | 網址的位址或連接埠不允許用於下載。                     | 改用連接埠 80 或 443 上的公開位址。                        |
+| `asset_too_large`      | 檔案超過 honk 的大小上限。                             | 確認網址指向地理資料檔案。                                 |
+| `invalid_source`       | 網址不是有效的 HTTP 或 HTTPS 網址。                    | 修正網址。                                                 |
+
 ## 固定映射時出現 Invalid argument
 
 `/sys/fs/bpf` 不是 bpffs。請依[系統需求](requirements.md#requirements)掛載。
@@ -109,3 +157,25 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 - 僅在以 `--store db` 執行時出現，本文件不使用此模式：已啟用的修訂未能記錄，導致寫入被阻止。
 
 請將所有密鑰移入 `config.d/api.dae`，並在變更 `native_api` 後重新啟動 honk。
+
+## 「日誌」與「事件」中沒有啟動訊息
+
+「設定」中的「日誌記錄」預設為「隨面板」，只在 doona 連線時記錄。請改為查看系統日誌：
+
+```sh
+logread -e honk                  # OpenWrt
+journalctl -u honk-core -b       # systemd
+docker logs <container>          # Docker
+```
+
+## 「連線」或「規則」頁保持空白
+
+「流程記錄」設為「隨面板」時，honk 只在用戶端請求時記錄。0.1.0-beta.8 之後的 doona 會在「連線」或「規則」頁開啟時發出請求。使用 0.1.0-beta.8 或更早版本時，請在「設定」中將「流程記錄」設為「常開」。
+
+## 升級後 doona 仍顯示舊版本
+
+Service worker 在更新完成前會提供快取的版本。請重新載入頁面一至兩次，或關閉所有 doona 分頁後重新開啟。
+
+## 透過 HTTP 登入時出現 crypto.randomUUID is not a function
+
+0.1.0-beta.8 之前的 doona 需要安全環境才能呼叫此函式，而區域網路上的純 HTTP 不屬於安全環境。請將 doona 升級至 0.1.0-beta.8 或更新版本。

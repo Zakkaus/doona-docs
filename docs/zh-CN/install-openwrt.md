@@ -119,4 +119,6 @@ honk-core debug.2026.9.28.native-api.2
 | `sha256sum: WARNING: 1 of 1 computed checksums did NOT match`      | 下载的文件损坏或不完整。删除该文件后重新下载。                                                            |
 | `sha256sum: -: no checksum lines found`                            | `grep` 没有找到该文件对应的行：当前 shell 未设置 `VERSION` 或 `TARGET`，或其中有拼写错误。                |
 
+若 honk 报告 `persistence_unavailable` 且 reason 为 `unsafe`，请参阅[故障排查](troubleshooting.md#state-unsafe)。
+
 安装后遇到的问题请参阅[故障排查](troubleshooting.md#troubleshooting)。

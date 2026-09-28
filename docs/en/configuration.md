@@ -143,6 +143,8 @@ experimental {
 
 Every `native_api` field needs a restart. A reload rejects a change to one and keeps the running listener.
 
+For geodata problems, see [sources cannot be edited](troubleshooting.md#geodata-sources), [reason unsafe](troubleshooting.md#state-unsafe) and [update failures](troubleshooting.md#geodata-update).
+
 ## Install the files
 
 ```sh

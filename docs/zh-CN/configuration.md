@@ -143,6 +143,8 @@ experimental {
 
 `native_api` 的每个字段都需要重启才能生效。重载会拒绝对这些字段的修改，并保留正在运行的监听。
 
+地理数据问题请参阅[来源无法编辑](troubleshooting.md#geodata-sources)、[reason 为 unsafe](troubleshooting.md#state-unsafe)与[更新失败](troubleshooting.md#geodata-update)。
+
 ## 安装配置文件
 
 ```sh
