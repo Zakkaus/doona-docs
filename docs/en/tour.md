@@ -67,8 +67,8 @@ Apply (N) and Reload honk wait for each other: while one runs, the other is disa
 
 ## Hold, apply or save
 
-- Hold appears only in the Add rule dialog, where it is the highlighted button. It puts the rule in the held list without writing it. Held rules are written later with Apply (N) in the top bar or Apply held rules on the Rules page; see [the held list](routing.md#held-rules).
-- Apply writes the change to the backend now. In Add rule, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and the Backend options card on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [backend options](config-and-settings.md#runtime-options).
+- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. The Add rule dialog on the Rules page writes at once; see [adding a rule](routing.md#add-rule). It puts the rule in the held list without writing it. Held rules are written later with Apply (N) in the top bar or Apply held rules on the Rules page; see [the held list](routing.md#held-rules).
+- Apply writes the change to the backend now. In the Add rule dialog opened from observed traffic, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and the Backend options card on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [backend options](config-and-settings.md#runtime-options).
 - Save stores a backend profile in this browser. Saving reloads the page to use the profile; see [Settings](config-and-settings.md#settings-page).
 
 <a name="confirm"></a>
