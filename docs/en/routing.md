@@ -102,8 +102,8 @@ Open the Routing hub, then Rules. The tabs are Routing rules, DNS rules and Trac
 
 ### Open the source of a rule
 
-1. Choose Open source on a row. The Configuration page opens that file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
-2. A rule from an include file outside a routing section cannot be changed in the list. Edit it in the file through Open source.
+1. Choose Open config source on a row. The Configuration page opens that file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
+2. A rule from an include file outside a routing section cannot be changed in the list. Edit it in the file through Open config source.
 
 ### Edit or remove a rule
 
@@ -120,7 +120,7 @@ Open the Routing hub, then Rules. The tabs are Routing rules, DNS rules and Trac
 1. Open the DNS rules tab. It holds two lists, each checked in order: Request rules decide how each query is handled, and Response rules accept an answer, reject it, or query again through another upstream.
 2. Each row shows the rule's expression, its Action and Where. Resolution log and Open DNS configuration link to the DNS page and to the dns section of the configuration.
 3. Choose Add rule in either list to add a rule. The dialog works as in [add a rule from a rule list](#add-rule), with Action in place of Outbound and without Lock this outbound. The rule goes into the dns routing section of the source file.
-4. Choose Remove rule on a row to delete it. DNS rules have no edit button; change a rule in the file through Open source.
+4. Choose Remove rule on a row to delete it. DNS rules have no edit button; change a rule in the file through Open config source.
 
 <a name="add-rule"></a>
 
