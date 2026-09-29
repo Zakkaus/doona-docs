@@ -47,7 +47,7 @@ Typing into a read-only file shows the notice This file is read-only, once per f
 
 Press Cancel to drop the change. If validation finds errors, nothing is written and the errors appear in the list. If the change touches a setting that takes effect only after a restart, nothing is written either; change that setting in the file and restart honk.
 
-If the file changed on disk while you were editing, an alert says so and Apply stays disabled. Press Keep changes to apply your text over the new file, or Cancel to drop your change and load the new text.
+If the file changed on disk while you were editing, an alert says so and Apply stays disabled. Press Keep changes, then Apply, to write your text over the new file; or press Cancel to drop your change and load the new text.
 
 To create an included file:
 
@@ -124,7 +124,7 @@ These options are not written to the configuration file. A restart, or any chang
 
 ### Geodata
 
-The Geodata card appears only when the backend lets you configure geodata sources. Otherwise the Backend actions card lists the geodata files; see [Backend actions](#backend-actions).
+The Geodata card appears only when the backend lets you configure geodata sources. If the backend provides geodata but does not let you configure its sources, the Backend actions card lists the geodata files; see [Backend actions](#backend-actions).
 
 1. Choose a Source: Loyalsoldier, MetaCubeX full, MetaCubeX lite or Custom. If the preset lacks categories your rules use, a dialog lists them before switching, because the backend refuses such a file on update.
 2. For Custom, enter the `geosite` and `geoip` URLs in the Custom URLs dialog and press Apply and update, or Apply. Each list takes up to four URLs, tried in order. Use URLs that serve the file directly; GitHub release download links redirect and do not work. Edit reopens the dialog later.
@@ -149,7 +149,7 @@ The card shows only the actions the backend supports.
 2. Under DNS, press Clear all cache and confirm to clear every DNS cache entry.
 3. Under Nodes, press Refresh all subscriptions (*N*).
 4. Under Connections, press Close all and confirm. It closes every connection the backend owns and skips kernel-direct connections.
-5. When geodata sources cannot be configured, a Geodata table lists each file with Asset, Size, Updated, SHA-256 and Source. Press Update, if offered, to download and verify the files and reload the configuration.
+5. When the backend provides geodata but its sources cannot be configured, a Geodata table lists each file with Asset, Size, Updated, SHA-256 and Source. Press Update, if offered, to download and verify the files and reload the configuration.
 
 The top bar's Reload honk runs the same reload after a confirmation; see the [interface tour](tour.md#top-bar). Neither writes held rules; see [held rules](routing.md#held-rules). If the geodata note says the download URLs come from the configuration file, editing sources needs the backend's state database; see [state database](troubleshooting.md#state-db).
 
