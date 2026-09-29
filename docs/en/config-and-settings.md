@@ -42,7 +42,7 @@ Typing into a read-only file shows the notice This file is read-only, once per f
 1. On Sources, choose a file without a badge and click its text.
 2. Type your change. A Not applied badge appears, and reloading or closing the page loses the change.
 3. If the backend supports validation, doona validates the main file and its includes after a pause in typing and marks diagnostic lines in the editor. Press Validate to check at once; the cursor moves to the first error.
-4. Review the diagnostics listed above the editor. Open source on a row opens its file at that line.
+4. Review the diagnostics listed above the editor. Open config source on a row opens its file at that line.
 5. Press Apply. honk validates the files, writes the change and reloads the configuration. A notice says the file was written and the configuration reloaded.
 
 Press Cancel to drop the change. If validation finds errors, nothing is written and the errors appear in the list. If the change touches a setting that takes effect only after a restart, nothing is written either; change that setting in the file and restart honk.
@@ -61,7 +61,7 @@ If no include pattern of the loaded files matches the path, the dialog warns tha
 
 1. Open Validation. The status reads Passed, Passed with N warnings, or Failed with the numbers of errors and warnings.
 2. Filter the table with All, Errors, Warnings or Info. Each row shows Level, Where, Message and Code.
-3. Select a row and press Open source to open the file at that line.
+3. Select a row and press Open config source to open the file at that line.
 4. Press Validate again to check the current files.
 
 Until you validate, the table shows the diagnostics kept for the accepted configuration, with its `generation`. After a validation it shows the time of that run; a reload or an applied change returns it to the accepted diagnostics. Validation covers the main file and its includes, and needs the whole text of the main file. If errors remain, Apply writes no file and a reload does not activate the configuration.
@@ -79,11 +79,11 @@ Only one section can be edited at a time. Open source file opens the whole file 
 Quick setup appears when configuration writes are enabled and the main file is writable with its full text returned.
 
 1. Open Quick setup. Under Subscriptions, enter a Name and Subscription URL for each subscription, and press Add subscription for more rows.
-2. Under Rules, keep Keep the current rules to leave the `routing` section as it is, or choose a template.
+2. Under Rules, keep Keep the current rules to leave the `routing` section as it is, or choose Mini groups, Standard groups (default), or Full groups.
 3. If the main file is empty, also fill in Transparent proxy port, Default DNS upstream and Mainland-China domain DNS upstream. LAN interface is optional.
 4. Read Generated configuration, then press Apply. The main file is written through the same validation and reload as Sources.
 
-Apply rewrites the main file's `subscription` section. A template also replaces every top-level `routing` section and adds missing groups; other content stays unchanged. After Apply, links to Nodes, Policies, Routing rules and Open source appear.
+Apply rewrites the main file's `subscription` section. A template also replaces every top-level `routing` section and adds missing groups; other content stays unchanged. After Apply, links to Nodes, Policies, Routing rules and Open config source appear.
 
 <a name="settings-page"></a>
 
