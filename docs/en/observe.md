@@ -10,7 +10,7 @@ This page covers the Activity hub (Activity and System status) and the Monitor h
 
 ## Activity
 
-Activity is the page doona opens by default. Each card links to the page that holds its details.
+Activity is the page doona opens by default. Some cards link to the page that holds their details; the Outbound mode and Global mode outbound cards hold controls instead.
 
 ### Outbound mode
 
@@ -132,7 +132,7 @@ Logs shows the engine's live log stream.
 4. Turn on Pause to hold the list. The status shows how many new records have arrived; they appear when you turn Pause off. Only the newest records are kept while paused.
 5. Clear removes the displayed records from this page. Export downloads the received records as a text file.
 6. Recording settings opens [Backend options](config-and-settings.md#runtime-options) in Settings, where log recording and the log level are set.
-7. Select a row to read the whole message. The status shows Streaming, Reconnecting or Disconnected. Records sent while disconnected cannot be recovered; the list marks the gap.
+7. Select a row to read the whole message. The status shows Streaming, Reconnecting or Disconnected. On reconnection, retained records are replayed; if replay is no longer possible, the list marks the gap.
 
 If the list shows Log recording is disabled in the configuration, change the honk configuration; see [configuration](configuration.md#config). If it shows Turn on log recording in Settings first, turn it on under Recording settings.
 
@@ -147,4 +147,4 @@ Events shows the backend's event stream, newest first.
 3. Select an event to read its full summary. A Configuration activated event links to View configuration. A Flow records lost event links to View flow record and Recording settings.
 4. Select Export JSON to download the events currently shown.
 
-Events sent while the page was disconnected cannot be recovered; a row in the list marks the loss.
+After a disconnection, retained events are replayed. If the replay cursor has expired, a row in the list marks the lost events.
