@@ -22,13 +22,13 @@ In a window at least 1024 px wide, the sidebar lists the pages under four sectio
 - Connections: Traffic and Connections tabs. Select a connection to see its route and actions.
 - Routing log: Map and Records tabs.
 - DNS: Statistics, Resolution log, Cache and Query tabs, as far as the backend provides them.
-- Logs: the live engine log, with a level filter, a target filter, Pause, Clear and Export.
+- Logs: the live engine log, with Level and Module filters, Pause, Clear and Export.
 - Events: backend state changes, with Export JSON.
 
 ### Routing
 
 - Policies: Groups and Group membership tabs. Select nodes for a group or change its members.
-- Nodes: nodes and their subscriptions, usage and refresh. A Latency tab appears once latency has been measured.
+- Nodes: nodes and their subscriptions, usage and refresh. The Latency tab appears when the backend provides a node list.
 - Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it.
 
 ### Settings
@@ -67,7 +67,7 @@ Apply (N) and Reload honk wait for each other: while one runs, the other is disa
 
 ## Hold, apply or save
 
-- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. The Add rule dialog on the Rules page writes at once; see [adding a rule](routing.md#add-rule). It puts the rule in the held list without writing it. Held rules are written later with Apply (N) in the top bar or Apply held rules on the Rules page; see [the held list](routing.md#held-rules).
+- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. Hold puts the rule in the held list without writing it. Held rules are written later with Apply (N) in the top bar or Apply held rules on the Rules page; see [the held list](routing.md#held-rules). The Add rule dialog on the Rules page writes at once; see [adding a rule](routing.md#add-rule).
 - Apply writes the change to the backend now. In the Add rule dialog opened from observed traffic, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and the Backend options card on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [backend options](config-and-settings.md#runtime-options).
 - Save stores a backend profile in this browser. Saving reloads the page to use the profile; see [Settings](config-and-settings.md#settings-page).
 
