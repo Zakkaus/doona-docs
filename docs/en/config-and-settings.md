@@ -155,4 +155,4 @@ The top bar's Reload honk runs the same reload after a confirmation; see the [in
 
 ### About
 
-About doona opens a dialog with the engine, API and contract versions, the license and the privacy statement. Keyboard shortcuts opens the shortcut list. Setup guide opens this documentation in the interface language. Install as an app appears when the browser offers installation; Safari on iOS and macOS shows the steps instead. If the backend uses an API major version other than 1, a warning appears in this card.
+About doona opens a dialog with the engine, API and contract versions, the license and the privacy statement. Keyboard shortcuts opens the shortcut list. Guide opens this documentation in the interface language. Install as an app appears when the browser offers installation; Safari on iOS and macOS shows the steps instead. If the backend uses an API major version other than 1, a warning appears in this card.
