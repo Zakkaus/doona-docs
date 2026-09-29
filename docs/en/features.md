@@ -49,13 +49,7 @@ In the default On flow demand mode, Connections and Rules request flows while op
 
 ## After sign-in
 
-The guides cover the signed-in interface:
-
-- [Interface tour](tour.md): navigation, the top bar and how changes are held, applied or saved.
-- [Watching traffic](observe.md): Activity, System status, Connections, Routing log, DNS, Logs and Events.
-- [Routing, nodes and rules](routing.md): policy groups, nodes and subscriptions, rules and Trace.
-- [Config and settings](config-and-settings.md): the Configuration and Settings pages.
-- [Common tasks](common-tasks.md): step-by-step procedures for frequent changes.
+For interface guides and task procedures, see the [documentation index](index.md).
 
 Every configuration-source write goes through the engine. doona sends the hash it read the source at (`If-Match`); a file changed on disk answers 412 and nothing is written. The engine validates the whole source set before saving and reloading, and a failed reload keeps the previous generation active. Dry-run validation never writes, and redacted text is never written back. Runtime settings and group selection are separate endpoints with their own checks.
 

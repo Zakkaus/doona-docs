@@ -24,7 +24,7 @@ doona 依赖 honk 的原生 API。该 API 目前只存在于 Glassyiris/honk 的
 6. [首次登录](first-sign-in.md)：创建管理员并检查概览。
 7. [界面导览](tour.md)：页面、顶部栏、详情面板与更改的提交方式。
 8. [观测流量](observe.md)：活动、系统状态、连接、分流、DNS、日志与事件页面。
-9. [分流、节点与规则](routing.md)：策略组、节点与订阅、规则与追踪模拟。
+9. [路由、节点与规则](routing.md)：策略组、节点与订阅、规则与追踪模拟。
 10. [配置与设置](config-and-settings.md)：配置页与设置页。
 11. [常见操作](common-tasks.md)：常见更改的操作步骤。
 12. [配置](configuration.md)：启用原生 API 的 honk 示例配置，以及每个 `native_api` 字段启用的功能。

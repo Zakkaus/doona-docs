@@ -18,7 +18,7 @@ This page collects short procedures for frequent changes to routing, traffic ins
 6. Check Insert. If the dialog says earlier rules may still match this traffic first, choose an earlier position.
 7. Select Apply to write the rule and reload now, or Hold to write it later with Apply (N) in the top bar.
 
-After Apply, a notice says the new rule is in effect. New connections that match use the new outbound; existing connections keep their route until they reconnect. See [the held list](routing.md#held-rules) and [the Add rule dialog](routing.md#add-rule).
+After Apply, a notice says the new rule is in effect. In Rule mode, new connections that match use the new outbound unless an earlier rule matches them first; existing connections keep their route until they reconnect. The dialog has no Lock this outbound switch, so Global and Direct mode still override this rule; to keep the route in those modes, add the rule under Routing > Rules with Lock this outbound turned on. See [the held list](routing.md#held-rules) and [the Add rule dialog](routing.md#add-rule).
 
 <a name="domain-family"></a>
 
@@ -56,7 +56,7 @@ A notice says the new rule is in effect. New connections from that address go di
 
 1. Open Routing > Policies and select the Groups tab.
 2. Find the group's card.
-3. Select a node in the card's node grid. A notice confirms the selection and whether existing connections were kept or interrupted.
+3. Select a node in the card's node grid. A notice confirms the selection. If the node is pinned, the notice says the automatic policy is paused; otherwise it says whether existing connections were kept or interrupted.
 4. If the notice says the node is pinned and the automatic policy is paused, open the card's More actions menu and select Back to automatic to resume it.
 
 After Back to automatic, a notice names the member the group now uses. See [Routing, nodes and rules](routing.md#policies).
