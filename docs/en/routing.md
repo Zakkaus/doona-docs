@@ -23,8 +23,8 @@ Open the Routing hub, then Policies. The Groups tab shows one card per group.
 1. In a group with the Manual policy, choose a member in the grid. The group switches to it at once.
 2. In an automatic group whose backend allows overrides, choosing a member pins it. The state changes from Automatic to Pinned, and the toast says the automatic policy is paused.
 3. To end the pin, open More actions on the card and choose Back to automatic. This item appears only while the group is pinned. The toast names the member the policy now selects.
-4. When the selector labelled Both, TCP and UDP is shown, choose the network first. A selection, a pin or Back to automatic then applies to that network only.
-5. When the card shows Interrupt existing connections on switch, that switch sets whether a member switch closes existing connections. Changing it writes the group's configuration and reloads. The toast after each selection says whether existing connections were kept or interrupted.
+4. When the selector labelled Both, TCP and UDP is shown, choose the network first. With Both, a selection, a pin or Back to automatic applies to TCP and UDP; with TCP or UDP, it applies to that network only.
+5. When the card shows Interrupt existing connections on switch, that switch sets whether a member switch closes existing connections. Changing it writes the group's configuration and reloads. After you choose a member in a Manual group, the toast says whether existing connections were kept or interrupted.
 
 ### Test, edit and check settings
 
@@ -66,7 +66,7 @@ Open the Routing hub, then Nodes. The Nodes tab lists node sources: subscription
 
 ### Add a subscription or a node
 
-The add and remove commands appear only when the backend allows node management, and they need a writable main configuration; see [read-only sources](troubleshooting.md#read-only).
+Adding or removing subscriptions and file sources requires the backend to allow source management; adding or removing individual nodes requires it to allow node management. Both need a writable main configuration; see [read-only sources](troubleshooting.md#read-only).
 
 1. Choose Add subscription. Enter a Name and a Subscription URL (HTTP or HTTPS). Depending on the backend, the dialog also offers Auto-refresh, User-Agent and Cache the subscription.
 2. Choose Add. The backend writes the subscription into the subscription section of the main configuration. The URL is stored and never shown again.
@@ -75,7 +75,7 @@ The add and remove commands appear only when the backend allows node management,
 
 ### Refresh a subscription
 
-1. Choose the refresh button on a subscription row to fetch that subscription now. Choose Refresh all subscriptions to fetch every subscription in one batch; Settings offers the same command under [backend actions](config-and-settings.md#backend-actions).
+1. Choose the refresh button on a subscription row to fetch that subscription now. Choose Refresh all subscriptions (N), or Refresh subscription (1) when there is only one, to fetch every subscription in one batch; Settings offers the same command under [backend actions](config-and-settings.md#backend-actions).
 2. A refresh fetches the subscription through its download route and applies the new nodes. It does not change the subscription's configured source.
 3. On success, the toast reports the node count. On failure, the last nodes that loaded successfully stay in place.
 4. If the download route has no usable node yet, for example because the rules send the subscription through a group of the nodes it has not delivered, the refresh fails instead of falling back to direct.
