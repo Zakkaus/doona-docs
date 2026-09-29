@@ -40,7 +40,7 @@ export const groups = {
   start: ['index', 'requirements'],
   install: ['install-debian', 'install-fedora', 'install-arch', 'install-gentoo', 'install-openwrt', 'install-manual', 'install'],
   firstRun: ['minimal-configuration', 'service-management', 'first-sign-in'],
-  guides: ['configuration', 'features', 'troubleshooting'],
+  guides: ['tour', 'observe', 'routing', 'config-and-settings', 'common-tasks', 'configuration', 'features', 'troubleshooting'],
   contributing: ['development']
 };
 export const pages = Object.values(groups).flat();

@@ -49,12 +49,13 @@ In the default On flow demand mode, Connections and Rules request flows while op
 
 ## After sign-in
 
-The activity page shows the running engine. The usual route through the rest:
+The guides cover the signed-in interface:
 
-1. Nodes: add a subscription (a name and its URL) or paste share links; nodes appear with their protocol, latency and groups. Set how often a subscription refreshes, test a node, or add it to a group from its row.
-2. Policies: each group is a card with its members' latency. Pick a member of a selector group, pin one in an automatic group and release it again, test them all, or edit the group's policy, filters, tolerance and idle timeout where available.
-3. Rules: the routing dictionary in evaluation order with the flows each rule decided. Add a rule from a kind and its values (a domain suffix, a geosite category, a port, a process name) or as an expression, before any rule or at the end. The DNS rules tab edits DNS request and response rules the same way. A connection can open its matched rule to change the outbound, and a DNS resolution can start a request rule for its domain.
-4. Configuration: the accepted sources with their diagnostics. Edit a file in place, validate, save and reload; a quick setup covers the main file's common settings.
+- [Interface tour](tour.md): navigation, the top bar and how changes are held, applied or saved.
+- [Watching traffic](observe.md): Activity, System status, Connections, Routing log, DNS, Logs and Events.
+- [Routing, nodes and rules](routing.md): policy groups, nodes and subscriptions, rules and Trace.
+- [Config and settings](config-and-settings.md): the Configuration and Settings pages.
+- [Common tasks](common-tasks.md): step-by-step procedures for frequent changes.
 
 Every configuration-source write goes through the engine. doona sends the hash it read the source at (`If-Match`); a file changed on disk answers 412 and nothing is written. The engine validates the whole source set before saving and reloading, and a failed reload keeps the previous generation active. Dry-run validation never writes, and redacted text is never written back. Runtime settings and group selection are separate endpoints with their own checks.
 
@@ -67,11 +68,12 @@ Every configuration-source write goes through the engine. doona sends the hash i
 | Page          | Shows                                                                                                                                                                                        | Needs                               |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | Activity      | Outbound mode, traffic and memory, active connections, node latency, outbound usage, top clients and notifications                                                                           | —                                   |
-| Overview      | Engine and eBPF state, traffic counters, backend capabilities, runtime degradations and status as JSON                                                                        | `runtime`                           |
+| System status | Engine and eBPF state, traffic counters, backend capabilities, runtime degradations and status as JSON                                                                        | `runtime`                           |
 | Connections   | Live connections with source, destination, rule, chain and traffic; close one or all, or edit a matched rule; URL filters                                                     | `connections`                       |
+| Routing log   | The routing map and flow records with their trace steps | `flows` |
 | DNS           | Queries and their answers, the cache and resolution log; create a DNS request rule from a resolution; flush                                                                                | `dns_query`, `dns_log`, `dns_cache` |
 | Policies      | Groups, their members and health; selection, pinning, probing, editing and check settings                                                                                     | `groups`                            |
-| Rules         | Routing and DNS rules, the routing map, flow records and Trace simulation; DNS rules appear only when the backend lists them                                                   | `rules`, `flows`, `routing_trace`   |
+| Rules         | Routing and DNS rules and Trace simulation; DNS rules appear only when the backend lists them                                                   | `rules`, `flows`, `routing_trace`   |
 | Nodes         | Subscriptions and their refresh interval, inline nodes, add and remove, probe and join a group                                                                                               | `nodes`, `providers`                |
 | Configuration | Sources with diagnostics, an editor with validation, quick setup and export                                                                                                                  | `config`                            |
 | Events        | The backend event stream                                                                                                                                                                     | `events`                            |

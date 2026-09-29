@@ -14,7 +14,7 @@ doona needs honk's native API, which exists only on the `feat/native-api` branch
 
 ## Pages
 
-For a new gateway, read Requirements and the install page for your system, then the First run pages in order: Minimal configuration, Service management and First sign-in.
+For a new gateway, read Requirements and the install page for your system, then the First run pages in order: Minimal configuration, Service management and First sign-in. After the first sign-in, continue with the Interface tour in Guides.
 
 1. [Requirements](requirements.md): the kernel, the honk build, browsers and build tools.
 2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md) or [another system](install-manual.md).
@@ -22,10 +22,15 @@ For a new gateway, read Requirements and the install page for your system, then 
 4. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
 5. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
 6. [First sign-in](first-sign-in.md): create the administrator and check the overview.
-7. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
-8. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
-9. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.
-10. [Development](development.md): build and test doona, the source layout and the API contract.
+7. [Interface tour](tour.md): pages, the top bar, panels and how changes are held, applied or saved.
+8. [Watching traffic](observe.md): Activity, System status, Connections, Routing log, DNS, Logs and Events.
+9. [Routing, nodes and rules](routing.md): policy groups, nodes and subscriptions, rules and Trace.
+10. [Config and settings](config-and-settings.md): the Configuration and Settings pages.
+11. [Common tasks](common-tasks.md): step-by-step procedures for frequent changes.
+12. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
+13. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
+14. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.
+15. [Development](development.md): build and test doona, the source layout and the API contract.
 
 ## Links
 
