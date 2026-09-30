@@ -41,7 +41,7 @@
 
 - 變更 `native_api` 後沒有重新啟動 honk。重載不會套用這些欄位。
 - 缺少 `config_write: true`。`native_api` 的欄位直接寫在 `experimental` 下時，honk 會以 [`unknown experimental setting`](troubleshooting.md#unknown-setting) 拒絕啟動。
-- 既沒有 `password_auth: true`，也沒有 `secret`。此時若設定了 `enabled: true`，honk 會拒絕啟動。
+- 既沒有 `password_auth: true`，也沒有 `secret`，且未啟用匿名 loopback。此時若設定了 `enabled: true`，honk 會拒絕啟動。`listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，請求無需 Token 即可獲准存取，權限與通過 bearer Token 驗證的請求相同。此模式僅用於本機開發。
 - 檔案包含密鑰或與密鑰相同的文字，因此 doona 將其顯示為[唯讀](troubleshooting.md#read-only)。
 - honk 是早期的 `feat/native-api` 建置，因此地理資料卡片沒有來源設定。請安裝 doona 發行版本附帶的建置，見 [honk 版本](requirements.md#honk-version)。
 - Token 模式下狀態資料庫未能開啟，因此地理資料來源卡片被隱藏，詳見[狀態資料庫問題](troubleshooting.md#state-db)。

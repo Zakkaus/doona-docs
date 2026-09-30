@@ -10,7 +10,7 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 
 ## 原生 API 狀態
 
-doona 需要 honk 的原生 API。此 API 目前只存在於 Glassyiris/honk 的 `feat/native-api` 分支及其持續更新的 `debug` 版本。本文件已對照 `debug.2026.9.28.native-api.4`（提交 `3ff52762`）核對。上游 honk 正式發布此 API 之前，組態鍵與預設值仍可能變更。
+doona 需要 honk 的原生 API，只有 Glassyiris/honk `feat/native-api` 分支及其持續更新的 `debug` 發布版本的建置提供此 API。在該分支上，建置時須明確啟用 `native-api`；發布與 `debug` 建置及 doona 0.1.0-beta.12 附帶的建置已包含此功能。daeuniverse/honk `main` 分支的建置會以 `unknown experimental setting` 拒絕所有 `native_api` 設定；`/api` 與 `/ui/` 回傳 404。`feat/native-api` 分支的建置若未啟用此功能，啟用 `native_api` 時會以 `native-api feature is required` 阻止啟動。本文件已對照 `debug.2026.9.30.native-api.5`（提交 `25377686`）核對。上游 honk 正式發布此 API 之前，組態鍵與預設值仍可能變更。
 
 ## 頁面
 

@@ -107,7 +107,7 @@ experimental {
 }
 ```
 
-Replace `192.168.1.1` with the gateway’s LAN address. Keep this block in its own file. doona shows a file as read-only when it contains a `secret` inside `native_api` or `clash_api`, or any text equal to a listener secret of 8 or more characters. honk hides the secret, so writing the file back would lose it. Groups declared in that file become read-only too.
+Replace `192.168.1.1` with the gateway’s LAN address. Keep this block in its own file. doona shows a file as read-only when it contains a `secret` inside `native_api` or `clash_api`, or any text equal to a listener secret of 8 or more bytes. honk masks secrets of at least 8 bytes, so writing the masked text back would lose them. Groups declared in that file become read-only too.
 
 Adding nodes and subscriptions writes to the main file, so the main file must not contain any secret.
 
@@ -125,20 +125,22 @@ experimental {
 
 ### native_api fields
 
+`allow_anonymous_loopback: true` with a loopback `listen` admits requests without a token, with the same access as bearer-authenticated requests. Use it for local development only.
+
 | Field                                        | Default            | What it enables in doona                                                                                                                |
 | -------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`                                    | `false`            | The API listener, and so all of doona.                                                                                                  |
+| `enabled`                                    | `false`            | The API listener. Requires `secret`, `password_auth: true`, or `allow_anonymous_loopback: true` with a loopback `listen`.                                                                                                  |
 | `listen`                                     | `'127.0.0.1:9527'` | The address doona connects to. A numeric IP and a port; the default is reachable only from the gateway.                                 |
-| `password_auth`                              | `false`            | Sign-in with an administrator username and password. Cannot be combined with `secret`.                                                  |
-| `secret`                                     | `''`               | Token mode: doona asks for this token. Cannot be combined with `password_auth`.                                                         |
+| `password_auth`                              | `false`            | Sign-in with an administrator username and password. Cannot be combined with `secret` or `allow_anonymous_loopback`.                                                  |
+| `secret`                                     | `''`               | Token mode: doona asks for this token. No minimum length; use visible ASCII without whitespace or commas. Cannot be combined with `password_auth`.                                                         |
 | `config_write`                               | `false`            | Editing and adding sources, managing nodes, subscriptions, groups and rules, and geodata updates. Requires `password_auth` or `secret`. |
-| `ui`                                         | `''`               | Serves doona at `/ui/`. The directory must hold `index.html`; a missing directory stops startup.                                        |
-| `record_flows`                               | `true`             | Flow records on Connections and Rules, on demand in beta.9. `false` also disables the runtime switch.                         |
+| `ui`                                         | `''`               | Serves doona at `/ui/`. A directory must hold `index.html`; a missing directory stops startup. `embedded` requires `native-ui`, included in release builds, which embed doona at packaging time.                                        |
+| `record_flows`                               | `true`             | Flow records on Connections and Rules, on demand since beta.9. `false` also disables the runtime switch.                         |
 | `record_traffic`                             | `true`             | Traffic history charts.                                                                                                                 |
 | `record_memory`                              | `true`             | Memory history charts.                                                                                                                  |
 | `record_logs`                                | `true`             | The Logs page.                                                                                                                          |
 | `record_dns_log`                             | `true`             | The DNS log.                                                                                                                            |
-| `geosite_download_url`, `geoip_download_url` | `''`               | Geodata Update without a state database. With one, these URLs replace the stored ones at startup.                                       |
+| `geosite_download_url`, `geoip_download_url` | `''`               | Legacy aliases for `assets.geodata.geosite` and `assets.geodata.geoip`; accepted with warnings. Without a state database, Update needs these URLs; with one, they replace stored URLs at startup.                                       |
 | `allow_origins`, `allowed_hosts`             | empty              | doona served from another origin or through a reverse proxy.                                                                            |
 
 Every `native_api` field needs a restart. A reload rejects a change to one and keeps the running listener.

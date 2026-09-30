@@ -32,7 +32,7 @@ doona 登入後開啟「活動」頁。honk 把帳戶儲存在狀態資料庫 `/
 在側邊導覽列中選擇「概覽」。honk 運作時，該頁顯示：
 
 - 頁面頂部的「運作中」。
-- 「引擎」卡片：「引擎」下為 `honk` 與 `honk-core --version` 輸出的版本，例如 `honk debug.2026.9.28.native-api.4`；「API」下為 `dae/honk-native v1 (draft)`；「建置」下為 honk 的提交與所安裝建置的 target。
+- 「引擎」卡片：「引擎」下為 `honk` 與 `honk-core --version` 輸出的版本，例如 `honk debug.2026.9.30.native-api.5`；「API」下為 `dae/honk-native v1 (draft)`；「建置」下為 honk 的提交與所安裝建置的 target。
 - 「後端能力」卡片，列出這個 honk 提供的功能，例如「連線」「日誌」「組態」。
 
 側邊導覽列底部顯示同一個 honk 版本。在有流量經過 honk 之前，流量計數保持為 0。

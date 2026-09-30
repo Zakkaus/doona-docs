@@ -31,14 +31,16 @@ experimental {
 }
 ```
 
-由 main 分支构建的 honk 没有原生 API，会以 `unknown experimental setting` 拒绝整个 `native_api { }` 配置块。请执行 `honk-core --version` 检查版本并安装 `debug` 版本，详见 [honk 版本](requirements.md#honk-version)。
+daeuniverse/honk `main` 分支的构建没有原生 API，会以 `unknown experimental setting` 拒绝所有 `native_api` 设置。Glassyiris/honk `feat/native-api` 分支的构建若未启用 `native-api` 功能，启用 `native_api` 时会以 `native-api feature is required` 阻止启动。请执行 `honk-core --version` 检查版本并安装 doona 发行版附带的构建，详见 [honk 版本](requirements.md#honk-version)。
 
 ## honk 拒绝 native_api 配置块
 
 - `configuration administration requires a bearer secret or password login`：`config_write: true` 需要 `password_auth: true` 或 `secret`。
 - `password login requires an empty secret; a configured secret selects token mode`：两者只能保留一个。
 - `password login cannot be combined with anonymous loopback`：删除 `allow_anonymous_loopback`。
-- `native API requires a secret, password login, or explicitly anonymous loopback`：`enabled: true` 需要 `password_auth: true` 或 `secret`。
+- `native API requires a secret, password login, or explicitly anonymous loopback`：`enabled: true` 需要 `secret`、`password_auth: true`，或 loopback `listen` 与 `allow_anonymous_loopback: true`。
+
+`listen` 为 loopback 地址且设置 `allow_anonymous_loopback: true` 时，请求无需 Token 即可获准访问，权限与通过 bearer Token 验证的请求相同。此模式仅用于本地开发。
 
 <a name="state-db"></a>
 
@@ -66,7 +68,7 @@ state database is corrupt
 4. corrupt：设置 `password_auth: true` 时 honk 会退出。Token 模式下 honk 会将文件移至 `honk.db.corrupt` 并新建数据库；若已存在较早的 `.corrupt` 文件，honk 会保留两者，并在该文件删除之前不使用数据库运行。
 5. 修复后重启 honk。
 
-`another honk-core has the state database open` 与 `state database has a foreign application id or a newer schema` 总会阻止启动：请停止另一个实例，或使用写入该数据库的 honk 版本。
+`another honk-core has the state database open` 与 `state database has a foreign application id or a newer schema` 总会阻止启动：请停止另一个实例，或使用写入该数据库的 honk 版本。doona beta.10 附带的 honk 构建打开 beta.9 附带构建写入的数据库时会报第二条错误；beta.11 及之后附带的构建可以打开该数据库。
 
 <a name="geodata-sources"></a>
 
@@ -135,7 +137,7 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 从 `journalctl -u honk-core -b` 的本次开机日志中找到最近一条 `honk-core <版本> starting`，再与 [honk 版本](requirements.md#honk-version)对照。
 
 - 无法连接 `listen` 地址：honk 未运行、`enabled` 不是 `true`，或 `listen` 指向其他地址。`enabled: false` 时监听不会启动。
-- `/api` 返回 404：该地址上的服务没有原生 API，例如由 main 分支构建的 honk。doona 的登录页面此时显示“此 honk 构建未提供原生 API”。请安装 `debug` 版本。
+- `/api` 返回 404：该地址上的服务没有原生 API，例如 daeuniverse/honk `main` 分支的构建。doona 的登录页面此时显示“此 honk 构建未提供原生 API”。请安装 doona 发行版附带的构建。
 - 只有 `/ui/` 返回 404：原生 API 正在运行，但 `ui` 为空。
 - honk 启动时以 `failed to inspect native UI directory`、`failed to inspect native UI index.html` 或 `native UI index.html must be a regular file` 退出：请按[安装 doona 并启动](install.md#doona)将 doona 解压到 `ui` 目录。
 
@@ -157,7 +159,7 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 
 - `config_write` 不是 `true`。
 - 既没有 `password_auth: true`，也没有 `secret`。
-- 文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与 8 个字符以上监听密钥相同的文本。
+- 文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与 8 字节以上监听密钥相同的文本。
 - honk 仍在加载配置文件，或其写入协调器未运行。
 - 仅在以 `--store db` 运行时出现，本文档不使用该模式：已激活的修订未能记录，导致写入被阻止。
 
@@ -174,7 +176,7 @@ journalctl -u honk-core -b       # systemd
 
 ## “连接”或“规则”页一直为空
 
-“流程记录”设为“按流程需求”时，honk 只在客户端请求时记录。beta.9 的 doona 在“连接”或“规则”页打开时请求流程，最后一次请求结束后继续记录 60 秒。使用 beta.8 或更早版本且看不到流程时，可在“设置”中将“流程记录”设为“常开”。
+“流程记录”设为“按流程需求”时，honk 只在客户端请求时记录。从 beta.9 起，doona 在“连接”或“规则”页打开时请求流程，最后一次请求结束后继续记录 60 秒。使用 beta.8 或更早版本且看不到流程时，可在“设置”中将“流程记录”设为“常开”。
 
 ## 升级后 doona 仍显示旧版本
 

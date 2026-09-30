@@ -41,7 +41,7 @@ In the default On flow demand mode, Connections and Rules request flows while op
 
 - honk was not restarted after `native_api` changed. A reload does not apply these fields.
 - `config_write: true` is absent. A `native_api` field written directly under `experimental` stops honk with “[unknown experimental setting](troubleshooting.md#unknown-setting)”.
-- Neither `password_auth: true` nor `secret` is set. With `enabled: true`, honk then refuses to start.
+- Neither `password_auth: true` nor `secret` is set, and anonymous loopback is not enabled. With `enabled: true`, honk then refuses to start. `allow_anonymous_loopback: true` with a loopback `listen` admits requests without a token, with the same access as bearer-authenticated requests. Use it for local development only.
 - The file contains a secret or text equal to one, so doona shows it [read-only](troubleshooting.md#read-only).
 - honk is an early `feat/native-api` build, so the Geodata card has no source settings. Install the build from the doona release; see [honk version](requirements.md#honk-version).
 - In token mode, the state database did not open, so the geodata sources card is hidden; see [State database problems](troubleshooting.md#state-db).

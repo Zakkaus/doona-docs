@@ -11,7 +11,7 @@ The release’s `.ipk` package does not fit either current OpenWrt series. OpenW
 - OpenWrt 25.12 or later, which runs Linux 6.12, and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
 - A root shell on the router, such as `ssh root@192.168.1.1`. OpenWrt has no sudo; every command runs as root.
 - About 30 MB free on `/` for the honk-core binary (27 MB) and doona (2.2 MB), and 15 MB free in `/tmp` for the downloads. Check with `df -h / /tmp`.
-- From `debug.2026.9.28.native-api.4` onward, including the honk builds attached to doona beta.10, geodata updates stream to disk and use an inactivity timeout. Keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) so mimalloc returns freed memory to the system after an update.
+- From `debug.2026.9.28.native-api.4` onward, including the honk builds attached to doona beta.10 and later, geodata updates stream to disk and use an inactivity timeout. Keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) so mimalloc returns freed memory to the system after an update.
 - Access to github.com.
 - Run every step in the same shell: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
@@ -36,7 +36,7 @@ Work in `/tmp`, which is in memory and is cleared at reboot. Set the release ver
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -50,10 +50,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.9.tar.gz: OK
+doona-0.1.0-beta.12.tar.gz: OK
 ```
 
 ## 4. Install doona
+
+The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 
@@ -111,7 +113,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.4
+honk-core debug.2026.9.30.native-api.5
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

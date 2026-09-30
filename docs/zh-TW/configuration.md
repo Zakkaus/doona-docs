@@ -107,7 +107,7 @@ experimental {
 }
 ```
 
-請將 `192.168.1.1` 換成閘道器的區域網路位址，並將此組態區塊單獨放在一個檔案。檔案在 `native_api` 或 `clash_api` 中包含 `secret`，或包含與 8 個字元以上監聽密鑰相同的文字時，doona 會將該檔案顯示為唯讀，因為 honk 會隱藏密鑰，寫回檔案會遺失密鑰。該檔案中宣告的群組同樣變為唯讀。
+請將 `192.168.1.1` 換成閘道器的區域網路位址，並將此組態區塊單獨放在一個檔案。檔案在 `native_api` 或 `clash_api` 中包含 `secret`，或包含與 8 位元組以上監聽密鑰相同的文字時，doona 會將該檔案顯示為唯讀，因為 honk 會隱藏至少 8 位元組的密鑰，寫回隱藏後的文字會遺失密鑰。該檔案中宣告的群組同樣變為唯讀。
 
 新增節點與訂閱會寫入主檔案，因此主檔案不能包含任何密鑰。
 
@@ -125,20 +125,22 @@ experimental {
 
 ### native_api 欄位
 
+`listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，請求無需 Token 即可獲准存取，權限與通過 bearer Token 驗證的請求相同。此模式僅用於本機開發。
+
 | 欄位                                         | 預設值             | 在 doona 中啟用的功能                                                                                |
 | -------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------- |
-| `enabled`                                    | `false`            | API 監聽，也就是 doona 的所有功能。                                                                  |
+| `enabled`                                    | `false`            | API 監聽器。需要 `secret`、`password_auth: true`，或 loopback `listen` 與 `allow_anonymous_loopback: true`。                                                                  |
 | `listen`                                     | `'127.0.0.1:9527'` | doona 連線的位址，只接受數字 IP 與連接埠。預設值只能從閘道器本機存取。                               |
-| `password_auth`                              | `false`            | 以管理員使用者名稱與密碼登入，不能與 `secret` 同時使用。                                             |
-| `secret`                                     | `''`               | Token 模式，doona 會要求輸入此 Token。不能與 `password_auth` 同時使用。                              |
+| `password_auth`                              | `false`            | 以管理員使用者名稱與密碼登入，不能與 `secret` 或 `allow_anonymous_loopback` 同時使用。                                             |
+| `secret`                                     | `''`               | Token 模式，doona 會要求輸入此 Token。沒有最短長度限制；只接受不含空白或逗號的可見 ASCII。不能與 `password_auth` 同時使用。                              |
 | `config_write`                               | `false`            | 編輯與新增組態檔案，管理節點、訂閱、群組與規則，以及更新地理資料。需要 `password_auth` 或 `secret`。 |
-| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目錄中必須有 `index.html`；目錄不存在時 honk 無法啟動。                        |
-| `record_flows`                               | `true`             | 連線頁和規則頁依需求顯示流程記錄。設為 `false` 時，執行期開關也無法開啟。                           |
+| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目錄中必須有 `index.html`；目錄不存在時 honk 無法啟動。`embedded` 需要 `native-ui`；發布建置已包含此功能，並在打包時嵌入 doona。                        |
+| `record_flows`                               | `true`             | 從 beta.9 起，連線頁和規則頁依需求顯示流程記錄。設為 `false` 時，執行期開關也無法開啟。                           |
 | `record_traffic`                             | `true`             | 流量歷史圖表。                                                                                       |
 | `record_memory`                              | `true`             | 記憶體歷史圖表。                                                                                     |
 | `record_logs`                                | `true`             | 日誌頁。                                                                                             |
 | `record_dns_log`                             | `true`             | DNS 記錄。                                                                                           |
-| `geosite_download_url`、`geoip_download_url` | `''`               | 沒有狀態資料庫時的地理資料更新。有狀態資料庫時，啟動時以這兩個網址覆寫已儲存的網址。                 |
+| `geosite_download_url`、`geoip_download_url` | `''`               | `assets.geodata.geosite` 與 `assets.geodata.geoip` 的舊別名，仍接受但會警告。沒有狀態資料庫時，更新需要這兩個網址；有資料庫時，啟動時覆寫已儲存的網址。                 |
 | `allow_origins`、`allowed_hosts`             | 空                 | 從其他來源或經由反向代理開啟 doona。                                                                 |
 
 `native_api` 的每個欄位都需要重新啟動才會生效。重載會拒絕這些欄位的變更，並保留執行中的監聽。

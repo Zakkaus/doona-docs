@@ -175,6 +175,14 @@ Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless y
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
+The honk-core builds attached to doona 0.1.0-beta.12 embed doona 0.1.0-beta.12. To serve it at `/ui/`, replace the `ui` line above with:
+
+```dae
+ui: embedded
+```
+
+The `doona` package is optional with `ui: embedded`. The embedded version is pinned by the honk build and omits the Noto Sans TC/SC fonts, so the browser falls back to system fonts. For those fonts or a newer doona, install the `doona` and `doona-fonts` packages and point `ui` at their directory, such as `/usr/share/doona`.
+
 ## 5. Check the configuration
 
 honk has no separate check command. Start it once with `--mock-ebpf`: it reads and admits the whole configuration, starts the API and serves doona, but leaves the network alone.
@@ -194,7 +202,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk keeps running in the foreground. Each line starts with a timestamp; among them you should see:
 
 ```text
-INFO honk_core: honk-core debug.2026.9.28.native-api.4 starting
+INFO honk_core: honk-core debug.2026.9.30.native-api.5 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
@@ -248,7 +256,7 @@ honk prints the reason on a line starting `fatal error, shutting down:` or as an
 | `Subscription network owner failed error="subscription HTTP client creation failed"`, then `subscription network startup failed` | CA certificates are missing. Install the `ca-certificates` package (`ca-bundle` on OpenWrt).                     |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | The `password_auth: true` line is missing from `api.dae`.                                                                         |
 | `native API setting belongs inside native_api { }`                                        | A `native_api` field sits directly under `experimental`. Move it into `native_api { }`. |
-| `unknown experimental setting`                                                            | `enabled` sits directly under `experimental`, or this honk build has no native API. See [unknown experimental setting](troubleshooting.md#unknown-setting). |
+| `unknown experimental setting`                                                            | `enabled` sits directly under `experimental`, or this is a build of daeuniverse/honk `main`, which has no native API. See [unknown experimental setting](troubleshooting.md#unknown-setting). |
 | `command not found`                                                                       | honk-core is not where the command expects it. Repeat the honk-core install step.                                                |
 
 A clean start does not prove that every value means what you intended: honk accepts some unknown values without an error. For more messages, see [Troubleshooting](troubleshooting.md#troubleshooting).
