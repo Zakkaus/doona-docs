@@ -175,6 +175,14 @@ cat /etc/honk/config.d/api.dae
 
 每个 `native_api` 字段都要重启后才生效。其余字段见[字段表](configuration.md#config)。
 
+doona 0.1.0-beta.12 附带的 honk-core 构建嵌入了 doona 0.1.0-beta.12。要在 `/ui/` 提供嵌入的版本，请将上面的 `ui` 行改为：
+
+```dae
+ui: embedded
+```
+
+使用 `ui: embedded` 时，`doona` 软件包可省略。嵌入的 doona 版本由 honk 构建固定，且不含 Noto Sans TC/SC 字体，浏览器会回退到系统字体。如需这些字体或更新版本的 doona，请安装 `doona` 与 `doona-fonts` 软件包，并将 `ui` 指向安装目录，例如 `/usr/share/doona`。
+
 ## 5. 检查配置
 
 honk 没有单独的检查命令。用 `--mock-ebpf` 启动一次：honk 会读取并接受整份配置，启动 API 并提供 doona，但不改动网络。
@@ -194,7 +202,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前台持续运行。每行以时间戳开头，其中应当包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.9.28.native-api.4 starting
+INFO honk_core: honk-core debug.2026.9.30.native-api.5 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
@@ -248,7 +256,7 @@ honk 在以 `fatal error, shutting down:` 开头的行或 `ERROR` 行中给出�
 | `Subscription network owner failed error="subscription HTTP client creation failed"`，随后是 `subscription network startup failed` | 缺少 CA 证书。请安装 `ca-certificates` 软件包（OpenWrt 上为 `ca-bundle`）。 |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | `api.dae` 缺少 `password_auth: true` 一行。                                                                   |
 | `native API setting belongs inside native_api { }`                                        | 某个 `native_api` 字段直接写在了 `experimental` 下。请把它移入 `native_api { }`。 |
-| `unknown experimental setting`                                                            | `enabled` 直接写在了 `experimental` 下，或这个 honk 构建没有原生 API。见 [unknown experimental setting](troubleshooting.md#unknown-setting)。 |
+| `unknown experimental setting`                                                            | `enabled` 直接写在了 `experimental` 下，或这是没有原生 API 的 daeuniverse/honk `main` 分支构建。见 [unknown experimental setting](troubleshooting.md#unknown-setting)。 |
 | `command not found`                                                                       | honk-core 不在命令所指的路径上。请重做安装 honk-core 的步骤。                                                 |
 
 启动成功并不代表每个值都符合预期：honk 会接受某些未知的值而不报错。更多报错信息见[故障排查](troubleshooting.md#troubleshooting)。

@@ -31,14 +31,16 @@ experimental {
 }
 ```
 
-A build from main has no native API and rejects the `native_api { }` block itself with `unknown experimental setting`. Check `honk-core --version` and install the `debug` build; see [honk version](requirements.md#honk-version).
+A build of daeuniverse/honk `main` has no native API and rejects every `native_api` setting with `unknown experimental setting`. A build from Glassyiris/honk `feat/native-api` without the `native-api` feature stops startup with `native-api feature is required` when `native_api` is enabled. Check `honk-core --version` and install the build attached to the doona release; see [honk version](requirements.md#honk-version).
 
 ## honk refuses the native_api block
 
 - “configuration administration requires a bearer secret or password login”: `config_write: true` needs `password_auth: true` or `secret`.
 - “password login requires an empty secret; a configured secret selects token mode”: remove one of the two.
 - “password login cannot be combined with anonymous loopback”: remove `allow_anonymous_loopback`.
-- “native API requires a secret, password login, or explicitly anonymous loopback”: `enabled: true` needs `password_auth: true` or `secret`.
+- “native API requires a secret, password login, or explicitly anonymous loopback”: `enabled: true` needs `secret`, `password_auth: true`, or `allow_anonymous_loopback: true` with a loopback `listen`.
+
+`allow_anonymous_loopback: true` with a loopback `listen` admits requests without a token, with the same access as bearer-authenticated requests. Use it for local development only.
 
 <a name="state-db"></a>
 
@@ -66,7 +68,7 @@ state database is corrupt
 4. corrupt: with `password_auth: true` honk stops. In token mode honk moves the file to `honk.db.corrupt` and starts a new one; if an older `.corrupt` file is already there, honk keeps both and runs without the database until that file is removed.
 5. Restart honk after the fix.
 
-“another honk-core has the state database open” and “state database has a foreign application id or a newer schema” always stop startup: stop the other instance, or run the honk build that wrote the database.
+“another honk-core has the state database open” and “state database has a foreign application id or a newer schema” always stop startup: stop the other instance, or run the honk build that wrote the database. The honk builds attached to doona beta.10 report the second message for a database written by the builds attached to beta.9; the builds attached to beta.11 and later open it.
 
 <a name="geodata-sources"></a>
 
@@ -135,7 +137,7 @@ honk rejects kernels older than 6.12 before attaching. When the verifier rejects
 Find the latest `honk-core <version> starting` line in the current boot’s `journalctl -u honk-core -b` log, then compare it with [honk version](requirements.md#honk-version).
 
 - The connection to the `listen` address fails: honk is not running, `enabled` is not `true`, or `listen` names another address. With `enabled: false` the listener does not start.
-- `/api` returns 404: the server at that address has no native API, such as a honk build from main. doona’s sign-in page then says “This honk build has no native API”. Install the `debug` build.
+- `/api` returns 404: the server at that address has no native API, such as a honk build from daeuniverse/honk `main`. doona’s sign-in page then says “This honk build has no native API”. Install the build attached to the doona release.
 - `/ui/` alone returns 404: the native API runs, but `ui` is empty.
 - honk stops at startup with “failed to inspect native UI directory”, “failed to inspect native UI index.html” or “native UI index.html must be a regular file”: extract doona into the `ui` directory, as in [Install doona and start](install.md#doona).
 
@@ -157,7 +159,7 @@ doona marks a source read-only when any of these holds:
 
 - `config_write` is not `true`.
 - Neither `password_auth: true` nor `secret` is set.
-- The file contains a `secret` inside `native_api` or `clash_api`, or text equal to a listener secret of 8 or more characters.
+- The file contains a `secret` inside `native_api` or `clash_api`, or text equal to a listener secret of 8 or more bytes.
 - honk is still loading its sources or its write coordinator is not running.
 - Only with `--store db`, which this guide does not use: an activated revision could not be recorded, which blocks writes.
 
@@ -174,7 +176,7 @@ journalctl -u honk-core -b       # systemd
 
 ## Connections or Rules stay empty
 
-With Flow recording set to On flow demand, honk records flows only when a client asks for them. In beta.9, doona requests flows while Connections or Rules is open; recording continues for 60 seconds after the last request. If an older build (beta.8 or earlier) shows no flows, set Flow recording to Always in Settings.
+With Flow recording set to On flow demand, honk records flows only when a client asks for them. Since beta.9, doona requests flows while Connections or Rules is open; recording continues for 60 seconds after the last request. If an older build (beta.8 or earlier) shows no flows, set Flow recording to Always in Settings.
 
 ## doona shows the old version after an upgrade
 

@@ -118,7 +118,7 @@ Switching, adding, renaming or deleting a profile discards unsaved Backend URL a
 3. For Flow recording, choose On flow demand, Always or Off. For Log recording and DNS log, choose With panel, Always or Off. A status next to each reads Recording, Idle or Disabled in configuration.
 4. Press Apply. The changes take effect immediately. Discard changes appears while you have unapplied edits.
 
-These options are not written to the configuration file. A restart, or any change that reloads the configuration, restores the configured values: switching the outbound mode, editing nodes, groups or rules, and updating geodata all reload it. A recorder disabled in the configuration cannot be enabled here. If the options change on the backend while you edit, doona keeps your draft and says so.
+These options are not written to the configuration file. A restart or an accepted explicit configuration activation, including a no-op reload, restores the configured values. Rejected activation and provider or network refresh preserve the overrides. A recorder disabled in the configuration cannot be enabled here. If the options change on the backend while you edit, doona keeps your draft and says so.
 
 <a name="geodata"></a>
 

@@ -107,7 +107,7 @@ experimental {
 }
 ```
 
-请将 `192.168.1.1` 替换为网关的局域网地址，并将此配置块单独放在一个文件中。文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与 8 个字符以上监听密钥相同的文本时，doona 会将该文件显示为只读，因为 honk 会隐藏密钥，写回文件会丢失密钥。该文件中声明的组同样变为只读。
+请将 `192.168.1.1` 替换为网关的局域网地址，并将此配置块单独放在一个文件中。文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与 8 字节以上监听密钥相同的文本时，doona 会将该文件显示为只读，因为 honk 会隐藏至少 8 字节的密钥，写回隐藏后的文本会丢失密钥。该文件中声明的组同样变为只读。
 
 添加节点与订阅会写入主文件，因此主文件中不能包含任何密钥。
 
@@ -125,20 +125,22 @@ experimental {
 
 ### native_api 字段
 
+`listen` 为 loopback 地址且设置 `allow_anonymous_loopback: true` 时，请求无需 Token 即可获准访问，权限与通过 bearer Token 验证的请求相同。此模式仅用于本地开发。
+
 | 字段                                         | 默认值             | 在 doona 中启用的功能                                                                              |
 | -------------------------------------------- | ------------------ | -------------------------------------------------------------------------------------------------- |
-| `enabled`                                    | `false`            | API 监听，也是 doona 的全部功能。                                                                  |
+| `enabled`                                    | `false`            | API 监听器。需要 `secret`、`password_auth: true`，或 loopback `listen` 与 `allow_anonymous_loopback: true`。                                                                  |
 | `listen`                                     | `'127.0.0.1:9527'` | doona 连接的地址，只接受数字 IP 与端口。默认值只能从网关本机访问。                                 |
-| `password_auth`                              | `false`            | 以管理员用户名与密码登录，不能与 `secret` 同时使用。                                               |
-| `secret`                                     | `''`               | Token 模式，doona 会要求输入此 Token。不能与 `password_auth` 同时使用。                            |
+| `password_auth`                              | `false`            | 以管理员用户名与密码登录，不能与 `secret` 或 `allow_anonymous_loopback` 同时使用。                                               |
+| `secret`                                     | `''`               | Token 模式，doona 会要求输入此 Token。没有最短长度限制；只接受不含空白或逗号的可见 ASCII。不能与 `password_auth` 同时使用。                            |
 | `config_write`                               | `false`            | 编辑与新建配置文件，管理节点、订阅、组与规则，以及更新地理数据。需要 `password_auth` 或 `secret`。 |
-| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目录中必须有 `index.html`；目录不存在时 honk 无法启动。                      |
-| `record_flows`                               | `true`             | 连接页和规则页按需显示流程记录。设为 `false` 时运行时开关也无法开启。                               |
+| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目录中必须有 `index.html`；目录不存在时 honk 无法启动。`embedded` 需要 `native-ui`；发布构建已包含此功能，并在打包时嵌入 doona。                      |
+| `record_flows`                               | `true`             | 从 beta.9 起，连接页和规则页按需显示流程记录。设为 `false` 时运行时开关也无法开启。                               |
 | `record_traffic`                             | `true`             | 流量历史图表。                                                                                     |
 | `record_memory`                              | `true`             | 内存历史图表。                                                                                     |
 | `record_logs`                                | `true`             | 日志页。                                                                                           |
 | `record_dns_log`                             | `true`             | DNS 记录。                                                                                         |
-| `geosite_download_url`、`geoip_download_url` | `''`               | 没有状态数据库时的地理数据更新。存在状态数据库时，启动时以这两个地址覆盖已存储的地址。             |
+| `geosite_download_url`、`geoip_download_url` | `''`               | `assets.geodata.geosite` 与 `assets.geodata.geoip` 的旧别名，仍接受但会警告。没有状态数据库时，更新需要这两个地址；有数据库时，启动时覆盖已存储的地址。             |
 | `allow_origins`、`allowed_hosts`             | 空                 | 从其他来源或经由反向代理打开 doona。                                                               |
 
 `native_api` 的每个字段都需要重启才能生效。重载会拒绝对这些字段的修改，并保留正在运行的监听。

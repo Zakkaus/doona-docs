@@ -11,7 +11,7 @@
 - OpenWrt 25.12 或更高版本（核心為 Linux 6.12），以及[系統需求](requirements.md#requirements)列出的核心選項。用 `uname -r` 檢視核心版本。
 - 路由器上的 root shell，例如 `ssh root@192.168.1.1`。OpenWrt 沒有 sudo，所有命令都以 root 身份執行。
 - `/` 上約 30 MB 可用空間，用於 honk-core 二進位檔（27 MB）與 doona（2.2 MB）；`/tmp` 上約 15 MB 可用空間，用於存放下載的檔案。用 `df -h / /tmp` 檢視。
-- 從 `debug.2026.9.28.native-api.4` 起，包括 doona beta.10 附帶的 honk 建置，geodata 更新會串流寫入磁碟，並使用 inactivity timeout。請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，讓 mimalloc 在更新後將已釋放的記憶體歸還給系統。
+- 從 `debug.2026.9.28.native-api.4` 起，包括 doona beta.10 及之後附帶的 honk 建置，geodata 更新會串流寫入磁碟，並使用 inactivity timeout。請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，讓 mimalloc 在更新後將已釋放的記憶體歸還給系統。
 - 能夠連線到 github.com。
 - 所有步驟都在同一個 shell 中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
 
@@ -36,7 +36,7 @@ apk add curl ca-bundle
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -50,10 +50,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.9.tar.gz: OK
+doona-0.1.0-beta.12.tar.gz: OK
 ```
 
 ## 4. 安裝 doona
+
+使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
@@ -111,7 +113,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.4
+honk-core debug.2026.9.30.native-api.5
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

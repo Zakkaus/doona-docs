@@ -45,7 +45,7 @@ portageq get_repos /
 設定發行版本號及其 Gentoo 寫法，然後從該發行版本的標籤下載 ebuild 與 `metadata.xml`。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
@@ -55,7 +55,7 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 PV=0.1.0_beta9
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
@@ -77,8 +77,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.9.tar.gz: OK
-doona-fonts-0.1.0-beta.9.tar.gz: OK
+doona-0.1.0-beta.12.tar.gz: OK
+doona-fonts-0.1.0-beta.12.tar.gz: OK
 ```
 
 ## 4. 把封存檔交給 Portage
@@ -102,6 +102,8 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 最後一條命令輸出 `>>> Creating Manifest for` 及套件目錄，預設為 `/var/db/repos/local/net-proxy/doona`。
 
 ## 5. 安裝 doona
+
+使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
 
 該 ebuild 的關鍵字為測試分支（`~amd64`、`~arm64` 等），需要先為這個套件接受測試關鍵字。請把 `~amd64` 換成本機架構的關鍵字。
 
@@ -177,7 +179,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.28.native-api.4
+honk-core debug.2026.9.30.native-api.5
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

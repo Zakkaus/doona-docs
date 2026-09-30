@@ -28,7 +28,7 @@ pacman -Syu --needed curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory. Arch package names write the prerelease without its `-` and `.`, so `PKGVER` holds that form.
 
 ```sh
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 PKGVER=0.1.0beta9
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
@@ -47,6 +47,8 @@ doona-0.1.0beta9-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. Install doona
+
+The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
@@ -130,7 +132,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.4
+honk-core debug.2026.9.30.native-api.5
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

@@ -32,7 +32,7 @@ doona 登录后打开“活动”页。honk 把账户保存在状态数据库 `/
 在侧边导航栏中选择“概览”。honk 运行时，该页显示：
 
 - 页面顶部的“运行中”。
-- “引擎”卡片：“引擎”下为 `honk` 与 `honk-core --version` 输出的版本，例如 `honk debug.2026.9.28.native-api.4`；“API”下为 `dae/honk-native v1 (draft)`；“构建”下为 honk 的提交与所安装构建的 target。
+- “引擎”卡片：“引擎”下为 `honk` 与 `honk-core --version` 输出的版本，例如 `honk debug.2026.9.30.native-api.5`；“API”下为 `dae/honk-native v1 (draft)`；“构建”下为 honk 的提交与所安装构建的 target。
 - “后端能力”卡片，列出这个 honk 提供的功能，例如“连接”“日志”“配置”。
 
 侧边导航栏底部显示同一个 honk 版本。在有流量经过 honk 之前，流量计数保持为 0。

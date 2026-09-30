@@ -30,7 +30,7 @@ apt install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.9
+VERSION=0.1.0-beta.12
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -44,10 +44,12 @@ grep " doona_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona_0.1.0-beta.9-1_all.deb: OK
+doona_0.1.0-beta.12-1_all.deb: OK
 ```
 
 ## 4. Install doona
+
+The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo apt install ./doona_${VERSION}-1_all.deb
@@ -131,7 +133,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.28.native-api.4
+honk-core debug.2026.9.30.native-api.5
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
