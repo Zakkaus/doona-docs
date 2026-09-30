@@ -21,6 +21,14 @@
 apk add kmod-veth kmod-nft-queue kmod-sched-core
 ```
 
+仍使用 `opkg` 的韌體（如 iStoreOS）請用以下指令安裝相同模組：
+
+```sh
+opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+官方 OpenWrt 24.10 及更早版本的核心低於 6.12，請先用 `uname -r` 對照[系統需求](requirements.md#requirements)確認核心版本。
+
 ## 1. 安裝 curl 與 CA 憑證
 
 honk 透過 HTTPS 下載訂閱與地理資料，缺少 CA 憑證時會在啟動階段結束。OpenWrt 25.12 已包含 `ca-bundle`；下面的命令保留它並安裝 curl。
@@ -132,6 +140,12 @@ printf '%s\n' '/etc/honk/' '/etc/init.d/honk-core' >> /etc/sysupgrade.conf
 
 ```sh
 apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+使用 `opkg` 的系統請用以下指令重新安裝模組：
+
+```sh
+opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 ```
 
 重新執行上文第 1 至 7 步，重新安裝 doona 與 honk-core，然後恢復服務的開機自動啟動並啟動服務：
