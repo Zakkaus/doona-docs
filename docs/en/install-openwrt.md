@@ -21,6 +21,14 @@ Install the kernel modules before installing honk. honk cannot start without `km
 apk add kmod-veth kmod-nft-queue kmod-sched-core
 ```
 
+Firmware that still uses `opkg`, such as iStoreOS, installs the same modules with:
+
+```sh
+opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r` against [Requirements](requirements.md#requirements) first.
+
 ## 1. Install curl and CA certificates
 
 honk downloads subscriptions and geodata over HTTPS and stops at startup without CA certificates. OpenWrt 25.12 includes `ca-bundle`; the command keeps it and adds curl.
@@ -132,6 +140,12 @@ Sysupgrade does not preserve the kernel modules, `/usr/share/doona` or `/usr/bin
 
 ```sh
 apk add kmod-veth kmod-nft-queue kmod-sched-core
+```
+
+On systems using `opkg`, reinstall the modules with:
+
+```sh
+opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 ```
 
 Repeat steps 1–7 above to reinstall doona and honk-core, then restore the service’s boot link and start it:

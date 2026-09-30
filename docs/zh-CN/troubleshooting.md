@@ -178,6 +178,10 @@ journalctl -u honk-core -b       # systemd
 
 “流程记录”设为“按流程需求”时，honk 只在客户端请求时记录。从 beta.9 起，doona 在“连接”或“规则”页打开时请求流程，最后一次请求结束后继续记录 60 秒。使用 beta.8 或更早版本且看不到流程时，可在“设置”中将“流程记录”设为“常开”。
 
+## “连接”页只显示局域网地址，全部直连
+
+检查 `lan_interface`：在 OpenWrt 上设为 `br-lan`，让 honk 处理局域网设备的流量。使用旁路由时，还要确认客户端的网关指向旁路由的局域网地址。参见[最小配置](minimal-configuration.md)。
+
 ## 升级后 doona 仍显示旧版本
 
 Service worker 在更新完成前会提供缓存的版本。请刷新页面一到两次，或关闭所有 doona 标签页后重新打开。

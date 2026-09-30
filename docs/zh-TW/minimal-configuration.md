@@ -90,6 +90,7 @@ include {
 
 global {
     wan_interface: auto
+    lan_interface: br-lan
     data_dir: '/etc/honk/data'
     bootstrap_resolver: '127.0.0.1:53'
 }
@@ -104,12 +105,19 @@ EOF
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
 | `include { config.d/*.dae }`   | 讀取 `/etc/honk/config.d/` 中的每個 `.dae` 檔案，路徑相對於主檔案。第 4 步的 API 檔案即在其中。              |
 | `wan_interface: auto`          | 把 honk 掛到 IPv4 預設路由所在的介面上，由 honk 處理閘道器自身的流量。                                         |
+| `lan_interface: br-lan`        | 將 honk 掛到 OpenWrt 的區域網路橋接介面，處理區域網路裝置的流量。                                             |
 | `data_dir: '/etc/honk/data'`   | 僅用於 OpenWrt。honk 存放地理資料與狀態資料庫（包括管理員帳戶）的目錄。其他系統使用預設值 `/var/lib/honk`。  |
 | `routing { fallback: direct }` | 所有連線都直接發出，不經過代理。節點、群組與規則稍後在 doona 或按[組態](configuration.md#config)一頁加入。   |
 
 在 OpenWrt 上，`bootstrap_resolver: '127.0.0.1:53'` 使用 dnsmasq 解析直接下載網址的網域名稱。地理資料網址不得重新導向：使用 `raw.githubusercontent.com` 等最終網址，不要使用 GitHub 發行版本的網址。
 
-該檔案沒有設定 `lan_interface`，因此區域網路裝置的流量暫時不經過 honk。加入方法見[組態](configuration.md#config)。
+依要處理的流量設定 `lan_interface`：
+
+- 主路由器：使用 `br-lan`，用戶端已將這台路由器設為閘道器。
+- 旁路由器：使用 `br-lan`，並將用戶端的閘道器與 DNS 設為旁路由器的區域網路位址；可逐一設定用戶端，也可修改主路由器的 DHCP 設定。
+- 僅處理本機流量：省略 `lan_interface`，與 sudo、root 兩個範例相同。
+
+`lan_interface: auto` 會選取預設路由所在的介面，在主路由器上通常是 WAN。
 
 ## 4. 撰寫 API 檔案
 
@@ -227,7 +235,7 @@ API 返回一行內容；`setup_required: true` 表示尚未建立管理員：
 
 ## 6. 正式啟動 honk 一次
 
-這次啟動會載入 eBPF 程式並掛到 WAN 介面上。請準備好進入機器的第二種途徑。
+這次啟動會載入 eBPF 程式並掛到組態指定的介面上。請準備好進入機器的第二種途徑。
 
 ```sh tab="sudo"
 sudo /usr/local/bin/honk-core --config /etc/honk/config.dae

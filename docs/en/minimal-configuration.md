@@ -90,6 +90,7 @@ include {
 
 global {
     wan_interface: auto
+    lan_interface: br-lan
     data_dir: '/etc/honk/data'
     bootstrap_resolver: '127.0.0.1:53'
 }
@@ -104,12 +105,19 @@ EOF
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `include { config.d/*.dae }`   | Reads every `.dae` file in `/etc/honk/config.d/`, relative to this file. The API file in step 4 is one of them.                        |
 | `wan_interface: auto`          | Attaches honk to the interface of the IPv4 default route, so honk handles the gateway’s own traffic.                                   |
+| `lan_interface: br-lan`        | Attaches honk to OpenWrt’s LAN bridge to handle LAN devices’ traffic.                                                                  |
 | `data_dir: '/etc/honk/data'`   | OpenWrt only. Where honk keeps geodata and its state database, including the administrator account. Elsewhere the default, `/var/lib/honk`, applies. |
 | `routing { fallback: direct }` | Sends every connection directly, without a proxy. Nodes, groups and rules come later, from doona or [Configuration](configuration.md#config). |
 
 On OpenWrt, `bootstrap_resolver: '127.0.0.1:53'` uses dnsmasq to resolve hosts for direct downloads. Geodata URLs must not redirect: use a final URL such as `raw.githubusercontent.com`, not a GitHub release URL.
 
-The file sets no `lan_interface`, so devices on the LAN are not routed through honk yet. [Configuration](configuration.md#config) shows how to add it.
+Choose `lan_interface` for the traffic you want honk to handle:
+
+- Main router: use `br-lan`; clients already use this router as their gateway.
+- Side router: use `br-lan` and set clients’ gateway and DNS to its LAN address, either on each client or through the main router’s DHCP settings.
+- This machine only: omit `lan_interface`, as in the sudo and root examples.
+
+`lan_interface: auto` selects the default-route interface, usually the WAN on a main router.
 
 ## 4. Write the API file
 
@@ -227,7 +235,7 @@ Press Ctrl+C in the first terminal. honk logs `Received SIGINT, shutting down...
 
 ## 6. Start honk for real once
 
-This start loads eBPF programs and attaches them to the WAN interface. Keep the second way into the machine ready.
+This start loads eBPF programs and attaches them to the configured interfaces. Keep the second way into the machine ready.
 
 ```sh tab="sudo"
 sudo /usr/local/bin/honk-core --config /etc/honk/config.dae

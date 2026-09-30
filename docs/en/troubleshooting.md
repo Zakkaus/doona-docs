@@ -178,6 +178,10 @@ journalctl -u honk-core -b       # systemd
 
 With Flow recording set to On flow demand, honk records flows only when a client asks for them. Since beta.9, doona requests flows while Connections or Rules is open; recording continues for 60 seconds after the last request. If an older build (beta.8 or earlier) shows no flows, set Flow recording to Always in Settings.
 
+## Connections page shows only LAN addresses, all direct
+
+Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic. On a side router, also check that clients use its LAN address as their gateway. See [Minimal configuration](minimal-configuration.md).
+
 ## doona shows the old version after an upgrade
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
