@@ -92,7 +92,24 @@ Adding or removing subscriptions and file sources requires the backend to allow 
 
 Open the Routing hub, then Rules. The tabs are Routing rules, DNS rules and Trace simulation; each tab appears only when the backend offers it.
 
+### Rule templates
+
+When the backend provides rules and configuration text, Routing rules offers a Simple / Advanced switch. Without an explicit view in the link, Simple opens, including for custom rules. Links that select or edit a rule, prefill a new rule, or review held rules open Advanced. Choose Advanced to read, edit or add individual rules and review held rules.
+
+Simple selects the detected template name when one file's top-level `routing` matches a template. Otherwise, the rules are custom: no template is selected, and a notice says the current rules match no mode. Routing spread over several files is also custom.
+
+1. Under Routing mode, choose Bypass mainland China, GFW list only or Global proxy. More templates offers ACL4SSR Mini, ACL4SSR Online and ACL4SSR Full.
+2. Choose a different template, then Apply to review the confirmation dialog. It names the target file: the file containing top-level `routing`, or the main file if none exists.
+3. Review Groups to create and Existing groups used. Existing groups, including those declared in other loaded files, keep their settings; missing groups are added to the target file. A warning marks reused groups that select one exact node name or use a `fixed` policy. A new group whose name matches a node gets a warning: rules using that name will reach the group instead of the node.
+4. Rule files no longer included lists `include` paths inside the routing being replaced. Applying drops those statements, so their rules no longer apply through those includes; the files stay on disk. Expand Changes to {file} to review the diff.
+5. If no loaded file has a `dns` block, Also add DNS routing appears and is checked by default. It adds a `dns` block to the target file: `geosite:cn` queries use `alidns` at `223.5.5.5`; other queries use `cloudflare` at `1.1.1.1` over DNS over TLS. Clear it to leave DNS unconfigured.
+6. Confirm with Apply. Only the target file's top-level `routing` is replaced (or added if absent), along with the missing groups and optional DNS block. Existing DNS routing, other content and other files stay unchanged. The write reloads the configuration.
+
+Templates cannot be applied when the backend's format is not dae text, configuration writes are disabled, no target file is available, or top-level routing is spread over several files. doona also refuses target files that contain `native_api` or `clash_api` settings or are read-only. Unavailable text, a SHA-256 mismatch or a backend permission refusal also prevents applying a template. The page shows the reason; a routing `include` statement alone does not prevent applying a template.
+
 ### Read the rule list
+
+Choose Advanced if the Simple / Advanced switch is shown.
 
 1. Read the list from top to bottom. The first rule that matches decides the outbound; the last row, numbered —, is the fallback.
 2. Each row shows the rule number, Expression, Outbound, Where and Hits. A `must` badge marks a locked outbound.
@@ -130,7 +147,7 @@ There are two dialogs. The dialog on a rule list writes the rule at once. The di
 
 ### From a rule list
 
-1. On Routing rules, choose Add rule above the list.
+1. On Routing rules, choose Advanced if the view switch is shown, then Add rule above the list.
 2. In Condition form, choose Select to pick a Match by kind (such as Domain suffix, geosite category or Destination IP) and enter the Values, separated by commas. Or choose Expression and type the Condition, such as `domain(geosite:netflix)`.
 3. Choose the Outbound. It starts at the first group, or `direct` when there is no group. Turn on Lock this outbound to add `must`.
 4. In Insert, choose Last, before the fallback, or Before rule N. The dialog starts at the first offered position.

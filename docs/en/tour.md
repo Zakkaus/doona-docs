@@ -29,11 +29,11 @@ In a window at least 1024 px wide, the sidebar lists the pages under four sectio
 
 - Policies: Groups and Group membership tabs. Select nodes for a group or change its members.
 - Nodes: nodes and their subscriptions, usage and refresh. The Latency tab appears when the backend provides a node list.
-- Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it.
+- Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it. Routing rules offers Simple for templates and Advanced for individual rules when the backend provides rules and configuration text; see [routing rules](routing.md#rules).
 
 ### Settings
 
-- Configuration: Modules, Quick setup, Sources and Validation tabs; Quick setup appears only when it is available.
+- Configuration: Modules, Sources and Validation tabs.
 - Settings: the Backend, Backend options, Geodata, Appearance, Backend actions and About cards.
 
 A page stays in the navigation when the backend does not provide it. Opening it shows This backend does not provide this page and a Back to activity button; see [feature requirements](features.md#still-missing).

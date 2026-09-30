@@ -13,9 +13,11 @@ This page covers the Configuration page, where you read, validate and apply honk
 1. In the Settings hub, open Configuration. The page appears only when the backend provides its configuration.
 2. Read the line above the tabs. Config version identifies the configuration in effect and changes when changed content takes effect. Next to it, a status shows No diagnostics or the number of errors or warnings.
 3. If the line also shows Listener secret values are redacted, the backend hid those values in the text it returned.
-4. Choose a tab: Modules, Quick setup, Sources or Validation. Quick setup appears only when the main file can be written; see Quick setup below.
+4. Choose a tab: Modules, Sources or Validation.
 
-The page opens on Modules. It opens on Sources when the backend did not return the main configuration text, and on Quick setup when the main file is empty and Quick setup is available. For the file format and the roles of the main file and its includes, see [Configuration](configuration.md#config).
+Without a tab specified in the link, the page opens on Modules, even when the main file is empty. It opens on Sources when the link selects a source or the backend did not return the main configuration text. For the file format and the roles of the main file and its includes, see [Configuration](configuration.md#config).
+
+To add a subscription, open Nodes and choose Add subscription; see [nodes and subscriptions](routing.md#nodes). To apply a rule template, open Rules; see [routing rules](routing.md#rules).
 
 ### Sources
 
@@ -73,17 +75,6 @@ Until you validate, the table shows the diagnostics kept for the accepted config
 3. Press Validate if offered, then Apply, or Cancel to drop the change.
 
 Only one section can be edited at a time. Open source file opens the whole file on Sources at the section. Open page opens the page that manages the section: Nodes, Policies, or the DNS or routing list on Rules. A card for a missing section says so, and names the main file when you can add the section there.
-
-## Quick setup
-
-Quick setup appears when configuration writes are enabled and the main file is writable with its full text returned.
-
-1. Open Quick setup. Under Subscriptions, enter a Name and Subscription URL for each subscription, and press Add subscription for more rows.
-2. Under Rules, keep Keep the current rules to leave the `routing` section as it is, or choose Mini groups, Standard groups (default), or Full groups.
-3. If the main file is empty, also fill in Transparent proxy port, Default DNS upstream and Mainland-China domain DNS upstream. LAN interface is optional.
-4. Read Generated configuration, then press Apply. The main file is written through the same validation and reload as Sources.
-
-Apply rewrites the main file's `subscription` section. A template also replaces every top-level `routing` section and adds missing groups; other content stays unchanged. After Apply, links to Nodes, Policies, Routing rules and Open config source appear.
 
 <a name="settings-page"></a>
 
