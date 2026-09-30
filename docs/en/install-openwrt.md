@@ -11,6 +11,7 @@ The release’s `.ipk` package does not fit either current OpenWrt series. OpenW
 - OpenWrt 25.12 or later, which runs Linux 6.12, and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
 - A root shell on the router, such as `ssh root@192.168.1.1`. OpenWrt has no sudo; every command runs as root.
 - About 30 MB free on `/` for the honk-core binary (27 MB) and doona (2.2 MB), and 15 MB free in `/tmp` for the downloads. Check with `df -h / /tmp`.
+- From `debug.2026.9.28.native-api.4` onward, including the honk builds attached to doona beta.10, geodata updates stream to disk and use an inactivity timeout. Keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) so mimalloc returns freed memory to the system after an update.
 - Access to github.com.
 - Run every step in the same shell: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 

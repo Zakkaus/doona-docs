@@ -13,7 +13,7 @@ honk 只能在 Linux 上以 `root` 身分執行。它會載入 eBPF 程式、建
 - `pname(...)` 規則需要 cgroup v2。缺少 cgroup v2 時 honk 仍可啟動，但依程序名稱分流無法使用。
 - bpffs 掛載於 `/sys/fs/bpf`。
 - CA 憑證，例如 `ca-certificates` 套件。缺少時 honk 會以 `subscription network startup failed` 結束。
-- 在 `debug.2026.9.28.native-api.4` 之前的 honk 建置上使用 `geoip` 規則時，建議至少 512 MB 記憶體：地理資料更新時會多用約 140 MB。從該建置起，honk 更新地理資料時不再保留額外副本。
+- 在 `debug.2026.9.28.native-api.4` 之前的 honk 建置上使用 `geoip` 規則時，建議至少 512 MB 記憶體：早期 OpenWrt 測試在 256 MB VM 上更新 geodata 時發生 OOM。從該建置起，honk 將 geodata 更新串流寫入磁碟。在 OpenWrt 上，請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`。
 
 ```sh
 uname -r
