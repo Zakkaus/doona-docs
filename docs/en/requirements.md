@@ -13,7 +13,7 @@ honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link an
 - cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
 - bpffs mounted at `/sys/fs/bpf`.
 - CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
-- With `geoip` rules on a honk build before `debug.2026.9.28.native-api.4`, use at least 512 MB RAM: a geodata update needs about 140 MB more. From that build on, honk no longer holds extra copies of the geodata during an update.
+- With `geoip` rules on a honk build before `debug.2026.9.28.native-api.4`, use at least 512 MB RAM: the older OpenWrt test ran out of memory during a geodata update on a 256 MB VM. From that build on, honk streams geodata updates to disk. For OpenWrt, keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md).
 
 ```sh
 uname -r

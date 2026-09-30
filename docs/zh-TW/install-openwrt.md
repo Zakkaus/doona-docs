@@ -11,6 +11,7 @@
 - OpenWrt 25.12 或更高版本（核心為 Linux 6.12），以及[系統需求](requirements.md#requirements)列出的核心選項。用 `uname -r` 檢視核心版本。
 - 路由器上的 root shell，例如 `ssh root@192.168.1.1`。OpenWrt 沒有 sudo，所有命令都以 root 身份執行。
 - `/` 上約 30 MB 可用空間，用於 honk-core 二進位檔（27 MB）與 doona（2.2 MB）；`/tmp` 上約 15 MB 可用空間，用於存放下載的檔案。用 `df -h / /tmp` 檢視。
+- 從 `debug.2026.9.28.native-api.4` 起，包括 doona beta.10 附帶的 honk 建置，geodata 更新會串流寫入磁碟，並使用 inactivity timeout。請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，讓 mimalloc 在更新後將已釋放的記憶體歸還給系統。
 - 能夠連線到 github.com。
 - 所有步驟都在同一個 shell 中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
 
