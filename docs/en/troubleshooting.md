@@ -165,6 +165,21 @@ doona marks a source read-only when any of these holds:
 
 Move every secret into `config.d/api.dae`, and restart honk after changing `native_api`.
 
+## A configuration write was refused
+
+When honk reports a known `details.reason`, doona shows the reason in the interface language. For an unknown or missing reason, a configuration write refusal keeps honk’s original message.
+
+| Reason | Action |
+| --- | --- |
+| `writes_disabled` | Enable `config_write` and set an API secret or `password_auth: true`, then restart honk and sign in again. |
+| `configuration_unavailable` | Check honk’s configuration and service status, then retry. |
+| `listener_secret_source` | The file declares a listener secret, or the write would add one. Edit it on disk. |
+| `listener_secret_in_content` | The content or source path contains an API secret value. Use a random secret absent from other content and paths, restart honk and sign in again. |
+| `listener_settings_changed` | Keep `experimental.native_api`, `clash_api.secret` and `global.data_dir` unchanged in UI writes. Edit these on disk and restart honk. |
+| `credential_sources_changed` | The sources declaring API secrets changed. Reload honk, then retry. |
+| `import_entry_changed` | The import entry differs from the active database entry. Start honk with `-c` pointing to the active entry, then retry the import. |
+| `unsafe_path` | Use a regular file inside an allowed configuration directory, then retry. |
+
 ## Startup messages are missing from Logs and Events
 
 Log recording in Settings defaults to With panel, which records only while doona is connected. Read the system log instead:

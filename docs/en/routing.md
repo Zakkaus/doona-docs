@@ -10,13 +10,15 @@ This page covers the Routing hub: the Policies, Nodes and Rules pages. It explai
 
 ## Policy groups
 
-Open the Routing hub, then Policies. The Groups tab shows one card per group.
+Open the Routing hub, then Policies. The Groups tab shows one card per group. Use All, Manual or Automatic above the list to filter groups by selection kind; each choice shows its count. The filter stays in the URL. A link to a group hidden by the filter returns to All.
 
 ### Read a group card
 
 1. The card header shows the group name, its policy, and the number of available, unavailable and untested members.
-2. Expand Configuration to see the group's settings, such as Check URL, Check interval and Tolerance.
+2. In More actions, choose Edit group or View configuration to see the group's settings, such as Check URL, Check interval and Tolerance.
 3. The member grid below shows each member with its state or latency. A group with more than 12 members adds Filter nodes, Region, Sort (By latency or By name) and Available only above the grid.
+
+Automatic groups start folded, showing their name, selected member and health. Select the summary to expand the card. A pinned group or a group opened by a link expands automatically. Back to automatic on a folded card clears both TCP and UDP pins. Select the lock button beside a group name to read why editing or Test all is unavailable.
 
 ### Choose a member
 
@@ -24,15 +26,19 @@ Open the Routing hub, then Policies. The Groups tab shows one card per group.
 2. In an automatic group whose backend allows overrides, choosing a member pins it. The state changes from Automatic to Pinned, and the toast says the automatic policy is paused.
 3. To end the pin, open More actions on the card and choose Back to automatic. This item appears only while the group is pinned. The toast names the member the policy now selects.
 4. When the selector labelled Both, TCP and UDP is shown, choose the network first. With Both, a selection, a pin or Back to automatic applies to TCP and UDP; with TCP or UDP, it applies to that network only.
-5. When the card shows Interrupt existing connections on switch, that switch sets whether a member switch closes existing connections. Changing it writes the group's configuration and reloads. After you choose a member in a Manual group, the toast says whether existing connections were kept or interrupted.
+5. Interrupt existing connections on switch, in Edit group or View configuration, sets whether switching members closes existing connections. After you choose a member in a Manual group, the toast says whether existing connections were kept or interrupted.
 
 ### Test, edit and check settings
 
 All three commands are in the card's More actions.
 
 1. Choose Test all to probe every member. A toast reports the available, unavailable and unknown counts and whether the selection changed. The item is disabled when the backend cannot probe the group.
-2. Choose Edit group to change the Selection policy and the filters (Filter 1, Filter 2, Add filter). Choose Apply. doona rewrites the policy and filters in the group section of the file that defines the group, keeps its other fields, then writes and reloads after validation passes. The item is disabled when the group is defined more than once, when its file is read-only, or when no loaded file defines it.
+2. Choose Edit group to change Selection policy and the filters (Filter 1, Filter 2, Add filter). When the backend allows them, Default member and Final outbound also appear. Apply validates, writes the group in its defining file and reloads. When the group cannot be edited, More actions offers View configuration instead of Edit group.
 3. Choose Check settings to change Check URL, Check interval, Tolerance and Idle timeout. Only the fields the backend lists as writable appear. Leave a field empty to use the global value or the default, then choose Apply. If the backend changed a value after the dialog opened, the field says so; applying again replaces it.
+
+Default member is the member the group starts with. It appears only when Selection policy is manual; choosing an automatic policy leaves the file's `default` unchanged. Final outbound is used when no member is eligible. Both pickers support search. Default member lists the group’s direct members; Final outbound offers `direct`, `block`, groups and nodes, excluding groups that would form a cycle. None removes the corresponding `default` or `final` setting. Choose Edit group in More actions to open these fields.
+
+In Edit group, Interrupt existing connections on switch is staged until Apply. In View configuration, changing the switch writes immediately.
 
 ### Arrange group membership
 
@@ -50,12 +56,16 @@ All three commands are in the card's More actions.
 
 Open the Routing hub, then Nodes. The Nodes tab lists node sources: subscriptions, files and the nodes in the configuration. The Latency tab appears when the backend lists nodes.
 
+With no subscriptions or proxy nodes, Nodes offers Add subscription and Paste node link. Add subscription in Activity’s Getting started card opens the subscription dialog directly.
+
 ### Sources and nodes
 
 1. The Sources table shows each source's Kind, Nodes, Usage, Updated, Auto-refresh, Expires and State.
 2. Select a source row. The node table below shows that source's nodes. Search nodes covers every source; Group and Protocol filter the table.
 3. Each node row shows its Protocol, Latency and Groups. Choose the test button on a row to measure that node; a toast reports the latency or the failure.
 4. Choose Add to group on a node row, then a group. doona adds the node name to that group in the main configuration and reloads. Choose New group… to create a group that includes the node by a name filter; enter a Name, choose a Selection policy and choose Add.
+
+A subscription with no successful fetch and no reported error shows Not fetched. Stale means a previous fetch succeeded but the retained data needs refreshing. The Group filter offers search above 12 groups. Add to group offers search above 12 menu items, including New group….
 
 ### Latency
 
@@ -81,10 +91,21 @@ Adding or removing subscriptions and file sources requires the backend to allow 
 4. If the download route has no usable node yet, for example because the rules send the subscription through a group of the nodes it has not delivered, the refresh fails instead of falling back to direct.
 5. To change how often a subscription refreshes, choose a value in its Auto-refresh column. doona writes the interval to the main configuration and reloads.
 
+### Edit a subscription
+
+1. Open More actions on a subscription row and choose Edit {name}, where {name} is the subscription name. If doona cannot identify one writable entry, use Open config source instead.
+2. Change Name, Subscription URL or User-Agent. An empty User-Agent removes `ua` and uses the engine default. Cache the subscription appears when the entry sets `cache` or the backend reports a cache default. Other options stay as written.
+3. When Download route appears, choose By routing rules, Direct or a group. This affects fetching the subscription, not traffic through its nodes. Choosing By routing rules removes the explicit `route`.
+4. Choose Apply. doona validates, writes the file that declares the subscription and reloads.
+
+Renaming can also update simple `subtag(...)` filters in the same file; keep the offered update switch on to retain those memberships. References in another file or inside an expression block renaming. Change those filters on Policies first.
+
 ### Remove a source or a node
 
 1. To remove a subscription or a file source, open More actions on its row and choose the remove item. Confirm in the dialog. doona deletes the source and its nodes from the main configuration and reloads.
 2. Nodes written in the configuration have a remove button on their row. Removing one deletes it from the node section of the main configuration and reloads.
+
+A subscription referenced by a group’s `subtag(...)` filter cannot be removed. The dialog names the groups and links to Policies; change their filters before removing it.
 
 <a name="rules"></a>
 
@@ -125,9 +146,11 @@ Choose Advanced if the Simple / Advanced switch is shown.
 
 1. Read the list from top to bottom. The first rule that matches decides the outbound; the last row, numbered —, is the fallback.
 2. Each row shows the rule number, Expression, Outbound, Where and Hits. A `must` badge marks a locked outbound.
-3. Where shows the file and line that holds the rule. Hits counts the flow records retained in the current snapshot, not a running total.
-4. The caption shows the rule count and the `generation` of the rule list.
+3. Where shows the file and line that holds the rule. Hits counts retained flow records whose `rule_generation_id` matches the rule list’s `generation_id`, not a running total.
+4. The caption shows the rule count and the `generation_id` of the rule list.
 5. When the backend offers flow records but no rule list, the tab shows the flows of the current snapshot grouped by rule, with Hits and Share, instead.
+
+In the flow-based list, Rule source filters where the rule was matched: `kernel` by eBPF, `userspace` by a userspace router, `recomputed` by evaluating the rules again, or `unknown` when the origin cannot be confirmed.
 
 ### Open the source of a rule
 
@@ -164,6 +187,8 @@ There are two dialogs. The dialog on a rule list writes the rule at once. The di
 3. Choose the Outbound. It starts at the first group, or `direct` when there is no group. Turn on Lock this outbound to add `must`.
 4. In Insert, choose Last, before the fallback, or Before rule N. The dialog starts at the first offered position.
 5. Choose Add rule. doona adds the rule to the routing section of the source file, then writes and reloads after validation passes.
+
+Domain keyword matches a substring of the domain. For example, `tracker, ads` produces `domain(keyword: tracker, keyword: ads)`, matching either keyword. DNS rules offer the same condition as `qname(keyword: tracker, keyword: ads)`. Outbound supports search and lists `direct` and `block` before groups; individual nodes are not offered. Insert supports search by rule text.
 
 ### From observed traffic
 
