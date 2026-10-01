@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/config-and-settings.md) / [繁體中文](../zh
 
 # Config and settings
 
-This page covers the Configuration page, where you read, validate and apply honk's configuration files. It also covers the Settings page, where you manage backend profiles, backend options, geodata, appearance and backend actions.
+This page covers the Configuration page, where you read, validate and apply honk's configuration files. It also covers the Settings page, where you manage backend profiles, backend options, geodata, appearance and backend actions. Activity’s [Getting started](observe.md#activity) card links to the setup steps.
 
 <a name="config-page"></a>
 
@@ -100,6 +100,8 @@ In the Settings hub, open Settings. The page opens without a connected backend, 
 
 Switching, adding, renaming or deleting a profile discards unsaved Backend URL and Token edits; the dialogs warn about this first. A pairing link fills in Backend URL and Token, which take effect once saved. Save changes doona's profile, not honk's configuration. If the test or sign-in fails, see [sign-in failures](troubleshooting.md#sign-in).
 
+Sign out also appears when the active profile uses a saved token. It removes the token from this browser, keeps the backend address and returns to sign-in; it does not revoke the backend secret. Password sign-out closes the session and also removes any saved token.
+
 <a name="runtime-options"></a>
 
 ### Backend options
@@ -129,6 +131,8 @@ Each control saves when you change it. If the backend updates on request, a new 
 ### Appearance
 
 Choose Language, Palette, Color scheme, Wordmark and Notification position. Turn on Mirrored layout to flip the layout left to right. doona stores these choices in this browser; they do not change honk's configuration.
+
+Open at startup chooses the page to open when the address has no page route. It defaults to Activity and saves immediately in this browser. A link to a specific page keeps its destination. Without a configured backend, an address without a page route still opens Settings.
 
 <a name="backend-actions"></a>
 

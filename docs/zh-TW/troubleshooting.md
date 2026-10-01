@@ -165,6 +165,21 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 
 請將所有密鑰移入 `config.d/api.dae`，並在變更 `native_api` 後重新啟動 honk。
 
+## 組態寫入遭拒
+
+honk 回傳已知的 `details.reason` 時，doona 以介面語言顯示原因。原因未知或缺失時，組態寫入拒絕訊息保留 honk 的原文。
+
+| 原因 | 處理方法 |
+| --- | --- |
+| `writes_disabled` | 啟用 `config_write`，並設定 API 金鑰或 `password_auth: true`，然後重新啟動 honk 並重新登入。 |
+| `configuration_unavailable` | 檢查 honk 的組態與服務狀態，然後重試。 |
+| `listener_secret_source` | 檔案宣告了監聽器金鑰，或此次寫入會新增此類宣告。須在磁碟上編輯。 |
+| `listener_secret_in_content` | 內容或來源路徑包含 API 金鑰值。使用未在其他內容與路徑中出現的隨機金鑰，然後重新啟動 honk 並重新登入。 |
+| `listener_settings_changed` | 介面寫入時須保持 `experimental.native_api`、`clash_api.secret` 與 `global.data_dir` 不變。在磁碟上修改這些設定，然後重新啟動 honk。 |
+| `credential_sources_changed` | 宣告 API 金鑰的組態來源已變更。重新載入 honk，然後重試。 |
+| `import_entry_changed` | 匯入入口與目前資料庫入口不同。使用 `-c` 指定目前入口啟動 honk，然後重試匯入。 |
+| `unsafe_path` | 使用允許的組態目錄中的一般檔案，然後重試。 |
+
 ## 「日誌」與「事件」中沒有啟動訊息
 
 「設定」中的「日誌記錄」預設為「隨面板」，只在 doona 連線時記錄。請改為查看系統日誌：

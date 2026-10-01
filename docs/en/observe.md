@@ -10,7 +10,17 @@ This page covers the Activity hub (Activity and System status) and the Monitor h
 
 ## Activity
 
-Activity is the page doona opens by default. Some cards link to the page that holds their details; the Outbound mode and Global mode outbound cards hold controls instead.
+Activity is the page doona opens by default; change Open at startup in [Appearance](config-and-settings.md#settings-page) to choose another page. Some cards link to their details; the Outbound mode and Global mode outbound cards hold controls instead.
+
+### Getting started
+
+When setup is incomplete and the backend provides the required data, Getting started shows three steps:
+
+1. Add a subscription or nodes. Add subscription opens the dialog on [Nodes](routing.md#nodes); adding a subscription or a proxy node completes this step.
+2. Choose routing rules. Choose rules opens Rules. An applied template or custom routing completes this step.
+3. Check the connection. Check connection opens [Policies](routing.md#policies). Measure the selected node; a successful latency result for a node selected by a group completes this step.
+
+The steps update automatically. The card hides when all three are complete or you press the close icon button (accessible name: Dismiss). doona remembers this in the browser.
 
 ### Outbound mode
 
@@ -24,13 +34,15 @@ If the card shows Read-only, doona cannot write the main configuration. Select R
 
 1. The status card shows the engine state. When some features are off, select the feature count (for example, 2 features are off) to open Features that are off on System status. View details opens System status.
 2. Select the Download or Upload tile to open the Traffic tab of Connections. Select Active connections to open the connection list.
-3. In the Latency card, choose a node from the Node menu. This changes only the latency shown on the card, not routing. Select the latency value to open that node on the [Nodes](routing.md#nodes) page.
+3. The Latency card follows a policy group’s selected node. Open the node-name menu to choose Automatic, which follows the group with the most active connections, or a specific group. doona remembers the choice in this browser; it changes only the card. The info button explains the choice. Select the latency value to open that node on [Nodes](routing.md#nodes).
 4. Select the CPU usage value to open System status.
 5. In the Traffic card, choose Live, 10 min, 1 h, 6 h, 24 h or 7 d.
 6. In Outbound downloads, select an outbound to open Connections filtered to it. The chart counts downloads since the time shown beside its title; it does not show current rates.
 7. In Top traffic, switch between Devices and Domains. Select a device to open Connections filtered to that device, or a domain to open Connections searched for it. The ranking covers visible connections only; Truncated means the connection list was cut short.
 8. The Memory card charts process memory over time. Its View details also opens System status.
-9. Notifications lists recent notices. Consecutive identical notices are folded into one row with a count. Select View all to open Events.
+9. Notifications lists recent notices and setup notices for missing node sources or routing rules. Their actions open Nodes or Rules. Consecutive identical notices fold into one row with a count. View all opens Events.
+
+If a runtime read fails, the last figures are muted until a read succeeds.
 
 <a name="overview"></a>
 
@@ -75,6 +87,8 @@ Connections opens on the Traffic tab. A link that filters the list or selects a 
    - Close connection: closes the connection. It is disabled for connections observed only by eBPF, because the kernel forwards them and the backend has no userspace transfer to interrupt.
 9. Select Close all and confirm. With only a device and network filter, doona closes every matching connection, including ones opened after the dialog. Any other filter, or a truncated list, closes the listed connections one by one. Kernel-direct connections are skipped, and a toast reports how many were closed and skipped.
 
+The device and rule menus list all choices and offer search when there are more than 12. Outbound also supports search.
+
 <a name="flows"></a>
 
 ## Routing log
@@ -115,7 +129,7 @@ DNS has up to four tabs, in this order: Statistics, Resolution log, Cache and Qu
    - Delete removes one entry, when the backend supports it.
    - Clear all cache removes every entry after a confirmation, when the backend supports it. This cannot be undone.
 4. Query sends a DNS query through honk's DNS routing.
-   - Enter a domain, choose a Type, then select Query.
+   - Enter a domain, choose a Type, then select Query. Turn on Bypass cache to query without using a cached answer. It is off by default.
    - The result shows Cache hit or Cache miss, State, Upstream, Route source, Route rule, Elapsed and the answers.
    - These queries are diagnostic: they do not appear in Resolution log.
    - Add rule opens the rule dialog for the name or an answer address. View cache opens the matching cache entries.
