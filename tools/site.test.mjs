@@ -3,6 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {render} from '../site/build.mjs';
 import {frontMatter} from '../site/build/markdown.mjs';
 import {noticeFiles, script as siteScript} from '../site/build/assets.mjs';
+import {extractIcon} from '../site/build/icons.mjs';
 import {join} from 'node:path';
 import {awaitsScreenshots, docs, groups, locales, pages, repository, slugger} from '../site/docs.mjs';
 import {linkFailures} from './links.mjs';
@@ -127,6 +128,35 @@ describe('copy button', () => {
 });
 
 describe('icons', () => {
+  const shell = '<svg width={20} height={20} viewBox="0 0 24 24" {...props} />';
+  const shapes = '<path\n fill="currentColor" d="M1 2h3v4z"\n /><circle cx="3.5" cy="9.771" r="1.5" />';
+
+  it.each([
+    `<svg viewBox="0 0 24 24" {...props}>${shapes}</svg>`,
+    `<IconSvg {...props}>${shapes}</IconSvg>`
+  ])('extracts the same geometry from literal and shared shells: %s', source => {
+    expect(extractIcon('ListBulleted', source, shell)).toBe(
+      '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M1 2h3v4z"/><circle fill="currentColor" cx="3.5" cy="9.771" r="1.5"/></svg>'
+    );
+  });
+
+  it('uses an icon viewBox override instead of the shared default', () => {
+    expect(extractIcon('Custom', `<IconSvg viewBox="0 0 16 16">${shapes}</IconSvg>`, shell)).toContain('viewBox="0 0 16 16"');
+  });
+
+  it.each([
+    `<OtherIcon viewBox="0 0 24 24">${shapes}</OtherIcon>`,
+    `<svg>${shapes}</svg>`,
+    '<IconSvg {...props}></IconSvg>',
+    '<IconSvg {...props}><rect width="2" height="3" /></IconSvg>'
+  ])('names the icon when extraction cannot preserve its SVG: %s', source => {
+    expect(() => extractIcon('Broken', source, shell)).toThrow('src/ui/icons/Broken.tsx');
+  });
+
+  it('names the icon when the shared shell has no literal viewBox', () => {
+    expect(() => extractIcon('Broken', `<IconSvg {...props}>${shapes}</IconSvg>`, '<svg {...props} />')).toThrow('src/ui/icons/Broken.tsx');
+  });
+
   it('keeps the bullets of the page-menu icon', () => {
     const page = render().get('en/index.html').text;
     const summary = /<details class="menu"[^]*?<summary>(<svg[^]*?<\/svg>)/.exec(page)[1];

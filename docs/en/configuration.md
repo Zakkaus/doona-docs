@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/configuration.md) / [繁體中文](../zh-TW/co
 
 # Configuration
 
-The configuration is two files. The main file, `/etc/honk/config.dae`, holds interfaces, nodes, groups, routing and DNS. `/etc/honk/config.d/api.dae` holds the native API that doona uses. The main file includes every `.dae` file in `config.d/`; a relative include resolves against the main file’s directory.
+This example uses two files. The main file, `/etc/honk/config.dae`, holds interfaces, nodes, groups, routing, DNS and asset download settings. `/etc/honk/config.d/api.dae` holds the native API that doona uses. The main file includes every `.dae` file in `config.d/`; a relative include resolves against the main file's directory.
 
 ## Main file
 
@@ -66,15 +66,23 @@ dns {
         }
     }
 }
+
+assets {
+    geodata {
+        geosite: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
+        geoip: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+    }
+}
 ```
 
 - `lan_interface`: replace `br-lan` with the interface LAN clients use to reach the gateway. Remove this field to proxy only the gateway’s own traffic. `wan_interface: auto` also covers the gateway’s own traffic.
 - `data_dir`: the runtime root, `/var/lib/honk` by default. It holds the geodata files and the state database `state/honk.db`.
 - `bootstrap_resolver`: resolves proxy server names and geodata download hosts without honk intercepting the query. A direct download from a URL with a hostname needs it; by default downloads follow the routing rules.
 - `subscription` and `node`: replace them with your own. doona’s Nodes page adds more later.
-- `group proxy`: the subscription’s nodes plus the static node; `min_moving_avg` selects the member with the lowest latency.
+- `group proxy`: the subscription's nodes plus the static node; `min_moving_avg` is an alias for honk's URLTest policy, which selects by moving-average latency and respects the switch tolerance.
 - `routing`: private destinations first with `direct(must)`, then Chinese mainland domains and IP addresses directly, everything else through `proxy`.
 - `dns`: Chinese mainland domains go to a local resolver, the rest to DNS over HTTPS through the proxy.
+- `assets.geodata`: final HTTP(S) download URLs. Without a state database, manual updates need configured URLs for the loaded assets. With a state database, startup seeds the stored URLs from these fields; later changes in Settings last until the next startup.
 
 ## API file
 
@@ -99,10 +107,7 @@ experimental {
         record_memory: true
         record_logs: true
         record_dns_log: true
-        # Geodata Update works even without a state db. Direct, final
-        # HTTP(S) URLs only; a redirect is refused.
-        geosite_download_url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
-        geoip_download_url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+        # Asset download URLs belong to assets.geodata in the main file.
     }
 }
 ```
@@ -125,7 +130,7 @@ experimental {
 
 ### native_api fields
 
-`allow_anonymous_loopback: true` with a loopback `listen` admits requests without a token, with the same access as bearer-authenticated requests. Use it for local development only.
+`allow_anonymous_loopback: true` with a loopback `listen` admits read requests without a token. Configuration writes and protected settings changes still require credentials. Use it for local development only.
 
 | Field                                        | Default            | What it enables in doona                                                                                                                |
 | -------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -140,7 +145,7 @@ experimental {
 | `record_memory`                              | `true`             | Memory history charts.                                                                                                                  |
 | `record_logs`                                | `true`             | The Logs page.                                                                                                                          |
 | `record_dns_log`                             | `true`             | The DNS log.                                                                                                                            |
-| `geosite_download_url`, `geoip_download_url` | `''`               | Legacy aliases for `assets.geodata.geosite` and `assets.geodata.geoip`; accepted with warnings. Without a state database, Update needs these URLs; with one, they replace stored URLs at startup.                                       |
+| `geosite_download_url`, `geoip_download_url` | `''`               | Legacy aliases for `assets.geodata.geosite` and `assets.geodata.geoip`, accepted with warnings. Use `assets.geodata` in new configurations. |
 | `allow_origins`, `allowed_hosts`             | empty              | doona served from another origin or through a reverse proxy.                                                                            |
 
 Every `native_api` field needs a restart. A reload rejects a change to one and keeps the running listener.
@@ -152,6 +157,7 @@ For geodata problems, see [sources cannot be edited](troubleshooting.md#geodata-
 ## Install the files
 
 ```sh
+sudo install -d -m 0700 /etc/honk /etc/honk/config.d /var/lib/honk
 sudo install -m 0600 config.dae /etc/honk/config.dae
 sudo install -m 0600 api.dae /etc/honk/config.d/api.dae
 ```

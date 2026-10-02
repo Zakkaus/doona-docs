@@ -4,16 +4,19 @@
 
 本页在 Arch Linux 及其他使用 pacman 的系统上，用 `.pkg.tar.zst` 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
 
+> [!NOTE]
+> beta.13 下载文件尚未发布。本页命令须在[发布页](https://github.com/Zakkaus/doona/releases)提供文件后执行，详见[原生 API 状态](index.md#原生-api-状态)。
+
 ## 开始之前
 
 - Linux 6.12 或更高版本，以及[系统要求](requirements.md#requirements)列出的内核选项。用 `uname -r` 查看内核版本。
 - 可使用 sudo 的用户，或 root shell。需要 root 权限的命令分为“sudo”与“root”两个标签页，请选择与当前 shell 相符的一个。
 - 能够访问 github.com。
-- 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `VERSION`、`BASE` 与 `TARGET` 变量。
+- 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `VERSION`、`PKGVER`、`BASE` 与 `TARGET` 变量。
 
 ## 1. 安装 curl 与 CA 证书
 
-honk 通过 HTTPS 下载订阅与地理数据，缺少 CA 证书时会在启动阶段退出。
+honk 使用系统 CA 证书校验通过 HTTPS 下载的订阅与地理数据。
 
 ```sh tab="sudo"
 sudo pacman -Syu --needed curl ca-certificates
@@ -28,8 +31,8 @@ pacman -Syu --needed curl ca-certificates
 设置发布版本号，然后把软件包与校验和文件下载到当前目录。Arch 软件包名称中的预发布版本号去掉了 `-` 与 `.`，`PKGVER` 保存这种写法。
 
 ```sh
-VERSION=0.1.0-beta.12
-PKGVER=0.1.0beta9
+VERSION=0.1.0-beta.13
+PKGVER=0.1.0beta13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
 ```
@@ -43,12 +46,12 @@ grep " doona-${PKGVER}-1-any.pkg.tar.zst\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0beta9-1-any.pkg.tar.zst: OK
+doona-0.1.0beta13-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. 安装 doona
 
-使用 doona 0.1.0-beta.12 附带的 honk-core 构建并设置 `ui: embedded` 时，`doona` 软件包可省略，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.13 软件包，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
@@ -60,7 +63,7 @@ pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
 ls -l /usr/share/doona/index.html
 ```
 
-`ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。该软件包只包含 doona 的网页文件，不安装任何服务。
+`ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。该软件包包含 doona 的网页文件与文档，不安装任何服务。
 
 可选：`doona-fonts` 软件包为中文界面加入 Noto Sans TC 与 SC 字体。
 
@@ -92,8 +95,8 @@ uname -m
 | target 结尾     | 适用情况                                                                                            |
 | --------------- | --------------------------------------------------------------------------------------------------- |
 | `musl`          | 无法确定时选择此项。静态链接，不受系统 glibc 版本限制。                                   |
-| `gnu`           | 系统的 glibc 为 2.39 或更高版本，当前的 Arch Linux 即满足。glibc 较旧时会报错 `GLIBC_2.38' not found` 并退出。 |
-| `-stock` 后缀   | 内存比速度更重要，例如小型设备。使用系统内存分配器而不是 mimalloc。                                 |
+| `gnu`           | 系统的 glibc 为 2.39 或更高版本。 |
+| `-stock` 后缀   | 使用系统内存分配器，而非 mimalloc。                                                               |
 
 例如 `x86_64-unknown-linux-musl`、`aarch64-unknown-linux-gnu` 或 `x86_64-unknown-linux-musl-stock`。
 
@@ -132,7 +135,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。

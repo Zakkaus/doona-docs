@@ -10,7 +10,9 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 
 ## 原生 API 狀態
 
-doona 需要 honk 的原生 API，只有 Glassyiris/honk `feat/native-api` 分支及其持續更新的 `debug` 發布版本的建置提供此 API。在該分支上，建置時須明確啟用 `native-api`；發布與 `debug` 建置及 doona 0.1.0-beta.12 附帶的建置已包含此功能。daeuniverse/honk `main` 分支的建置會以 `unknown experimental setting` 拒絕所有 `native_api` 設定；`/api` 與 `/ui/` 回傳 404。`feat/native-api` 分支的建置若未啟用此功能，啟用 `native_api` 時會以 `native-api feature is required` 阻止啟動。本文件已對照 `debug.2026.9.30.native-api.5`（提交 `25377686`）核對。上游 honk 正式發布此 API 之前，組態鍵與預設值仍可能變更。
+本文件說明預計發布的 doona v0.1.0-beta.13。doona 需要 Glassyiris/honk `feat/native-api` 分支的原生 API，其持續更新的 `debug` 版本與 doona 發布頁附帶的 honk 歸檔提供此 API。發布建置固定使用 honk 提交 `5ad13ac`，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
+
+原始碼仍宣告 beta.12，beta.13 下載檔案尚未發布。安裝頁中的 beta.13 指令須在該版本發布後執行。
 
 ## 頁面
 
@@ -21,7 +23,7 @@ doona 需要 honk 的原生 API，只有 Glassyiris/honk `feat/native-api` 分�
 3. [安裝詳解](install.md)：在一頁內完成手動安裝，以及從其他來源開啟 doona、發行版套件與更新。
 4. [最小組態](minimal-configuration.md)：能提供 doona 的最小組態，以及檢查方法。
 5. [服務管理](service-management.md)：以 systemd 或 procd 服務執行 honk，啟動、停止、重載並查看日誌。
-6. [首次登入](first-sign-in.md)：建立管理員並檢查概覽。
+6. [首次登入](first-sign-in.md)：建立管理員並檢查系統狀態。
 7. [介面導覽](tour.md)：頁面、頂端列、詳細資料面板與變更的提交方式。
 8. [觀測流量](observe.md)：活動、系統狀態、連線、分流、DNS、日誌與事件頁面。
 9. [路由、節點與規則](routing.md)：策略群組、節點與訂閱、規則與追蹤模擬。

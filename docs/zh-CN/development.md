@@ -20,7 +20,7 @@ pnpm e2e                         # rebuild, then test against the mock at the ro
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
 ```
 
-`pnpm dev` 以 Vite 开发服务器提供模拟后端。发布包的版本号在本地取自 `package.json`，在标签上取自 Git 描述；时间戳用 `SOURCE_DATE_EPOCH`，未设置时用 HEAD 提交时间。
+`pnpm dev` 以 Vite 开发服务器提供模拟后端。`pnpm package` 使用 `package.json` 中的版本号；`pnpm package --git-version` 使用去掉开头 `v` 的 `git describe --tags --always` 输出。时间戳使用 `SOURCE_DATE_EPOCH`，未设置时使用 HEAD 提交时间。
 
 ## 对实际后端测试
 
@@ -28,7 +28,7 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 
 ## 截图
 
-`node tools/screenshots.mjs <url> docs/screenshots` 从运行中的构建截取页面、配色总览、手机拼图与两段动画，输出 WebP，需要安装 `cwebp` 和 `img2webp`。
+`node tools/screenshots.mjs <url> docs/screenshots` 截取各语言的模拟后端页面、配色总览、英文主题图库、手机拼图、页面导览静帧与路由动画，输出 WebP。需要安装 `cwebp`、`img2webp` 与 Playwright 的 Chromium。
 
 ## 源码布局
 
@@ -37,15 +37,19 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 | `src/features/` | 各页面及其 hook 与文案，一页一个文件夹            |
 | `src/shell/`    | 应用外壳、导航与搜索                              |
 | `src/ui/`       | 共用组件、主题与图标                              |
-| `src/api/`      | 客户端、后端档案、模拟后端与生成的类型            |
+| `src/api/`      | 客户端、后端档案、引擎适配器与生成的类型 |
+| `mock/`         | 演示、预览与测试使用的模拟后端 |
 | `src/store/`    | 资源监听、读取缓存与操作 hook                     |
 | `src/i18n/`     | 翻译与区域设置辅助                                |
 | `contract/`     | 内嵌的 OpenAPI 契约与钉点                         |
-| `public/`       | 静态资源、字体与 service worker                   |
+| `public/`       | 静态图标、manifest 与 service worker |
 | `e2e/`          | 浏览器测试                                        |
 | `tools/`        | 构建、打包、一致性检查与截图工具                  |
 | `install/`      | nfpm 配置与 OpenWrt、Alpine、Gentoo、Nix 打包配置 |
-| `docs/`         | 截图                                              |
+| `docs/`         | 国旗与字体文档 |
+| `node_modules/@fontsource-variable/` | Vite 打包的 Noto Sans TC/SC 字体源码 |
+
+截图工具在运行时创建 `docs/screenshots/`；截图不在源码树中。
 
 ## 契约
 

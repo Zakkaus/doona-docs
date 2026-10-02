@@ -110,7 +110,7 @@ chmod 0755 /etc/init.d/honk-core
 
 Do not add `NoNewPrivileges=yes`, capability limits or a read-only `/proc/sys` to the unit: honk needs BPF, network administration, namespace, mount and sysctl privileges at startup.
 
-On OpenWrt, keep `MIMALLOC_PURGE_DELAY=0` in the procd script above so mimalloc returns freed memory to the system at once. This advice also applies to builds from `debug.2026.9.28.native-api.4` onward, which stream geodata updates to disk: on a 256 MB router, such a build kept about 120 MB after a geodata update without it, and settled at 36–46 MB over three updates with it.
+On OpenWrt with a mimalloc build, keep `MIMALLOC_PURGE_DELAY=0` in the procd script above so freed memory is returned promptly. Builds using the system allocator do not use this setting.
 
 ## 2. Start honk and start it at boot
 
@@ -154,6 +154,8 @@ A running honk looks like this. systemd on Debian 13:
 procd prints `running`; after a stop it prints `inactive`.
 
 The log also shows `honk-core is running. Press Ctrl+C to stop.`, and `curl http://192.168.1.1:9527/api`, with your address, answers as in [step 5 of Minimal configuration](minimal-configuration.md).
+
+A reachable API does not prove transparent routing works. Check System status for datapath degradations and test traffic from a LAN client.
 
 ## Read the log
 

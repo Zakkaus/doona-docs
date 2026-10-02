@@ -10,15 +10,15 @@ This page covers the Routing hub: the Policies, Nodes and Rules pages. It explai
 
 ## Policy groups
 
-Open the Routing hub, then Policies. The Groups tab shows one card per group. Use All, Manual or Automatic above the list to filter groups by selection kind; each choice shows its count. The filter stays in the URL. A link to a group hidden by the filter returns to All.
+Open the Routing hub, then Policies. One card represents each group. Use All, Manual or Automatic above the list to filter groups by selection kind; each choice shows its count. The filter stays in the URL. A link to a group hidden by the filter returns to All.
 
 ### Read a group card
 
 1. The card header shows the group name, its policy, and the number of available, unavailable and untested members.
-2. In More actions, choose Edit group or View configuration to see the group's settings, such as Check URL, Check interval and Tolerance.
+2. Use the pencil button for Edit group, or More actions > View configuration when the group is read-only. Check settings opens Check URL, Check interval, Tolerance and Idle timeout when supported.
 3. The member grid below shows each member with its state or latency. A group with more than 12 members adds Filter nodes, Region, Sort (By latency or By name) and Available only above the grid.
 
-Automatic groups start folded, showing their name, selected member and health. Select the summary to expand the card. A pinned group or a group opened by a link expands automatically. Back to automatic on a folded card clears both TCP and UDP pins. Select the lock button beside a group name to read why editing or Test all is unavailable.
+Automatic groups start folded, showing their name, selected member and health. Select the summary to expand the card. A pinned group or a group opened by a link expands automatically. Back to automatic on a folded card clears both TCP and UDP pins. Disabled actions expose their reasons through help controls, including on touch devices.
 
 ### Choose a member
 
@@ -30,25 +30,28 @@ Automatic groups start folded, showing their name, selected member and health. S
 
 ### Test, edit and check settings
 
-All three commands are in the card's More actions.
+Test all, Probe with options… and Check settings are in the card's More actions; the pencil button opens Edit group.
 
-1. Choose Test all to probe every member. A toast reports the available, unavailable and unknown counts and whether the selection changed. The item is disabled when the backend cannot probe the group.
-2. Choose Edit group to change Selection policy and the filters (Filter 1, Filter 2, Add filter). When the backend allows them, Default member and Final outbound also appear. Apply validates, writes the group in its defining file and reloads. When the group cannot be edited, More actions offers View configuration instead of Edit group.
+1. Choose Test all to measure the group using Settings > Latency probes. A toast reports the available, unavailable and unknown counts and whether the selection changed. Probe with options… offers supported HTTP, TCP connect, DNS (TCP), DNS (UDP) or DNS (TCP + UDP) probes, an IP family, Cold and Include nodes in nested groups. The dialog starts from this browser's probe preferences. Unsupported methods fall back to a supported method and the toast names the change.
+
+   Trojan, AnyTLS and VLESS keep DNS UDP choices when support depends on node configuration. A backend admission refusal is reported, not silently replaced by HTTP. A timed-out or cancelled measurement, an unavailable address or a local refusal can leave the result unknown; this is not proof that the node is unavailable.
+2. Choose Edit group to change Selection policy, membership and filters. When supported, Default member and Final outbound also appear. Apply validates, writes the group in its defining main or include file and reloads. A refused save caused by another configuration change retries only the fields changed in the dialog; conflicting edits or a group renamed or removed meanwhile require reopening it.
 3. Choose Check settings to change Check URL, Check interval, Tolerance and Idle timeout. Only the fields the backend lists as writable appear. Leave a field empty to use the global value or the default, then choose Apply. If the backend changed a value after the dialog opened, the field says so; applying again replaces it.
 
-Default member is the member the group starts with. It appears only when Selection policy is manual; choosing an automatic policy leaves the file's `default` unchanged. Final outbound is used when no member is eligible. Both pickers support search. Default member lists the group’s direct members; Final outbound offers `direct`, `block`, groups and nodes, excluding groups that would form a cycle. None removes the corresponding `default` or `final` setting. Choose Edit group in More actions to open these fields.
+Default member is the member the group starts with. It appears only when Selection policy is manual; choosing an automatic policy leaves the file's `default` unchanged. Final outbound is used when no member is eligible. Both pickers support search. Default member lists the group’s direct members; Final outbound offers `direct`, `block`, groups and nodes, excluding groups that would form a cycle. None removes the corresponding `default` or `final` setting. Use the card's pencil button to open Edit group and these fields.
 
 In Edit group, Interrupt existing connections on switch is staged until Apply. In View configuration, changing the switch writes immediately.
 
 ### Arrange group membership
 
-1. Open the Group membership tab. Groups are on the left; nodes and subscriptions are on the right.
-2. Drag a node or subscription onto a group. Or select rows and choose Add to group below the list.
-3. To remove a member that was added by name or as a whole subscription, choose its remove button. Nodes that a group selects by rule cannot be removed here; change them in the configuration source.
-4. To create a group, choose New group, enter a Group name, choose a Selection policy and choose Create. Add at least one node or subscription; a group without members holds every node, so it cannot be applied.
-5. Changes are staged, and the count of changes not applied is shown. Choose Discard all to drop them, or Review and apply to open Review changes.
-6. Review changes lists each staged change with an undo button. Expand Show the configuration text to be written to see the group text. Choose Apply: doona validates the whole configuration, then writes and reloads. Nothing is written if validation fails.
-7. Leaving the page with staged changes asks you to confirm discarding them.
+1. Use Edit group on a card, or New group above the cards. Both open the shared group editor.
+2. Choose included regions, subscriptions, individual nodes or nested groups. The dialog previews Matching nodes.
+3. Use a member's remove button to undo its inclusion. A node still matching another filter remains included; change that filter to remove it.
+4. Add filter supports name and `subtag` matches. Add OR match joins alternatives; multiple conditions in one filter must all match. A custom expression stays editable as text.
+5. In New group, enter Group name and choose Selection policy and members. An empty filter includes every node, so explicitly choose the intended membership.
+
+   The Groups and Nodes pickers keep their search fields fixed and scroll only the option lists. Searchable menus and other pickers use the same layout; region checkboxes scroll with the dialog body.
+6. Choose Apply to validate, write and reload, or Cancel to discard the dialog's draft.
 
 <a name="nodes"></a>
 
@@ -60,12 +63,14 @@ With no subscriptions or proxy nodes, Nodes offers Add subscription and Paste no
 
 ### Sources and nodes
 
-1. The Sources table shows each source's Kind, Nodes, Usage, Updated, Auto-refresh, Expires and State.
+1. The Node sources table shows each source's Kind, Nodes, Usage, Updated, Auto-update, Expires and State, with update, edit and removal controls when available.
 2. Select a source row. The node table below shows that source's nodes. Search nodes covers every source; Group and Protocol filter the table.
-3. Each node row shows its Protocol, Latency and Groups. Choose the test button on a row to measure that node; a toast reports the latency or the failure.
-4. Choose Add to group on a node row, then a group. doona adds the node name to that group in the main configuration and reloads. Choose New group… to create a group that includes the node by a name filter; enter a Name, choose a Selection policy and choose Add.
+3. Each node row shows Protocol, Latency and Groups. The test button uses Settings > Latency probes; Node actions > Probe with options… opens the supported options. Select a row to see the latest TCP, HTTP, UDP and DNS results reported by the backend, including latency or failure reason.
+4. Open Node actions > Add to group, then choose a group from a writable main or include file. The shared group editor opens with the node staged; choose Apply to confirm. New group… opens the same editor with that node included.
 
-A subscription with no successful fetch and no reported error shows Not fetched. Stale means a previous fetch succeeded but the retained data needs refreshing. The Group filter offers search above 12 groups. Add to group offers search above 12 menu items, including New group….
+A subscription with no successful fetch and no reported error shows Not fetched. Stale means a previous fetch succeeded but the retained data needs updating. The Group filter and Add to group submenu support search for long lists. Group editing can still work from readable configuration when the runtime groups API is unavailable.
+
+Empty file sources stay in Node sources with their status and a removal action when allowed.
 
 ### Latency
 
@@ -78,22 +83,22 @@ A subscription with no successful fetch and no reported error shows Not fetched.
 
 Adding or removing subscriptions and file sources requires the backend to allow source management; adding or removing individual nodes requires it to allow node management. Both need a writable main configuration; see [read-only sources](troubleshooting.md#read-only).
 
-1. Choose Add subscription. Enter a Name and a Subscription URL (HTTP or HTTPS). Depending on the backend, the dialog also offers Auto-refresh, User-Agent and Cache the subscription.
+1. Choose Add subscription. Enter a Name and a Subscription URL (HTTP or HTTPS). Depending on the backend, the dialog also offers Auto-update, User-Agent and Cache the subscription.
 2. Choose Add. The backend writes the subscription into the subscription section of the main configuration. The URL is stored and never shown again.
 3. A new subscription has no nodes until it is fetched. When the backend can refresh subscriptions, doona refreshes it at once, and the toast reports the node count. If that refresh fails, the toast offers Retry.
 4. To add a single node, choose Paste node link above the node table. Enter a Name and a Node link such as `vless://…`, then choose Add. The node goes into the node section of the main configuration.
 
 ### Refresh a subscription
 
-1. Choose the refresh button on a subscription row to fetch that subscription now. Choose Refresh all subscriptions (N), or Refresh subscription (1) when there is only one, to fetch every subscription in one batch; Settings offers the same command under [backend actions](config-and-settings.md#backend-actions).
+1. Choose Update {name} on a subscription row to fetch it now. Choose Update N subscription or Update N subscriptions, depending on the count, to fetch every subscription in one batch.
 2. A refresh fetches the subscription through its download route and applies the new nodes. It does not change the subscription's configured source.
 3. On success, the toast reports the node count. On failure, the last nodes that loaded successfully stay in place.
 4. If the download route has no usable node yet, for example because the rules send the subscription through a group of the nodes it has not delivered, the refresh fails instead of falling back to direct.
-5. To change how often a subscription refreshes, choose a value in its Auto-refresh column. doona writes the interval to the main configuration and reloads.
+5. To change how often a subscription updates, choose a value in Auto-update. Custom accepts a non-negative whole Interval and a Unit, such as Hours. doona writes the interval to the main configuration and reloads.
 
 ### Edit a subscription
 
-1. Open More actions on a subscription row and choose Edit {name}, where {name} is the subscription name. If doona cannot identify one writable entry, use Open config source instead.
+1. Choose Edit {name} on a subscription row, where {name} is the subscription name. If doona cannot identify one writable entry, use Open config file instead.
 2. Change Name, Subscription URL or User-Agent. An empty User-Agent removes `ua` and uses the engine default. Cache the subscription appears when the entry sets `cache` or the backend reports a cache default. Other options stay as written.
 3. When Download route appears, choose By routing rules, Direct or a group. This affects fetching the subscription, not traffic through its nodes. Choosing By routing rules removes the explicit `route`.
 4. Choose Apply. doona validates, writes the file that declares the subscription and reloads.
@@ -107,15 +112,17 @@ Renaming can also update simple `subtag(...)` filters in the same file; keep the
 
 A subscription referenced by a group’s `subtag(...)` filter cannot be removed. The dialog names the groups and links to Policies; change their filters before removing it.
 
+Subscriptions and nodes declared in include files cannot be removed here; the disabled action explains that they must be removed from their declaring file. Node actions > Edit… changes an inline node's link and name in its declaring source. Renaming updates exact node filters, default and final members, and DNS upstream detours in that source; references from another source prevent renaming.
+
 <a name="rules"></a>
 
 ## Routing rules
 
-Open the Routing hub, then Rules. The tabs are Routing rules, DNS rules and Trace simulation; each tab appears only when the backend offers it.
+Open the Routing hub, then Rules. DNS rules and Trace simulation appear when the backend offers them. Routing rules can also show templates with readable configuration even when the rules API is unavailable.
 
 ### Rule templates
 
-When the backend provides rules and configuration text, Routing rules offers a Simple / Advanced switch. Without an explicit view in the link, Simple opens, including for custom rules. Unless the link explicitly selects a view, links that select or edit a rule, prefill a new rule, or review held rules open Advanced.
+With readable configuration, Routing rules offers templates. When a rule list or flow records are also available, a Simple / Advanced switch separates templates from that list. Without an explicit view in the link, Simple opens, including for custom rules. Links that select or edit a rule, prefill a new rule, or review held rules open Advanced unless they explicitly select another view.
 
 Simple selects the detected template name when one file's top-level `routing` matches a template. Otherwise, the rules are custom: no template is selected, and a notice says the current rules match no mode. Routing spread over several files is also custom.
 
@@ -144,7 +151,7 @@ Templates cannot be applied when the backend reports an engine name other than `
 
 Choose Advanced if the Simple / Advanced switch is shown.
 
-1. Read the list from top to bottom. The first rule that matches decides the outbound; the last row, numbered —, is the fallback.
+1. Read the list from top to bottom. The first rule that matches decides the outbound; the unnumbered last row is the fallback.
 2. Each row shows the rule number, Expression, Outbound, Where and Hits. A `must` badge marks a locked outbound.
 3. Where shows the file and line that holds the rule. Hits counts retained flow records whose `rule_generation_id` matches the rule list’s `generation_id`, not a running total.
 4. The caption shows the rule count and the `generation_id` of the rule list.
@@ -154,16 +161,16 @@ In the flow-based list, Rule source filters where the rule was matched: `kernel`
 
 ### Open the source of a rule
 
-1. Choose Open config source on a row. The Configuration page opens that file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
-2. A rule from an include file outside a routing section cannot be changed in the list. Edit it in the file through Open config source.
+1. Choose Open config file on a row. The Configuration page opens that file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
+2. A rule from an include file outside a routing section cannot be changed in the list. Edit it in the file through Open config file.
 
 ### Edit or remove a rule
 
-1. Choose Edit outbound settings on a row. The dialog shows the rule's expression. Choose another Outbound and, if needed, turn on Lock this outbound. Choose Edit outbound settings to confirm. Only the outbound changes; the condition stays as written.
+1. Choose Edit rule on a row. Change its conditions and target; representable expressions use condition rows, others remain editable as an Expression. All condition rows must match. A fallback edits only the target. Choose Edit rule to validate, write and reload.
 2. Choose Remove rule on a row. The dialog names the file and line it deletes. Confirm with Remove rule.
 3. Both commands write and reload after validation passes. The toast says the change is in effect; existing connections keep their current route until they reconnect.
-4. Both buttons are disabled, with the reason on hover, when the rule's file is read-only or incomplete, when doona cannot locate the rule's line, or when the rule is in an include file outside a routing section.
-5. In a connection's More actions, Edit matched rule's outbound settings opens this dialog for the rule that connection matched.
+4. Disabled actions provide their reason through help controls when the file is read-only or incomplete, the rule's line cannot be located, or the rule is in an include file outside a routing section.
+5. In a connection's More actions, Edit matched rule's outbound settings opens Edit rule for the matched rule; it is not limited to changing the outbound.
 
 <a name="dns-rules"></a>
 
@@ -172,7 +179,7 @@ In the flow-based list, Rule source filters where the rule was matched: `kernel`
 1. Open the DNS rules tab. It holds two lists, each checked in order: Request rules decide how each query is handled, and Response rules accept an answer, reject it, or query again through another upstream.
 2. Each row shows the rule's expression, its Action and Where. Resolution log and Open DNS configuration link to the DNS page and to the dns section of the configuration.
 3. Choose Add rule in either list to add a rule. The dialog works as in [add a rule from a rule list](#add-rule), with Action in place of Outbound and without Lock this outbound. The rule goes into the dns routing section of the source file.
-4. Choose Remove rule on a row to delete it. DNS rules have no edit button; change a rule in the file through Open config source.
+4. Choose Edit rule to change conditions and Action, or Remove rule to delete the row. Open config file edits the declaring file directly.
 
 <a name="add-rule"></a>
 
@@ -183,7 +190,9 @@ There are two dialogs. The dialog on a rule list writes the rule at once. The di
 ### From a rule list
 
 1. On Routing rules, choose Advanced if the view switch is shown, then Add rule above the list.
-2. In Condition form, choose Select to pick a Match by kind (such as Domain suffix, geosite category or Destination IP) and enter the Values, separated by commas. Or choose Expression and type the Condition, such as `domain(geosite:netflix)`.
+2. In Condition form, choose Select to pick a Match by kind (such as Domain suffix, geosite category or Destination IP) and enter Values, separated by commas. Add AND condition adds another condition; every row must match. Or choose Expression and type Condition, such as `domain(geosite:netflix)`.
+
+   Switching from Expression back to Select converts the edited expression into condition rows. An expression the rows cannot represent stays in Expression with a hint. An empty expression resets to one empty condition row.
 3. Choose the Outbound. It starts at the first group, or `direct` when there is no group. Turn on Lock this outbound to add `must`.
 4. In Insert, choose Last, before the fallback, or Before rule N. The dialog starts at the first offered position.
 5. Choose Add rule. doona adds the rule to the routing section of the source file, then writes and reloads after validation passes.
@@ -192,11 +201,11 @@ Domain keyword matches a substring of the domain. For example, `tracker, ads` pr
 
 ### From observed traffic
 
-The Add rule button also appears on these pages:
+These pages also open the rule dialog. Row icons work without selecting the row first.
 
-- Connections: the toolbar, after you select a row, and a connection's detail panel. See [Connections](observe.md#connections).
-- Routing log: Add a rule for this target in a record's details. See [Routing log](observe.md#flows).
-- DNS: the Query result and each answered address, a Resolution log record, and a Cache entry. See [DNS](observe.md#dns).
+- Connections: use a row's add-rule icon. The detail panel also offers Add rule when available. The toolbar has no add-rule button. See [Connections](observe.md#connections).
+- Routing log: use a record's add-rule icon. The detail panel has no add-rule button. See [Routing log](observe.md#flows).
+- DNS: use Add rule in the Query result or beside an answered address, or the add-rule icon on a Resolution log or Cache row. Domain rows open Rules > DNS rules > Request rules. When DNS rules are unavailable, they open routing rules. See [DNS](observe.md#dns).
 - Trace simulation: an evaluation card that offers it. See [Trace](#trace).
 
 In the dialog:
@@ -218,7 +227,7 @@ In the dialog:
 1. Held rules stay only for the current browser session. Reloading the page drops them, so the browser asks before you leave while rules are held.
 2. The Rules page shows a Pending: N card above each list that holds rules. Each row shows the rule line and its position.
 3. Choose Discard held rule on a row to drop it.
-4. Choose Apply held rules on the card, or Apply (N) in the top bar, to write every held rule of every list. The card notes rules held in other lists, and the number of files when there is more than one.
+4. Choose Apply held rules on the card, or the counted apply button in the top bar, to write every held rule of every list. The card notes rules held in other lists, and the number of files when there is more than one.
 5. Rules are written one file at a time, and each file is validated and reloaded. Written rules leave the held list. If a file fails, the rules not yet written stay held, and the failure with its lines appears on the card.
 6. Reload honk in the top bar reloads the configuration already written; it does not write held rules. See [the top bar](tour.md#top-bar).
 
@@ -233,7 +242,7 @@ Trace simulates rule evaluation against the current configuration. It does not o
 1. Open Rules, then Trace simulation.
 2. Choose the Network protocol (TCP or UDP). Enter a Domain, a Destination IP, or both, and a Destination port.
 3. Choose the Resolution mode: No resolution (none), Live resolution (live), or Resolve, then simulate (query). Live and query resolve the domain first, so they need a domain and an empty Destination IP. Only the modes the backend offers can be used.
-4. Expand Advanced to add a Source IP, Source port or Process name.
+4. Expand Advanced to add a Source IP, Source port, Process name or optional DSCP integer from 0 to 63 for `dscp(...)` rules.
 5. Choose Run trace.
 
 With only a destination IP, the simulation evaluates the IP and port. If `dial_mode` uses a domain-family mode, the engine reads the domain from real TLS or HTTP traffic and evaluates the rules again; include the domain to simulate that.

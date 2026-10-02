@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/minimal-configuration.md) / [繁體中文](../
 
 This page writes the smallest honk configuration that starts honk and serves doona, then checks it by starting honk by hand. It assumes doona is in `/usr/share/doona` and honk-core is installed, as the [install pages](install.md) leave them.
 
-The configuration is two files. `/etc/honk/config.dae` is the main file. `/etc/honk/config.d/api.dae` turns on the native API that doona talks to. Every connection goes out directly until you add nodes and rules; [Configuration](configuration.md#config) has a fuller example.
+This example uses two files. `/etc/honk/config.dae` is the main file. `/etc/honk/config.d/api.dae` turns on the native API that doona talks to. Every connection goes out directly until you add nodes and rules; [Configuration](configuration.md#config) has a fuller example.
 
 ## Before you start
 
@@ -170,7 +170,7 @@ cat /etc/honk/config.d/api.dae
 
 The printed file shows your address on the `listen` line, such as `listen: '192.168.1.1:9527'`.
 
-Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless you add `allowed_hosts: 'openwrt.lan'` inside `native_api` and restart honk.
+Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless you add `allowed_hosts: 'openwrt.lan:9527'` inside `native_api` and restart honk. Host entries without a port mean port 80.
 
 | Line                         | What it does                                                                                                                                  |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -183,7 +183,7 @@ Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless y
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The honk-core builds attached to doona 0.1.0-beta.12 embed doona 0.1.0-beta.12. To serve it at `/ui/`, replace the `ui` line above with:
+The honk-core build pinned for this release embeds doona 0.1.0-beta.12, not the standalone beta.13 UI. To serve that embedded version at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded
@@ -210,7 +210,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk keeps running in the foreground. Each line starts with a timestamp; among them you should see:
 
 ```text
-INFO honk_core: honk-core debug.2026.9.30.native-api.5 starting
+INFO honk_core: honk-core debug.2026.10.3.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected

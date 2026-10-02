@@ -15,11 +15,15 @@ const paths = list => [list].flat().map(d => `<path fill="currentColor" d="${d}"
 // Only paths and circles are copied, so an icon drawn with any other element fails the build rather than losing that
 // part.
 const shapeAttributes = {path: ['d'], circle: ['cx', 'cy', 'r']};
-function icon(name) {
+export function extractIcon(name, source, shellSource = '') {
   const file = `src/ui/icons/${name}.tsx`;
-  const source = readFileSync(join(doona, file), 'utf8');
-  const viewBox = /viewBox="([^"]+)"/.exec(source)?.[1];
-  const shapes = [...source.matchAll(/<(\w+)\s([^>]*?)\/>/g)].map(([, tag, attributes]) => {
+  const wrapper = /<(svg|IconSvg)\b([^>]*?)>([^]*?)<\/\1>/.exec(source);
+  if (!wrapper) throw new Error(`${file}: no svg or IconSvg wrapper`);
+  const [, tag, attributes, body] = wrapper;
+  const literalViewBox = text => /(?:^|\s)viewBox="([^"]+)"/.exec(text)?.[1];
+  const viewBox = literalViewBox(attributes) ??
+    (tag === 'IconSvg' ? literalViewBox(/<svg\b([^>]*?)\/>/.exec(shellSource)?.[1] ?? '') : undefined);
+  const shapes = [...body.matchAll(/<(\w+)\s([^>]*?)\/>/g)].map(([, tag, attributes]) => {
     if (!(tag in shapeAttributes)) throw new Error(`${file}: <${tag}> is not a path or circle`);
     const values = shapeAttributes[tag].map(attribute => {
       const value = new RegExp(`(?:^|\\s)${attribute}="([^"]+)"`).exec(attributes)?.[1];
@@ -30,6 +34,20 @@ function icon(name) {
   });
   if (!viewBox || !shapes.length) throw new Error(`${file}: no viewBox or shape`);
   return svg(viewBox, shapes);
+}
+
+let shellSource;
+function icon(name) {
+  const file = `src/ui/icons/${name}.tsx`;
+  const source = readFileSync(join(doona, file), 'utf8');
+  if (/<IconSvg\b/.test(source) && shellSource === undefined) {
+    try {
+      shellSource = readFileSync(join(doona, 'src/ui/icons/IconSvg.tsx'), 'utf8');
+    } catch (cause) {
+      throw new Error(`${file}: cannot read IconSvg shell`, {cause});
+    }
+  }
+  return extractIcon(name, source, shellSource);
 }
 const workflow = name => svg('0 0 20 20', paths(spectrum[name]));
 const distro = slug => svg('0 0 24 24', paths(distros[slug]), 'icon logo');

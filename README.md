@@ -16,7 +16,7 @@ The pages are Markdown in `docs/<locale>/`, in English, Simplified Chinese and T
 
 ## Build
 
-The build reads doona's palette, sizes, icons, logo and screenshots from a doona checkout, so the site always matches the app. `DOONA_DIR` names it; the default is `../doona`. Use Node `^22.18.0 || ^24.0.0 || >=26.0.0` and pnpm 11.
+The build reads doona's palette, sizes, icons, logo and screenshots from a doona checkout, so the site always matches the app. Icon extraction accepts literal `<svg>` components and components using doona's shared `IconSvg` shell; unsupported sources fail with the icon's name. `DOONA_DIR` names the checkout; the default is `../doona`. Use Node `^22.18.0 || ^24.0.0 || >=26.0.0` and pnpm 11.
 
 ```sh
 git clone https://github.com/Zakkaus/doona ../doona
@@ -27,6 +27,8 @@ pnpm test                            # the site script and the heading ids
 ```
 
 `DOCS_BASE=/ pnpm docs:build` builds for a domain of its own. CI builds against doona's `main`; the `DOONA_REF` repository variable pins a tag instead.
+
+`DOCS_OUT=/absolute/path pnpm docs:build` writes the site outside the repository instead of `dist-docs/`. The build replaces the output directory.
 
 doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://zakkaus.github.io/doona-docs/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
 
