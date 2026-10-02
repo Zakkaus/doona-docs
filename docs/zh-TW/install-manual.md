@@ -4,11 +4,14 @@
 
 本頁在沒有 doona 套件、符合核心要求的 x86_64 或 aarch64 Linux 系統（例如 Alpine Linux）上，用發行版本中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
+> [!NOTE]
+> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+
 ## 開始之前
 
 - Linux 6.12 或更高版本，以及[系統需求](requirements.md#requirements)列出的核心選項。用 `uname -r` 檢視核心版本。
 - 可使用 sudo 的使用者，或 root shell。需要 root 權限的命令分為「sudo」與「root」兩個分頁，請選擇與目前的 shell 相符的一個。
-- curl、tar、gzip、`sha256sum` 與 CA 憑證。缺少 CA 憑證時 honk 會在啟動階段結束。在 Alpine 上用 `sudo apk add curl ca-certificates` 安裝，或在 root shell 中執行 `apk add curl ca-certificates`；其他系統的套件名稱相近。
+- curl、tar、gzip、`sha256sum` 與 CA 憑證。honk 使用系統 CA 憑證驗證 HTTPS 下載。在 Alpine 上用 `sudo apk add curl ca-certificates` 安裝，或在 root shell 中執行 `apk add curl ca-certificates`；其他系統的套件名稱相近。
 - 能夠連線到 github.com。
 - 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
 
@@ -17,7 +20,7 @@
 設定發行版本號，然後把程式封存檔與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.12
+VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -33,12 +36,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 3. 安裝 doona
 
-使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
@@ -86,8 +89,8 @@ uname -m
 | target 結尾     | 適用情況                                                                                        |
 | --------------- | ----------------------------------------------------------------------------------------------- |
 | `musl`          | 無法確定，或系統使用 musl（例如 Alpine）時選擇此項。靜態連結，不受系統 glibc 版本限制。 |
-| `gnu`           | 系統的 glibc 為 2.39 或更高版本。glibc 較舊時會顯示錯誤 `GLIBC_2.38' not found` 並結束。           |
-| `-stock` 後綴   | 記憶體比速度更重要，例如小型裝置。使用系統記憶體分配器而不是 mimalloc。                             |
+| `gnu`           | 系統的 glibc 為 2.39 或更高版本。 |
+| `-stock` 後綴   | 使用系統記憶體配置器，而非 mimalloc。                                                         |
 
 例如 `x86_64-unknown-linux-musl`、`aarch64-unknown-linux-gnu` 或 `x86_64-unknown-linux-musl-stock`。
 
@@ -126,12 +129,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
-下一步：[最小組態](minimal-configuration.md)。服務相關步驟只涵蓋 systemd 與 OpenWrt 的 procd；doona 與 honk 都不提供 OpenRC 指令碼。使用 OpenRC 時（例如 Alpine），[服務管理](service-management.md)提供在前景運作 honk 的命令，用於完成首次登入。
+下一步：[最小組態](minimal-configuration.md)。服務相關步驟只涵蓋 systemd 與 OpenWrt 的 procd；doona 與 honk 都不提供 OpenRC 指令碼。使用 OpenRC 時（例如 Alpine），[服務管理](service-management.md)提供在前景執行 honk 的命令，用於完成首次登入。
 
 ## 遇到問題時
 
@@ -139,7 +142,7 @@ honk-core debug.2026.9.30.native-api.5
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | `curl: (22) The requested URL returned error: 404`                 | 版本號或檔名有誤。請對照[發布頁面](https://github.com/Zakkaus/doona/releases)檢查 `VERSION`。            |
 | `no properly formatted checksum lines found`（GNU）或 `no checksum lines found`（BusyBox） | `grep` 沒有找到該檔案對應的行：目前的終端機未設定 `VERSION` 或 `TARGET`，或其中有拼字錯誤。 |
-| `FAILED` 以及驗證和不匹配的 `WARNING`                              | 下載的檔案損壞或不完整。刪除該檔案後重新下載。                                                            |
+| `FAILED` 以及總和檢查碼不符的 `WARNING`                          | 下載的檔案損壞或不完整。刪除該檔案後重新下載。                                                            |
 | `sha256sum: unrecognized option: ignore-missing`                   | BusyBox 沒有 `--ignore-missing` 選項。請使用第 2 步的 `grep` 寫法。                                         |
 | `version 'GLIBC_2.38' not found`                                   | `gnu` 建置需要更新的 glibc。請改用 `musl` 建置。                                                          |
 

@@ -1,10 +1,10 @@
 // Renders docs/<locale>/*.md into a static site: one HTML page per Markdown page with the page's Markdown beside it,
 // llms.txt listing the Markdown pages, a root page that sends the browser to its language, and a 404 page.
-// `node site/build.mjs` writes dist-docs/; tools/check-docs.mjs calls render() directly. DOCS_BASE is the path the site
-// is served under: /doona-docs/ on github.io, / on a domain of its own. DOCS_ORIGIN, such as https://zakkaus.github.io,
-// makes the Markdown pages and llms.txt link by full URL, so the links still work once the text is pasted elsewhere;
-// without it they link by path. DOONA_DIR names the doona checkout the build reads the app's styles, icons and logo
-// from (site/docs.mjs).
+// `node site/build.mjs` writes dist-docs/ (or DOCS_OUT); tools/check-docs.mjs calls render() directly. DOCS_BASE is the
+// path the site is served under: /doona-docs/ on github.io, / on a domain of its own. DOCS_ORIGIN, such as
+// https://zakkaus.github.io, makes the Markdown pages and llms.txt link by full URL, so the links still work once the
+// text is pasted elsewhere; without it they link by path. DOONA_DIR names the doona checkout the build reads the
+// app's styles, icons and logo from (site/docs.mjs).
 //
 // The build is split by job, in site/build/: markdown.mjs parses and renders a page, templates.mjs and nav.mjs draw the
 // HTML around it, exports.mjs writes the Markdown, search index and llms.txt, assets.mjs the stylesheet, script and
@@ -52,7 +52,7 @@ export function write(files, out) {
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   const base = process.env.DOCS_BASE || undefined;
   const origin = process.env.DOCS_ORIGIN || undefined;
-  const out = join(root, 'dist-docs');
+  const out = process.env.DOCS_OUT || join(root, 'dist-docs');
   const files = render({base, origin});
   write(files, out);
   console.log(`docs: ${files.size} files in ${relative(root, out)}/`);

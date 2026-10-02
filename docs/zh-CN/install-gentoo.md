@@ -2,13 +2,16 @@
 
 # 在 Gentoo 上安装
 
-本页用 Portage 从 doona 仓库中的 ebuild 安装 doona，并从同一个 doona 发布版本安装 honk-core。目前没有 ebuild 仓库收录 doona，因此需要把 ebuild 放进本地仓库。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
+本页用 Portage 从 doona 仓库中的 ebuild 模板安装 doona，并从同一个 doona 发布版本安装 honk-core。请使用本地 ebuild 仓库安装此模板。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
+
+> [!NOTE]
+> beta.13 下载文件尚未发布。本页命令须在[发布页](https://github.com/Zakkaus/doona/releases)提供文件后执行，详见[原生 API 状态](index.md#原生-api-状态)。
 
 ## 开始之前
 
 - Linux 6.12 或更高版本，以及[系统要求](requirements.md#requirements)列出的内核选项。用 `uname -r` 查看内核版本。
 - 可使用 sudo 的用户，或 root shell。需要 root 权限的命令分为“sudo”与“root”两个标签页，请选择与当前 shell 相符的一个。
-- `net-misc/curl` 与 `app-misc/ca-certificates`，stage3 已包含这两个软件包。缺少 CA 证书时 honk 会在启动阶段退出。
+- `net-misc/curl` 与 `app-misc/ca-certificates`。honk 使用系统 CA 证书校验 HTTPS 下载。
 - 能够访问 github.com。
 - 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `REPO`、`VERSION`、`PV`、`BASE` 与 `TARGET` 变量。
 
@@ -42,25 +45,25 @@ portageq get_repos /
 
 ## 2. 加入 doona 的 ebuild
 
-设置发布版本号及其 Gentoo 写法，然后从该发布版本的标签下载 ebuild 与 `metadata.xml`。
+设置发布版本号及其 Gentoo 写法。源码提交 `ca2eccf0bbced6f4d22948c9f71d96a90705e5ab` 中的模板名为 `doona-0.1.0_beta12.ebuild`；下载已核实的模板，安装 beta.13 时将其保存为 `doona-$PV.ebuild`。ebuild 会根据 `PV` 生成下载网址。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+sudo curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
@@ -77,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
-doona-fonts-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
+doona-fonts-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 4. 把归档文件交给 Portage
@@ -103,7 +106,7 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 5. 安装 doona
 
-使用 doona 0.1.0-beta.12 附带的 honk-core 构建并设置 `ui: embedded` 时，`doona` 软件包可省略，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.13 软件包，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
 
 该 ebuild 的关键字为测试分支（`~amd64`、`~arm64` 等），需要先为这个软件包接受测试关键字。请把 `~amd64` 换成本机架构的关键字。
 
@@ -121,7 +124,7 @@ emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
 ```
 
-Portage 最后输出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。该软件包只包含 doona 的网页文件，不安装任何服务。如不需要 Noto Sans TC 与 SC 字体，请为 `net-proxy/doona` 设置 `USE=-fonts`。
+Portage 最后输出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。该软件包包含 doona 的网页文件与文档，不安装任何服务。如不需要 Noto Sans TC 与 SC 字体，请为 `net-proxy/doona` 设置 `USE=-fonts`。
 
 ## 6. 选择 honk-core 构建
 
@@ -139,8 +142,8 @@ uname -m
 | target 结尾     | 适用情况                                                                              |
 | --------------- | ------------------------------------------------------------------------------------- |
 | `musl`          | 无法确定，或系统使用 musl 时选择此项。静态链接，不受系统 glibc 版本限制。  |
-| `gnu`           | 系统的 glibc 为 2.39 或更高版本。glibc 较旧时会报错 `GLIBC_2.38' not found` 并退出。 |
-| `-stock` 后缀   | 内存比速度更重要，例如小型设备。使用系统内存分配器而不是 mimalloc。                   |
+| `gnu`           | 系统的 glibc 为 2.39 或更高版本。 |
+| `-stock` 后缀   | 使用系统内存分配器，而非 mimalloc。                                                 |
 
 例如 `x86_64-unknown-linux-musl`、`aarch64-unknown-linux-gnu` 或 `x86_64-unknown-linux-musl-stock`。
 
@@ -179,7 +182,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。

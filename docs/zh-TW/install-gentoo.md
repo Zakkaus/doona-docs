@@ -2,13 +2,16 @@
 
 # 在 Gentoo 上安裝
 
-本頁用 Portage 從 doona 儲存庫中的 ebuild 安裝 doona，並從同一個 doona 發行版本安裝 honk-core。目前沒有 ebuild 儲存庫收錄 doona，因此需要把 ebuild 放進本機儲存庫。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+本頁用 Portage 從 doona 儲存庫中的 ebuild 範本安裝 doona，並從同一個 doona 發行版本安裝 honk-core。請使用本機 ebuild 儲存庫安裝此範本。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+
+> [!NOTE]
+> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
 
 ## 開始之前
 
 - Linux 6.12 或更高版本，以及[系統需求](requirements.md#requirements)列出的核心選項。用 `uname -r` 檢視核心版本。
 - 可使用 sudo 的使用者，或 root shell。需要 root 權限的命令分為「sudo」與「root」兩個分頁，請選擇與目前的 shell 相符的一個。
-- `net-misc/curl` 與 `app-misc/ca-certificates`，stage3 已包含這兩個套件。缺少 CA 憑證時 honk 會在啟動階段結束。
+- `net-misc/curl` 與 `app-misc/ca-certificates`。honk 使用系統 CA 憑證驗證 HTTPS 下載。
 - 能夠連線到 github.com。
 - 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `REPO`、`VERSION`、`PV`、`BASE` 與 `TARGET` 變數。
 
@@ -42,25 +45,25 @@ portageq get_repos /
 
 ## 2. 加入 doona 的 ebuild
 
-設定發行版本號及其 Gentoo 寫法，然後從該發行版本的標籤下載 ebuild 與 `metadata.xml`。
+設定發行版本號及其 Gentoo 寫法。原始碼提交 `ca2eccf0bbced6f4d22948c9f71d96a90705e5ab` 中的範本名為 `doona-0.1.0_beta12.ebuild`；下載已核實的範本，安裝 beta.13 時將其儲存為 `doona-$PV.ebuild`。ebuild 會依據 `PV` 產生下載網址。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+sudo curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
@@ -77,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
-doona-fonts-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
+doona-fonts-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 4. 把封存檔交給 Portage
@@ -103,7 +106,7 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 5. 安裝 doona
 
-使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 該 ebuild 的關鍵字為測試分支（`~amd64`、`~arm64` 等），需要先為這個套件接受測試關鍵字。請把 `~amd64` 換成本機架構的關鍵字。
 
@@ -121,7 +124,7 @@ emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
 ```
 
-Portage 最後輸出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件只包含 doona 的網頁檔案，不安裝任何服務。如不需要 Noto Sans TC 與 SC 字型，請為 `net-proxy/doona` 設定 `USE=-fonts`。
+Portage 最後輸出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件包含 doona 的網頁檔案與文件，不安裝任何服務。如不需要 Noto Sans TC 與 SC 字型，請為 `net-proxy/doona` 設定 `USE=-fonts`。
 
 ## 6. 選擇 honk-core 建置
 
@@ -139,8 +142,8 @@ uname -m
 | target 結尾     | 適用情況                                                                              |
 | --------------- | ------------------------------------------------------------------------------------- |
 | `musl`          | 無法確定，或系統使用 musl 時選擇此項。靜態連結，不受系統 glibc 版本限制。  |
-| `gnu`           | 系統的 glibc 為 2.39 或更高版本。glibc 較舊時會顯示錯誤 `GLIBC_2.38' not found` 並結束。 |
-| `-stock` 後綴   | 記憶體比速度更重要，例如小型裝置。使用系統記憶體分配器而不是 mimalloc。                   |
+| `gnu`           | 系統的 glibc 為 2.39 或更高版本。 |
+| `-stock` 後綴   | 使用系統記憶體配置器，而非 mimalloc。                                               |
 
 例如 `x86_64-unknown-linux-musl`、`aarch64-unknown-linux-gnu` 或 `x86_64-unknown-linux-musl-stock`。
 
@@ -179,12 +182,12 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
-下一步：[最小組態](minimal-configuration.md)。服務相關步驟只涵蓋 systemd 與 OpenWrt 的 procd；doona 與 honk 都不提供 OpenRC 指令碼。使用 OpenRC 時，[服務管理](service-management.md)提供在前景運作 honk 的命令，用於完成首次登入。
+下一步：[最小組態](minimal-configuration.md)。服務相關步驟只涵蓋 systemd 與 OpenWrt 的 procd；doona 與 honk 都不提供 OpenRC 指令碼。使用 OpenRC 時，[服務管理](service-management.md)提供在前景執行 honk 的命令，用於完成首次登入。
 
 ## 遇到問題時
 

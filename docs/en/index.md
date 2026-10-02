@@ -10,7 +10,9 @@ doona is a static web UI for the native API that the daeuniverse engines share: 
 
 ## Native API status
 
-doona needs honk's native API, which exists only in builds from the `feat/native-api` branch of Glassyiris/honk and its rolling `debug` release. On that branch, `native-api` is opt-in; release and `debug` builds, including those attached to doona 0.1.0-beta.12, include it. Builds of daeuniverse/honk `main` reject every `native_api` setting as `unknown experimental setting`; `/api` and `/ui/` answer 404. A build from `feat/native-api` without the feature stops with `native-api feature is required` when `native_api` is enabled. These pages were checked against `debug.2026.9.30.native-api.5` (commit `25377686`). Keys and defaults may change before upstream honk releases the API.
+These pages describe the planned doona v0.1.0-beta.13 release. doona needs honk's native API from Glassyiris/honk's `feat/native-api` branch, available in its rolling `debug` release and the honk archives attached to doona releases. The release build pins honk commit `5ad13ac`; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
+
+The source still declares beta.12, and beta.13 download assets are not yet published. The beta.13 commands on the installation pages require that release to be available.
 
 ## Pages
 
@@ -21,7 +23,7 @@ For a new gateway, read Requirements and the install page for your system, then 
 3. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
 4. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
 5. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
-6. [First sign-in](first-sign-in.md): create the administrator and check the overview.
+6. [First sign-in](first-sign-in.md): create the administrator and check System status.
 7. [Interface tour](tour.md): pages, the top bar, panels and how changes are held, applied or saved.
 8. [Watching traffic](observe.md): Activity, System status, Connections, Routing log, DNS, Logs and Events.
 9. [Routing, nodes and rules](routing.md): policy groups, nodes and subscriptions, rules and Trace.

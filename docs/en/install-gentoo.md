@@ -2,13 +2,16 @@ English / [简体中文](../zh-CN/install-gentoo.md) / [繁體中文](../zh-TW/i
 
 # Install on Gentoo
 
-This page installs doona with Portage from the ebuild in doona’s repository, and honk-core from the same doona release. No ebuild repository carries doona yet, so the ebuild goes into a local repository. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+This page installs doona with Portage from the ebuild template in doona’s repository, and honk-core from the same doona release. Use a local ebuild repository for this recipe. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+
+> [!NOTE]
+> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
 
 ## Before you start
 
 - Linux 6.12 or later and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
 - A user account with sudo, or a root shell. Commands that need root have a sudo tab and a root tab; pick the one that matches your shell.
-- `net-misc/curl` and `app-misc/ca-certificates`, which a stage3 already contains. honk stops at startup without CA certificates.
+- `net-misc/curl` and `app-misc/ca-certificates`. honk uses the system CA certificates to verify HTTPS downloads.
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `REPO`, `VERSION`, `PV`, `BASE` and `TARGET` variables that earlier steps set.
 
@@ -42,25 +45,25 @@ The last command lists `local` next to `gentoo`.
 
 ## 2. Add the doona ebuild
 
-Set the release version and its Gentoo form, then download the ebuild and `metadata.xml` from that release tag.
+Set the release version and its Gentoo form. At source commit `ca2eccf0bbced6f4d22948c9f71d96a90705e5ab`, the template is named `doona-0.1.0_beta12.ebuild`; download that verified recipe and save it as `doona-$PV.ebuild` for beta.13. The ebuild derives its download URLs from `PV`.
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-sudo curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+sudo curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.12
-PV=0.1.0_beta9
-RAW=https://raw.githubusercontent.com/Zakkaus/doona/v$VERSION/install/gentoo/net-proxy/doona
+VERSION=0.1.0-beta.13
+PV=0.1.0_beta13
+RAW=https://raw.githubusercontent.com/Zakkaus/doona/ca2eccf0bbced6f4d22948c9f71d96a90705e5ab/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
-curl -fL -O "$RAW/doona-$PV.ebuild" -O "$RAW/metadata.xml"
+curl -fL -o "doona-$PV.ebuild" "$RAW/doona-0.1.0_beta12.ebuild" -O "$RAW/metadata.xml"
 cd -
 ```
 
@@ -77,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
-doona-fonts-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
+doona-fonts-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 4. Hand the archives to Portage
@@ -103,7 +106,7 @@ The last command prints `>>> Creating Manifest for` and the package directory, `
 
 ## 5. Install doona
 
-The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
 
@@ -121,7 +124,7 @@ emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
 ```
 
-Portage ends with `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`, and `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files; it installs no service. Set `USE=-fonts` for `net-proxy/doona` to leave out the Noto Sans TC and SC fonts.
+Portage ends with `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`, and `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds doona’s web files and documentation; it installs no service. Set `USE=-fonts` for `net-proxy/doona` to leave out the Noto Sans TC and SC fonts.
 
 ## 6. Choose the honk-core build
 
@@ -139,8 +142,8 @@ The release carries eight honk-core archives, named `honk-core-debug-<target>.ta
 | Target ends with | Choose it when                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `musl`           | Unsure, or the system uses musl. Statically linked, so the system’s glibc version does not matter.                                          |
-| `gnu`            | The system has glibc 2.39 or later. On an older glibc it stops with `GLIBC_2.38' not found`.                      |
-| `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
+| `gnu`            | The system has glibc 2.39 or later. |
+| `-stock` suffix  | Uses the system allocator instead of mimalloc.                                                                    |
 
 For example, `x86_64-unknown-linux-musl`, `aarch64-unknown-linux-gnu` or `x86_64-unknown-linux-musl-stock`.
 
@@ -179,7 +182,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

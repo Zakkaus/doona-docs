@@ -4,13 +4,16 @@ English / [简体中文](../zh-CN/install-openwrt.md) / [繁體中文](../zh-TW/
 
 This page installs doona and honk-core on OpenWrt 25.12 from the release archives. After the last step, continue with [Minimal configuration](minimal-configuration.md).
 
+> [!NOTE]
+> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+
 The release’s `.ipk` package does not fit either current OpenWrt series. OpenWrt 25.12 installs packages with `apk`, which rejects the `.ipk` with `v2 package format error`. OpenWrt 24.10 still uses `opkg`, but runs Linux 6.6, older than the 6.12 honk needs.
 
 ## Before you start
 
 - OpenWrt 25.12 or later, which runs Linux 6.12, and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
 - A root shell on the router, such as `ssh root@192.168.1.1`. OpenWrt has no sudo; every command runs as root.
-- About 30 MB free on `/` for the honk-core binary (27 MB) and doona (2.2 MB), and 15 MB free in `/tmp` for the downloads. Check with `df -h / /tmp`.
+- Free space on `/` for honk-core, the extracted doona files, geodata and the state database. `/tmp` must hold the downloads and the extracted honk-core archive at the same time. Check with `df -h / /tmp`; sizes vary by build and geodata source.
 - From `debug.2026.9.28.native-api.4` onward, including the honk builds attached to doona beta.10 and later, geodata updates stream to disk and use an inactivity timeout. Keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) so mimalloc returns freed memory to the system after an update.
 - Access to github.com.
 - Run every step in the same shell: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
@@ -31,7 +34,7 @@ Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r
 
 ## 1. Install curl and CA certificates
 
-honk downloads subscriptions and geodata over HTTPS and stops at startup without CA certificates. OpenWrt 25.12 includes `ca-bundle`; the command keeps it and adds curl.
+honk uses the system CA certificates to verify HTTPS subscription and geodata downloads. Install curl and `ca-bundle`:
 
 ```sh
 apk update
@@ -44,7 +47,7 @@ Work in `/tmp`, which is in memory and is cleared at reboot. Set the release ver
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.12
+VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -58,12 +61,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 4. Install doona
 
-The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 files installed here; see [Minimal configuration](minimal-configuration.md).
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 
@@ -73,7 +76,7 @@ tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
 ```
 
-`ls` prints a line ending in `/usr/share/doona/index.html`. The optional font archive, `doona-fonts-${VERSION}.tar.gz`, adds 8.7 MB of Chinese fonts; skip it where storage is short.
+`ls` prints a line ending in `/usr/share/doona/index.html`. The optional font archive, `doona-fonts-${VERSION}.tar.gz`, adds the Noto Sans TC and SC fonts; skip it where storage is short.
 
 ## 5. Choose the honk-core build
 
@@ -88,7 +91,7 @@ OpenWrt uses musl, so take a `musl` build:
 | `x86_64`          | `x86_64-unknown-linux-musl`, or `x86_64-unknown-linux-musl-stock`           |
 | `aarch64`         | `aarch64-unknown-linux-musl`, or `aarch64-unknown-linux-musl-stock`         |
 
-The `-stock` build uses the system allocator instead of mimalloc. Choose it when memory matters more than speed. There are no builds for other router CPUs, such as MIPS or 32-bit ARM.
+The `-stock` build uses the system allocator instead of mimalloc. There are no release builds for other router CPUs, such as MIPS or 32-bit ARM.
 
 ## 6. Download and verify honk-core
 
@@ -121,7 +124,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

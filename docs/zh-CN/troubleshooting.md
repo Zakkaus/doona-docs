@@ -40,13 +40,13 @@ daeuniverse/honk `main` 分支的构建没有原生 API，会以 `unknown experi
 - `password login cannot be combined with anonymous loopback`：删除 `allow_anonymous_loopback`。
 - `native API requires a secret, password login, or explicitly anonymous loopback`：`enabled: true` 需要 `secret`、`password_auth: true`，或 loopback `listen` 与 `allow_anonymous_loopback: true`。
 
-`listen` 为 loopback 地址且设置 `allow_anonymous_loopback: true` 时，请求无需 Token 即可获准访问，权限与通过 bearer Token 验证的请求相同。此模式仅用于本地开发。
+`listen` 为 loopback 地址且设置 `allow_anonymous_loopback: true` 时，读取请求无需 Token。配置写入与受保护的设置修改仍需要凭据。此模式仅用于本地开发。
 
 <a name="state-db"></a>
 
 ## 状态数据库问题
 
-示例配置设置了 `password_auth: true`，数据库无法打开时 honk 会在启动时退出，日志显示 `state database:` 及原因。Token 模式下 honk 会记录警告并在没有数据库的情况下运行：地理数据来源卡片消失，只有同时设置两个下载地址，“更新”按钮才会保留。请在日志中查找原因：
+示例配置设置了 `password_auth: true`，数据库无法打开时 honk 会在启动时退出，日志显示 `state database:` 及原因。Token 模式下 honk 会记录警告并在没有数据库的情况下运行。「设置」仍显示地理数据文件，但来源与计划控件消失。手动更新需要为每个已加载资源配置地址。请在日志中查找原因：
 
 ```sh
 sudo journalctl -u honk-core | grep -i 'state database'
@@ -62,31 +62,31 @@ state database is locked by `honk-core admin reset`
 state database is corrupt
 ```
 
-1. unavailable：`data_dir` 不存在时由 honk 创建，`state/` 也由 honk 在其中创建。运行 honk 的用户必须能在父目录中创建 `data_dir`，并能写入该目录；使用[安装](install.md#install)中的 systemd 单元时该用户为 root。
+1. unavailable：`data_dir` 不存在时由 honk 创建，`state/` 也由 honk 在其中创建。运行 honk 的用户必须能在父目录中创建 `data_dir`，并能写入该目录；使用 [systemd 单元](service-management.md)时该用户为 root。
 2. unsafe：`state/` 与 `honk.db` 必须属于该用户，且不授予组或其他用户任何权限。`honk.db` 必须是普通文件，不能是符号链接，也不能在 honk 打开时被替换。
 3. locked：等待 `honk-core admin reset` 执行完毕。
 4. corrupt：设置 `password_auth: true` 时 honk 会退出。Token 模式下 honk 会将文件移至 `honk.db.corrupt` 并新建数据库；若已存在较早的 `.corrupt` 文件，honk 会保留两者，并在该文件删除之前不使用数据库运行。
 5. 修复后重启 honk。
 
-`another honk-core has the state database open` 与 `state database has a foreign application id or a newer schema` 总会阻止启动：请停止另一个实例，或使用写入该数据库的 honk 版本。doona beta.10 附带的 honk 构建打开 beta.9 附带构建写入的数据库时会报第二条错误；beta.11 及之后附带的构建可以打开该数据库。
+`another honk-core has the state database open` 与 `state database has a foreign application id or a newer schema` 总会阻止启动：请停止另一个实例，或使用写入该数据库的 honk 版本。
 
 <a name="geodata-sources"></a>
 
 ## 地理数据来源无法编辑，或自动更新从未运行
 
-honk 正在没有状态数据库的情况下运行，而来源与更新计划都保存在该数据库中。自 doona beta.9 起，概览页的“数据路径”卡片会提示状态数据库不可用，即使无法读取数据路径也会显示。`/api/v1/runtime` 的 `degradations` 列表也会列出该项；`<listen>` 为 `listen` 地址，`<token>` 为 `secret`：
+honk 正在没有状态数据库的情况下运行，而来源与更新计划都保存在该数据库中。「系统状态」页的「数据路径」卡片会提示状态数据库不可用，即使无法读取数据路径也会显示。`/api/v1/runtime` 的 `degradations` 列表也会列出该项；`<listen>` 为 `listen` 地址，`<token>` 为 `secret`：
 
 ```sh
 curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
 ```
 
-出现 `persistence_unavailable` 条目即可确认，其 `reason` 指出原因，请参阅[状态数据库问题](#state-db)。修复之前，“更新”从 `native_api` 中的 `geosite_download_url` 与 `geoip_download_url` 下载，且只在手动点击时执行。
+出现 `persistence_unavailable` 条目即可确认，其 `reason` 指出原因，请参阅[状态数据库问题](#state-db)。修复之前，手动更新使用配置中的 `assets.geodata.geosite` 与 `assets.geodata.geoip` 地址；`native_api` 中的下载地址字段是旧别名。
 
 <a name="state-unsafe"></a>
 
 ## persistence_unavailable 的 reason 为 unsafe
 
-honk 拒绝使用数据目录中的 `state/` 或其中的 `honk.db`。两者都必须属于运行 honk 的用户，不授予组或其他用户任何权限，且不能是符号链接。数据目录为 `ps w | grep '[h]onk-core'` 显示的 `--data-dir` 值；没有此参数时为配置中的 `data_dir`，默认为 `/var/lib/honk`。
+honk 拒绝使用数据目录中的 `state/` 或其中的 `honk.db`。两者都必须属于运行 honk 的用户，不授予组或其他用户任何权限，且不能是符号链接。本指南使用默认的文件存储模式，目录由 `global.data_dir` 指定，默认为 `/var/lib/honk`；`--data-dir` 不会覆盖此值。执行 `admin reset` 时，将同一目录传给 `--data-dir`。
 
 ```sh
 ls -ld /var/lib/honk/state /var/lib/honk/state/honk.db
@@ -102,7 +102,7 @@ OpenWrt 的 `/var` 位于内存中，因此默认的 `/var/lib/honk` 每次重�
 
 ## 地理数据更新失败并显示 checksum_unavailable
 
-文件已下载，但无法获取 `<url>.sha256sum`。404 不算失败：honk 会保留未经校验的文件。beta.9 附带的构建在文件下载连续 30 秒无进展或总计超过 10 分钟时超时；校验和请求有独立的 10 秒期限。HTTP 403、429 或路由故障也会让校验和请求失败。可改用其他镜像站；仅当可信镜像站的`.sha256sum` 地址确定无法使用时，才关闭“SHA-256 校验”。
+文件已下载，但无法获取 `<url>.sha256sum`。404 不算失败：honk 会保留未经校验的文件。文件下载连续 30 秒无进展或总计超过 10 分钟时超时；校验和请求有独立的 10 秒期限。HTTP 403、429 或路由故障也会让校验和请求失败。可改用其他镜像站；仅当可信镜像站的 `.sha256sum` 地址确定无法使用时，才关闭「SHA-256 校验」。
 
 | 阶段                   | 含义                                                   | 处理方法                                                   |
 | ---------------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
@@ -114,7 +114,6 @@ OpenWrt 的 `/var` 位于内存中，因此默认的 `/var/lib/honk` 每次重�
 | `tls_failed`           | TLS 握手或证书检查失败。                               | 检查网关的时钟与地址的主机名。                             |
 | `group_unavailable`    | 下载所经的组没有可用节点。                             | 在“策略”页检查该组。                                       |
 | `route_blocked`        | 路由规则将下载主机导向 `block`。                       | 修改匹配该主机的规则。                                     |
-| `destination_rejected` | 地址的 IP 或端口不允许用于下载。                       | 改用端口 80 或 443 上的公网地址。                          |
 | `asset_too_large`      | 文件超过 honk 的大小上限。                             | 确认地址指向地理数据文件。                                 |
 | `invalid_source`       | 地址不是有效的 HTTP 或 HTTPS 地址。                    | 修正地址。                                                 |
 
@@ -146,8 +145,8 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 ## 登录与跨域失败
 
 - 首次设置只能在网关本机或私有网络中的客户端上完成。
-- 设置中显示“网络连接失败”或“网络或跨域请求失败”：无法通过 `listen` 地址访问 honk，或 doona 所在来源未列入 `allow_origins` 与 `allowed_hosts`。
-- 通过 `openwrt.lan` 访问 API 时，若主机名不在 `native_api` 的 `allowed_hosts` 中，会返回 403。请改用局域网 IP，或在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan'` 并重启 honk。
+- 「设置」中出现网络或跨域请求失败：无法通过 `listen` 地址访问 honk，或 doona 所在来源未列入 `allow_origins` 与 `allowed_hosts`。
+- 通过 `openwrt.lan` 访问 API 时，若主机名与端口不在 `native_api` 的 `allowed_hosts` 中，会返回 403。请改用局域网 IP，或在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan:9527'` 并重启 honk。未指定端口的主机条目表示端口 80。
 - 忘记密码：停止 honk，执行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上执行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再启动 honk 重新设置。
 - HTTPS 页面无法访问 HTTP API，请参阅[从其他来源打开 doona](install.md#other-origin)。
 
@@ -180,9 +179,13 @@ honk 返回已知的 `details.reason` 时，doona 以界面语言显示原因。
 | `import_entry_changed` | 导入入口与当前数据库入口不同。使用 `-c` 指定当前入口启动 honk，然后重试导入。 |
 | `unsafe_path` | 使用允许的配置目录中的常规文件，然后重试。 |
 
+失败提示中的「复制错误」复制该请求的错误详情。「设置」中的「关于」提供「复制最近错误」，可复制内存中保留的最多 20 条最近错误，不含密钥与请求正文。重新加载页面会清除记录。
+
+写入或已接受操作的结果未知时，不要假定失败或直接重复操作。请检查重新加载的配置。已接受的导入或修订恢复可在重新打开「备份与修订」后点击「刷新」，查询原操作。需重启的诊断表示没有写入；请在磁盘上修改列出的设置，再[重启 honk](service-management.md)。
+
 ## “日志”与“事件”中没有启动消息
 
-“设置”中的“日志记录”默认为“随面板”，只在 doona 连接时记录。请改为查看系统日志：
+「设置」中的「日志记录」默认为「按日志需求」。本次固定的 honk 构建在客户端连接时开始记录，并可在 60 秒宽限期内继续记录；此前的启动消息不会补录。请改为查看系统日志：
 
 ```sh
 logread -e honk                  # OpenWrt
@@ -191,7 +194,7 @@ journalctl -u honk-core -b       # systemd
 
 ## “连接”或“规则”页一直为空
 
-“流程记录”设为“按流程需求”时，honk 只在客户端请求时记录。从 beta.9 起，doona 在“连接”或“规则”页打开时请求流程，最后一次请求结束后继续记录 60 秒。使用 beta.8 或更早版本且看不到流程时，可在“设置”中将“流程记录”设为“常开”。
+「流程记录」设为「按流程需求」时，honk 只在客户端请求时记录。doona 在「连接」「规则」或「分流」页打开时请求流程，最后一次需求结束后继续记录 60 秒。请检查「设置」中的「流程记录」：「常开」持续记录，「关闭」停止记录；配置中禁止的记录功能不能在此启用。
 
 ## “连接”页只显示局域网地址，全部直连
 
@@ -200,6 +203,8 @@ journalctl -u honk-core -b       # systemd
 ## 升级后 doona 仍显示旧版本
 
 Service worker 在更新完成前会提供缓存的版本。请刷新页面一到两次，或关闭所有 doona 标签页后重新打开。
+
+使用 `ui: embedded` 时，界面版本由 honk 构建固定。本次发布附带的 honk 构建嵌入 beta.12；请安装独立的 beta.13 界面，并将 `ui` 指向其目录以使用新版界面。
 
 ## 通过 HTTP 登录时出现 crypto.randomUUID is not a function
 

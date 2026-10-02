@@ -13,7 +13,7 @@ honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link an
 - cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
 - bpffs mounted at `/sys/fs/bpf`.
 - CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
-- With `geoip` rules on a honk build before `debug.2026.9.28.native-api.4`, use at least 512 MB RAM: the older OpenWrt test ran out of memory during a geodata update on a 256 MB VM. From that build on, honk streams geodata updates to disk. For OpenWrt, keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md).
+- Geodata updates can raise memory use on small routers. honk streams them to disk; on OpenWrt with a mimalloc build, keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) to return freed memory promptly.
 
 ```sh
 uname -r
@@ -24,6 +24,7 @@ zcat /proc/config.gz 2>/dev/null || cat /boot/config-$(uname -r)
 CONFIG_BPF=y
 CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
+CONFIG_DEBUG_INFO_BTF=y
 CONFIG_CGROUP_BPF=y
 CONFIG_NET_CLS_BPF=y|m
 CONFIG_NET_SCH_INGRESS=y|m
@@ -31,7 +32,8 @@ CONFIG_NET_CLS_ACT=y
 CONFIG_NET_NS=y
 # Held-first-packet UDP (NFQUEUE, on by default) also needs:
 CONFIG_NF_TABLES=y|m
-CONFIG_NF_TABLES_INET=y
+CONFIG_NF_TABLES_INET=y|m
+CONFIG_NFT_CT=y|m
 CONFIG_NETFILTER_NETLINK_QUEUE=y|m
 CONFIG_NFT_QUEUE=y|m
 ```
@@ -50,17 +52,17 @@ mountpoint /sys/fs/bpf
 
 ## honk version
 
-- Only builds from the `feat/native-api` branch of Glassyiris/honk and its rolling `debug` release have the native API. On that branch, `native-api` is an opt-in build feature; release and `debug` builds include it. doona beta.12 attaches `debug.2026.9.30.native-api.5` (commit `25377686`). `HONK-SOURCE.txt` in each doona release from beta.8 onward names its honk tag and commit.
+- Builds from Glassyiris/honk's `feat/native-api` branch provide the native API. `native-api` is an opt-in build feature; release and rolling `debug` builds include it. The doona release pipeline pins honk commit `5ad13ac` (`debug.2026.10.3.native-api.1`), whose embedded UI is doona beta.12. `HONK-SOURCE.txt` in the release records the honk tag and full commit. Install the standalone beta.13 UI to use this release's interface changes once its assets are published.
 - Builds of daeuniverse/honk `main` have no native API. honk rejects every `native_api` setting as `unknown experimental setting`, and `/api` and `/ui/` answer 404.
 - A build from `feat/native-api` without the `native-api` feature stops startup with `native-api feature is required` when `native_api` is enabled.
 - Early `feat/native-api` builds update geodata but have no configurable sources. The builds attached to doona beta.8 and beta.9 have both.
 
-Run `honk-core --version` to check the installed binary. To check the running version, use the Engine card on Overview or the bottom of the side navigation.
+Run `honk-core --version` to check the installed binary. To check the running version, use the Engine card on System status or the bottom of the side navigation.
 
 ## Browser and build
 
 | Component | Requirement                                                                                                                                                             |
 | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Backend   | An engine implementing the native API contract pinned in [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md), with its API listener enabled                           |
-| Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Automated tests use Chromium, and CI adds WebKit |
-| Build     | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives                              |
+| Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Browser tests use Chromium; CI adds WebKit and a Firefox Nightly compatibility run. |
+| Build     | Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives |

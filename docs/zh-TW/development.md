@@ -20,7 +20,7 @@ pnpm e2e                         # rebuild, then test against the mock at the ro
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
 ```
 
-`pnpm dev` 以 Vite 開發伺服器提供模擬後端。封存檔的版本號在本機取自 `package.json`，在標籤上取自 Git 描述；時間戳用 `SOURCE_DATE_EPOCH`，未設定時用 HEAD 提交時間。
+`pnpm dev` 以 Vite 開發伺服器提供模擬後端。`pnpm package` 使用 `package.json` 中的版本號；`pnpm package --git-version` 使用去掉開頭 `v` 的 `git describe --tags --always` 輸出。時間戳使用 `SOURCE_DATE_EPOCH`，未設定時使用 HEAD 提交時間。
 
 ## 對實際後端測試
 
@@ -28,7 +28,7 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 
 ## 截圖
 
-`node tools/screenshots.mjs <url> docs/screenshots` 從執行中的建置擷取頁面截圖、配色總覽、手機拼圖與兩段動畫，輸出 WebP，需要安裝 `cwebp` 和 `img2webp`。
+`node tools/screenshots.mjs <url> docs/screenshots` 擷取各語言的模擬後端頁面、配色總覽、英文主題圖庫、手機拼圖、頁面導覽靜態影格與路由動畫，輸出 WebP。需要安裝 `cwebp`、`img2webp` 與 Playwright 的 Chromium。
 
 ## 原始碼配置
 
@@ -37,15 +37,19 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 | `src/features/` | 各頁面及其 hook 與文案，一頁一個資料夾            |
 | `src/shell/`    | 應用程式外殼、導覽與搜尋                          |
 | `src/ui/`       | 共用元件、主題與圖示                              |
-| `src/api/`      | 用戶端、後端設定檔、模擬後端與產生的型別          |
+| `src/api/`      | 用戶端、後端設定檔、引擎轉接器與產生的型別 |
+| `mock/`         | 示範、預覽與測試使用的模擬後端 |
 | `src/store/`    | 資源監聽、讀取快取與操作 hook                     |
 | `src/i18n/`     | 翻譯與地區設定輔助                                |
 | `contract/`     | 內嵌的 OpenAPI 契約與釘點                         |
-| `public/`       | 靜態資源、字型與 service worker                   |
+| `public/`       | 靜態圖示、manifest 與 service worker |
 | `e2e/`          | 瀏覽器測試                                        |
 | `tools/`        | 建置、打包、一致性檢查與截圖工具                  |
 | `install/`      | nfpm 設定與 OpenWrt、Alpine、Gentoo、Nix 打包設定 |
-| `docs/`         | 截圖                                              |
+| `docs/`         | 國旗與字型文件 |
+| `node_modules/@fontsource-variable/` | Vite 打包的 Noto Sans TC/SC 字型原始碼 |
+
+截圖工具在執行時建立 `docs/screenshots/`；截圖不在原始碼樹中。
 
 ## 契約
 

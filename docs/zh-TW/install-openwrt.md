@@ -4,13 +4,16 @@
 
 本頁在 OpenWrt 25.12 上用發行版本中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
+> [!NOTE]
+> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+
 發行版本中的 `.ipk` 套件不適用於目前任何一個 OpenWrt 系列。OpenWrt 25.12 用 `apk` 安裝套件，`apk` 拒絕 `.ipk` 並報錯 `v2 package format error`。OpenWrt 24.10 仍使用 `opkg`，但核心是 Linux 6.6，低於 honk 要求的 6.12。
 
 ## 開始之前
 
 - OpenWrt 25.12 或更高版本（核心為 Linux 6.12），以及[系統需求](requirements.md#requirements)列出的核心選項。用 `uname -r` 檢視核心版本。
 - 路由器上的 root shell，例如 `ssh root@192.168.1.1`。OpenWrt 沒有 sudo，所有命令都以 root 身份執行。
-- `/` 上約 30 MB 可用空間，用於 honk-core 二進位檔（27 MB）與 doona（2.2 MB）；`/tmp` 上約 15 MB 可用空間，用於存放下載的檔案。用 `df -h / /tmp` 檢視。
+- `/` 上須有足夠空間存放 honk-core、解壓縮後的 doona 檔案、地理資料與狀態資料庫。`/tmp` 須能同時存放下載檔案與解壓縮後的 honk-core 封存內容。用 `df -h / /tmp` 檢查；大小隨建置與地理資料來源變化。
 - 從 `debug.2026.9.28.native-api.4` 起，包括 doona beta.10 及之後附帶的 honk 建置，geodata 更新會串流寫入磁碟，並使用 inactivity timeout。請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，讓 mimalloc 在更新後將已釋放的記憶體歸還給系統。
 - 能夠連線到 github.com。
 - 所有步驟都在同一個 shell 中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
@@ -31,7 +34,7 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 ## 1. 安裝 curl 與 CA 憑證
 
-honk 透過 HTTPS 下載訂閱與地理資料，缺少 CA 憑證時會在啟動階段結束。OpenWrt 25.12 已包含 `ca-bundle`；下面的命令保留它並安裝 curl。
+honk 使用系統 CA 憑證驗證透過 HTTPS 下載的訂閱與地理資料。安裝 curl 與 `ca-bundle`：
 
 ```sh
 apk update
@@ -44,7 +47,7 @@ apk add curl ca-bundle
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.12
+VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -58,12 +61,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.12.tar.gz: OK
+doona-0.1.0-beta.13.tar.gz: OK
 ```
 
 ## 4. 安裝 doona
 
-使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
@@ -73,7 +76,7 @@ tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
 ```
 
-`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。可選的字型封存檔 `doona-fonts-${VERSION}.tar.gz` 包含 8.7 MB 中文字型，儲存空間不足時可以不裝。
+`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。選用的字型封存檔 `doona-fonts-${VERSION}.tar.gz` 包含 Noto Sans TC 與 SC 字型，儲存空間不足時可以不裝。
 
 ## 5. 選擇 honk-core 建置
 
@@ -88,7 +91,7 @@ OpenWrt 使用 musl，因此選擇 `musl` 建置：
 | `x86_64`        | `x86_64-unknown-linux-musl` 或 `x86_64-unknown-linux-musl-stock`         |
 | `aarch64`       | `aarch64-unknown-linux-musl` 或 `aarch64-unknown-linux-musl-stock`       |
 
-`-stock` 建置使用系統記憶體分配器而不是 mimalloc，適合記憶體比速度更重要的裝置。其他路由器 CPU（例如 MIPS 或 32 位 ARM）沒有對應的建置。
+`-stock` 建置使用系統記憶體配置器，而非 mimalloc。發行版本不提供其他路由器 CPU（例如 MIPS 或 32 位元 ARM）的建置。
 
 ## 6. 下載並驗證 honk-core
 
@@ -121,7 +124,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

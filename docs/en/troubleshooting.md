@@ -40,13 +40,13 @@ A build of daeuniverse/honk `main` has no native API and rejects every `native_a
 - “password login cannot be combined with anonymous loopback”: remove `allow_anonymous_loopback`.
 - “native API requires a secret, password login, or explicitly anonymous loopback”: `enabled: true` needs `secret`, `password_auth: true`, or `allow_anonymous_loopback: true` with a loopback `listen`.
 
-`allow_anonymous_loopback: true` with a loopback `listen` admits requests without a token, with the same access as bearer-authenticated requests. Use it for local development only.
+`allow_anonymous_loopback: true` with a loopback `listen` admits read requests without a token. Configuration writes and protected settings changes still require credentials. Use it for local development only.
 
 <a name="state-db"></a>
 
 ## State database problems
 
-With `password_auth: true`, as in the example configuration, a database that cannot be opened stops honk at startup, and the log shows `state database:` with the reason. In token mode honk logs a warning and runs without it: the geodata sources card disappears, and Update remains only when both download URLs are set. Find the cause in the log:
+With `password_auth: true`, as in the example configuration, a database that cannot be opened stops honk at startup, and the log shows `state database:` with the reason. In token mode honk logs a warning and runs without it. Geodata files remain in Settings, but source and schedule controls disappear. Manual updates require a configured URL for every loaded asset. Find the cause in the log:
 
 ```sh
 sudo journalctl -u honk-core | grep -i 'state database'
@@ -62,31 +62,31 @@ state database is locked by `honk-core admin reset`
 state database is corrupt
 ```
 
-1. unavailable: honk creates `data_dir` when it is missing, and `state/` inside it. The user honk runs as, root with the [systemd unit](install.md#install), must be able to create `data_dir` in its parent directory and write to it.
+1. unavailable: honk creates `data_dir` when it is missing, and `state/` inside it. The user honk runs as, root with the [systemd unit](service-management.md), must be able to create `data_dir` in its parent directory and write to it.
 2. unsafe: `state/` and `honk.db` must belong to that user and grant no group or other permissions. `honk.db` must be a regular file, not a symbolic link or a file replaced while honk opened it.
 3. locked: wait for `honk-core admin reset` to finish.
 4. corrupt: with `password_auth: true` honk stops. In token mode honk moves the file to `honk.db.corrupt` and starts a new one; if an older `.corrupt` file is already there, honk keeps both and runs without the database until that file is removed.
 5. Restart honk after the fix.
 
-“another honk-core has the state database open” and “state database has a foreign application id or a newer schema” always stop startup: stop the other instance, or run the honk build that wrote the database. The honk builds attached to doona beta.10 report the second message for a database written by the builds attached to beta.9; the builds attached to beta.11 and later open it.
+“another honk-core has the state database open” and “state database has a foreign application id or a newer schema” always stop startup: stop the other instance, or run the honk build that wrote the database.
 
 <a name="geodata-sources"></a>
 
 ## Geodata sources cannot be edited, or auto-update never runs
 
-honk is running without its state database, which keeps the sources and the update schedule. From doona beta.9, the Datapath card on Overview warns that the state database is unavailable, even when the datapath itself cannot be read. The `degradations` list on `/api/v1/runtime` shows it too; `<listen>` is the `listen` address and `<token>` the `secret`:
+honk is running without its state database, which keeps the sources and the update schedule. The Datapath card on System status warns that the state database is unavailable, even when the datapath itself cannot be read. The `degradations` list on `/api/v1/runtime` shows it too; `<listen>` is the `listen` address and `<token>` the `secret`:
 
 ```sh
 curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
 ```
 
-An entry with `persistence_unavailable` confirms it, and its `reason` names the cause; see [State database problems](#state-db). Until it is fixed, Update downloads from `geosite_download_url` and `geoip_download_url` in `native_api`, and runs only when you press it.
+An entry with `persistence_unavailable` confirms it, and its `reason` names the cause; see [State database problems](#state-db). Until it is fixed, manual updates use the configuration's `assets.geodata.geosite` and `assets.geodata.geoip` URLs. The `native_api` download URL fields are legacy aliases.
 
 <a name="state-unsafe"></a>
 
 ## persistence_unavailable with reason unsafe
 
-honk refuses `state/` in the data directory or `honk.db` in it. Both must belong to the user honk runs as, grant no group or other permissions, and not be symbolic links. The data directory is the `--data-dir` value that `ps w | grep '[h]onk-core'` shows, otherwise `data_dir` in the configuration, `/var/lib/honk` by default.
+honk refuses `state/` in the data directory or `honk.db` in it. Both must belong to the user honk runs as, grant no group or other permissions, and not be symbolic links. With the default file store used in this guide, `global.data_dir` sets the directory, `/var/lib/honk` by default; `--data-dir` does not override it. Pass that same directory to `--data-dir` when running `admin reset`.
 
 ```sh
 ls -ld /var/lib/honk/state /var/lib/honk/state/honk.db
@@ -102,7 +102,7 @@ On OpenWrt `/var` is in memory, so the default `/var/lib/honk` loses the databas
 
 ## Geodata update fails with checksum_unavailable
 
-The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. In the beta.9 build, file downloads time out after 30 seconds without progress or 10 minutes in all; the checksum request has its own 10-second deadline. HTTP 403 or 429 or a failed route also stops the checksum request. Use another mirror, or turn off Verify checksum only for a trusted mirror whose checksum URL is known to fail.
+The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. File downloads time out after 30 seconds without progress or 10 minutes in all; the checksum request has its own 10-second deadline. HTTP 403 or 429 or a failed route also stops the checksum request. Use another mirror, or turn off Verify checksum only for a trusted mirror whose checksum URL is known to fail.
 
 | Stage                  | Meaning                                                                 | What to try                                                        |
 | ---------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -114,7 +114,6 @@ The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a 
 | `tls_failed`           | The TLS handshake or certificate check failed.                          | Check the gateway's clock and the URL's host name.                 |
 | `group_unavailable`    | The group the download is routed through has no usable node.            | Check the group on the Policies page.                              |
 | `route_blocked`        | The routing rules send the download host to `block`.                    | Change the rule that matches the host.                             |
-| `destination_rejected` | The URL's address or port is not allowed for downloads.                 | Use a public address on port 80 or 443.                            |
 | `asset_too_large`      | The file exceeds honk's size limit.                                     | Check that the URL points at a geodata file.                       |
 | `invalid_source`       | The URL is not a valid HTTP or HTTPS URL.                               | Correct the URL.                                                   |
 
@@ -146,8 +145,8 @@ Find the latest `honk-core <version> starting` line in the current boot’s `jou
 ## Sign-in and cross-origin failures
 
 - First-time setup works only from the gateway or a private-network client.
-- “Network connection failed” or “Network or CORS request failed” in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
-- A request to the API through `openwrt.lan` returns 403 unless the hostname is in `native_api { allowed_hosts }`. Use the LAN IP instead, or add `allowed_hosts: 'openwrt.lan'` inside `native_api` and restart honk.
+- A network or CORS failure in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
+- A request to the API through `openwrt.lan` returns 403 unless the host and port are in `native_api { allowed_hosts }`. Use the LAN IP instead, or add `allowed_hosts: 'openwrt.lan:9527'` inside `native_api` and restart honk. Host entries without a port mean port 80.
 - A forgotten password: stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), and start honk to set up again.
 - An HTTPS page cannot reach an HTTP API; see [doona on another origin](install.md#other-origin).
 
@@ -180,9 +179,13 @@ When honk reports a known `details.reason`, doona shows the reason in the interf
 | `import_entry_changed` | The import entry differs from the active database entry. Start honk with `-c` pointing to the active entry, then retry the import. |
 | `unsafe_path` | Use a regular file inside an allowed configuration directory, then retry. |
 
+Copy error in a failure notice copies that request's error details. Settings -> About -> Copy recent errors copies up to 20 recent errors kept in memory, with secrets and request bodies omitted. Reloading clears the history.
+
+If a write or accepted operation has an unknown result, do not assume it failed or repeat it blindly. Check the reloaded configuration. For an accepted import or revision restore, reopen Backups and revisions and use Refresh to query the original operation. A restart-required diagnostic means nothing was written; edit the listed settings on disk and [restart honk](service-management.md).
+
 ## Startup messages are missing from Logs and Events
 
-Log recording in Settings defaults to With panel, which records only while doona is connected. Read the system log instead:
+Log recording in Settings defaults to On log demand. With the pinned honk build, recording starts when a client attaches and can continue for a 60-second grace period; earlier startup messages are not recorded retroactively. Read the system log instead:
 
 ```sh
 logread -e honk                  # OpenWrt
@@ -191,7 +194,7 @@ journalctl -u honk-core -b       # systemd
 
 ## Connections or Rules stay empty
 
-With Flow recording set to On flow demand, honk records flows only when a client asks for them. Since beta.9, doona requests flows while Connections or Rules is open; recording continues for 60 seconds after the last request. If an older build (beta.8 or earlier) shows no flows, set Flow recording to Always in Settings.
+With Flow recording set to On flow demand, honk records flows only when a client asks for them. doona requests flows while Connections, Rules or Routing log is open; recording continues for 60 seconds after the last demand. Check Flow recording in Settings: Always keeps recording on, Off stops it, and a recorder forbidden by the configuration cannot be enabled there.
 
 ## Connections page shows only LAN addresses, all direct
 
@@ -200,6 +203,8 @@ Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic
 ## doona shows the old version after an upgrade
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
+
+With `ui: embedded`, the interface version is pinned by the honk build. The honk build attached to this release embeds beta.12; install the standalone beta.13 UI and point `ui` at its directory to get the newer interface.
 
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 

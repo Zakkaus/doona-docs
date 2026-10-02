@@ -10,7 +10,7 @@ This page covers the Activity hub (Activity and System status) and the Monitor h
 
 ## Activity
 
-Activity is the page doona opens by default; change Open at startup in [Appearance](config-and-settings.md#settings-page) to choose another page. Some cards link to their details; the Outbound mode and Global mode outbound cards hold controls instead.
+Activity is the page doona opens by default; change Open at startup in [Appearance](config-and-settings.md#settings-page) to choose another page. Some cards link to their details; Outbound mode and Global outbound hold controls instead.
 
 ### Getting started
 
@@ -20,13 +20,13 @@ When setup is incomplete and the backend provides the required data, Getting sta
 2. Choose routing rules. Choose rules opens Rules. An applied template or custom routing completes this step.
 3. Check the connection. Check connection opens [Policies](routing.md#policies). Measure the selected node; a successful latency result for a node selected by a group completes this step.
 
-The steps update automatically. The card hides when all three are complete or you press the close icon button (accessible name: Dismiss). doona remembers this in the browser.
+The steps update automatically. The card hides when all three are complete or you press the close icon. doona remembers this in the browser.
 
 ### Outbound mode
 
 1. In the Outbound mode card, select Rule, Direct or Global.
-2. For Global, choose a policy group in the Global mode outbound card. Until a group is chosen, Apply stays disabled and the card shows Global mode needs an outbound. Choosing a group also selects Global.
-3. Select Apply. doona writes the mode into the main configuration and reloads it, and a toast confirms the new mode. Selecting a mode without Apply changes nothing.
+2. For Global, choose an outbound in the Global outbound card. Until one is chosen, Apply stays disabled and the card shows Global mode needs an outbound. Choosing an outbound also selects Global.
+3. Select Apply beside the changed mode or outbound. doona writes the change into the main configuration and reloads it, and a toast confirms the new mode. Selecting a mode without Apply changes nothing.
 
 If the card shows Read-only, doona cannot write the main configuration. Select Read-only to see the reason, then see [read-only sources](troubleshooting.md#read-only). If it shows Not provided by this backend, the backend does not offer a configuration this card can edit.
 
@@ -42,6 +42,8 @@ If the card shows Read-only, doona cannot write the main configuration. Select R
 8. The Memory card charts process memory over time. Its View details also opens System status.
 9. Notifications lists recent notices and setup notices for missing node sources or routing rules. Their actions open Nodes or Rules. Consecutive identical notices fold into one row with a count. View all opens Events.
 
+CPU usage and Latency also draw sparklines once two samples are available. Latency leaves failed probes as gaps and starts over when its group changes. Settings > Appearance controls metric-tile sparklines. Edit dashboard changes the cards and their displays; an empty outbound chart keeps its labels without an empty tooltip target.
+
 If a runtime read fails, the last figures are muted until a read succeeds.
 
 <a name="overview"></a>
@@ -55,7 +57,7 @@ Open System status from the navigation, or from View details or the CPU usage va
 3. Memory shows Resident memory, the cgroup figures and OOM events, where the backend reports them. A cgroup usage bar appears when a cgroup limit is known.
 4. Datapath shows the checks of the eBPF programs, hooks and maps in the kernel, and an Attachments table. Datapath errors and runtime degradations appear as warnings under the card.
 5. Backend features lists the features the backend provides. Select one to open the page that uses it.
-6. Features that are off appears only when some features are off. Each row names the cause and the affected features. How to turn on shows the settings to add; Possible causes explains why; other rows link to Backend options or Geodata in Settings, or to this guide.
+6. Features that are off appears only when some features are off. Each row names the cause and the affected features. How to turn on shows the settings to add; Possible causes explains why; other rows link to Temporary runtime overrides or Geodata in Settings, or to this guide.
 7. Select Export state JSON to download the reported state. Reload, Suspend and Resume appear only when the backend allows them; a toast reports each result.
 
 <a name="connections"></a>
@@ -67,7 +69,7 @@ Connections opens on the Traffic tab. A link that filters the list or selects a 
 ### Traffic tab
 
 1. Traffic per connection plots each connection: horizontal is upload, vertical is download. Select a point to open that connection in the Connections tab.
-2. Node latency places each node at the TCP latency the Nodes page shows, and separates nodes In use from nodes Not in use.
+2. Node latency places nodes at their latest reported latency and separates nodes In use from nodes Not in use. This is not limited to TCP probes.
 
 ### Connections tab
 
@@ -77,10 +79,10 @@ Connections opens on the Traffic tab. A link that filters the list or selects a 
 4. A notice appears when the list is truncated. Partial connection visibility or No connection visibility means an empty list does not prove the device has no connections.
 5. Select Export CSV to download the filtered list.
 6. Select a row to open its detail panel: state, target, device, process, observation source, Outbound, Chain and Rule.
-7. Add rule is the panel's primary action. The toolbar's Add rule does the same for the selected row. The dialog is described in [Adding a rule](routing.md#add-rule).
+7. Use a row's add-rule icon to open the [rule dialog](routing.md#add-rule). A disabled icon shows the tooltip This connection has no domain or IP address to match. The detail panel also offers Add rule when available. The toolbar has no add-rule button.
 8. More actions offers, when available:
    - Show matched rule: opens the rule on the [Rules](routing.md#rules) page.
-   - Edit matched rule's outbound settings: opens that rule for editing on the Rules page.
+   - Edit matched rule's outbound settings: opens Edit rule on the Rules page, where the conditions and target can be changed.
    - View flow: opens the flow record in Routing log.
    - Trace this connection: opens the Trace tab on the Rules page with this connection's input; see [Trace](routing.md#trace).
    - Only this device: filters the list to the connection's device.
@@ -106,8 +108,9 @@ Routing log shows how honk routed recorded flows. It has two tabs: Map and Recor
 1. Filter by Network protocol (All, TCP or UDP) and by State. A path or connection filter appears as a chip (Path: … or Connection: …); select the chip to remove it. Observation coverage appears when part of the traffic was not fully observed.
 2. The columns are Target, Node, Rule, Protocol, State and Started.
 3. Select a flow to open its detail panel. It shows whether the trace is Complete or Partial, the configuration revision, State, Outbound, Node, Rule and, for a partial trace, Why incomplete. The ordered trace steps follow.
-4. Select View connection to open the live connection, if it still exists. Select Add a rule for this target to open the rule dialog; see [Adding a rule](routing.md#add-rule).
-5. Recording settings opens Backend options in Settings, where flow recording is configured; see [backend options](config-and-settings.md#runtime-options).
+4. In the detail panel, select View connection to open the live connection, if it still exists.
+5. Use a record's add-rule icon to open the [rule dialog](routing.md#add-rule). A disabled icon shows the tooltip This flow has no domain or IP address to match. The toolbar and detail panel have no add-rule action.
+6. Recording settings opens Temporary runtime overrides in Settings, where flow recording is configured; see [runtime overrides](config-and-settings.md#runtime-options).
 
 <a name="dns"></a>
 
@@ -121,18 +124,21 @@ DNS has up to four tabs, in this order: Statistics, Resolution log, Cache and Qu
    - In Top queries, switch between Devices and Domains. Select an entry to open Resolution log filtered to it.
 2. Resolution log lists recent resolutions with Time, Domain, Type, Device, Result, Upstream and Elapsed.
    - Filter by Domain, Type or Device.
-   - Select a row to see its answers, cache status and route. Add rule opens the rule dialog for it.
+   - Select a row to see its answers, cache status and route. Use the row's add-rule icon to open a DNS request rule under Rules > DNS rules > Request rules. When DNS rules are unavailable, it opens a routing rule. The initial condition matches the exact domain. Choose Domain suffix to include subdomains.
    - Refresh loads the newest records. When newer records are waiting, a note says so; Refresh replaces the loaded records.
    - Load older records extends the list. Export CSV covers only the loaded records.
 3. Cache lists entries with Domain, Type, State, Expires and Stale until.
-   - Select an entry, then Add rule to open the rule dialog for it.
-   - Delete removes one entry, when the backend supports it.
+   - Cache is kept in memory only and cleared on restart.
+   - Use an entry's add-rule icon to open the same rule dialog as in Resolution log.
+   - When the backend supports deletion, use an entry's delete icon to remove it immediately.
+   - For bulk deletion, choose Match by (Full domain, Domain suffix, Domain keyword or Domain regex), enter Pattern and optionally select Type. Delete matching shows the matching count before confirmation. Available matches depend on backend deletion support; exact-name deletion also works when cache listing is unavailable.
    - Clear all cache removes every entry after a confirmation, when the backend supports it. This cannot be undone.
 4. Query sends a DNS query through honk's DNS routing.
    - Enter a domain, choose a Type, then select Query. Turn on Bypass cache to query without using a cached answer. It is off by default.
+   - When readable configuration defines `dns.upstream`, Upstream offers Automatic, which follows `dns.routing`, or one of those named upstreams.
    - The result shows Cache hit or Cache miss, State, Upstream, Route source, Route rule, Elapsed and the answers.
    - These queries are diagnostic: they do not appear in Resolution log.
-   - Add rule opens the rule dialog for the name or an answer address. View cache opens the matching cache entries.
+   - Add rule opens a DNS request rule for the name, or a routing rule for an answer address. View cache opens the matching cache entries.
 
 <a name="logs"></a>
 
@@ -145,7 +151,7 @@ Logs shows the engine's live log stream.
 3. Log activity over time charts the received records by level. Select a level in the chart to make it the minimum.
 4. Turn on Pause to hold the list. The status shows how many new records have arrived; they appear when you turn Pause off. Only the newest records are kept while paused.
 5. Clear removes the displayed records from this page. Export downloads the received records as a text file.
-6. Recording settings opens [Backend options](config-and-settings.md#runtime-options) in Settings, where log recording and the log level are set.
+6. Recording settings opens [Temporary runtime overrides](config-and-settings.md#runtime-options) in Settings, where log recording and the log level are set.
 7. Select a row to read the whole message. The status shows Streaming, Reconnecting or Disconnected. On reconnection, retained records are replayed; if replay is no longer possible, the list marks the gap.
 
 If the list shows Log recording is disabled in the configuration, change the honk configuration; see [configuration](configuration.md#config). If it shows Turn on log recording in Settings first, turn it on under Recording settings.

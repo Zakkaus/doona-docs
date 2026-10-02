@@ -4,6 +4,9 @@
 
 先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。開始前請確認[系統需求](requirements.md#requirements)。「安裝」下的其他頁面按系統逐步介紹同樣的安裝過程，從 [Debian 或 Ubuntu](install-debian.md) 開始。
 
+> [!NOTE]
+> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+
 <a name="install"></a>
 
 ## 安裝 honk
@@ -19,20 +22,20 @@
 | `x86_64`、`aarch64`  | 閘道器的 CPU 架構，即 `uname -m` 的輸出。                             |
 | `unknown-linux-musl` | 靜態連結，適用於閘道器。無法確定時請選擇此項。                        |
 | `unknown-linux-gnu`  | 連結 glibc，適用於一般發行版。                                        |
-| 無後綴               | 使用 mimalloc，為預設建置，QUIC 效能較佳。                            |
-| `-stock` 後綴        | 使用系統記憶體配置器而非 mimalloc，適用於較重視記憶體用量的小型裝置。 |
+| 無後綴               | 使用預設記憶體配置器 mimalloc。                                  |
+| `-stock` 後綴        | 使用系統記憶體配置器，而非 mimalloc。                            |
 
 如需分別下載、驗證與安裝 honk-core，請先完成[在其他系統上安裝](install-manual.md)的第 1 步，再依第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.12               # the doona release, without v
+VERSION=0.1.0-beta.13               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.9.30.native-api.5
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.1
 ```
 
 如需自行建置 honk，請簽出 `HONK-SOURCE.txt` 註明的提交，依 honk 快速入門的步驟建置：先建置 eBPF 物件，再執行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要明確啟用，發布建置已包含此功能；未啟用 `ebpf` 時 honk 沒有資料路徑。發布頁同時附有該提交的原始碼封存 `honk-source-<commit>.tar.gz`。
@@ -90,7 +93,7 @@ WantedBy=multi-user.target
 
 ## 安裝 doona 並啟動
 
-使用 doona 0.1.0-beta.12 附帶的 honk-core 建置並設定 `ui: embedded` 時，`doona` 套件可省略，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供執行檔中內建的 doona，而非此處安裝的檔案。目前固定的 honk 建置內建 doona 0.1.0-beta.12。如需提供 beta.13，請設定 `ui: /usr/share/doona` 並依下文安裝發布檔案，詳見[最小組態](minimal-configuration.md)。
 
 同時下載 doona 發布套件與 `SHA256SUMS`，再將套件解壓縮到 `/usr/share/doona`，也就是 `ui` 指定的目錄。最後一個指令必須列出 `index.html`，否則 honk 無法啟動。
 
@@ -99,7 +102,7 @@ WantedBy=multi-user.target
 如需逐步下載、驗證並解壓縮程式與選用字型，請依[在其他系統上安裝](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.12   # the doona release, without v
+VERSION=0.1.0-beta.13   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -131,12 +134,12 @@ sudo journalctl -u honk-core -e
 
 honk 預設會開啟 `<data_dir>/state/honk.db`：`global.store_subscribe` 預設為開啟，本範例也啟用了 `native_api`。狀態資料庫沒有需要加入的開關。此資料庫儲存管理員帳號、地理資料來源，以及 honk 需要持久保存的其他狀態。honk 會自行建立 `state/` 與 `honk.db`，`/var/lib/honk` 不存在時也由 honk 建立。執行 honk 的使用者必須能在 `/var/lib` 中建立該目錄，並能寫入該目錄；本範例中該使用者為 root。
 
-本範例設定了 `password_auth: true`，資料庫無法開啟時 honk 不會啟動，因此 honk 正在執行即代表資料庫已開啟。Token 模式下 honk 不使用資料庫也會啟動，並記錄一則警告；此時缺少狀態資料庫代表它未能開啟。日誌訊息的意義請參閱[狀態資料庫問題](troubleshooting.md#state-db)。
+本範例設定了 `password_auth: true`，資料庫無法開啟時 honk 不會啟動。Token 模式下，資料庫無法使用、路徑不安全或被管理員重設鎖定時，honk 可在沒有持久儲存的情況下啟動，並記錄警告。資料庫屬於其他應用程式、結構版本過新或已被另一個 honk 程序使用時，仍會阻止啟動。日誌訊息的意義請參閱[狀態資料庫問題](troubleshooting.md#state-db)。
 
 ### 首次登入
 
 1. 開啟 `http://192.168.1.1:9527/ui/`，也就是 `listen` 位址。doona 會在同一來源找到 API，並將其儲存為後端。
-2. 密碼模式：登入頁面顯示「建立管理員」。請在閘道器本機或區域網路裝置上建立管理員，再登入。
+2. 密碼模式：登入頁面顯示「建立管理員」。請在閘道器本機或區域網路裝置上填寫使用者名稱、密碼與確認密碼，再按下「建立並登入」。建立帳號後會自動登入。
 3. Token 模式：輸入 `secret` 作為 Token，或開啟配對連結。doona 載入後會從網址列移除 Token。
 
 ```text
@@ -159,11 +162,13 @@ doona 由其他伺服器提供時，瀏覽器會送出跨網域請求，honk 只
 
 ### 發行版套件
 
-目前尚無發行版套件庫收錄 doona。每個發布版本附有 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 以預先建置的程式封存檔與字型封存檔產生的 `deb`、`rpm`、`ipk` 與 Arch 套件，全部與架構無關；`doona-fonts` 是獨立的選用套件。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 與 Nix 的打包設定是尚未提交的範本，安裝的也是同一批封存檔。AUR 的 `doona-bin` 位於獨立倉庫。封裝本機建置結果時，可使用 `make install DESTDIR=… PREFIX=/usr` 與 `make install-fonts`。
+每個發布版本附有 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 以預先建置的程式封存檔與字型封存檔產生的 `deb`、`rpm`、`ipk` 與 Arch 套件，全部與架構無關；`doona-fonts` 是獨立的選用套件。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 與 Nix 的打包設定是尚未發布的範本，目前仍使用 beta.12 的版本號。封裝 beta.13 前須修改版本號並取代標記的雜湊值；[在 Gentoo 上安裝](install-gentoo.md)說明了如何調整 ebuild。AUR 的 `doona-bin` 位於獨立儲存庫。封裝本機建置結果時，可使用 `make install DESTDIR=… PREFIX=/usr` 與 `make install-fonts`。
 
 <a name="operation"></a>
 
 ## 日常維護
+
+<a name="reload-and-restart"></a>
 
 ### 重載與重新啟動
 
@@ -173,7 +178,9 @@ sudo systemctl restart honk-core   # needed for native_api, interfaces, data_dir
 sudo journalctl -u honk-core -e    # look for applied or rejected
 ```
 
-重載會重新讀取組態，並在日誌中記錄 `applied` 或 `rejected`。變更 `native_api`、網路介面、TPROXY 設定、`data_dir`、`log_level`、健康檢查設定、NFQUEUE 開關、DNS 監聽或 Clash API 監聽後需要重新啟動；被拒絕的重載會在日誌中列出這些欄位。doona 的組態頁在套用後會自動重載。
+重載會重新讀取組態，並在日誌中記錄 `applied` 或 `rejected`。honk 會拒絕變更需要重新啟動的設定，並在日誌中列出欄位，包括 `native_api`、網路介面、TPROXY 設定、`data_dir`、`log_level`、`log_file`、`check_interval`、`tcp_check_url`、`tcp_check_http_method`、`udp_check_dns`、`store_subscribe`、`nfqueue_enable`、`dns.bind`、Clash API 設定、`auto_config_kernel_parameter`、`pprof_port`、`so_mark_from_dae` 與 `experimental.cache_file`。將 `tls_implementation` 改為 `utls` 或從 `utls` 改為其他值也需要重新啟動。
+
+組態頁會自動套用可重載的修改。若修改需要重新啟動，API 會在寫入前拒絕，doona 會列出相關設定與重新啟動指令。請在主機上編輯這些設定，再重新啟動 honk。
 
 ### 更新 honk
 
@@ -185,7 +192,7 @@ sudo journalctl -u honk-core -e    # look for applied or rejected
 
 ### 更新地理資料
 
-在設定的地理資料卡片中按下「更新」，honk 會下載並啟用兩個檔案。自動更新預設開啟，每 24 小時檢查一次；可在同一卡片關閉或變更間隔。
+在設定 → 地理資料中按「立即更新」，honk 會下載兩個檔案並啟用有變更的內容。內容相同的檔案不會重寫；所有內容均未變更時，更新成功但不啟用或重載。自動更新預設開啟，每 24 小時檢查一次；可在同一卡片關閉或變更「更新間隔（小時）」。「重設為預設值」會先要求確認，再移除所有地理資料覆寫及取自設定檔的值，恢復內建來源與預設值。該卡片也列出已安裝的地理資料檔案。
 
 ### 檔案位置
 

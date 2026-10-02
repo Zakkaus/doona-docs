@@ -27,14 +27,14 @@ In a window at least 1024 px wide, the sidebar lists the pages under four sectio
 
 ### Routing
 
-- Policies: Groups and Group membership tabs. Select nodes for a group or change its members.
-- Nodes: nodes and their subscriptions, usage and refresh. The Latency tab appears when the backend provides a node list.
-- Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it. Routing rules offers Simple for templates and Advanced for individual rules when the backend provides rules and configuration text; see [routing rules](routing.md#rules).
+- Policies: one card per group. Select members, probe them, or use Edit group and New group to change membership in a dialog.
+- Nodes: nodes and their subscriptions, usage and updates. The Latency tab appears when the backend provides a node list.
+- Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it. Routing templates remain available with readable configuration even without the rules API; see [routing rules](routing.md#rules).
 
 ### Settings
 
-- Configuration: Modules, Sources and Validation tabs.
-- Settings: the Backend, Backend options, Geodata, Appearance, Backend actions and About cards.
+- Configuration: Modules, Global settings, Config files and Backups and revisions tabs, when supported.
+- Settings: Backend, Temporary runtime overrides, Latency probes, Geodata, Appearance and About cards, when supported. The Geodata card includes the geodata files table.
 
 A page stays in the navigation when the backend does not provide it. Opening it shows This backend does not provide this page and a Back to activity button; see [feature requirements](features.md#still-missing).
 
@@ -46,12 +46,12 @@ Press `?` to open Keyboard shortcuts. Press `g` and then a page letter within 80
 
 1. Select the backend indicator at the bottom of the sidebar. A popover shows the engine and version, the connection state (for example Connected or Sign-in required), the API, the Backend URL and the profile. Select Edit backend to open the Backend card on Settings, or About doona for version details.
 2. Select the search field, or press `Ctrl K` (`⌘K` on macOS). Type part of a page, tab, node, group or node source name, a live connection, a configuration file path or a rule expression. Select a result to open it.
-3. When rules are held, a check-mark button with the number of held rules appears. Its name is Apply (N), or Apply (N); writes F files when the rules go to more than one file. Select it to write every held rule; see [the held list](routing.md#held-rules).
+3. When rules are held, a check-mark button with their count appears. Its name is Apply N rule or Apply N rules, depending on the count; when several files are involved, the name also includes writes F files. Select it to write every held rule; see [the held list](routing.md#held-rules).
 4. Select Reload honk and confirm in the Reload honk? dialog. honk reads its configuration files again and reloads; held rules are not written. The button appears only when the backend offers a reload.
 5. Select Refresh, or press `r`, to read all displayed data from the backend again. A Data refreshed. toast confirms it. Refresh does not write anything and does not reload honk.
 6. Select the Theme button to switch between light and dark. When the theme follows the system, it switches to the opposite scheme; the next press returns to System. The Language and Palette menus sit beside it; Palette also holds the Wordmark choice.
 
-Apply (N) and Reload honk wait for each other: while one runs, the other is disabled.
+The held-rule apply button and Reload honk wait for each other: while one runs, the other is disabled.
 
 <a name="panels"></a>
 
@@ -59,27 +59,29 @@ Apply (N) and Reload honk wait for each other: while one runs, the other is disa
 
 1. Select a tab under the page title to change the view within the page. The tab changes the view, not the page.
 2. Select a row on Connections, Routing log or DNS to open its details. In a window at least 1200 px wide, the details appear in a panel beside the list; in a narrower window they open in a drawer.
-3. Use the panel's one primary button for the main task. On a connection, this is Add rule.
+3. On Connections and Routing log, use a row's add-rule icon to open the rule dialog. Disabled icons show a reason tooltip. A connection's detail panel also offers Add rule when available. The Routing log detail panel has no add-rule action.
 4. Open More actions (the vertical dots button) for the other commands. On a connection, these include Show matched rule, View flow, Trace this connection and Close connection; the destructive command is last.
 5. Close the panel with Close or `Esc`.
+
+Searchable pickers keep the search field visible while only the options list scrolls.
 
 <a name="commit-verbs"></a>
 
 ## Hold, apply or save
 
-- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. Hold puts the rule in the held list without writing it. Held rules are written later with Apply (N) in the top bar or Apply held rules on the Rules page; see [the held list](routing.md#held-rules). The Add rule dialog on the Rules page writes at once; see [adding a rule](routing.md#add-rule).
-- Apply writes the change to the backend now. In the Add rule dialog opened from observed traffic, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and the Backend options card on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [backend options](config-and-settings.md#runtime-options).
-- Save stores a backend profile in this browser. Saving reloads the page to use the profile; see [Settings](config-and-settings.md#settings-page).
+- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. Hold puts the rule in the held list without writing it. Write held rules later with the counted apply button in the top bar or Apply held rules on Rules; see [the held list](routing.md#held-rules). The Add rule dialog on Rules writes at once; see [adding a rule](routing.md#add-rule).
+- Apply writes the change to the backend now. In the Add rule dialog opened from observed traffic, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and Temporary runtime overrides on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [runtime overrides](config-and-settings.md#runtime-options).
+- Save stores a backend profile in this browser. Saving reloads the page to use the profile; see [Settings](config-and-settings.md#settings-page). In Edit widgets, Save keeps the panel layout in this browser. The editor provides Widget gallery, a Preview at the floating panel's real width and Widget settings. Cancel discards the draft; Restore defaults resets it. Compatible rate and count widgets offer Sparkline or Key-value list. The panel menu also offers Hide at edge when the panel is unpinned and undocked; hover, focus or tap the speed summary to reveal it.
 
 <a name="confirm"></a>
 
 ## Check that a change took effect
 
-1. Read the toast after the write. A rule write shows New rule is in effect, Rule change is in effect, or N rules are in effect after Apply (N).
+1. Read the toast after the write. A rule write shows New rule is in effect, Rule change is in effect, or N rule is in effect / N rules are in effect after applying held rules, depending on the count.
 2. Read the toast detail: Existing connections keep their current route until they reconnect.
 3. To check the new route, open Connections and inspect a connection opened after the change.
 
-If a write fails, the toast shows the reason, and held rules that were not written stay held. For a read-only configuration file, see [troubleshooting](troubleshooting.md#read-only).
+If a write fails, the toast shows the reason, and held rules that were not written stay held. Copy error copies diagnostic details from a failure or unknown-result notice. Settings > About offers Copy recent errors for the last 20 errors kept in memory, excluding secrets and request bodies. For a read-only configuration file, see [troubleshooting](troubleshooting.md#read-only).
 
 <a name="phone"></a>
 
@@ -90,7 +92,7 @@ In a window narrower than 1024 px, the sidebar is replaced by a bottom bar and a
 1. Select Activity, Monitor, Routing or Settings in the bottom bar. Each section opens on the page you last visited in it during this browser session, or on its first page.
 2. Select a page in the strip above the content. When the pages do not fit, swipe the strip sideways; the current page stays in view.
 3. Open More options (the vertical dots button) in the top bar for the Language, Theme, Palette and Wordmark menus, Reload honk, and Backend. Backend opens the same popover as the sidebar indicator.
-4. Use the search button, Refresh and Apply (N) directly in the top bar; they stay outside the menu.
+4. Use the search button, Refresh and the held-rule apply button directly in the top bar; they stay outside the menu.
 5. In a page toolbar, the first action stays a button and the others move into More actions.
 
 For installing honk and doona, see the [installation guide](install.md); for the configuration file, see [Configuration](configuration.md#config).

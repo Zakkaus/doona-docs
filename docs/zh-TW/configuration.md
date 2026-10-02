@@ -4,7 +4,7 @@
 
 # 組態
 
-組態分為兩個檔案。主檔案 `/etc/honk/config.dae` 包含網路介面、節點、群組、分流與 DNS；`/etc/honk/config.d/api.dae` 包含 doona 使用的原生 API。主檔案引入 `config.d/` 中的所有 `.dae` 檔案，相對路徑以主檔案所在目錄為基準。
+此範例使用兩個檔案。主檔案 `/etc/honk/config.dae` 包含網路介面、節點、群組、分流、DNS 與資源下載設定；`/etc/honk/config.d/api.dae` 包含 doona 使用的原生 API。主檔案引入 `config.d/` 中的所有 `.dae` 檔案，相對路徑以主檔案所在目錄為基準。
 
 ## 主檔案
 
@@ -66,15 +66,23 @@ dns {
         }
     }
 }
+
+assets {
+    geodata {
+        geosite: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
+        geoip: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+    }
+}
 ```
 
 - `lan_interface`：將範例中的 `br-lan` 改為區域網路用戶端連到閘道器所用的網路介面；只代理閘道器本身的流量時移除此項。`wan_interface: auto` 同時處理閘道器本身的流量。
 - `data_dir`：執行期根目錄，預設為 `/var/lib/honk`，存放地理資料檔案與狀態資料庫 `state/honk.db`。
 - `bootstrap_resolver`：直接解析代理伺服器與地理資料下載位址的網域名稱，避免被 honk 攔截。直接下載且網址使用網域名稱時必須設定此項；下載預設依路由規則轉送。
 - `subscription` 與 `node`：請換成自己的訂閱與節點。之後可在 doona 的節點頁繼續新增。
-- `group proxy`：包含訂閱中的節點與靜態節點；`min_moving_avg` 選擇延遲最低的成員。
+- `group proxy`：包含訂閱中的節點與靜態節點；`min_moving_avg` 是 honk 的 URLTest 策略別名，依移動平均延遲選擇成員，並遵循切換容差。
 - `routing`：私有位址優先以 `direct(must)` 直連，中國大陸網域與 IP 位址直連，其餘流量經由 `proxy`。
 - `dns`：中國大陸網域交給本地解析器，其餘經由代理以 DNS over HTTPS 解析。
+- `assets.geodata`：最終 HTTP(S) 下載網址。沒有狀態資料庫時，手動更新需要為已載入資源設定網址。有資料庫時，啟動時以這些欄位寫入儲存的網址；之後在「設定」中修改的網址會保留到下次啟動。
 
 ## API 檔案
 
@@ -99,10 +107,7 @@ experimental {
         record_memory: true
         record_logs: true
         record_dns_log: true
-        # Geodata Update works even without a state db. Direct, final
-        # HTTP(S) URLs only; a redirect is refused.
-        geosite_download_url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
-        geoip_download_url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+        # Asset download URLs belong to assets.geodata in the main file.
     }
 }
 ```
@@ -125,7 +130,7 @@ experimental {
 
 ### native_api 欄位
 
-`listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，請求無需 Token 即可獲准存取，權限與通過 bearer Token 驗證的請求相同。此模式僅用於本機開發。
+`listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，讀取請求無需 Token。組態寫入與受保護的設定變更仍需要憑證。此模式僅用於本機開發。
 
 | 欄位                                         | 預設值             | 在 doona 中啟用的功能                                                                                |
 | -------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------- |
@@ -140,7 +145,7 @@ experimental {
 | `record_memory`                              | `true`             | 記憶體歷史圖表。                                                                                     |
 | `record_logs`                                | `true`             | 日誌頁。                                                                                             |
 | `record_dns_log`                             | `true`             | DNS 記錄。                                                                                           |
-| `geosite_download_url`、`geoip_download_url` | `''`               | `assets.geodata.geosite` 與 `assets.geodata.geoip` 的舊別名，仍接受但會警告。沒有狀態資料庫時，更新需要這兩個網址；有資料庫時，啟動時覆寫已儲存的網址。                 |
+| `geosite_download_url`、`geoip_download_url` | `''`               | `assets.geodata.geosite` 與 `assets.geodata.geoip` 的舊別名，仍接受但會警告。新組態請使用 `assets.geodata`。 |
 | `allow_origins`、`allowed_hosts`             | 空                 | 從其他來源或經由反向代理開啟 doona。                                                                 |
 
 `native_api` 的每個欄位都需要重新啟動才會生效。重載會拒絕這些欄位的變更，並保留執行中的監聽。
@@ -152,6 +157,7 @@ experimental {
 ## 安裝組態檔案
 
 ```sh
+sudo install -d -m 0700 /etc/honk /etc/honk/config.d /var/lib/honk
 sudo install -m 0600 config.dae /etc/honk/config.dae
 sudo install -m 0600 api.dae /etc/honk/config.d/api.dae
 ```

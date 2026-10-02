@@ -4,7 +4,7 @@
 
 本页编写能启动 honk 并提供 doona 的最小 honk 配置，然后手动启动 honk 检查配置。本页假定 doona 已位于 `/usr/share/doona`，honk-core 也已安装，即[各安装页](install.md)完成后的状态。
 
-配置由两个文件组成。`/etc/honk/config.dae` 是主文件。`/etc/honk/config.d/api.dae` 启用 doona 所用的原生 API。在加入节点与规则之前，所有连接都直接发出；更完整的示例见[配置](configuration.md#config)。
+此示例使用两个文件。`/etc/honk/config.dae` 是主文件。`/etc/honk/config.d/api.dae` 启用 doona 所用的原生 API。在加入节点与规则之前，所有连接都直接发出；更完整的示例见[配置](configuration.md#config)。
 
 ## 开始之前
 
@@ -170,7 +170,7 @@ cat /etc/honk/config.d/api.dae
 
 输出的文件中，`listen` 一行应为你的地址，例如 `listen: '192.168.1.1:9527'`。
 
-访问 API 时请使用局域网 IP。使用 `openwrt.lan` 等主机名时，须在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan'` 并重启 honk，否则会返回 403。
+访问 API 时请使用局域网 IP。使用 `openwrt.lan` 等主机名时，须在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan:9527'` 并重启 honk，否则会返回 403。未指定端口的主机条目表示端口 80。
 
 | 行                           | 作用                                                                                                                     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -183,7 +183,7 @@ cat /etc/honk/config.d/api.dae
 
 每个 `native_api` 字段都要重启后才生效。其余字段见[字段表](configuration.md#config)。
 
-doona 0.1.0-beta.12 附带的 honk-core 构建嵌入了 doona 0.1.0-beta.12。要在 `/ui/` 提供嵌入的版本，请将上面的 `ui` 行改为：
+本次发布固定的 honk-core 构建嵌入了 doona 0.1.0-beta.12，并非独立的 beta.13 界面。要在 `/ui/` 提供嵌入的版本，请将上面的 `ui` 行改为：
 
 ```dae
 ui: embedded
@@ -210,7 +210,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前台持续运行。每行以时间戳开头，其中应当包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.9.30.native-api.5 starting
+INFO honk_core: honk-core debug.2026.10.3.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected

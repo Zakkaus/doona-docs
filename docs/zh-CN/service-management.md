@@ -110,7 +110,7 @@ chmod 0755 /etc/init.d/honk-core
 
 不要在单元中加入 `NoNewPrivileges=yes`、能力限制或只读的 `/proc/sys`：honk 启动时需要 BPF、网络管理、命名空间、挂载与 sysctl 权限。
 
-在 OpenWrt 上，请保留上述 procd 脚本中的 `MIMALLOC_PURGE_DELAY=0`，让 mimalloc 立即将已释放的内存归还给系统。此建议也适用于 `debug.2026.9.28.native-api.4` 及之后将 geodata 更新流式写入磁盘的构建：在 256 MB 路由器上，这类构建未设置时，geodata 更新后仍占用约 120 MB；设置后连续三次更新稳定在 36–46 MB。
+在 OpenWrt 上使用 mimalloc 构建时，请保留上述 procd 脚本中的 `MIMALLOC_PURGE_DELAY=0`，让已释放的内存及时归还系统。使用系统分配器的构建不使用此设置。
 
 ## 2. 启动 honk 并设为开机启动
 
@@ -154,6 +154,8 @@ systemctl status honk-core
 procd 输出 `running`；停止后输出 `inactive`。
 
 日志中也会出现 `honk-core is running. Press Ctrl+C to stop.`；把地址换成你的地址后执行 `curl http://192.168.1.1:9527/api`，返回内容与[最小配置第 5 步](minimal-configuration.md)相同。
+
+API 可访问不代表透明分流正常。请在「系统状态」检查数据路径降级情况，并从局域网客户端测试流量。
 
 ## 查看日志
 

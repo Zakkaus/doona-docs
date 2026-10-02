@@ -4,6 +4,9 @@
 
 先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前请确认[系统要求](requirements.md#requirements)。“安装”下的其他页面按系统逐步介绍同样的安装过程，从 [Debian 或 Ubuntu](install-debian.md) 开始。
 
+> [!NOTE]
+> beta.13 下载文件尚未发布。本页命令须在[发布页](https://github.com/Zakkaus/doona/releases)提供文件后执行，详见[原生 API 状态](index.md#原生-api-状态)。
+
 <a name="install"></a>
 
 ## 安装 honk
@@ -19,20 +22,20 @@
 | `x86_64`、`aarch64`  | 网关的 CPU 架构，即 `uname -m` 的输出。                           |
 | `unknown-linux-musl` | 静态链接，适用于网关。无法确定时选择此项。                        |
 | `unknown-linux-gnu`  | 链接 glibc，适用于常规发行版。                                    |
-| 无后缀               | 使用 mimalloc，为默认构建，QUIC 性能更好。                        |
-| `-stock` 后缀        | 使用系统内存分配器而非 mimalloc，适用于更重视内存占用的小型设备。 |
+| 无后缀               | 使用默认内存分配器 mimalloc。                                    |
+| `-stock` 后缀        | 使用系统内存分配器，而非 mimalloc。                              |
 
 如需分别下载、校验和安装 honk-core，请先完成[在其他系统上安装](install-manual.md)的第 1 步，再按第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.12               # the doona release, without v
+VERSION=0.1.0-beta.13               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.9.30.native-api.5
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.1
 ```
 
 如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，按 honk 快速入门的步骤构建：先构建 eBPF 对象，再执行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要显式启用，发布构建已包含此功能；未启用 `ebpf` 时 honk 没有数据路径。发布页同时附有该提交的源码包 `honk-source-<commit>.tar.gz`。
@@ -90,7 +93,7 @@ WantedBy=multi-user.target
 
 ## 安装 doona 并启动
 
-使用 doona 0.1.0-beta.12 附带的 honk-core 构建并设置 `ui: embedded` 时，`doona` 软件包可省略，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.12。如需提供 beta.13，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
 
 同时下载 doona 发布包与 `SHA256SUMS`，再将发布包解压到 `/usr/share/doona`，即 `ui` 指定的目录。最后一条命令必须列出 `index.html`，否则 honk 无法启动。
 
@@ -99,7 +102,7 @@ WantedBy=multi-user.target
 如需逐步下载、校验并解压程序与可选字体，请按[在其他系统上安装](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.12   # the doona release, without v
+VERSION=0.1.0-beta.13   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -131,12 +134,12 @@ sudo journalctl -u honk-core -e
 
 honk 默认会打开 `<data_dir>/state/honk.db`：`global.store_subscribe` 默认开启，本示例也启用了 `native_api`。状态数据库没有需要添加的开关。该数据库保存管理员账户、地理数据来源以及 honk 需要持久保存的其他状态。honk 会自行创建 `state/` 与 `honk.db`，`/var/lib/honk` 不存在时也由 honk 创建。运行 honk 的用户必须能在 `/var/lib` 中创建该目录，并能写入该目录；本示例中该用户为 root。
 
-本示例设置了 `password_auth: true`，数据库无法打开时 honk 不会启动，因此 honk 正在运行即表示数据库已打开。Token 模式下 honk 不使用数据库也会启动，并记录一条警告；此时缺少状态数据库表示它未能打开。日志消息的含义见[状态数据库问题](troubleshooting.md#state-db)。
+本示例设置了 `password_auth: true`，数据库无法打开时 honk 不会启动。Token 模式下，数据库不可用、路径不安全或被管理员重置锁定时，honk 可在没有持久存储的情况下启动，并记录警告。数据库属于其他应用、结构版本过新或已被另一个 honk 进程使用时，仍会阻止启动。日志消息的含义见[状态数据库问题](troubleshooting.md#state-db)。
 
 ### 首次登录
 
 1. 打开 `http://192.168.1.1:9527/ui/`，即 `listen` 地址。doona 会在同一来源找到 API，并将其保存为后端。
-2. 密码模式：登录页面显示“创建管理员”。请在网关本机或局域网设备上创建管理员，然后登录。
+2. 密码模式：登录页面显示“创建管理员”。请在网关本机或局域网设备上填写用户名、密码与确认密码，再点击“创建并登录”。创建账户后会自动登录。
 3. Token 模式：输入 `secret` 作为 Token，或打开配对链接。doona 加载后会从地址栏移除 Token。
 
 ```text
@@ -159,11 +162,13 @@ doona 由其他服务器提供时，浏览器会发送跨域请求，honk 只接
 
 ### 发行版软件包
 
-目前还没有发行版软件仓库收录 doona。每个发布版本附带 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 基于预构建的程序包与字体包生成的 `deb`、`rpm`、`ipk` 与 Arch 软件包，全部与架构无关；`doona-fonts` 是独立的可选软件包。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 与 Nix 的打包配置是尚未提交的模板，安装的也是同一批发布包。AUR 的 `doona-bin` 位于独立仓库。打包本地构建结果时，可使用 `make install DESTDIR=… PREFIX=/usr` 和 `make install-fonts`。
+每个发布版本附带 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 基于预构建的程序包与字体包生成的 `deb`、`rpm`、`ipk` 与 Arch 软件包，全部与架构无关；`doona-fonts` 是独立的可选软件包。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 与 Nix 的打包配置是尚未发布的模板，目前仍使用 beta.12 的版本号。打包 beta.13 前须修改版本号并替换标记的哈希值；[在 Gentoo 上安装](install-gentoo.md)说明了如何调整 ebuild。AUR 的 `doona-bin` 位于独立仓库。打包本地构建结果时，可使用 `make install DESTDIR=… PREFIX=/usr` 和 `make install-fonts`。
 
 <a name="operation"></a>
 
 ## 日常维护
+
+<a name="reload-and-restart"></a>
 
 ### 重载与重启
 
@@ -173,7 +178,9 @@ sudo systemctl restart honk-core   # needed for native_api, interfaces, data_dir
 sudo journalctl -u honk-core -e    # look for applied or rejected
 ```
 
-重载会重新读取配置，并在日志中记录 `applied` 或 `rejected`。修改 `native_api`、网卡、TPROXY 设置、`data_dir`、`log_level`、健康检查设置、NFQUEUE 开关、DNS 监听或 Clash API 监听后需要重启；被拒绝的重载会在日志中列出这些字段。doona 的配置页在应用后会自动重载。
+重载会重新读取配置，并在日志中记录 `applied` 或 `rejected`。honk 会拒绝修改需要重启的设置，并在日志中列出字段，包括 `native_api`、网卡、TPROXY 设置、`data_dir`、`log_level`、`log_file`、`check_interval`、`tcp_check_url`、`tcp_check_http_method`、`udp_check_dns`、`store_subscribe`、`nfqueue_enable`、`dns.bind`、Clash API 设置、`auto_config_kernel_parameter`、`pprof_port`、`so_mark_from_dae` 与 `experimental.cache_file`。将 `tls_implementation` 改为 `utls` 或从 `utls` 改为其他值也需要重启。
+
+配置页会自动应用可重载的修改。若修改需要重启，API 会在写入前拒绝，doona 会列出相关设置与重启命令。请在主机上编辑这些设置，再重启 honk。
 
 ### 更新 honk
 
@@ -185,7 +192,7 @@ sudo journalctl -u honk-core -e    # look for applied or rejected
 
 ### 更新地理数据
 
-在设置的地理数据卡片中点击“更新”，honk 会下载并启用两个文件。自动更新默认开启，每 24 小时检查一次；可在同一卡片中关闭或修改间隔。
+在设置 → 地理数据中点击“立即更新”，honk 会下载两个文件并启用有变化的内容。内容相同的文件不会重写；所有内容均未变化时，更新成功但不激活或重载。自动更新默认开启，每 24 小时检查一次；可在同一卡片中关闭或修改“更新间隔（小时）”。“重置为默认值”会先要求确认，再移除所有地理数据覆盖及取自配置文件的值，恢复内置来源与默认值。该卡片也列出已安装的地理数据文件。
 
 ### 文件位置
 

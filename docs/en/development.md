@@ -20,7 +20,7 @@ pnpm e2e                         # rebuild, then test against the mock at the ro
 pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<version>.tar.gz, SHA256SUMS
 ```
 
-`pnpm dev` serves the mock on Vite's dev server. Archive versions come from `package.json` locally and from the Git description on tags; timestamps use `SOURCE_DATE_EPOCH` or the HEAD commit time.
+`pnpm dev` serves the mock on Vite's dev server. `pnpm package` uses the version in `package.json`; `pnpm package --git-version` uses `git describe --tags --always` without its leading `v`. Timestamps use `SOURCE_DATE_EPOCH` or the HEAD commit time.
 
 ## Test against a live backend
 
@@ -28,7 +28,7 @@ For a read-only pass against a live backend, run `DOONA_API=http://router:9527 D
 
 ## Screenshots
 
-`node tools/screenshots.mjs <url> docs/screenshots` captures pages, the palette sheet, the phone strip and the two animations from a running build as WebP; it requires `cwebp` and `img2webp`.
+`node tools/screenshots.mjs <url> docs/screenshots` captures mock-backed pages in each language, the palette sheet, the English theme gallery, phone strips, page-tour stills and the routing animation as WebP. It requires `cwebp`, `img2webp` and Playwright's Chromium.
 
 ## Source layout
 
@@ -37,15 +37,19 @@ For a read-only pass against a live backend, run `DOONA_API=http://router:9527 D
 | `src/features/` | Pages, their hooks and messages, one folder each           |
 | `src/shell/`    | Application shell, navigation and search                   |
 | `src/ui/`       | Shared components, theme and icons                         |
-| `src/api/`      | Client, backend profiles, mock backend and generated types |
+| `src/api/`      | Client, backend profiles, engine adapters and generated types |
+| `mock/`         | Mock backend for the demo, previews and tests               |
 | `src/store/`    | Resource watching, cached reads and action hooks           |
 | `src/i18n/`     | Translations and locale helpers                            |
 | `contract/`     | The vendored OpenAPI contract and its pin                  |
-| `public/`       | Static assets, fonts and the service worker                |
+| `public/`       | Static icons, manifest and service worker                   |
 | `e2e/`          | Browser tests                                              |
 | `tools/`        | Build, packaging, conformance and screenshot tools         |
 | `install/`      | nfpm configs, OpenWrt, Alpine, Gentoo and Nix recipes      |
-| `docs/`         | The screenshots                                            |
+| `docs/`         | Country-flag and font documentation                         |
+| `node_modules/@fontsource-variable/` | Noto Sans TC/SC font sources bundled by Vite |
+
+The screenshot tool creates `docs/screenshots/` when run; screenshots are not part of the source tree.
 
 ## Contract
 

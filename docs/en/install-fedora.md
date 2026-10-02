@@ -4,6 +4,9 @@ English / [简体中文](../zh-CN/install-fedora.md) / [繁體中文](../zh-TW/i
 
 This page installs doona from its `.rpm` package and honk-core from the same doona release on Fedora, RHEL and other DNF-based systems. After the last step, continue with [Minimal configuration](minimal-configuration.md).
 
+> [!NOTE]
+> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+
 ## Before you start
 
 - Linux 6.12 or later and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
@@ -13,7 +16,7 @@ This page installs doona from its `.rpm` package and honk-core from the same doo
 
 ## 1. Install curl and CA certificates
 
-honk downloads subscriptions and geodata over HTTPS and stops at startup without CA certificates.
+honk uses the system CA certificates to verify HTTPS subscription and geodata downloads.
 
 ```sh tab="sudo"
 sudo dnf install curl ca-certificates
@@ -28,7 +31,7 @@ dnf install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.12
+VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-1.noarch.rpm" -O "$BASE/SHA256SUMS"
 ```
@@ -42,12 +45,12 @@ grep " doona-${VERSION}-1.noarch.rpm\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.12-1.noarch.rpm: OK
+doona-0.1.0-beta.13-1.noarch.rpm: OK
 ```
 
 ## 4. Install doona
 
-The `doona` package is optional when you use `ui: embedded` with the honk-core builds attached to doona 0.1.0-beta.12; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -59,7 +62,7 @@ dnf install ./doona-${VERSION}-1.noarch.rpm
 ls -l /usr/share/doona/index.html
 ```
 
-DNF prints `Warning: skipped OpenPGP checks for 1 package from repository: @commandline`, because a downloaded package has no repository signature; step 3 checked it instead. `ls` then prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files; it installs no service.
+The release RPM is unsigned; step 3 verifies its checksum before installation. `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files and documentation; it installs no service.
 
 Optional: the `doona-fonts` package adds the Noto Sans TC and SC fonts for the Chinese interface.
 
@@ -91,8 +94,8 @@ The release carries eight honk-core archives, named `honk-core-debug-<target>.ta
 | Target ends with | Choose it when                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `musl`           | Unsure. Statically linked, so the system’s glibc version does not matter.                                                                    |
-| `gnu`            | The system has glibc 2.39 or later, such as Fedora 44. On an older glibc it stops with `GLIBC_2.38' not found`. |
-| `-stock` suffix  | Memory matters more than speed, as on a small device. Uses the system allocator instead of mimalloc.              |
+| `gnu`            | The system has glibc 2.39 or later. |
+| `-stock` suffix  | Uses the system allocator instead of mimalloc.                                                                    |
 
 For example, `x86_64-unknown-linux-musl`, `aarch64-unknown-linux-gnu` or `x86_64-unknown-linux-musl-stock`.
 
@@ -131,7 +134,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.9.30.native-api.5
+honk-core debug.2026.10.3.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
