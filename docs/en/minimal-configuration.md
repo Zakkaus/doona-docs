@@ -4,6 +4,9 @@ English / [简体中文](../zh-CN/minimal-configuration.md) / [繁體中文](../
 
 This page writes the smallest honk configuration that starts honk and serves doona, then checks it by starting honk by hand. It assumes doona is in `/usr/share/doona` and honk-core is installed, as the [install pages](install.md) leave them.
 
+> [!NOTE]
+> On Debian and Ubuntu, the packages are `doona-web` and `doona-web-fonts`, installed under `/usr/share/doona-web`. Use `ui: '/usr/share/doona-web'` instead of `ui: '/usr/share/doona'` in the examples below.
+
 This example uses two files. `/etc/honk/config.dae` is the main file. `/etc/honk/config.d/api.dae` turns on the native API that doona talks to. Every connection goes out directly until you add nodes and rules; [Configuration](configuration.md#config) has a fuller example.
 
 ## Before you start

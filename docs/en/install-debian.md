@@ -2,7 +2,7 @@ English / [简体中文](../zh-CN/install-debian.md) / [繁體中文](../zh-TW/i
 
 # Install on Debian or Ubuntu
 
-This page installs doona from its `.deb` package and honk-core from the same doona release on Debian, Ubuntu and other APT-based systems. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+This page installs doona from the `doona-web` `.deb` package and honk-core from the same doona release on Debian, Ubuntu and other APT-based systems. After the last step, continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
 > These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
@@ -35,49 +35,49 @@ Set the release version, then download the package and the checksum file into th
 ```sh
 VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
+curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
 
 ## 3. Verify the download
 
 ```sh
-grep " doona_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 ```
 
 You should see:
 
 ```text
-doona_0.1.0-beta.13-1_all.deb: OK
+doona-web_0.1.0-beta.13-1_all.deb: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona-web` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
-sudo apt install ./doona_${VERSION}-1_all.deb
-ls -l /usr/share/doona/index.html
+sudo apt install ./doona-web_${VERSION}-1_all.deb
+ls -l /usr/share/doona-web/index.html
 ```
 
 ```sh tab="root"
-apt install ./doona_${VERSION}-1_all.deb
-ls -l /usr/share/doona/index.html
+apt install ./doona-web_${VERSION}-1_all.deb
+ls -l /usr/share/doona-web/index.html
 ```
 
-`ls` prints a line ending in `/usr/share/doona/index.html`. The package holds doona’s web files and documentation; it installs no service.
+`ls` prints a line ending in `/usr/share/doona-web/index.html`. The `doona-web` package holds doona’s web files in `/usr/share/doona-web` and documentation in `/usr/share/doc/doona-web`; it installs no service.
 
-Optional: the `doona-fonts` package adds the Noto Sans TC and SC fonts for the Chinese interface.
+Optional: the `doona-web-fonts` package adds the Noto Sans TC and SC fonts for the Chinese interface in `/usr/share/doona-web/fonts` and depends on `doona-web`.
 
 ```sh tab="sudo"
-curl -fL -O "$BASE/doona-fonts_${VERSION}-1_all.deb"
-grep " doona-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-sudo apt install ./doona-fonts_${VERSION}-1_all.deb
+curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
+grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+sudo apt install ./doona-web-fonts_${VERSION}-1_all.deb
 ```
 
 ```sh tab="root"
-curl -fL -O "$BASE/doona-fonts_${VERSION}-1_all.deb"
-grep " doona-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-apt install ./doona-fonts_${VERSION}-1_all.deb
+curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
+grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+apt install ./doona-web-fonts_${VERSION}-1_all.deb
 ```
 
 ## 5. Choose the honk-core build
@@ -142,6 +142,32 @@ honk-core debug.2026.10.3.native-api.1
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
 Next: [Minimal configuration](minimal-configuration.md).
+
+## If apt replaced doona with an unrelated package
+
+If `apt upgrade` replaced `doona` with version `1.0+git20190108-2` and the web UI is gone, Debian or Ubuntu installed an unrelated network fuzzer with the same package name and a higher version.
+
+Download and verify `doona-web` and `doona-web-fonts` as in steps 2–4, then install them from that directory:
+
+```sh tab="sudo"
+sudo apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
+```
+
+```sh tab="root"
+apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
+```
+
+Set `ui: /usr/share/doona-web` in honk’s `native_api` configuration. Installing the new packages removes the earlier doona packages, `doona` and `doona-fonts` below version `1.0`.
+
+If the unrelated `doona` package is still installed, you can remove it; this leaves `doona-web` in place:
+
+```sh tab="sudo"
+sudo apt remove doona
+```
+
+```sh tab="root"
+apt remove doona
+```
 
 ## If it doesn’t work
 

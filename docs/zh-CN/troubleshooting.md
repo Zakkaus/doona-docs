@@ -10,6 +10,9 @@
 
 `native_api` 的字段直接写在 `experimental` 下，honk 因此拒绝该配置。`fatal error, shutting down:` 一行会给出设置路径与消息，例如 `experimental.ui: native API setting belongs inside native_api { }`。`enabled` 与 `secret` 也属于其他配置块，因此 honk 对这两个字段只报告 `unknown experimental setting`。请将字段移入 `native_api { }`。
 
+> [!NOTE]
+> Debian 与 Ubuntu 的 `doona-web` 软件包安装到 `/usr/share/doona-web`。请在下文示例中使用 `ui: '/usr/share/doona-web'`。
+
 ```dae
 # Wrong: "native API setting belongs inside native_api { }"
 experimental {

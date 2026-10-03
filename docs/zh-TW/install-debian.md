@@ -2,7 +2,7 @@
 
 # 在 Debian 或 Ubuntu 上安裝
 
-本頁在 Debian、Ubuntu 及其他使用 APT 的系統上，用 `.deb` 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+本頁在 Debian、Ubuntu 及其他使用 APT 的系統上，用 `doona-web` `.deb` 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
 > beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
@@ -35,49 +35,49 @@ apt install curl ca-certificates
 ```sh
 VERSION=0.1.0-beta.13
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
+curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
 
 ## 3. 驗證下載的檔案
 
 ```sh
-grep " doona_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 ```
 
 應顯示：
 
 ```text
-doona_0.1.0-beta.13-1_all.deb: OK
+doona-web_0.1.0-beta.13-1_all.deb: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 套件，請設定 `ui: /usr/share/doona-web`，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
-sudo apt install ./doona_${VERSION}-1_all.deb
-ls -l /usr/share/doona/index.html
+sudo apt install ./doona-web_${VERSION}-1_all.deb
+ls -l /usr/share/doona-web/index.html
 ```
 
 ```sh tab="root"
-apt install ./doona_${VERSION}-1_all.deb
-ls -l /usr/share/doona/index.html
+apt install ./doona-web_${VERSION}-1_all.deb
+ls -l /usr/share/doona-web/index.html
 ```
 
-`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件包含 doona 的網頁檔案與文件，不安裝任何服務。
+`ls` 輸出一行以 `/usr/share/doona-web/index.html` 結尾的內容。`doona-web` 套件將 doona 的網頁檔案安裝至 `/usr/share/doona-web`，文件安裝至 `/usr/share/doc/doona-web`，不安裝任何服務。
 
-可選：`doona-fonts` 套件為中文介面加入 Noto Sans TC 與 SC 字型。
+可選：`doona-web-fonts` 套件將中文介面的 Noto Sans TC 與 SC 字型安裝至 `/usr/share/doona-web/fonts`，依賴 `doona-web`。
 
 ```sh tab="sudo"
-curl -fL -O "$BASE/doona-fonts_${VERSION}-1_all.deb"
-grep " doona-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-sudo apt install ./doona-fonts_${VERSION}-1_all.deb
+curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
+grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+sudo apt install ./doona-web-fonts_${VERSION}-1_all.deb
 ```
 
 ```sh tab="root"
-curl -fL -O "$BASE/doona-fonts_${VERSION}-1_all.deb"
-grep " doona-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-apt install ./doona-fonts_${VERSION}-1_all.deb
+curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
+grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+apt install ./doona-web-fonts_${VERSION}-1_all.deb
 ```
 
 ## 5. 選擇 honk-core 建置
@@ -142,6 +142,32 @@ honk-core debug.2026.10.3.native-api.1
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
 下一步：[最小組態](minimal-configuration.md)。
+
+## 如果 apt 將 doona 替換為無關套件
+
+如果執行 `apt upgrade` 後，`doona` 的版本變成 `1.0+git20190108-2`，網頁介面也無法存取，表示 Debian 或 Ubuntu 安裝了同名但版本號較高的網路模糊測試工具，與本專案無關。
+
+依第 2–4 步下載並驗證 `doona-web` 與 `doona-web-fonts`，再於下載目錄中安裝：
+
+```sh tab="sudo"
+sudo apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
+```
+
+```sh tab="root"
+apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
+```
+
+在 honk 的 `native_api` 組態中設定 `ui: /usr/share/doona-web`。安裝新套件會移除本專案版本低於 `1.0` 的舊 `doona` 與 `doona-fonts` 套件。
+
+如果系統上仍留有無關的 `doona` 套件，可以將其移除，`doona-web` 不受影響：
+
+```sh tab="sudo"
+sudo apt remove doona
+```
+
+```sh tab="root"
+apt remove doona
+```
 
 ## 遇到問題時
 

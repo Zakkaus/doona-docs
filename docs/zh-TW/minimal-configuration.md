@@ -4,6 +4,9 @@
 
 本頁撰寫能啟動 honk 並提供 doona 的最小 honk 組態，然後手動啟動 honk 檢查組態。本頁假定 doona 已位於 `/usr/share/doona`，honk-core 也已安裝，即[各安裝頁](install.md)完成後的狀態。
 
+> [!NOTE]
+> Debian 與 Ubuntu 的套件名稱為 `doona-web` 與 `doona-web-fonts`，安裝於 `/usr/share/doona-web` 下。請將下文範例中的 `ui: '/usr/share/doona'` 改為 `ui: '/usr/share/doona-web'`。
+
 此範例使用兩個檔案。`/etc/honk/config.dae` 是主檔案。`/etc/honk/config.d/api.dae` 啟用 doona 所用的原生 API。在加入節點與規則之前，所有連線都直接發出；更完整的範例見[組態](configuration.md#config)。
 
 ## 開始之前
