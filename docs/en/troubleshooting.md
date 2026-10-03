@@ -10,6 +10,9 @@ English / [简体中文](../zh-CN/troubleshooting.md) / [繁體中文](../zh-TW/
 
 honk refuses the configuration because a `native_api` field sits directly under `experimental`. The `fatal error, shutting down:` line names the setting and the message, such as `experimental.ui: native API setting belongs inside native_api { }`. `enabled` and `secret` also belong to other blocks, so for them honk reports only `unknown experimental setting`. Move the field into `native_api { }`.
 
+> [!NOTE]
+> On Debian and Ubuntu, the `doona-web` package installs to `/usr/share/doona-web`. Use `ui: '/usr/share/doona-web'` in the example below.
+
 ```dae
 # Wrong: "native API setting belongs inside native_api { }"
 experimental {

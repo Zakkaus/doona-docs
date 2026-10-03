@@ -164,6 +164,8 @@ A reverse proxy keeps doona and honk on one origin. Forward the exact `/api` dis
 
 Each release attaches architecture-independent `deb`, `rpm`, `ipk` and Arch packages built by [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) from the prebuilt program and font archives; `doona-fonts` is a separate optional package. The recipes in [install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) for OpenWrt, Alpine, Gentoo and Nix are unpublished templates, currently versioned for beta.12. Adapt their versions and replace the marked hashes before packaging beta.13; [Install on Gentoo](install-gentoo.md) shows how to adapt the ebuild. The AUR `doona-bin` recipe lives in a separate repository. Use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts` when packaging a local build.
 
+On Debian and Ubuntu, the package is named `doona-web` and installs to `/usr/share/doona-web`; its optional font package is `doona-web-fonts`.
+
 <a name="operation"></a>
 
 ## Everyday operation

@@ -164,6 +164,8 @@ doona 由其他伺服器提供時，瀏覽器會送出跨網域請求，honk 只
 
 每個發布版本附有 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 以預先建置的程式封存檔與字型封存檔產生的 `deb`、`rpm`、`ipk` 與 Arch 套件，全部與架構無關；`doona-fonts` 是獨立的選用套件。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 與 Nix 的打包設定是尚未發布的範本，目前仍使用 beta.12 的版本號。封裝 beta.13 前須修改版本號並取代標記的雜湊值；[在 Gentoo 上安裝](install-gentoo.md)說明了如何調整 ebuild。AUR 的 `doona-bin` 位於獨立儲存庫。封裝本機建置結果時，可使用 `make install DESTDIR=… PREFIX=/usr` 與 `make install-fonts`。
 
+在 Debian 與 Ubuntu 上，套件名稱為 `doona-web`，安裝目錄為 `/usr/share/doona-web`，選用字型套件名稱為 `doona-web-fonts`。
+
 <a name="operation"></a>
 
 ## 日常維護
