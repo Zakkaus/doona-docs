@@ -1,0 +1,75 @@
+# doona documentation
+
+> doona is a static web UI for the native API that the daeuniverse engines share: honk today, dae once it implements the same contract.
+
+## English
+
+- [doona documentation](https://zakkaus.github.io/doona-docs/en/index.md): doona is a static web UI for the native API that the daeuniverse engines share: honk today, dae once it implements the same contract.
+- [Requirements](https://zakkaus.github.io/doona-docs/en/requirements.md)
+- [Install on Debian or Ubuntu](https://zakkaus.github.io/doona-docs/en/install-debian.md): This page installs doona from the doona-web .deb package and honk-core from the same doona release on Debian, Ubuntu and other APT-based systems.
+- [Install on Fedora or RHEL](https://zakkaus.github.io/doona-docs/en/install-fedora.md): This page installs doona from its .rpm package and honk-core from the same doona release on Fedora, RHEL and other DNF-based systems.
+- [Install on Arch Linux](https://zakkaus.github.io/doona-docs/en/install-arch.md): This page installs doona from its .pkg.tar.zst package and honk-core from the same doona release on Arch Linux and other pacman-based systems.
+- [Install on Gentoo](https://zakkaus.github.io/doona-docs/en/install-gentoo.md): This page installs doona with Portage from the ebuild template in doona’s repository, and honk-core from the same doona release.
+- [Install on OpenWrt](https://zakkaus.github.io/doona-docs/en/install-openwrt.md): This page installs doona and honk-core on OpenWrt 25.12 from the release archives.
+- [Install on other systems](https://zakkaus.github.io/doona-docs/en/install-manual.md): This page installs doona and honk-core from the release archives on a Linux system without a doona package, such as Alpine Linux.
+- [Installation details](https://zakkaus.github.io/doona-docs/en/install.md): Install honk, write its configuration, then install doona and start honk.
+- [Minimal configuration](https://zakkaus.github.io/doona-docs/en/minimal-configuration.md): This page writes the smallest honk configuration that starts honk and serves doona, then checks it by starting honk by hand.
+- [Service management](https://zakkaus.github.io/doona-docs/en/service-management.md): This page runs honk as a systemd or OpenWrt procd service: it creates the service once, then lists the commands that start, stop, restart and reload honk and read its log.
+- [First sign-in](https://zakkaus.github.io/doona-docs/en/first-sign-in.md): This page opens doona in a browser, creates the administrator account and checks that doona shows the running honk.
+- [Interface tour](https://zakkaus.github.io/doona-docs/en/tour.md): This page shows where things are in doona after you sign in: the four navigation sections, the top bar, and the tabs, detail panels and action menus inside a page.
+- [Watching traffic](https://zakkaus.github.io/doona-docs/en/observe.md): This page covers the Activity hub (Activity and System status) and the Monitor hub (Connections, Routing log, DNS, Logs and Events).
+- [Routing, nodes and rules](https://zakkaus.github.io/doona-docs/en/routing.md): This page covers the Routing hub: the Policies, Nodes and Rules pages.
+- [Config and settings](https://zakkaus.github.io/doona-docs/en/config-and-settings.md): This page covers the Configuration page, where you read, validate and apply honk's configuration files.
+- [Common tasks](https://zakkaus.github.io/doona-docs/en/common-tasks.md): This page collects short procedures for frequent changes to routing, traffic inspection and honk maintenance.
+- [Configuration](https://zakkaus.github.io/doona-docs/en/configuration.md): The main file is /etc/honk/config.dae; its include loads every .dae file in config.d/, with relative paths resolved against the main file's directory.
+- [Features](https://zakkaus.github.io/doona-docs/en/features.md): First confirm that the gateway carries traffic.
+- [Troubleshooting](https://zakkaus.github.io/doona-docs/en/troubleshooting.md)
+- [Development](https://zakkaus.github.io/doona-docs/en/development.md): Read CONTRIBUTING.md before opening a pull request.
+
+## 简体中文
+
+- [doona 文档](https://zakkaus.github.io/doona-docs/zh-CN/index.md): doona 是 daeuniverse 引擎共用原生 API 的静态 Web 界面：目前对接 honk，dae 实现同一份契约后也可对接。
+- [系统要求](https://zakkaus.github.io/doona-docs/zh-CN/requirements.md)
+- [在 Debian 或 Ubuntu 上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-debian.md): 本页在 Debian、Ubuntu 及其他使用 APT 的系统上，用 doona-web .deb 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。
+- [在 Fedora 或 RHEL 上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-fedora.md): 本页在 Fedora、RHEL 及其他使用 DNF 的系统上，用 .rpm 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。
+- [在 Arch Linux 上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-arch.md): 本页在 Arch Linux 及其他使用 pacman 的系统上，用 .pkg.tar.zst 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。
+- [在 Gentoo 上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-gentoo.md): 本页用 Portage 从 doona 仓库中的 ebuild 模板安装 doona，并从同一个 doona 发布版本安装 honk-core。
+- [在 OpenWrt 上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-openwrt.md): 本页在 OpenWrt 25.12 上用发布版本中的归档文件安装 doona 与 honk-core。
+- [在其他系统上安装](https://zakkaus.github.io/doona-docs/zh-CN/install-manual.md): 本页在没有 doona 软件包、符合内核要求的 x86_64 或 aarch64 Linux 系统（例如 Alpine Linux）上，用发布版本中的归档文件安装 doona 与 honk-core。
+- [安装详解](https://zakkaus.github.io/doona-docs/zh-CN/install.md): 先安装 honk 并编写配置，再安装 doona 并启动 honk。
+- [最小配置](https://zakkaus.github.io/doona-docs/zh-CN/minimal-configuration.md): 本页编写能启动 honk 并提供 doona 的最小 honk 配置，然后手动启动 honk 检查配置。
+- [服务管理](https://zakkaus.github.io/doona-docs/zh-CN/service-management.md): 本页把 honk 作为 systemd 或 OpenWrt procd 服务运行：先创建一次服务，再列出启动、停止、重启、重载 honk 以及查看日志的命令。
+- [首次登录](https://zakkaus.github.io/doona-docs/zh-CN/first-sign-in.md): 本页在浏览器中打开 doona，创建管理员账户，并检查 doona 是否显示正在运行的 honk。
+- [界面导览](https://zakkaus.github.io/doona-docs/zh-CN/tour.md): 本页说明登录 doona 后各项功能的位置：四个导航分区、顶部栏，以及页面内的标签页、详情面板与操作菜单。
+- [观测流量](https://zakkaus.github.io/doona-docs/zh-CN/observe.md): 本页介绍「活动」分区（「活动」与「系统状态」）及「观测」分区（「连接」、「分流」、「DNS」、「日志」与「事件」）。
+- [路由、节点与规则](https://zakkaus.github.io/doona-docs/zh-CN/routing.md): 本页说明「路由」分区中的「策略」「节点」和「规则」三个页面。
+- [配置与设置](https://zakkaus.github.io/doona-docs/zh-CN/config-and-settings.md): 本页说明「配置」页：在此查看、校验并应用 honk 的配置文件。
+- [常见操作](https://zakkaus.github.io/doona-docs/zh-CN/common-tasks.md): 本页汇总调整路由、查看流量与维护 honk 的常用步骤。
+- [配置](https://zakkaus.github.io/doona-docs/zh-CN/configuration.md): 主文件为 /etc/honk/config.dae；include 引入 config.d/ 中的全部 .dae 文件，相对路径以主文件所在目录为基准。
+- [功能](https://zakkaus.github.io/doona-docs/zh-CN/features.md): 首先确认网关能够转发流量。
+- [故障排查](https://zakkaus.github.io/doona-docs/zh-CN/troubleshooting.md)
+- [开发](https://zakkaus.github.io/doona-docs/zh-CN/development.md): 提交 pull request 前先读 CONTRIBUTING.md。
+
+## 繁體中文
+
+- [doona 文件](https://zakkaus.github.io/doona-docs/zh-TW/index.md): doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接 honk，dae 實作同一份契約後也可對接。
+- [系統需求](https://zakkaus.github.io/doona-docs/zh-TW/requirements.md)
+- [在 Debian 或 Ubuntu 上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-debian.md): 本頁在 Debian、Ubuntu 及其他使用 APT 的系統上，用 doona-web .deb 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。
+- [在 Fedora 或 RHEL 上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-fedora.md): 本頁在 Fedora、RHEL 及其他使用 DNF 的系統上，用 .rpm 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。
+- [在 Arch Linux 上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-arch.md): 本頁在 Arch Linux 及其他使用 pacman 的系統上，用 .pkg.tar.zst 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。
+- [在 Gentoo 上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-gentoo.md): 本頁用 Portage 從 doona 儲存庫中的 ebuild 範本安裝 doona，並從同一個 doona 發行版本安裝 honk-core。
+- [在 OpenWrt 上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-openwrt.md): 本頁在 OpenWrt 25.12 上用發行版本中的封存檔安裝 doona 與 honk-core。
+- [在其他系統上安裝](https://zakkaus.github.io/doona-docs/zh-TW/install-manual.md): 本頁在沒有 doona 套件、符合核心要求的 x86_64 或 aarch64 Linux 系統（例如 Alpine Linux）上，用發行版本中的封存檔安裝 doona 與 honk-core。
+- [安裝詳解](https://zakkaus.github.io/doona-docs/zh-TW/install.md): 先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。
+- [最小組態](https://zakkaus.github.io/doona-docs/zh-TW/minimal-configuration.md): 本頁撰寫能啟動 honk 並提供 doona 的最小 honk 組態，然後手動啟動 honk 檢查組態。
+- [服務管理](https://zakkaus.github.io/doona-docs/zh-TW/service-management.md): 本頁以 systemd 或 OpenWrt procd 服務的形式運作 honk：先建立一次服務，再列出啟動、停止、重新啟動、重載 honk 以及檢視日誌的命令。
+- [首次登入](https://zakkaus.github.io/doona-docs/zh-TW/first-sign-in.md): 本頁在瀏覽器中開啟 doona，建立管理員帳戶，並檢查 doona 是否顯示正在運作的 honk。
+- [介面導覽](https://zakkaus.github.io/doona-docs/zh-TW/tour.md): 本頁說明登入 doona 後各項功能的位置：四個導覽分區、頂端列，以及頁面內的分頁、詳細資料面板與操作選單。
+- [觀測流量](https://zakkaus.github.io/doona-docs/zh-TW/observe.md): 本頁說明「活動」分區（「活動」與「系統狀態」）及「觀測」分區（「連線」、「分流」、「DNS」、「日誌」與「事件」）。
+- [路由、節點與規則](https://zakkaus.github.io/doona-docs/zh-TW/routing.md): 本頁說明「路由」分區中的「策略」「節點」與「規則」三個頁面。
+- [組態與設定](https://zakkaus.github.io/doona-docs/zh-TW/config-and-settings.md): 本頁說明「組態」頁：在此檢視、驗證並套用 honk 的設定檔。
+- [常見操作](https://zakkaus.github.io/doona-docs/zh-TW/common-tasks.md): 本頁彙整調整路由、查看流量與維護 honk 的常用步驟。
+- [組態](https://zakkaus.github.io/doona-docs/zh-TW/configuration.md): 主檔案為 /etc/honk/config.dae；include 引入 config.d/ 中的所有 .dae 檔案，相對路徑以主檔案所在目錄為基準。
+- [功能](https://zakkaus.github.io/doona-docs/zh-TW/features.md): 請先確認閘道器能轉送流量。
+- [疑難排解](https://zakkaus.github.io/doona-docs/zh-TW/troubleshooting.md)
+- [開發](https://zakkaus.github.io/doona-docs/zh-TW/development.md): 送出 pull request 前先讀 CONTRIBUTING.md。
