@@ -52,7 +52,7 @@ mountpoint /sys/fs/bpf
 
 ## honk version
 
-- Builds from Glassyiris/honk's `feat/native-api` branch provide the native API. `native-api` is an opt-in build feature; release and rolling `debug` builds include it. The doona release pipeline pins honk commit `5ad13ac` (`debug.2026.10.3.native-api.1`), whose embedded UI is doona beta.12. `HONK-SOURCE.txt` in the release records the honk tag and full commit. Install the standalone beta.13 UI to use this release's interface changes once its assets are published.
+- Each doona release attaches honk-core builds with the native API, built from Glassyiris/honk `feat/native-api` debug tags. `native-api` is an opt-in build feature included in these builds. The doona release pipeline pins honk commit `464c9b3` (`debug.2026.10.3.native-api.2`), whose embedded UI is doona beta.12. `HONK-SOURCE.txt` in the release records the honk tag and full commit. Install the standalone beta.13 UI to use this release's interface changes once its assets are published.
 - Builds of daeuniverse/honk `main` have no native API. honk rejects every `native_api` setting as `unknown experimental setting`, and `/api` and `/ui/` answer 404.
 - A build from `feat/native-api` without the `native-api` feature stops startup with `native-api feature is required` when `native_api` is enabled.
 - Early `feat/native-api` builds update geodata but have no configurable sources. The builds attached to doona beta.8 and beta.9 have both.

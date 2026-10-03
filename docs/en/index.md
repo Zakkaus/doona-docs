@@ -10,7 +10,7 @@ doona is a static web UI for the native API that the daeuniverse engines share: 
 
 ## Native API status
 
-These pages describe the planned doona v0.1.0-beta.13 release. doona needs honk's native API from Glassyiris/honk's `feat/native-api` branch, available in its rolling `debug` release and the honk archives attached to doona releases. The release build pins honk commit `5ad13ac`; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
+These pages describe the planned doona v0.1.0-beta.13 release. doona uses honk's native API from the honk-core builds attached to each doona release, built from Glassyiris/honk `feat/native-api` debug tags. The release build pins honk commit `464c9b3`; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
 
 The source still declares beta.12, and beta.13 download assets are not yet published. The beta.13 commands on the installation pages require that release to be available.
 
@@ -36,7 +36,6 @@ For a new gateway, read Requirements and the install page for your system, then 
 
 ## Links
 
-- [doona releases](https://github.com/Zakkaus/doona/releases)
-- [Glassyiris/honk `debug` release](https://github.com/Glassyiris/honk/releases/tag/debug)
+- [doona releases](https://github.com/Zakkaus/doona/releases) for honk-core downloads
 - [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 - [doona issues](https://github.com/Zakkaus/doona/issues); report engine problems to [honk](https://github.com/daeuniverse/honk) or [dae](https://github.com/daeuniverse/dae)

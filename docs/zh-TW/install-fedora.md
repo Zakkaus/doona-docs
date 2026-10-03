@@ -134,7 +134,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.10.3.native-api.1
+honk-core debug.2026.10.3.native-api.2
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
