@@ -17,7 +17,11 @@ Open this address in the browser, with your address in place of `192.168.1.1`:
 http://192.168.1.1:9527/ui/
 ```
 
-doona finds honk’s API at the same address and saves it as its backend. Because no administrator exists yet, it shows a page titled Create the administrator with the fields Username, Password and Confirm password. The appearance button opens Settings > Appearance for language, palette and theme controls.
+doona finds honk’s API at the same address and saves it as its backend. If no administrator exists, it opens Create the administrator.
+
+![Administrator setup with Language, Palette and Color scheme controls at the upper right](../screenshots/en/login-setup.webp)
+
+Use the three icons at the upper right to change Language, Palette and Color scheme before signing in.
 
 ## 2. Create the administrator
 
@@ -48,5 +52,9 @@ Setup is complete. To route LAN devices, add nodes and rules, see [Configuration
 | The backend accepts administrator setup only from loopback, private or link-local addresses. | The browser reached honk from a public address. Open doona from a device on the LAN, or on the gateway itself.                                                                                         |
 | The username or password is incorrect.                                                 | Enter them again. To replace a forgotten administrator, stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), then start honk; the setup page opens again.                                                    |
 | Token required instead of the setup page                                               | `api.dae` sets `secret` instead of `password_auth: true`. Enter that secret as the token, or change `api.dae` as in [Minimal configuration](minimal-configuration.md) and restart honk.                 |
+
+![Token sign-in with the Token field, show/hide control and Connect button](../screenshots/en/login-token.webp)
+
+Enter the backend secret in Token, use the show/hide control to check it, then select Connect. doona saves the Token in the current browser's connection profile.
 
 For more, see [Sign-in problems](troubleshooting.md#sign-in).

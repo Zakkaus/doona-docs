@@ -42,9 +42,8 @@ Typing into a read-only file shows the notice This file is read-only, once per f
 
 1. On Config files, choose a writable file with complete text and click its text.
 2. Type your change. A Not applied badge appears, and reloading or closing the page loses the change.
-3. If the backend supports validation, doona validates the main file and its includes after a pause in typing and marks diagnostic lines in the editor. Press Validate to check at once; the cursor moves to the first error.
-4. Review Diagnostics above the editor. Go jumps to a diagnostic in the current file; Open opens another file at that line. Details expands the backend's original diagnostic text.
-5. Press Apply. honk validates the files, writes the change and reloads the configuration. A notice says the file was written and the configuration reloaded.
+3. If the backend supports validation, doona checks the main file and its includes after a pause in typing. Press Validate to check at once.
+4. Review the [draft diagnostics](#validation-and-diagnostics), then press Apply. honk validates the files, writes the change and reloads the configuration; a notice confirms the write and reload.
 
 Press Cancel to drop the change. If validation finds errors, nothing is written and the errors appear in the list. If the change touches a setting that takes effect only after a restart, nothing is written either. The notice lists those settings and the restart command; edit them on disk and [restart honk](service-management.md).
 
@@ -60,10 +59,9 @@ If no include pattern of the loaded files matches the path, the dialog warns tha
 
 ## Validation and diagnostics
 
-1. Open Config files. Diagnostics appears above the editor, with error and warning counts and the diagnostic scope.
-2. Expand the counts to read the diagnostic rows. Errors expand the list automatically. Details shows the original backend text.
-3. Use Go or Open on a row to reach its location.
-4. Press Validate to check the main file and its includes when the backend offers full validation and all required text is available.
+![Current draft diagnostics under the editor toolbar: level filter with counts, Go buttons and line markers](../screenshots/en/config-diagnostics.webp)
+
+These diagnostics belong to the unapplied draft, not the accepted configuration. When the selected level runs out of items, the filter returns to All; Open jumps to another file.
 
 The list shows diagnostics for the accepted configuration until a draft is validated. Validation needs the complete main file and include text. An applied change or a new accepted generation clears the previous validation results. Old links to Validation open the diagnostics on Config files.
 
@@ -84,11 +82,11 @@ Only writable files with complete text can be changed. A file changed on disk bl
 
 ## Backups and revisions
 
-Open Backups and revisions when offered by the backend. Available controls depend on its capabilities:
+![Export, Import and revision Restore use different configuration sources](../images/config-recovery.svg)
 
-- Export configuration downloads the accepted configuration, unlike Download source file on Config files, which downloads only the displayed file. Listener secrets are omitted, but other credentials may remain; review the export before sharing.
-- Import server files reads the file tree specified by `-c` at honk startup, validates it, replaces the database configuration and applies it after confirmation. It does not upload a local backup.
-- The revision table shows Revision, Recorded at, Origin and Size, and marks Database head. Open a row for metadata and source SHA-256 values. Restore revision validates and applies that revision after confirmation, usually creating a new revision.
+Export downloads accepted source files; Import reads honk's server-side startup tree selected by `-c`, not a local upload, and Restore uses a revision's snapshot. Import and Restore validate and apply after confirmation; open a revision row to review its metadata and source SHA-256 values before replacing the current configuration.
+
+Unlike Export configuration, Download source file downloads only the displayed file. Exports omit listener secrets but may retain other credentials; review them before sharing.
 
 If an accepted import or restore has an unknown result, reopen this tab and use Refresh to check its operation without sending another write. A changed database head requires review and confirmation again.
 
@@ -135,15 +133,15 @@ Edit persistent settings in Configuration opens Global settings for values writt
 
 ### Geodata
 
-The Geodata card shows the files the backend provides, even when sources cannot be configured. Its table lists Asset, Size, Updated, SHA-256 and Source. Update now appears when the backend supports a manual update. Source and schedule controls below require configurable sources.
+![Geodata card with Update now, Reset to defaults and Details open on the file tables](../screenshots/en/settings-geodata.webp)
+
+Reset to defaults asks first, then removes every override and every value taken from the configuration file. The file table shows even when sources cannot be configured.
 
 1. Choose a Source: Loyalsoldier, MetaCubeX full, MetaCubeX lite or Custom. If the preset lacks categories your rules use, a dialog lists them before switching, because the backend refuses such a file on update.
 2. For Custom, enter the `geosite` and `geoip` URLs in the Custom URLs dialog and press Apply and update, or Apply. Each list takes up to four URLs, tried in order. Use URLs that serve the file directly; GitHub release download links redirect and do not work. Edit reopens the dialog later.
 3. Choose a Download route: By routing rules, Direct or Specific group. For Specific group, choose the group; the route is saved then.
 4. Leave Verify checksum on unless a trusted mirror's checksum URL returns an error page or an error other than HTTP 404. A mirror without a `.sha256sum` file already loads files unverified.
 5. Turn on Automatic updates and choose an Interval (hours) for scheduled downloads.
-6. Read Status. Press Update now, if offered, to download at once. Open Details for update status; the files table lists each file's information.
-7. Press Reset to defaults and confirm to remove every geodata override and every value taken from the configuration file. The built-in sources and defaults apply again.
 
 Each control saves when you change it. If the backend updates on request, a new source downloads at once; otherwise it downloads at the next automatic update. Download route and Verify checksum appear only when the backend reports them. If the card says the URLs come from the configuration file, honk writes those URLs back when it restarts. For failures, see [geodata update failures](troubleshooting.md#geodata-update) and [geodata sources](troubleshooting.md#geodata-sources).
 

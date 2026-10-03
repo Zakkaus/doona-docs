@@ -4,7 +4,11 @@ English / [简体中文](../zh-CN/configuration.md) / [繁體中文](../zh-TW/co
 
 # Configuration
 
-This example uses two files. The main file, `/etc/honk/config.dae`, holds interfaces, nodes, groups, routing, DNS and asset download settings. `/etc/honk/config.d/api.dae` holds the native API that doona uses. The main file includes every `.dae` file in `config.d/`; a relative include resolves against the main file's directory.
+The main file is `/etc/honk/config.dae`; its `include` loads every `.dae` file in `config.d/`, with relative paths resolved against the main file's directory.
+
+![Main configuration includes API and routing files, with listener secrets outside writable sources](../images/include-boundary.svg)
+
+Keep the API in `config.d/api.dae` and any added routing files separate from listener secrets. Configuration writes require `config_write: true`, complete text and a writable source; the dashed boundary marks a listener-secret file, not a file doona can write back.
 
 ## Main file
 
@@ -100,6 +104,8 @@ experimental {
         password_auth: true
         # secret: 'replace-with-a-long-random-token'
         config_write: true
+        # Debian/Ubuntu doona-web: /usr/share/doona-web.
+        # On other platforms, use the package's installation path.
         ui: '/usr/share/doona'
         # On by default; listed so the names are known.
         record_flows: true
@@ -112,9 +118,9 @@ experimental {
 }
 ```
 
-Replace `192.168.1.1` with the gateway’s LAN address. Keep this block in its own file. doona shows a file as read-only when it contains a `secret` inside `native_api` or `clash_api`, or any text equal to a listener secret of 8 or more bytes. honk masks secrets of at least 8 bytes, so writing the masked text back would lose them. Groups declared in that file become read-only too.
+Replace `192.168.1.1` with the gateway's LAN address. A file containing `secret` in `native_api` or `clash_api`, or any text equal to a listener secret of at least 8 bytes, is read-only, including its groups; honk masks secrets of at least 8 bytes, and writing masked text would lose them.
 
-Adding nodes and subscriptions writes to the main file, so the main file must not contain any secret.
+Adding nodes and subscriptions writes the main file, so keep it free of secrets.
 
 When doona is opened from another origin, such as a TLS reverse proxy, also add:
 

@@ -10,33 +10,16 @@ This page shows where things are in doona after you sign in: the four navigation
 
 ## Find a page
 
-In a window at least 1024 px wide, the sidebar lists the pages under four sections. Select a page name to open it.
+![Activity page with the sidebar listing every page under four sections](../screenshots/en/activity-light.webp)
 
-### Activity
+| Section  | Pages                                          |
+| -------- | ---------------------------------------------- |
+| Activity | Activity, System status                        |
+| Monitor  | Connections, Routing log, DNS, Logs, Events    |
+| Routing  | Policies, Nodes, Rules                         |
+| Settings | Configuration, Settings                        |
 
-- Activity: outbound mode, download and upload rates, active connections, the current node, CPU, traffic, outbound usage, top devices and domains, memory and notifications.
-- System status: engine state, traffic counters, memory, datapath attachments and backend features, with Export state JSON.
-
-### Monitor
-
-- Connections: Traffic and Connections tabs. Select a connection to see its route and actions.
-- Routing log: Map and Records tabs.
-- DNS: Statistics, Resolution log, Cache and Query tabs, as far as the backend provides them.
-- Logs: the live engine log, with Level and Module filters, Pause, Clear and Export.
-- Events: backend state changes, with Export JSON.
-
-### Routing
-
-- Policies: one card per group. Select members, probe them, or use Edit group and New group to change membership in a dialog.
-- Nodes: nodes and their subscriptions, usage and updates. The Latency tab appears when the backend provides a node list.
-- Rules: Routing rules, DNS rules and Trace simulation tabs; the DNS rules tab appears only when the backend provides it. Routing templates remain available with readable configuration even without the rules API; see [routing rules](routing.md#rules).
-
-### Settings
-
-- Configuration: Modules, Global settings, Config files and Backups and revisions tabs, when supported.
-- Settings: Backend, Temporary runtime overrides, Latency probes, Geodata, Appearance and About cards, when supported. The Geodata card includes the geodata files table.
-
-A page stays in the navigation when the backend does not provide it. Opening it shows This backend does not provide this page and a Back to activity button; see [feature requirements](features.md#still-missing).
+Tabs and cards appear only when the backend provides them. A page the backend does not provide stays in the navigation and opens This backend does not provide this page; see [feature requirements](features.md#still-missing).
 
 Press `?` to open Keyboard shortcuts. Press `g` and then a page letter within 800 ms to open that page, for example `g` `r` for Rules.
 
@@ -45,13 +28,17 @@ Press `?` to open Keyboard shortcuts. Press `g` and then a page letter within 80
 ## Use the top bar
 
 1. Select the backend indicator at the bottom of the sidebar. A popover shows the engine and version, the connection state (for example Connected or Sign-in required), the API, the Backend URL and the profile. Select Edit backend to open the Backend card on Settings, or About doona for version details.
-2. Select the search field, or press `Ctrl K` (`⌘K` on macOS). Type part of a page, tab, node, group or node source name, a live connection, a configuration file path or a rule expression. Select a result to open it.
+2. Select the search field, or press `Ctrl K` (`⌘K` on macOS). Search includes settings fields and actions, persistent `global` settings, configuration sections and feature entry points.
 3. When rules are held, a check-mark button with their count appears. Its name is Apply N rule or Apply N rules, depending on the count; when several files are involved, the name also includes writes F files. Select it to write every held rule; see [the held list](routing.md#held-rules).
 4. Select Reload honk and confirm in the Reload honk? dialog. honk reads its configuration files again and reloads; held rules are not written. The button appears only when the backend offers a reload.
 5. Select Refresh, or press `r`, to read all displayed data from the backend again. A Data refreshed. toast confirms it. Refresh does not write anything and does not reload honk.
 6. Select the Theme button to switch between light and dark. When the theme follows the system, it switches to the opposite scheme; the next press returns to System. The Language and Palette menus sit beside it; Palette also holds the Wordmark choice.
 
 The held-rule apply button and Reload honk wait for each other: while one runs, the other is disabled.
+
+![Searching for palette, then opening the focused Appearance control](../screenshots/en/search-settings.webp)
+
+Search `palette` and select the Settings result to open and focus Appearance. Selecting a result navigates to its control; it does not run an update, import or other action.
 
 <a name="panels"></a>
 
@@ -69,9 +56,25 @@ Searchable pickers keep the search field visible while only the options list scr
 
 ## Hold, apply or save
 
-- Hold appears only in the Add rule dialog opened from observed traffic, such as a connection or a DNS record, where it is the highlighted button. Hold puts the rule in the held list without writing it. Write held rules later with the counted apply button in the top bar or Apply held rules on Rules; see [the held list](routing.md#held-rules). The Add rule dialog on Rules writes at once; see [adding a rule](routing.md#add-rule).
-- Apply writes the change to the backend now. In the Add rule dialog opened from observed traffic, Apply writes that rule and reloads honk at once. Configuration uses Apply to write an edited source, and Temporary runtime overrides on Settings uses Apply for runtime changes that are not written to the configuration file; see [editing a source](config-and-settings.md#edit-source) and [runtime overrides](config-and-settings.md#runtime-options).
-- Save stores a backend profile in this browser. Saving reloads the page to use the profile; see [Settings](config-and-settings.md#settings-page). In Edit widgets, Save keeps the panel layout in this browser. The editor provides Widget gallery, a Preview at the floating panel's real width and Widget settings. Cancel discards the draft; Restore defaults resets it. Compatible rate and count widgets offer Sparkline or Key-value list. The panel menu also offers Hide at edge when the panel is unpinned and undocked; hover, focus or tap the speed summary to reveal it.
+![Write scopes for Hold, Apply, Save and Done](../images/write-scope.svg)
+
+Hold keeps an observed rule in this browser session; reloading drops it. Apply validates, writes and reloads each target file separately, either immediately or from the [held list](routing.md#held-rules); a partial failure leaves unwritten rules held, and existing connections keep their route until they reconnect.
+
+Runtime Apply changes honk's running values without writing files. Backend profile Save stores the profile in the browser and reloads the page; widget Save and dashboard Done store only browser layouts.
+
+## Floating widgets
+
+![Widget editor from Panel options > Edit widgets: gallery, live preview with width grip, and settings](../screenshots/en/widgets-editor.webp)
+
+The preview reads live data. Save keeps the layout in this browser only.
+
+![Speed selected in the widget editor, with size and display choices](../screenshots/en/widgets-speed-settings.webp)
+
+Panel options > Combine upload and download charts is on by default; turn it off to draw two charts.
+
+![Floating panel unpinned and open, collapsed after a page change, pinned on another page, and docked in the sidebar](../screenshots/en/widgets-states.webp)
+
+The panel starts pinned and open. An unpinned panel collapses when you change pages. Hide at edge works only on a floating, unpinned panel.
 
 <a name="confirm"></a>
 
@@ -87,12 +90,8 @@ If a write fails, the toast shows the reason, and held rules that were not writt
 
 ## Navigate on a phone
 
-In a window narrower than 1024 px, the sidebar is replaced by a bottom bar and a page strip.
+![Phone layout: page strip and bottom bar, the More options menu, and its Palette submenu](../screenshots/en/phone.webp)
 
-1. Select Activity, Monitor, Routing or Settings in the bottom bar. Each section opens on the page you last visited in it during this browser session, or on its first page.
-2. Select a page in the strip above the content. When the pages do not fit, swipe the strip sideways; the current page stays in view.
-3. Open More options (the vertical dots button) in the top bar for the Language, Theme, Palette and Wordmark menus, Reload honk, and Backend. Backend opens the same popover as the sidebar indicator.
-4. Use the search button, Refresh and the held-rule apply button directly in the top bar; they stay outside the menu.
-5. In a page toolbar, the first action stays a button and the others move into More actions.
+Below 1024 px wide, a bottom bar and a page strip replace the sidebar. Each section reopens the page you last visited in it during this browser session. Search, Refresh and the held-rule apply button stay in the top bar; the other top-bar controls move into More options, and a page toolbar keeps only its first action as a button.
 
 For installing honk and doona, see the [installation guide](install.md); for the configuration file, see [Configuration](configuration.md#config).

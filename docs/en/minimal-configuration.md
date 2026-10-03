@@ -192,7 +192,7 @@ The honk-core build pinned for this release embeds doona 0.1.0-beta.12, not the 
 ui: embedded
 ```
 
-The `doona` package is optional with `ui: embedded`. The embedded version is pinned by the honk build and omits the Noto Sans TC/SC fonts, so the browser falls back to system fonts. For those fonts or a newer doona, install the `doona` and `doona-fonts` packages and point `ui` at their directory, such as `/usr/share/doona`.
+With `ui: embedded`, the standalone UI package is optional. The embedded version is pinned by the honk build and omits Noto Sans TC/SC, so the browser uses system fonts. For those fonts or a newer doona, install `doona` and `doona-fonts` and point `ui` at their installation directory, such as `/usr/share/doona`; on Debian or Ubuntu, use `doona-web`, `doona-web-fonts` and `/usr/share/doona-web`.
 
 ## 5. Check the configuration
 
@@ -263,7 +263,7 @@ honk prints the reason on a line starting `fatal error, shutting down:` or as an
 | You see                                                                                   | Cause and fix                                                                                                                    |
 | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `native API listener bind failed`                                                         | The `listen` address is not on this machine. Repeat step 1 and step 4.                                                           |
-| `failed to inspect native UI index.html: No such file or directory`                       | doona is not in `/usr/share/doona`. Repeat the doona steps of the install page.                                                  |
+| `failed to inspect native UI index.html: No such file or directory` | Check that the actual directory named by `ui` contains `index.html`: `/usr/share/doona-web` on Debian or Ubuntu, commonly `/usr/share/doona` elsewhere. Follow the doona installation steps for your platform. |
 | `Subscription network owner failed error="subscription HTTP client creation failed"`, then `subscription network startup failed` | CA certificates are missing. Install the `ca-certificates` package (`ca-bundle` on OpenWrt).                     |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | The `password_auth: true` line is missing from `api.dae`.                                                                         |
 | `native API setting belongs inside native_api { }`                                        | A `native_api` field sits directly under `experimental`. Move it into `native_api { }`. |

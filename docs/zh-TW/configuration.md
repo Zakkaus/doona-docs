@@ -4,7 +4,11 @@
 
 # 組態
 
-此範例使用兩個檔案。主檔案 `/etc/honk/config.dae` 包含網路介面、節點、群組、分流、DNS 與資源下載設定；`/etc/honk/config.d/api.dae` 包含 doona 使用的原生 API。主檔案引入 `config.d/` 中的所有 `.dae` 檔案，相對路徑以主檔案所在目錄為基準。
+主檔案為 `/etc/honk/config.dae`；`include` 引入 `config.d/` 中的所有 `.dae` 檔案，相對路徑以主檔案所在目錄為基準。
+
+![主組態引入 API 與 routing 檔案，監聽密鑰與可寫來源分離](../images/include-boundary.svg)
+
+將 API 放在 `config.d/api.dae`，新增 routing 檔案也應與監聽密鑰分離。組態寫入需要 `config_write: true`、完整文字與可寫來源；虛線邊界表示監聽密鑰檔案，不是 doona 可寫回的檔案。
 
 ## 主檔案
 
@@ -100,6 +104,8 @@ experimental {
         password_auth: true
         # secret: 'replace-with-a-long-random-token'
         config_write: true
+        # Debian/Ubuntu doona-web: /usr/share/doona-web.
+        # On other platforms, use the package's installation path.
         ui: '/usr/share/doona'
         # On by default; listed so the names are known.
         record_flows: true
@@ -112,9 +118,9 @@ experimental {
 }
 ```
 
-請將 `192.168.1.1` 換成閘道器的區域網路位址，並將此組態區塊單獨放在一個檔案。檔案在 `native_api` 或 `clash_api` 中包含 `secret`，或包含與 8 位元組以上監聽密鑰相同的文字時，doona 會將該檔案顯示為唯讀，因為 honk 會隱藏至少 8 位元組的密鑰，寫回隱藏後的文字會遺失密鑰。該檔案中宣告的群組同樣變為唯讀。
+請將 `192.168.1.1` 換成閘道器的區域網路位址。檔案在 `native_api` 或 `clash_api` 中包含 `secret`，或包含與至少 8 位元組監聽密鑰相同的文字時，檔案及其中的群組均為唯讀；honk 隱藏至少 8 位元組的密鑰，寫回隱藏文字會遺失密鑰。
 
-新增節點與訂閱會寫入主檔案，因此主檔案不能包含任何密鑰。
+新增節點與訂閱會寫入主檔案，因此主檔案不能包含密鑰。
 
 從其他來源開啟 doona 時，例如經由 TLS 反向代理，還需加入：
 

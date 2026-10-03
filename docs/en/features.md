@@ -78,7 +78,7 @@ Every configuration-source write goes through the engine. doona sends the hash i
 | Logs          | The log stream with level and module filters, pause and export                                                                                                                               | `logs`                              |
 | Settings | Backends, runtime settings, latency probe preferences, geodata sources and files, language, appearance and palette | None |
 
-Every page remains in navigation. A page is marked unavailable only when every resource listed for it in [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) is unavailable; Configuration is also available when the backend offers export, import or revisions. Opening an unavailable page shows a notice. `Ctrl K` (`⌘ K` on macOS) searches pages, connections, nodes, groups, subscriptions, rules and sources from anywhere.
+Every page remains in navigation. A page is marked unavailable only when every resource listed for it in [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) is unavailable; Configuration is also available when the backend offers export, import or revisions. Opening an unavailable page shows a notice. `Ctrl K` (`⌘ K` on macOS) searches pages and live data as well as settings fields and actions, persistent `global` settings, configuration sections and feature entry points; selecting a result opens and focuses its control, without executing the action. See the [search example](tour.md#top-bar).
 
 ![The rules page](../screenshots/en/rules-light.webp)
 
@@ -99,23 +99,15 @@ Every page remains in navigation. A page is marked unavailable only when every r
 | Arco Design | [Light](../screenshots/en/theme-arco-light.webp) | [Dark](../screenshots/en/theme-arco-dark.webp) |
 | Semi Design | [Light](../screenshots/en/theme-semi-light.webp) | [Dark](../screenshots/en/theme-semi-dark.webp) |
 | Glass | [Light](../screenshots/en/theme-glass-light.webp) | [Dark](../screenshots/en/theme-glass-dark.webp) |
-| China | [Clock-in](../screenshots/en/theme-qiangguo-light.webp) | [All-nighter](../screenshots/en/theme-qiangguo-dark.webp) |
+| Qiangguo | [Day shift](../screenshots/en/theme-qiangguo-light.webp) | [Night shift](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## Settings stored in the browser
 
-doona has no server-side store for its own UI settings. Configuration and runtime changes are written through the engine; doona's UI settings live in the browser's `localStorage` for the site's origin. The main keys are below; [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts) lists all of them.
+![Storage boundaries between localStorage, sessionStorage and honk](../images/storage-boundary.svg)
 
-| Setting       | Key              | Values                                                                                                                                                                                                                                                                                                                                                                                            |
-| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Backends      | `doona-profiles` | JSON list of `{id, name, api, token}`; `api` is a server root or proxy prefix, empty or `mock` for demo data. For password backends, `token` is empty and honk manages the session; doona keeps its session token in this tab's `sessionStorage`. In token mode, API requests send the token in the `Authorization` header. Pairing links may carry it in the URL fragment and remove it on load. |
-| Active one    | `doona-profile`  | `id` of the selected backend                                                                                                                                                                                                                                                                                                                                                                      |
-| Language      | `doona-lang`     | `zh-TW`, `zh-CN`, `en`; unset follows the browser language                                                                                                                                                                                                                                                                                                                                        |
-| Colour scheme | `doona-scheme`   | `system` (default), `light`, `dark`                                                                                                                                                                                                                                                                                                                                                               |
-| Palette       | `doona-palette`  | `rose-pine/moon` (default); the other ids are the `PaletteId` union in [palettes.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/palettes.ts)                                                                                                                                                                                                                                                                                 |
-| Wordmark      | `doona-wordmark` | `gradient` (default), `plain`                                                                                                                                                                                                                                                                                                                                                                     |
-| Latency probes | `doona-latency-probe` | JSON `{choice, family, cold, leaves}`; defaults: `http`, `auto`, `false`, `false` |
-| Metric sparklines | `doona-sparklines` | `true` (default), `false`; applies to all metric tiles |
-| Dashboard / widgets | `doona-dashboard`, `doona-widgets` | Saved dashboard and floating-panel layouts |
+`localStorage` holds this origin's preferences, layouts and connection profiles, including the Token; `sessionStorage` holds the password sign-in session token for this tab. honk stores the backend configuration and manages password sessions; clearing browser data loses the saved profiles and preferences, not honk's configuration.
+
+In token mode, requests send the saved Token in `Authorization`; a pairing link may carry it in the URL fragment, removed on load. For storage keys, see [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts).
 
 The saved theme and language are applied before the first paint, so a reload does not flash the default look.
 
