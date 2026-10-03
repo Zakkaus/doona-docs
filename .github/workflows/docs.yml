@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOONA_DIR: doona
-      # doona's README links the screenshots on this site rather than keeping them in git. Rendering them adds about
-      # five minutes, so only the runs that can publish do it; pull requests and the daily run check the pages without.
-      SCREENSHOTS: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+      # doona's README links the screenshots on this site rather than keeping them in git. Publishing replaces the whole
+      # site, so every run that can publish renders them; only pull requests check the pages without.
+      SCREENSHOTS: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       # A release pins a tag through the DOONA_REF repository variable; otherwise doona's main.
@@ -88,6 +88,10 @@ jobs:
         env:
           DOCS_ORIGIN: https://zakkaus.github.io
       - run: pnpm docs:check
+      # A publishing run without screenshots would replace the site and drop every image doona's README links.
+      - name: Require the screenshots
+        if: env.SCREENSHOTS == 'true'
+        run: test -s doona/docs/screenshots/palettes.webp && test -s doona/docs/screenshots/en/activity-light.webp
       - uses: actions/upload-artifact@v4
         with:
           name: site
