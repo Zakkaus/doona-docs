@@ -192,7 +192,7 @@ cat /etc/honk/config.d/api.dae
 ui: embedded
 ```
 
-使用 `ui: embedded` 時，`doona` 套件可省略。嵌入的 doona 版本由 honk 建置固定，且不含 Noto Sans TC/SC 字型，瀏覽器會改用系統字型。如需這些字型或更新版本的 doona，請安裝 `doona` 與 `doona-fonts` 套件，並將 `ui` 指向安裝目錄，例如 `/usr/share/doona`。
+使用 `ui: embedded` 時，可省略獨立 UI 套件。嵌入版本由 honk 建置固定，不含 Noto Sans TC/SC，瀏覽器使用系統字型。如需這些字型或新版 doona，安裝 `doona` 與 `doona-fonts`，並將 `ui` 指向實際安裝目錄，例如 `/usr/share/doona`；Debian 或 Ubuntu 使用 `doona-web`、`doona-web-fonts` 與 `/usr/share/doona-web`。
 
 ## 5. 檢查組態
 
@@ -263,7 +263,7 @@ honk 在以 `fatal error, shutting down:` 開頭的行或 `ERROR` 行中給出�
 | 看到的內容                                                                                | 原因與處理                                                                                                   |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `native API listener bind failed`                                                         | `listen` 位址不屬於這台機器。請重做第 1 步與第 4 步。                                                         |
-| `failed to inspect native UI index.html: No such file or directory`                       | `/usr/share/doona` 中沒有 doona。請重做安裝頁中安裝 doona 的步驟。                                            |
+| `failed to inspect native UI index.html: No such file or directory` | 檢查 `ui` 實際指向的目錄是否包含 `index.html`：Debian 或 Ubuntu 為 `/usr/share/doona-web`，其他平台通常為 `/usr/share/doona`。按對應平台的安裝頁安裝 doona。 |
 | `Subscription network owner failed error="subscription HTTP client creation failed"`，隨後是 `subscription network startup failed` | 缺少 CA 憑證。請安裝 `ca-certificates` 套件（OpenWrt 上為 `ca-bundle`）。 |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | `api.dae` 缺少 `password_auth: true` 一行。                                                                   |
 | `native API setting belongs inside native_api { }`                                        | 某個 `native_api` 欄位直接寫在了 `experimental` 下。請把它移入 `native_api { }`。 |

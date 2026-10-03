@@ -17,7 +17,11 @@
 http://192.168.1.1:9527/ui/
 ```
 
-doona 在同一位址找到 honk 的 API，並將其儲存為後端。由於尚未建立管理員，頁面標題為「建立管理員」，包含「使用者名稱」「密碼」「確認密碼」三個欄位。外觀按鈕開啟「設定 > 外觀」，可調整語言、配色與主題。
+doona 在同一位址找到 honk 的 API，並將其儲存為後端。尚未建立管理員時，頁面顯示「建立管理員」。
+
+![建立管理員頁面，右上角為語言、配色與明暗模式控制](../screenshots/zh-TW/login-setup.webp)
+
+登入前可直接使用右上角的三個圖示調整語言、配色與明暗模式。
 
 ## 2. 建立管理員
 
@@ -48,5 +52,9 @@ doona 登入後開啟「活動」頁。honk 把帳戶儲存在狀態資料庫 `/
 | 「後端只接受來自本機、私有網路或鏈路本地位址的管理員建立請求。」 | 瀏覽器從公用網路位址存取了 honk。請在區域網路裝置或閘道器本機上開啟 doona。                                                                                                |
 | 「使用者名稱或密碼錯誤。」                                        | 重新輸入。如需替換忘記密碼的管理員，先停止 honk，執行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上執行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再啟動 honk，頁面會重新顯示建立管理員。                                        |
 | 顯示「需要 Token」而不是建立管理員                           | `api.dae` 設定了 `secret` 而不是 `password_auth: true`。請把該 secret 作為 Token 輸入，或按[最小組態](minimal-configuration.md)修改 `api.dae` 後重新啟動 honk。          |
+
+![Token 登入頁面，顯示 Token 欄位、顯示或隱藏控制與連線按鈕](../screenshots/zh-TW/login-token.webp)
+
+在 Token 欄位輸入後端 secret，可用顯示或隱藏按鈕檢查內容，再按「連線」。doona 將 Token 儲存在目前瀏覽器的連線設定檔中。
 
 更多內容見[登入問題](troubleshooting.md#sign-in)。

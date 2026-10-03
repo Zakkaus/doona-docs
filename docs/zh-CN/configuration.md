@@ -4,7 +4,11 @@
 
 # 配置
 
-此示例使用两个文件。主文件 `/etc/honk/config.dae` 包含网卡、节点、组、分流、DNS 与资源下载设置；`/etc/honk/config.d/api.dae` 包含 doona 使用的原生 API。主文件引入 `config.d/` 中的全部 `.dae` 文件，相对路径以主文件所在目录为基准。
+主文件为 `/etc/honk/config.dae`；`include` 引入 `config.d/` 中的全部 `.dae` 文件，相对路径以主文件所在目录为基准。
+
+![主配置引入 API 与 routing 文件，监听密钥与可写来源分离](../images/include-boundary.svg)
+
+将 API 放在 `config.d/api.dae`，新增 routing 文件也应与监听密钥分离。配置写入需要 `config_write: true`、完整文本与可写来源；虚线边界表示监听密钥文件，不是 doona 可写回的文件。
 
 ## 主文件
 
@@ -100,6 +104,8 @@ experimental {
         password_auth: true
         # secret: 'replace-with-a-long-random-token'
         config_write: true
+        # Debian/Ubuntu doona-web: /usr/share/doona-web.
+        # On other platforms, use the package's installation path.
         ui: '/usr/share/doona'
         # On by default; listed so the names are known.
         record_flows: true
@@ -112,9 +118,9 @@ experimental {
 }
 ```
 
-请将 `192.168.1.1` 替换为网关的局域网地址，并将此配置块单独放在一个文件中。文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与 8 字节以上监听密钥相同的文本时，doona 会将该文件显示为只读，因为 honk 会隐藏至少 8 字节的密钥，写回隐藏后的文本会丢失密钥。该文件中声明的组同样变为只读。
+请将 `192.168.1.1` 替换为网关的局域网地址。文件在 `native_api` 或 `clash_api` 中包含 `secret`，或包含与至少 8 字节监听密钥相同的文本时，文件及其中的组均为只读；honk 隐藏至少 8 字节的密钥，写回隐藏文本会丢失密钥。
 
-添加节点与订阅会写入主文件，因此主文件中不能包含任何密钥。
+添加节点与订阅会写入主文件，因此主文件不能包含密钥。
 
 从其他来源打开 doona 时，例如经由 TLS 反向代理，还需添加：
 

@@ -65,8 +65,10 @@ With no subscriptions or proxy nodes, Nodes offers Add subscription and Paste no
 
 1. The Node sources table shows each source's Kind, Nodes, Usage, Updated, Auto-update, Expires and State, with update, edit and removal controls when available.
 2. Select a source row. The node table below shows that source's nodes. Search nodes covers every source; Group and Protocol filter the table.
-3. Each node row shows Protocol, Latency and Groups. The test button uses Settings > Latency probes; Node actions > Probe with options… opens the supported options. Select a row to see the latest TCP, HTTP, UDP and DNS results reported by the backend, including latency or failure reason.
-4. Open Node actions > Add to group, then choose a group from a writable main or include file. The shared group editor opens with the node staged; choose Apply to confirm. New group… opens the same editor with that node included.
+
+![Node details with probe results and the Add to group submenu](../screenshots/en/node-actions.webp)
+
+The test button uses Settings > Latency probes; Probe with options… offers what the backend supports. Add to group lists groups in writable main or include files and opens the group editor with the node staged; Apply confirms.
 
 A subscription with no successful fetch and no reported error shows Not fetched. Stale means a previous fetch succeeded but the retained data needs updating. The Group filter and Add to group submenu support search for long lists. Group editing can still work from readable configuration when the runtime groups API is unavailable.
 
@@ -124,6 +126,10 @@ Open the Routing hub, then Rules. DNS rules and Trace simulation appear when the
 
 With readable configuration, Routing rules offers templates. When a rule list or flow records are also available, a Simple / Advanced switch separates templates from that list. Without an explicit view in the link, Simple opens, including for custom rules. Links that select or edit a rule, prefill a new rule, or review held rules open Advanced unless they explicitly select another view.
 
+![Simple view showing routing templates](../screenshots/en/rules-light.webp)
+
+Use Simple for templates; the source actions shown below belong to Advanced and DNS rules.
+
 Simple selects the detected template name when one file's top-level `routing` matches a template. Otherwise, the rules are custom: no template is selected, and a notice says the current rules match no mode. Routing spread over several files is also custom.
 
 1. Under Routing mode, choose Bypass mainland China, GFW list only or Global proxy. More templates offers Single proxy group, Groups by service, Groups by service and region, and Back to mainland China.
@@ -151,17 +157,17 @@ Templates cannot be applied when the backend reports an engine name other than `
 
 Choose Advanced if the Simple / Advanced switch is shown.
 
-1. Read the list from top to bottom. The first rule that matches decides the outbound; the unnumbered last row is the fallback.
-2. Each row shows the rule number, Expression, Outbound, Where and Hits. A `must` badge marks a locked outbound.
-3. Where shows the file and line that holds the rule. Hits counts retained flow records whose `rule_generation_id` matches the rule list’s `generation_id`, not a running total.
-4. The caption shows the rule count and the `generation_id` of the rule list.
-5. When the backend offers flow records but no rule list, the tab shows the flows of the current snapshot grouped by rule, with Hits and Share, instead.
+![Advanced routing rules with source file and line, and the Open config file, Edit rule and Remove rule actions](../screenshots/en/rules-advanced.webp)
+
+The first matching rule decides the outbound; the unnumbered last row is the fallback, and `must` locks the outbound. Edit rule and Remove rule need a writable file with complete text and a located rule.
+
+Hits counts retained flow records whose `rule_generation_id` matches the list's `generation_id`, not a running total; the caption identifies that generation and the rule count. If the backend provides flows but no rule list, the view groups current-snapshot flows by rule, with Hits and Share instead.
 
 In the flow-based list, Rule source filters where the rule was matched: `kernel` by eBPF, `userspace` by a userspace router, `recomputed` by evaluating the rules again, or `unknown` when the origin cannot be confirmed.
 
 ### Open the source of a rule
 
-1. Choose Open config file on a row. The Configuration page opens that file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
+1. Open config file works on every row with a known source, writable or read-only, and opens the file at the rule's line; see [edit a source](config-and-settings.md#edit-source).
 2. A rule from an include file outside a routing section cannot be changed in the list. Edit it in the file through Open config file.
 
 ### Edit or remove a rule
@@ -176,10 +182,11 @@ In the flow-based list, Rule source filters where the rule was matched: `kernel`
 
 ## DNS rules
 
-1. Open the DNS rules tab. It holds two lists, each checked in order: Request rules decide how each query is handled, and Response rules accept an answer, reject it, or query again through another upstream.
-2. Each row shows the rule's expression, its Action and Where. Resolution log and Open DNS configuration link to the DNS page and to the dns section of the configuration.
-3. Choose Add rule in either list to add a rule. The dialog works as in [add a rule from a rule list](#add-rule), with Action in place of Outbound and without Lock this outbound. The rule goes into the dns routing section of the source file.
-4. Choose Edit rule to change conditions and Action, or Remove rule to delete the row. Open config file edits the declaring file directly.
+![DNS request and response rules with their sources and actions](../screenshots/en/rules-dns.webp)
+
+Both lists are checked in order. A response rule accepts an answer, rejects it or queries again through another upstream. Open config file also works for read-only files; Edit rule and Remove rule need write access.
+
+Add rule in either list uses the [rule-list dialog](#add-rule), with Action instead of Outbound and no Lock this outbound, and writes into that source's DNS routing section. Resolution log opens DNS; Open DNS configuration opens the configuration's `dns` section.
 
 <a name="add-rule"></a>
 

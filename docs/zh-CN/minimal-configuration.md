@@ -192,7 +192,7 @@ cat /etc/honk/config.d/api.dae
 ui: embedded
 ```
 
-使用 `ui: embedded` 时，`doona` 软件包可省略。嵌入的 doona 版本由 honk 构建固定，且不含 Noto Sans TC/SC 字体，浏览器会回退到系统字体。如需这些字体或更新版本的 doona，请安装 `doona` 与 `doona-fonts` 软件包，并将 `ui` 指向安装目录，例如 `/usr/share/doona`。
+使用 `ui: embedded` 时，可省略独立 UI 软件包。嵌入版本由 honk 构建固定，不含 Noto Sans TC/SC，浏览器使用系统字体。如需这些字体或新版 doona，安装 `doona` 与 `doona-fonts`，并将 `ui` 指向实际安装目录，例如 `/usr/share/doona`；Debian 或 Ubuntu 使用 `doona-web`、`doona-web-fonts` 与 `/usr/share/doona-web`。
 
 ## 5. 检查配置
 
@@ -263,7 +263,7 @@ honk 在以 `fatal error, shutting down:` 开头的行或 `ERROR` 行中给出�
 | 看到的内容                                                                                | 原因与处理                                                                                                   |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `native API listener bind failed`                                                         | `listen` 地址不属于这台机器。请重做第 1 步与第 4 步。                                                         |
-| `failed to inspect native UI index.html: No such file or directory`                       | `/usr/share/doona` 中没有 doona。请重做安装页中安装 doona 的步骤。                                            |
+| `failed to inspect native UI index.html: No such file or directory` | 检查 `ui` 实际指向的目录是否包含 `index.html`：Debian 或 Ubuntu 为 `/usr/share/doona-web`，其他平台通常为 `/usr/share/doona`。按对应平台的安装页安装 doona。 |
 | `Subscription network owner failed error="subscription HTTP client creation failed"`，随后是 `subscription network startup failed` | 缺少 CA 证书。请安装 `ca-certificates` 软件包（OpenWrt 上为 `ca-bundle`）。 |
 | `native API requires a secret, password login, or explicitly anonymous loopback`          | `api.dae` 缺少 `password_auth: true` 一行。                                                                   |
 | `native API setting belongs inside native_api { }`                                        | 某个 `native_api` 字段直接写在了 `experimental` 下。请把它移入 `native_api { }`。 |

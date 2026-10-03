@@ -78,7 +78,7 @@
 | 日志 | 日志流，可按级别与模块筛选、暂停、导出                                                                     | `logs`                              |
 | 设置 | 后端、运行时设置、延迟探测偏好、地理数据来源与文件、语言、外观与配色 | 无 |
 
-所有页面都保留在导航栏中。只有 [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) 为页面列出的资源全部不可用时，页面才会标为不可用；后端提供导出、导入或修订时，配置页也可用。打开不可用的页面会显示提示。任何页面按 `Ctrl K`（macOS 为 `⌘ K`）可搜索页面、连接、节点、组、订阅、规则与来源。
+所有页面都保留在导航栏中。只有 [registry.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/registry.ts) 为页面列出的资源全部不可用时，页面才会标为不可用；后端提供导出、导入或修订时，配置页也可用。打开不可用的页面会显示提示。`Ctrl K`（macOS 为 `⌘ K`）可搜索页面与实时数据，也涵盖设置字段与动作、持久化 `global` 设置、配置区段与功能入口；选择结果会打开并聚焦控件，不会执行动作，见[搜索示例](tour.md#top-bar)。
 
 ![规则页](../screenshots/zh-CN/rules-light.webp)
 
@@ -99,23 +99,15 @@
 | Arco Design | [浅色](../screenshots/en/theme-arco-light.webp) | [深色](../screenshots/en/theme-arco-dark.webp) |
 | Semi Design | [浅色](../screenshots/en/theme-semi-light.webp) | [深色](../screenshots/en/theme-semi-dark.webp) |
 | 玻璃 | [浅色](../screenshots/en/theme-glass-light.webp) | [深色](../screenshots/en/theme-glass-dark.webp) |
-| 中国 | [打卡版](../screenshots/en/theme-qiangguo-light.webp) | [通宵版](../screenshots/en/theme-qiangguo-dark.webp) |
+| 强国 | [白班](../screenshots/en/theme-qiangguo-light.webp) | [夜班](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## 浏览器中保存的设置
 
-doona 没有用于存储自身界面设置的服务器端存储。配置与运行时变更通过引擎写入；doona 的界面设置存储在浏览器中，范围限于该网站来源的 `localStorage`。下表列出主要的键，完整列表见 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
+![localStorage、sessionStorage 与 honk 的存储边界](../images/storage-boundary.svg)
 
-| 设置         | 键               | 值                                                                                                                                                                                                                                                                                                                    |
-| ------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 后端         | `doona-profiles` | `{id, name, api, token}` 的 JSON 数组；`api` 是服务器根地址或代理前缀，留空或 `mock` 使用演示数据。密码模式下，`token` 为空，honk 管理会话，doona 将会话 token 保存在当前标签页的 `sessionStorage` 中。token 模式下，API 请求通过 `Authorization` 头发送 token。配对链接可能把 token 放在网址片段中，并在加载后移除。 |
-| 使用中的后端 | `doona-profile`  | 所选后端的 `id`                                                                                                                                                                                                                                                                                                       |
-| 语言         | `doona-lang`     | `zh-TW`、`zh-CN`、`en`；未设置时按浏览器语言                                                                                                                                                                                                                                                                          |
-| 配色方案     | `doona-scheme`   | `system`（默认）、`light`、`dark`                                                                                                                                                                                                                                                                                     |
-| 配色         | `doona-palette`  | `rose-pine/moon`（默认）；其他值见 [palettes.ts](https://github.com/Zakkaus/doona/blob/main/src/shell/palettes.ts) 的 `PaletteId`                                                                                                                                                                                                                          |
-| 字标         | `doona-wordmark` | `gradient`（默认）、`plain`                                                                                                                                                                                                                                                                                           |
-| 延迟探测 | `doona-latency-probe` | JSON `{choice, family, cold, leaves}`；默认值：`http`、`auto`、`false`、`false` |
-| 指标迷你图 | `doona-sparklines` | `true`（默认）、`false`；适用于所有指标卡片 |
-| 仪表盘与小工具 | `doona-dashboard`、`doona-widgets` | 保存的仪表盘与浮动面板布局 |
+`localStorage` 保存当前网站来源的偏好、布局与连接配置方案，包括 Token；`sessionStorage` 保存当前标签页的密码登录会话 token。honk 保存后端配置并管理密码会话；清除浏览器数据会丢失配置方案与偏好，不会删除 honk 的配置。
+
+Token 模式下，请求通过 `Authorization` 发送已保存的 Token；配对链接可通过网址片段传递 Token，加载后移除该片段。存储键见 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
 
 保存的主题与语言在第一帧之前就应用，重新加载不会闪出默认外观。
 
