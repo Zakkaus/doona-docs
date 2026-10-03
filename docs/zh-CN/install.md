@@ -11,10 +11,9 @@
 
 ## 安装 honk
 
-每个 doona 发行版都附带具备原生 API 的 honk-core 构建，`HONK-SOURCE.txt` 注明构建所用的 honk 提交。请从同一个发行版下载适合网关的归档文件与 `SHA256SUMS`。只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，且须启用 `native-api`；daeuniverse/honk `main` 分支的构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。v0.1.0-beta.7 及更早的发行版不含 honk，请改从 Glassyiris/honk 的 `debug` 版本下载同名归档文件；每次新的 honk 构建都会替换该版本的文件。
+每个 doona 发布版本都附带提供原生 API 的 honk-core 构建，构建来自 Glassyiris/honk `feat/native-api` 的 debug 标签。`HONK-SOURCE.txt` 注明构建所用的 honk 提交。请从同一个发行版下载适合网关的归档文件与 `SHA256SUMS`。只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，且须启用 `native-api`；daeuniverse/honk `main` 分支的构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。
 
-- [doona 发布页](https://github.com/Zakkaus/doona/releases)
-- [Glassyiris/honk `debug` 版本](https://github.com/Glassyiris/honk/releases/tag/debug)
+- [doona 发布页](https://github.com/Zakkaus/doona/releases)：下载 honk-core 构建
 - [honk 快速入门](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 
 | 文件名片段           | 用途                                                              |
@@ -35,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.2
 ```
 
 如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，按 honk 快速入门的步骤构建：先构建 eBPF 对象，再执行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要显式启用，发布构建已包含此功能；未启用 `ebpf` 时 honk 没有数据路径。发布页同时附有该提交的源码包 `honk-source-<commit>.tar.gz`。
@@ -186,7 +185,7 @@ sudo journalctl -u honk-core -e    # look for applied or rejected
 
 ### 更新 honk
 
-从较新的 doona 发行版下载 honk-core 归档文件，或从 honk `debug` 版本下载较新的构建，按[安装 honk](#install) 一节安装，然后执行 `sudo systemctl restart honk-core` 并检查 `honk-core --version`。`debug` 标签随每次构建移动，请将版本与 [honk 版本](requirements.md#honk-version)中注明的版本对照。
+从较新的 [doona 发布版本](https://github.com/Zakkaus/doona/releases)下载 honk-core 归档文件，按[安装 honk](#install) 一节安装，然后执行 `sudo systemctl restart honk-core` 并检查 `honk-core --version`。请将版本与 [honk 版本](requirements.md#honk-version)中注明的版本对照。
 
 ### 更新 doona
 

@@ -10,7 +10,7 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 
 ## 原生 API 狀態
 
-本文件說明預計發布的 doona v0.1.0-beta.13。doona 需要 Glassyiris/honk `feat/native-api` 分支的原生 API，其持續更新的 `debug` 版本與 doona 發布頁附帶的 honk 歸檔提供此 API。發布建置固定使用 honk 提交 `5ad13ac`，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
+本文件說明預計發布的 doona v0.1.0-beta.13。doona 所需的原生 API 由每個 doona 發布版本附帶的 honk-core 建置提供，建置來自 Glassyiris/honk `feat/native-api` 的 debug 標籤。發布建置固定使用 honk 提交 `464c9b3`，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
 
 原始碼仍宣告 beta.12，beta.13 下載檔案尚未發布。安裝頁中的 beta.13 指令須在該版本發布後執行。
 
@@ -36,7 +36,6 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 
 ## 連結
 
-- [doona 發布頁](https://github.com/Zakkaus/doona/releases)
-- [Glassyiris/honk `debug` 版本](https://github.com/Glassyiris/honk/releases/tag/debug)
+- [doona 發布頁](https://github.com/Zakkaus/doona/releases)：下載 honk-core 建置
 - [honk 快速入門](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 - [doona issues](https://github.com/Zakkaus/doona/issues)；引擎問題請回報給 [honk](https://github.com/daeuniverse/honk) 或 [dae](https://github.com/daeuniverse/dae)

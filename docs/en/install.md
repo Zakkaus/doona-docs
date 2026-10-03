@@ -11,10 +11,9 @@ Install honk, write its configuration, then install doona and start honk. Check 
 
 ## Install honk
 
-Each doona release attaches honk-core builds with the native API, and `HONK-SOURCE.txt` names the honk commit they were built from. Download the archive for the gateway and `SHA256SUMS` from the same release. The native API exists only in builds from Glassyiris/honk `feat/native-api`, where the `native-api` feature must be enabled. Builds of daeuniverse/honk `main` have no native API; see [honk version](requirements.md#honk-version). Releases up to v0.1.0-beta.7 carry no honk; take the same archive from the Glassyiris/honk `debug` release, which each new honk build replaces.
+Each doona release attaches honk-core builds with the native API, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` names the honk commit they were built from. Download the archive for the gateway and `SHA256SUMS` from the same release. The native API exists only in builds from Glassyiris/honk `feat/native-api`, where the `native-api` feature must be enabled. Builds of daeuniverse/honk `main` have no native API; see [honk version](requirements.md#honk-version).
 
-- [doona releases](https://github.com/Zakkaus/doona/releases)
-- [Glassyiris/honk `debug` release](https://github.com/Glassyiris/honk/releases/tag/debug)
+- [doona releases](https://github.com/Zakkaus/doona/releases) for honk-core downloads
 - [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
 
 | Asset name part      | Use                                                                                                        |
@@ -35,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.2
 ```
 
 To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf,native-api`. `native-api` is opt-in; release builds include it; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
@@ -186,7 +185,7 @@ Configuration applies reloadable edits automatically. If an edit requires a rest
 
 ### Update honk
 
-Download the honk-core archive from a newer doona release, or a newer build from the honk `debug` release, install it as in [Install honk](#install), then run `sudo systemctl restart honk-core` and check `honk-core --version`. The `debug` tag moves with every build, so compare the version with the one [honk version](requirements.md#honk-version) names.
+Download the honk-core archive from a newer [doona release](https://github.com/Zakkaus/doona/releases), install it as in [Install honk](#install), then run `sudo systemctl restart honk-core` and check `honk-core --version`. Compare the version with the one [honk version](requirements.md#honk-version) names.
 
 ### Update doona
 
