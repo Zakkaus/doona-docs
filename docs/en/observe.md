@@ -45,6 +45,10 @@ Download and Upload open Connections > Traffic, Active connections opens the lis
 - When an eBPF backend reports only userspace traffic, the Traffic title's help explains that kernel-forwarded direct connections are not counted. Connections > Traffic shows the same warning beside its title.
 - Notifications folds identical notices into one row with a repeat count; its badge counts distinct notices. Stream ready events stay on Events, not this card. A flow gap without a record reads Flow records lost: recording changed.
 
+![Memory as a value tile with its sparkline, and a full-width Memory card listing peak and average](../screenshots/en/widgets-memory-wide.webp)
+
+![Notifications card on Activity with an information toast in white on blue](../screenshots/en/notices-light.webp)
+
 ### Edit the dashboard
 
 ![Edit dashboard with the Download card at width 1/3 and Tall, its handles and the free space left in the row](../screenshots/en/dashboard-settings.webp)
@@ -76,6 +80,8 @@ Open System status from the navigation, or from View details or the CPU usage va
 7. Select Export state JSON to download the reported state. Reload, Suspend and Resume appear only when the backend allows them; a toast reports each result.
 
 Status cards keep their space with skeleton placeholders while data loads. Loading notices show a progress circle. Meters expose their names and value text to assistive technology.
+
+![System status with the cgroup memory meter in the Memory card](../screenshots/en/system-status-meters.webp)
 
 <a name="connections"></a>
 
@@ -119,6 +125,8 @@ DNS has Statistics, Resolution log, Cache and Query tabs, as far as the backend 
 - In Resolution log, a row's add-rule icon opens a DNS request rule for the exact domain, or a routing rule when DNS rules are unavailable. Choose Domain suffix to include subdomains. Export CSV covers only the loaded records.
 - Cache lives in memory and is cleared on restart. Show expired includes expired entries on request. Its meter compares usage with a nonzero entry capacity; zero capacity shows no meter. Delete matching removes every entry matching the pattern, not only the shown page, and shows the count before confirmation. Clear all cache cannot be undone.
 - Query results are diagnostic and do not appear in Resolution log. Upstream offers Automatic, which follows `dns.routing`, or a named `dns.upstream`. Bypass cache is off by default.
+
+![Cache with Show expired on and an expired entry, beside the cache usage meter on Statistics](../screenshots/en/dns-cache-expired.webp)
 
 <a name="logs"></a>
 

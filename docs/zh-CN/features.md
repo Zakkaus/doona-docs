@@ -101,6 +101,8 @@
 
 面板移动、固定、嵌入与编辑器滚动见[界面导览](tour.md)。
 
+![「活动」页的「出站失败」「节点可用性」「DNS 延迟」卡片](../screenshots/zh-CN/widgets-health.webp)
+
 ## 主题与配色
 
 ![所有配色的浅色和深色模式](../screenshots/palettes.webp)

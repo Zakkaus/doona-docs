@@ -161,6 +161,8 @@ Show country flags controls flags before node names and does not affect routing.
 
 Open at startup chooses the page to open when the address has no page route. It defaults to Activity and saves immediately in this browser. A link to a specific page keeps its destination. Without a configured backend, an address without a page route still opens Settings.
 
+![Appearance with Time format set to 12-hour, beside Logs showing 9:30:00 AM](../screenshots/en/settings-formats.webp)
+
 <a name="backend-actions"></a>
 
 ### Backend controls

@@ -86,6 +86,10 @@ Hold 將觀測規則保留在目前瀏覽器工作階段中，重新載入頁面
 
 顯示形式、配額與記憶體計量器、寬卡片統計見[小工具](features.md#widgets)。
 
+![未固定的面板開啟「收至邊緣」後收在右側把手後方，把手上顯示上下行速率](../screenshots/zh-TW/widgets-edge.webp)
+
+![Glass 淺色配色下，展開的浮動面板覆蓋在「活動」頁上](../screenshots/zh-TW/widgets-glass.webp)
+
 <a name="confirm"></a>
 
 ## 確認變更已生效
