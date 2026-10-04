@@ -2,10 +2,10 @@
 
 # 在其他系統上安裝
 
-本頁在沒有 doona 套件、符合核心要求的 x86_64 或 aarch64 Linux 系統（例如 Alpine Linux）上，用發行版本中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+在符合以下核心需求的 x86_64 或 aarch64 Linux 系統上，從發行封存檔安裝 doona 與 honk-core。Alpine 也可使用[已簽章的 apk 套件](#install-alpine)。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+> beta.14 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 ## 開始之前
 
@@ -15,12 +15,45 @@
 - 能夠連線到 github.com。
 - 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `VERSION`、`BASE` 與 `TARGET` 變數。
 
+<a name="install-alpine"></a>
+
+## 在 Alpine 上安裝
+
+Alpine 的 `.apk` 檔案不能與 OpenWrt 的混用。在目前目錄下載 Alpine 套件、發行公鑰與總和檢查碼：
+
+```sh
+VERSION=0.1.0-beta.14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${VERSION}-r0.alpine.apk" \
+  -O "$BASE/doona-precompressed-${VERSION}-r0.alpine.apk" \
+  -O "$BASE/doona-alpine.rsa.pub" -O "$BASE/SHA256SUMS"
+grep -E " (doona(-precompressed)?-${VERSION}-r0.alpine.apk|doona-alpine.rsa.pub)\$" SHA256SUMS | sha256sum -c -
+```
+
+每次發行都用新金鑰簽署套件。安裝公鑰時保留名稱 `doona-alpine.rsa.pub`，後續版本會替換它。
+
+```sh tab="sudo"
+sudo wget -O /etc/apk/keys/doona-alpine.rsa.pub "$BASE/doona-alpine.rsa.pub"
+sudo apk add ./doona-${VERSION}-r0.alpine.apk ./doona-precompressed-${VERSION}-r0.alpine.apk
+ls -l /usr/share/doona/index.html
+```
+
+```sh tab="root"
+wget -O /etc/apk/keys/doona-alpine.rsa.pub "$BASE/doona-alpine.rsa.pub"
+apk add ./doona-${VERSION}-r0.alpine.apk ./doona-precompressed-${VERSION}-r0.alpine.apk
+ls -l /usr/share/doona/index.html
+```
+
+`ls` 須列出 `/usr/share/doona/index.html`。選用的 `doona-precompressed` 為支援預先壓縮回應的伺服器加入 `.br` 與 `.gz` 副本；不需要時省略其下載與安裝參數。選用字型套件為 `doona-fonts-${VERSION}-r0.alpine.apk`。
+
+沒有簽章公鑰時，可用 `apk add --allow-untrusted` 直接安裝檔案。安裝 honk-core 請從下方[第 4 步](#4-選擇-honk-core-建置)繼續，選擇 musl 建置。其餘編號步驟說明其他系統的封存檔安裝方式。
+
 ## 1. 下載 doona
 
 設定發行版本號，然後把程式封存檔與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -36,12 +69,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.13.tar.gz: OK
+doona-0.1.0-beta.14.tar.gz: OK
 ```
 
 ## 3. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.14 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
@@ -72,6 +105,8 @@ curl -fL -O "$BASE/doona-fonts-${VERSION}.tar.gz"
 grep " doona-fonts-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf doona-fonts-${VERSION}.tar.gz -C /usr/share/doona
 ```
+
+選用的 `doona-precompressed-${VERSION}.tar.gz` 封存檔在網頁檔案旁加入 `.br` 與 `.gz` 副本，讓伺服器傳送預先壓縮的回應。從同一個發行版本下載並驗證，再像字型封存檔一樣解壓縮到 `/usr/share/doona`。
 
 ## 4. 選擇 honk-core 建置
 

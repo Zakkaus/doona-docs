@@ -2,10 +2,10 @@
 
 # 安装详解
 
-先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前请确认[系统要求](requirements.md#requirements)。“安装”下的其他页面按系统逐步介绍同样的安装过程，从 [Debian 或 Ubuntu](install-debian.md) 开始。
+先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前确认[系统要求](requirements.md#requirements)，或按[对应系统的安装页](index.md#页面)操作。
 
 > [!NOTE]
-> beta.13 下载文件尚未发布。本页命令须在[发布页](https://github.com/Zakkaus/doona/releases)提供文件后执行，详见[原生 API 状态](index.md#原生-api-状态)。
+> beta.14 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@
 如需分别下载、校验和安装 honk-core，请先完成[在其他系统上安装](install-manual.md)的第 1 步，再按第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.13               # the doona release, without v
+VERSION=0.1.0-beta.14               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -92,7 +92,7 @@ WantedBy=multi-user.target
 
 ## 安装 doona 并启动
 
-设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.12。如需提供 beta.13，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.12。如需提供 beta.14，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
 
 同时下载 doona 发布包与 `SHA256SUMS`，再将发布包解压到 `/usr/share/doona`，即 `ui` 指定的目录。最后一条命令必须列出 `index.html`，否则 honk 无法启动。
 
@@ -101,7 +101,7 @@ WantedBy=multi-user.target
 如需逐步下载、校验并解压程序与可选字体，请按[在其他系统上安装](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.13   # the doona release, without v
+VERSION=0.1.0-beta.14   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -161,9 +161,13 @@ doona 由其他服务器提供时，浏览器会发送跨域请求，honk 只接
 
 ### 发行版软件包
 
-每个发布版本附带 [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) 基于预构建的程序包与字体包生成的 `deb`、`rpm`、`ipk` 与 Arch 软件包，全部与架构无关；`doona-fonts` 是独立的可选软件包。[install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) 中 OpenWrt、Alpine、Gentoo 与 Nix 的打包配置是尚未发布的模板，目前仍使用 beta.12 的版本号。打包 beta.13 前须修改版本号并替换标记的哈希值；[在 Gentoo 上安装](install-gentoo.md)说明了如何调整 ebuild。AUR 的 `doona-bin` 位于独立仓库。打包本地构建结果时，可使用 `make install DESTDIR=… PREFIX=/usr` 和 `make install-fonts`。
+发布版本提供与架构无关的 `deb`、`rpm`、Arch、OpenWrt 24.10 `ipk`、OpenWrt 25.12 `apk` 与 Alpine `apk` 软件包。安装步骤见 [Debian 或 Ubuntu](install-debian.md)、[Fedora 或 RHEL](install-fedora.md)、[Arch](install-arch.md)、[OpenWrt](install-openwrt.md#openwrt-packages) 或 [Alpine](install-manual.md#install-alpine)。OpenWrt 签名 apk 索引，Alpine 签名每个 apk 软件包，两者的文件与公钥不能混用。
 
-在 Debian 与 Ubuntu 上，软件包名为 `doona-web`，安装目录为 `/usr/share/doona-web`，可选字体软件包名为 `doona-web-fonts`。
+`doona-fonts` 加入可选的 Noto Sans TC 与 SC 字体。未安装时界面使用后备字体，不会请求缺失的字体文件。`doona-precompressed` 在原文件旁加入文本资源的 `.br` 与 `.gz` 副本，让服务器发送预压缩响应。它需要相同版本的主软件包，约占 1.6 MB 存储空间；不安装时主软件包保持不变。手动安装时，将 `doona-precompressed-<version>.tar.gz` 解压到 doona 目录。
+
+[OpenWrt、Alpine、Gentoo 与 Nix 的打包配置](https://github.com/Zakkaus/doona/blob/main/install/README.md)尚未进入各发行版仓库。[在 Gentoo 上安装](install-gentoo.md)使用 ebuild；AUR 的 `doona-bin` 位于独立仓库。本地打包可使用 `make install DESTDIR=… PREFIX=/usr` 与 `make install-fonts`。
+
+Debian 与 Ubuntu 的软件包名为 `doona-web`，安装目录为 `/usr/share/doona-web`，可选软件包为 `doona-web-fonts` 与 `doona-web-precompressed`。其他格式安装到 `/usr/share/doona`。
 
 <a name="operation"></a>
 

@@ -2,12 +2,12 @@ English / [简体中文](../zh-CN/install-openwrt.md) / [繁體中文](../zh-TW/
 
 # Install on OpenWrt
 
-This page installs doona and honk-core on OpenWrt 25.12 from the release archives. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+Install doona from a release package or archive and honk-core from the same release on OpenWrt 25.12. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
-The release’s `.ipk` package does not fit either current OpenWrt series. OpenWrt 25.12 installs packages with `apk`, which rejects the `.ipk` with `v2 package format error`. OpenWrt 24.10 still uses `opkg`, but runs Linux 6.6, older than the 6.12 honk needs.
+OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and `.ipk` files. Alpine apk packages do not work on OpenWrt. Stock 24.10 runs Linux 6.6, below honk's 6.12 requirement.
 
 ## Before you start
 
@@ -32,6 +32,51 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r` against [Requirements](requirements.md#requirements) first.
 
+<a name="openwrt-packages"></a>
+
+## Package routes
+
+In a root shell, download the packages into `/tmp/doona`. Choose the commands for your package manager. Both install the web files into `/usr/share/doona`.
+
+OpenWrt 25.12 signs the index, not the individual packages. Keep `doona-openwrt.adb` and the packages together, then install the public key and use that index:
+
+```sh
+apk update
+apk add curl ca-bundle
+mkdir -p /tmp/doona
+cd /tmp/doona
+VERSION=0.1.0-beta.14
+APKVER=0.1.0_beta14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
+  -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
+  -O "$BASE/doona-openwrt.adb" -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
+grep -E " (doona(-precompressed)?-${APKVER}-r1.apk|doona-openwrt.adb|doona-openwrt.pem)\$" SHA256SUMS | sha256sum -c -
+cp doona-openwrt.pem /etc/apk/keys/
+apk add -X /tmp/doona/doona-openwrt.adb doona doona-precompressed
+ls -l /usr/share/doona/index.html
+```
+
+OpenWrt 24.10 and earlier use the ipk packages. honk still needs a kernel of at least 6.12, so this route requires suitable firmware:
+
+```sh
+opkg update
+opkg install curl ca-bundle
+mkdir -p /tmp/doona
+cd /tmp/doona
+VERSION=0.1.0-beta.14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
+  -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
+grep -E " doona(-precompressed)?_${VERSION}-1_all.ipk\$" SHA256SUMS | sha256sum -c -
+opkg install doona_${VERSION}-1_all.ipk doona-precompressed_${VERSION}-1_all.ipk
+ls -l /usr/share/doona/index.html
+```
+
+`ls` must list `/usr/share/doona/index.html`. The optional `doona-precompressed` package adds `.br` and `.gz` copies for precompressed responses and uses about 1.6 MB of storage; omit it if not needed. `doona-fonts` is also optional. Each release supplies a new signing key. Without the OpenWrt key and index, direct apk installation requires `apk add --allow-untrusted ./doona-${APKVER}-r1.apk`.
+
+After installing a package, continue at [step 5](#5-choose-the-honk-core-build) for honk-core. Steps 1–4 below are the archive alternative.
+
 ## 1. Install curl and CA certificates
 
 honk uses the system CA certificates to verify HTTPS subscription and geodata downloads. Install curl and `ca-bundle`:
@@ -47,7 +92,7 @@ Work in `/tmp`, which is in memory and is cleared at reboot. Set the release ver
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -61,12 +106,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.13.tar.gz: OK
+doona-0.1.0-beta.14.tar.gz: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 files installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.14 files installed here; see [Minimal configuration](minimal-configuration.md).
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 

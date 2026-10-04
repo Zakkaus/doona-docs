@@ -10,16 +10,16 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 
 ## 原生 API 狀態
 
-本文件說明預計發布的 doona v0.1.0-beta.13。doona 所需的原生 API 由每個 doona 發布版本附帶的 honk-core 建置提供，建置來自 Glassyiris/honk `feat/native-api` 的 debug 標籤。發布建置固定使用 honk 提交 `464c9b3`，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
+本文件說明 doona v0.1.0-beta.14。doona 使用各發行版本附帶的 honk-core 建置中的原生 API，建置來自 Glassyiris/honk `feat/native-api` 的 debug 標籤。`HONK-SOURCE.txt` 註明附帶的建置，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
 
-原始碼仍宣告 beta.12，beta.13 下載檔案尚未發布。安裝頁中的 beta.13 指令須在該版本發布後執行。
+安裝範例使用 beta.14 檔名。下載前確認[發布頁](https://github.com/Zakkaus/doona/releases)已提供對應檔案。
 
 ## 頁面
 
 部署新的閘道器時，請先閱讀系統需求與對應系統的安裝頁，再依序閱讀「首次執行」下的最小組態、服務管理與首次登入。首次登入後，請繼續閱讀「指南」中的介面導覽。
 
 1. [系統需求](requirements.md)：核心、honk 建置、瀏覽器與建置工具。
-2. 在 [Debian 或 Ubuntu](install-debian.md)、[Fedora 或 RHEL](install-fedora.md)、[Arch Linux](install-arch.md)、[Gentoo](install-gentoo.md)、[OpenWrt](install-openwrt.md) 或[其他系統](install-manual.md)上安裝 doona 與 honk-core。
+2. 在 [Debian 或 Ubuntu](install-debian.md)、[Fedora 或 RHEL](install-fedora.md)、[Arch Linux](install-arch.md)、[Gentoo](install-gentoo.md)、[OpenWrt](install-openwrt.md)、[Alpine](install-manual.md#install-alpine) 或[其他系統](install-manual.md)上安裝 doona 與 honk-core。
 3. [安裝詳解](install.md)：在一頁內完成手動安裝，以及從其他來源開啟 doona、發行版套件與更新。
 4. [最小組態](minimal-configuration.md)：能提供 doona 的最小組態，以及檢查方法。
 5. [服務管理](service-management.md)：以 systemd 或 procd 服務執行 honk，啟動、停止、重載並查看日誌。

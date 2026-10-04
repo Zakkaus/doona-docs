@@ -2,10 +2,10 @@ English / [简体中文](../zh-CN/install-debian.md) / [繁體中文](../zh-TW/i
 
 # Install on Debian or Ubuntu
 
-This page installs doona from the `doona-web` `.deb` package and honk-core from the same doona release on Debian, Ubuntu and other APT-based systems. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+Install doona from the `doona-web` `.deb` package and honk-core from the same release on Debian, Ubuntu or another APT-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -33,7 +33,7 @@ apt install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -47,12 +47,12 @@ grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-web_0.1.0-beta.13-1_all.deb: OK
+doona-web_0.1.0-beta.14-1_all.deb: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona-web` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona-web` to serve the beta.14 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
@@ -65,6 +65,8 @@ ls -l /usr/share/doona-web/index.html
 ```
 
 `ls` prints a line ending in `/usr/share/doona-web/index.html`. The `doona-web` package holds doona’s web files in `/usr/share/doona-web` and documentation in `/usr/share/doc/doona-web`; it installs no service.
+
+The optional `doona-web-precompressed` package adds `.br` and `.gz` copies beside the web files so a server can send precompressed responses. Install the same version as `doona-web`; without it, the main package stays unchanged.
 
 Optional: the `doona-web-fonts` package adds the Noto Sans TC and SC fonts for the Chinese interface in `/usr/share/doona-web/fonts` and depends on `doona-web`.
 

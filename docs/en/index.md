@@ -10,16 +10,16 @@ doona is a static web UI for the native API that the daeuniverse engines share: 
 
 ## Native API status
 
-These pages describe the planned doona v0.1.0-beta.13 release. doona uses honk's native API from the honk-core builds attached to each doona release, built from Glassyiris/honk `feat/native-api` debug tags. The release build pins honk commit `464c9b3`; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
+These pages cover doona v0.1.0-beta.14. doona uses honk's native API from the honk-core builds attached to each release, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` identifies the bundled build; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
 
-The source still declares beta.12, and beta.13 download assets are not yet published. The beta.13 commands on the installation pages require that release to be available.
+Installation examples use beta.14 asset names. Check that the matching assets are published on the [release page](https://github.com/Zakkaus/doona/releases) before downloading.
 
 ## Pages
 
 For a new gateway, read Requirements and the install page for your system, then the First run pages in order: Minimal configuration, Service management and First sign-in. After the first sign-in, continue with the Interface tour in Guides.
 
 1. [Requirements](requirements.md): the kernel, the honk build, browsers and build tools.
-2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md) or [another system](install-manual.md).
+2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md), [Alpine](install-manual.md#install-alpine) or [another system](install-manual.md).
 3. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
 4. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
 5. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.

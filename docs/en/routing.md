@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/routing.md) / [繁體中文](../zh-TW/routing.
 
 # Routing, nodes and rules
 
-This page covers the Routing hub: the Policies, Nodes and Rules pages. It explains how to choose group members, manage subscriptions, read and change rules, hold rules for a later apply, and simulate a route with Trace.
+Policies manages group selection and membership. Nodes manages sources, subscriptions and probes. Rules edits routing and DNS rules and simulates routes with Trace.
 
 <a name="policies"></a>
 
@@ -17,6 +17,8 @@ Open the Routing hub, then Policies. One card represents each group. Use All, Ma
 1. The card header shows the group name, its policy, and the number of available, unavailable and untested members.
 2. Use the pencil button for Edit group, or More actions > View configuration when the group is read-only. Check settings opens Check URL, Check interval, Tolerance and Idle timeout when supported.
 3. The member grid below shows each member with its state or latency. A group with more than 12 members adds Filter nodes, Region, Sort (By latency or By name) and Available only above the grid.
+
+Member tiles keep the same column width across groups; a shorter group leaves the rest of the row empty. Long names wrap. A member that is itself a group shows the parent's latency sample for it, or the latency of the node its current selection resolves to.
 
 Automatic groups start folded, showing their name, selected member and health. Select the summary to expand the card. A pinned group or a group opened by a link expands automatically. Back to automatic on a folded card clears both TCP and UDP pins. Disabled actions expose their reasons through help controls, including on touch devices.
 
@@ -35,7 +37,8 @@ Test all, Probe with options… and Check settings are in the card's More action
 1. Choose Test all to measure the group using Settings > Latency probes. A toast reports the available, unavailable and unknown counts and whether the selection changed. Probe with options… offers supported HTTP, TCP connect, DNS (TCP), DNS (UDP) or DNS (TCP + UDP) probes, an IP family, Cold and Include nodes in nested groups. The dialog starts from this browser's probe preferences. Unsupported methods fall back to a supported method and the toast names the change.
 
    Trojan, AnyTLS and VLESS keep DNS UDP choices when support depends on node configuration. A backend admission refusal is reported, not silently replaced by HTTP. A timed-out or cancelled measurement, an unavailable address or a local refusal can leave the result unknown; this is not proof that the node is unavailable.
-2. Choose Edit group to change Selection policy, membership and filters. When supported, Default member and Final outbound also appear. Apply validates, writes the group in its defining main or include file and reloads. A refused save caused by another configuration change retries only the fields changed in the dialog; conflicting edits or a group renamed or removed meanwhile require reopening it.
+
+2. Choose Edit group to change Selection policy, membership and filters. When supported, Default member and Final outbound also appear. Apply validates, writes the group in its defining main or include file and reloads. A refused save caused by another configuration change retries only the fields changed in the dialog. Conflicting edits or a renamed group require reopening it. If the group is removed elsewhere, the editor stays open and says the changes were not saved.
 3. Choose Check settings to change Check URL, Check interval, Tolerance and Idle timeout. Only the fields the backend lists as writable appear. Leave a field empty to use the global value or the default, then choose Apply. If the backend changed a value after the dialog opened, the field says so; applying again replaces it.
 
 Default member is the member the group starts with. It appears only when Selection policy is manual; choosing an automatic policy leaves the file's `default` unchanged. Final outbound is used when no member is eligible. Both pickers support search. Default member lists the group’s direct members; Final outbound offers `direct`, `block`, groups and nodes, excluding groups that would form a cycle. None removes the corresponding `default` or `final` setting. Use the card's pencil button to open Edit group and these fields.
@@ -63,8 +66,10 @@ With no subscriptions or proxy nodes, Nodes offers Add subscription and Paste no
 
 ### Sources and nodes
 
-1. The Node sources table shows each source's Kind, Nodes, Usage, Updated, Auto-update, Expires and State, with update, edit and removal controls when available.
-2. Select a source row. The node table below shows that source's nodes. Search nodes covers every source; Group and Protocol filter the table.
+1. Node sources shows a card for each source with its kind, state, node count, update times, expiry and usage. A reported traffic allowance adds a quota meter below the usage. Update, edit and removal controls appear when available, beside the page's lead line and on the cards.
+2. Select a card, or use the arrow keys to move between cards and select a source. The node table below lists its nodes. Search nodes covers every source; Group and Protocol filter the table.
+
+Expiry is shown to the minute, with seconds in the tooltip. Dates and times follow [Date format and Time format](features.md#settings-stored-in-the-browser); the default clock is 24-hour.
 
 ![Node details with probe results and the Add to group submenu](../screenshots/en/node-actions.webp)
 
@@ -92,7 +97,7 @@ Adding or removing subscriptions and file sources requires the backend to allow 
 
 ### Refresh a subscription
 
-1. Choose Update {name} on a subscription row to fetch it now. Choose Update N subscription or Update N subscriptions, depending on the count, to fetch every subscription in one batch.
+1. Choose Update {name} on a subscription card to fetch it now. Choose Update N subscription or Update N subscriptions, depending on the count, to fetch every subscription in one batch.
 2. A refresh fetches the subscription through its download route and applies the new nodes. It does not change the subscription's configured source.
 3. On success, the toast reports the node count. On failure, the last nodes that loaded successfully stay in place.
 4. If the download route has no usable node yet, for example because the rules send the subscription through a group of the nodes it has not delivered, the refresh fails instead of falling back to direct.
@@ -100,7 +105,7 @@ Adding or removing subscriptions and file sources requires the backend to allow 
 
 ### Edit a subscription
 
-1. Choose Edit {name} on a subscription row, where {name} is the subscription name. If doona cannot identify one writable entry, use Open config file instead.
+1. Choose Edit {name} on a subscription card, where {name} is the subscription name. If doona cannot identify one writable entry, use Open config file instead.
 2. Change Name, Subscription URL or User-Agent. An empty User-Agent removes `ua` and uses the engine default. Cache the subscription appears when the entry sets `cache` or the backend reports a cache default. Other options stay as written.
 3. When Download route appears, choose By routing rules, Direct or a group. This affects fetching the subscription, not traffic through its nodes. Choosing By routing rules removes the explicit `route`.
 4. Choose Apply. doona validates, writes the file that declares the subscription and reloads.
@@ -109,7 +114,7 @@ Renaming can also update simple `subtag(...)` filters in the same file; keep the
 
 ### Remove a source or a node
 
-1. To remove a subscription or a file source, open More actions on its row and choose the remove item. Confirm in the dialog. doona deletes the source and its nodes from the main configuration and reloads.
+1. To remove a subscription or a file source, open More actions on its card and choose the remove item. Confirm in the dialog. doona deletes the source and its nodes from the main configuration and reloads.
 2. Nodes written in the configuration have a remove button on their row. Removing one deletes it from the node section of the main configuration and reloads.
 
 A subscription referenced by a group’s `subtag(...)` filter cannot be removed. The dialog names the groups and links to Policies; change their filters before removing it.
@@ -200,6 +205,7 @@ There are two dialogs. The dialog on a rule list writes the rule at once. The di
 2. In Condition form, choose Select to pick a Match by kind (such as Domain suffix, geosite category or Destination IP) and enter Values, separated by commas. Add AND condition adds another condition; every row must match. Or choose Expression and type Condition, such as `domain(geosite:netflix)`.
 
    Switching from Expression back to Select converts the edited expression into condition rows. An expression the rows cannot represent stays in Expression with a hint. An empty expression resets to one empty condition row.
+
 3. Choose the Outbound. It starts at the first group, or `direct` when there is no group. Turn on Lock this outbound to add `must`.
 4. In Insert, choose Last, before the fallback, or Before rule N. The dialog starts at the first offered position.
 5. Choose Add rule. doona adds the rule to the routing section of the source file, then writes and reloads after validation passes.
