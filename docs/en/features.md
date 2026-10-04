@@ -101,6 +101,8 @@ The memory meter reads cgroup used. It shows no meter for a zero or absent limit
 
 See the [tour](tour.md) for panel movement, pinning, docking and editor scrolling.
 
+![Outbound failures, Node availability and DNS latency cards on Activity](../screenshots/en/widgets-health.webp)
+
 ## Theme gallery
 
 ![Every palette in light and dark](../screenshots/palettes.webp)

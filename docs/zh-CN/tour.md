@@ -86,6 +86,10 @@ Hold 将观测规则保留在当前浏览器会话中，重新加载页面即丢
 
 显示形式、配额与内存仪表、宽卡片统计见[小工具](features.md#widgets)。
 
+![未固定的面板开启「收至边缘」后收在右侧把手后方，把手上显示上下行速率](../screenshots/zh-CN/widgets-edge.webp)
+
+![Glass 浅色配色下，展开的浮动面板覆盖在「活动」页上](../screenshots/zh-CN/widgets-glass.webp)
+
 <a name="confirm"></a>
 
 ## 确认修改已生效

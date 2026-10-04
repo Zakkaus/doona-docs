@@ -79,6 +79,8 @@ A subscription with no successful fetch and no reported error shows Not fetched.
 
 Empty file sources stay in Node sources with their status and a removal action when allowed.
 
+![Subscription quota and Source health cards with harbor's usage of 461 GB of 1.1 TB and its expiry](../screenshots/en/widgets-quota.webp)
+
 ### Latency
 
 1. Open the Latency tab. The summary shows the lowest and highest latency and the number of unavailable nodes.

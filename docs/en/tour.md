@@ -86,6 +86,10 @@ A narrow collapsed panel keeps both rates visible beside its buttons. The edge-h
 
 See [Widgets](features.md#widgets) for display forms, quota and memory meters, and wide-card statistics.
 
+![An unpinned panel with Hide at edge on, collapsed behind its handle at the right edge with both rates showing](../screenshots/en/widgets-edge.webp)
+
+![The expanded floating panel over Activity in the Glass light palette](../screenshots/en/widgets-glass.webp)
+
 <a name="confirm"></a>
 
 ## Check that a change took effect
