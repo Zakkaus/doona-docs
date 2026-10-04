@@ -2,10 +2,10 @@ English / [简体中文](../zh-CN/install-fedora.md) / [繁體中文](../zh-TW/i
 
 # Install on Fedora or RHEL
 
-This page installs doona from its `.rpm` package and honk-core from the same doona release on Fedora, RHEL and other DNF-based systems. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+Install doona from its `.rpm` package and honk-core from the same release on Fedora, RHEL or another DNF-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -31,7 +31,7 @@ dnf install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-1.noarch.rpm" -O "$BASE/SHA256SUMS"
 ```
@@ -45,12 +45,12 @@ grep " doona-${VERSION}-1.noarch.rpm\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.13-1.noarch.rpm: OK
+doona-0.1.0-beta.14-1.noarch.rpm: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.14 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -63,6 +63,8 @@ ls -l /usr/share/doona/index.html
 ```
 
 The release RPM is unsigned; step 3 verifies its checksum before installation. `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files and documentation; it installs no service.
+
+The optional `doona-precompressed` package adds `.br` and `.gz` copies beside the web files so a server can send precompressed responses. Install the same version as `doona`; without it, the main package stays unchanged.
 
 Optional: the `doona-fonts` package adds the Noto Sans TC and SC fonts for the Chinese interface.
 

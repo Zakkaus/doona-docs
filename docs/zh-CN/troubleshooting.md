@@ -207,7 +207,7 @@ journalctl -u honk-core -b       # systemd
 
 Service worker 在更新完成前会提供缓存的版本。请刷新页面一到两次，或关闭所有 doona 标签页后重新打开。
 
-使用 `ui: embedded` 时，界面版本由 honk 构建固定。本次发布附带的 honk 构建嵌入 beta.12；请安装独立的 beta.13 界面，并将 `ui` 指向其目录以使用新版界面。
+使用 `ui: embedded` 时，界面版本由 honk 构建固定。当前固定的构建嵌入 beta.12；安装独立的 beta.14 文件，并将 `ui` 指向其目录，才能使用新版界面。
 
 ## 通过 HTTP 登录时出现 crypto.randomUUID is not a function
 

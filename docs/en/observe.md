@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/observe.md) / [繁體中文](../zh-TW/observe.
 
 # Watching traffic
 
-This page covers the Activity hub (Activity and System status) and the Monitor hub (Connections, Routing log, DNS, Logs and Events). For each page it lists what the page shows, what you can do there and where its links lead.
+Use Activity and System status to read engine health, and Connections, Routing log and DNS to inspect traffic. Logs and Events show the backend streams.
 
 <a name="activity"></a>
 
@@ -42,6 +42,8 @@ Download and Upload open Connections > Traffic, Active connections opens the lis
 - CPU and Latency draw trends after two samples. Failed probes leave gaps, and changing the group restarts the series. Settings > Appearance > Show trends on activity cards turns them off.
 - Top devices / domains covers only the returned connection sample.
 - If a runtime read fails, the last figures stay muted until a read succeeds.
+- When an eBPF backend reports only userspace traffic, the Traffic title's help explains that kernel-forwarded direct connections are not counted. Connections > Traffic shows the same warning beside its title.
+- Notifications folds identical notices into one row with a repeat count; its badge counts distinct notices. Stream ready events stay on Events, not this card. A flow gap without a record reads Flow records lost: recording changed.
 
 ### Edit the dashboard
 
@@ -57,6 +59,8 @@ Each widget can be placed at most three times.
 
 The default dashboard keeps Download and Upload as separate cards.
 
+The gallery includes Subscription quota, Outbound failures, Node availability and DNS latency. Memory can be a chart or a Sparkline value tile. Wide cards show peak and average statistics beside their charts; see [Widgets](features.md#widgets).
+
 <a name="overview"></a>
 
 ## System status
@@ -65,11 +69,13 @@ Open System status from the navigation, or from View details or the CPU usage va
 
 1. Engine shows the engine version, API, Build, Instance, Started and Configuration activated. A badge shows the backend's profile: Base or Full observability.
 2. Traffic counters shows TCP connections, UDP connections, Total connections, Upload, Download and Rate interval. The line below gives the counter start time and whether the counters cover all traffic or visible traffic.
-3. Memory shows Resident memory, the cgroup figures and OOM events, where the backend reports them. A cgroup usage bar appears when a cgroup limit is known.
+3. Memory shows Resident memory, the cgroup figures and OOM events when reported. Its named meter compares cgroup usage with a nonzero limit; zero or missing limits show no meter.
 4. Datapath shows the checks of the eBPF programs, hooks and maps in the kernel, and an Attachments table. Datapath errors and runtime degradations appear as warnings under the card.
 5. Backend features lists the features the backend provides. Select one to open the page that uses it.
 6. Features that are off appears only when some features are off. Each row names the cause and the affected features. How to turn on shows the settings to add; Possible causes explains why; other rows link to Temporary runtime overrides or Geodata in Settings, or to this guide.
 7. Select Export state JSON to download the reported state. Reload, Suspend and Resume appear only when the backend allows them; a toast reports each result.
+
+Status cards keep their space with skeleton placeholders while data loads. Loading notices show a progress circle. Meters expose their names and value text to assistive technology.
 
 <a name="connections"></a>
 
@@ -111,7 +117,7 @@ DNS has Statistics, Resolution log, Cache and Query tabs, as far as the backend 
 
 - Statistics covers only the latest page of the resolution log. Select a top query to open Resolution log filtered to it.
 - In Resolution log, a row's add-rule icon opens a DNS request rule for the exact domain, or a routing rule when DNS rules are unavailable. Choose Domain suffix to include subdomains. Export CSV covers only the loaded records.
-- Cache lives in memory and is cleared on restart. Delete matching removes every entry that matches the pattern, not only the shown page, and shows the count before you confirm. Clear all cache cannot be undone.
+- Cache lives in memory and is cleared on restart. Show expired includes expired entries on request. Its meter compares usage with a nonzero entry capacity; zero capacity shows no meter. Delete matching removes every entry matching the pattern, not only the shown page, and shows the count before confirmation. Clear all cache cannot be undone.
 - Query results are diagnostic and do not appear in Resolution log. Upstream offers Automatic, which follows `dns.routing`, or a named `dns.upstream`. Bypass cache is off by default.
 
 <a name="logs"></a>

@@ -2,12 +2,12 @@
 
 # 在 OpenWrt 上安裝
 
-本頁在 OpenWrt 25.12 上用發行版本中的封存檔安裝 doona 與 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+在 OpenWrt 25.12 上，從發行套件或封存檔安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+> beta.14 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
-發行版本中的 `.ipk` 套件不適用於目前任何一個 OpenWrt 系列。OpenWrt 25.12 用 `apk` 安裝套件，`apk` 拒絕 `.ipk` 並報錯 `v2 package format error`。OpenWrt 24.10 仍使用 `opkg`，但核心是 Linux 6.6，低於 honk 要求的 6.12。
+OpenWrt 25.12 使用 apk-tools 3；24.10 及更早版本使用 opkg 與 `.ipk` 檔案。Alpine 的 apk 套件不能用於 OpenWrt。官方 24.10 使用 Linux 6.6，低於 honk 要求的 6.12。
 
 ## 開始之前
 
@@ -32,6 +32,51 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 官方 OpenWrt 24.10 及更早版本的核心低於 6.12，請先用 `uname -r` 對照[系統需求](requirements.md#requirements)確認核心版本。
 
+<a name="openwrt-packages"></a>
+
+## 套件安裝方式
+
+在 root shell 中把套件下載到 `/tmp/doona`，選擇適合目前套件管理器的指令。兩種方式都將網頁檔案安裝到 `/usr/share/doona`。
+
+OpenWrt 25.12 只簽署索引，不簽署個別套件。將 `doona-openwrt.adb` 與套件放在同一目錄，安裝公鑰後透過索引安裝：
+
+```sh
+apk update
+apk add curl ca-bundle
+mkdir -p /tmp/doona
+cd /tmp/doona
+VERSION=0.1.0-beta.14
+APKVER=0.1.0_beta14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
+  -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
+  -O "$BASE/doona-openwrt.adb" -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
+grep -E " (doona(-precompressed)?-${APKVER}-r1.apk|doona-openwrt.adb|doona-openwrt.pem)\$" SHA256SUMS | sha256sum -c -
+cp doona-openwrt.pem /etc/apk/keys/
+apk add -X /tmp/doona/doona-openwrt.adb doona doona-precompressed
+ls -l /usr/share/doona/index.html
+```
+
+OpenWrt 24.10 及更早版本使用 ipk 套件。honk 仍要求核心至少為 6.12，此方式需要符合需求的韌體：
+
+```sh
+opkg update
+opkg install curl ca-bundle
+mkdir -p /tmp/doona
+cd /tmp/doona
+VERSION=0.1.0-beta.14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
+  -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
+grep -E " doona(-precompressed)?_${VERSION}-1_all.ipk\$" SHA256SUMS | sha256sum -c -
+opkg install doona_${VERSION}-1_all.ipk doona-precompressed_${VERSION}-1_all.ipk
+ls -l /usr/share/doona/index.html
+```
+
+`ls` 須列出 `/usr/share/doona/index.html`。選用的 `doona-precompressed` 加入 `.br` 與 `.gz` 副本供伺服器傳送預先壓縮的回應，約占 1.6 MB 儲存空間，不需要時可省略。`doona-fonts` 也是選用套件。每次發行都提供新簽章公鑰。沒有 OpenWrt 公鑰與索引時，直接安裝 apk 須用 `apk add --allow-untrusted ./doona-${APKVER}-r1.apk`。
+
+安裝套件後，從[第 5 步](#5-選擇-honk-core-建置)繼續安裝 honk-core。下方第 1–4 步是封存檔安裝方式。
+
 ## 1. 安裝 curl 與 CA 憑證
 
 honk 使用系統 CA 憑證驗證透過 HTTPS 下載的訂閱與地理資料。安裝 curl 與 `ca-bundle`：
@@ -47,7 +92,7 @@ apk add curl ca-bundle
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -61,12 +106,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.13.tar.gz: OK
+doona-0.1.0-beta.14.tar.gz: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.14 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 

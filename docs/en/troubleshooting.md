@@ -207,7 +207,7 @@ Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
 
-With `ui: embedded`, the interface version is pinned by the honk build. The honk build attached to this release embeds beta.12; install the standalone beta.13 UI and point `ui` at its directory to get the newer interface.
+With `ui: embedded`, the honk build fixes the interface version. The pinned build embeds beta.12; install standalone beta.14 files and point `ui` at their directory to use the newer interface.
 
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 

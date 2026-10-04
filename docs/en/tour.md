@@ -4,7 +4,7 @@ English / [简体中文](../zh-CN/tour.md) / [繁體中文](../zh-TW/tour.md)
 
 # Interface tour
 
-This page shows where things are in doona after you sign in: the four navigation sections, the top bar, and the tabs, detail panels and action menus inside a page. It also explains how Hold, Apply and Save differ, how to confirm that a change took effect, and how the layout changes on a phone.
+Use the navigation to open a page, the top bar to search or refresh, and the page tabs to change views. Hold, Apply and Save have different write scopes.
 
 <a name="navigation"></a>
 
@@ -52,6 +52,8 @@ Search `palette` and select the Settings result to open and focus Appearance. Se
 
 Searchable pickers keep the search field visible while only the options list scrolls.
 
+Page tabs use the large segmented control: 40 px high with 16 px labels. The Policies kind switch uses the same size; page controls below them normally use the medium, 32 px size.
+
 <a name="commit-verbs"></a>
 
 ## Hold, apply or save
@@ -66,15 +68,23 @@ Runtime Apply changes honk's running values without writing files. Backend profi
 
 ![Widget editor from Panel options > Edit widgets: gallery, live preview with width grip, and settings](../screenshots/en/widgets-editor.webp)
 
-The preview reads live data. Save keeps the layout in this browser only.
+The preview reads live data and scrolls independently of the gallery and settings. Save keeps the layout in this browser only.
 
 ![Speed selected in the widget editor, with size and display choices](../screenshots/en/widgets-speed-settings.webp)
 
-Panel options > Combine upload and download charts is on by default; turn it off to draw two charts.
+Select a Speed widget in Edit widgets. Combine upload and download charts is now in that widget's settings, not Panel options. Turn it off for two charts; each instance keeps its own choice, including previously saved split charts.
 
 ![Floating panel unpinned and open, collapsed after a page change, pinned on another page, and docked in the sidebar](../screenshots/en/widgets-states.webp)
 
-The panel starts pinned and open. An unpinned panel collapses when you change pages. Hide at edge works only on a floating, unpinned panel.
+The panel starts unpinned and open. Pin panel locks its position and size: you cannot drag it, move it with arrow keys, resize it or drag it into the sidebar. Unpin panel restores those actions. An unpinned panel collapses when you change pages; Hide at edge works only while it is floating and unpinned.
+
+The docked header has no title. Undock replaces the pin button there and is no longer in Panel options.
+
+An unsized floating panel is 280 px wide and can be resized down to 200 px. Narrowing it from a side or by keyboard lets its height grow with the content, up to the window height, without cutting off Apply. Resizing its top or bottom edge keeps the chosen height even if the pointer drifts sideways. Glass gives it a frosted fill and blur.
+
+A narrow collapsed panel keeps both rates visible beside its buttons. The edge-hidden handle keeps spacing around its rates and controls.
+
+See [Widgets](features.md#widgets) for display forms, quota and memory meters, and wide-card statistics.
 
 <a name="confirm"></a>
 
@@ -93,5 +103,7 @@ If a write fails, the toast shows the reason, and held rules that were not writt
 ![Phone layout: page strip and bottom bar, the More options menu, and its Palette submenu](../screenshots/en/phone.webp)
 
 Below 1024 px wide, a bottom bar and a page strip replace the sidebar. Each section reopens the page you last visited in it during this browser session. Search, Refresh and the held-rule apply button stay in the top bar; the other top-bar controls move into More options, and a page toolbar keeps only its first action as a button.
+
+Below 600 px, pages use phone padding and wrapping. At 600 px and above, they use the wider layout.
 
 For installing honk and doona, see the [installation guide](install.md); for the configuration file, see [Configuration](configuration.md#config).

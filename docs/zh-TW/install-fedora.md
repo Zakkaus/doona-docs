@@ -2,10 +2,10 @@
 
 # 在 Fedora 或 RHEL 上安裝
 
-本頁在 Fedora、RHEL 及其他使用 DNF 的系統上，用 `.rpm` 套件安裝 doona，並從同一個 doona 發行版本安裝 honk-core。完成最後一步後，請繼續閱讀[最小組態](minimal-configuration.md)。
+在 Fedora、RHEL 或其他使用 DNF 的系統上，從 `.rpm` 套件安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.13 下載檔案尚未發布。本頁指令須在[發布頁](https://github.com/Zakkaus/doona/releases)提供檔案後執行，詳見[原生 API 狀態](index.md#原生-api-狀態)。
+> beta.14 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 ## 開始之前
 
@@ -31,7 +31,7 @@ dnf install curl ca-certificates
 設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-1.noarch.rpm" -O "$BASE/SHA256SUMS"
 ```
@@ -45,12 +45,12 @@ grep " doona-${VERSION}-1.noarch.rpm\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.13-1.noarch.rpm: OK
+doona-0.1.0-beta.14-1.noarch.rpm: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.13 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.14 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -63,6 +63,8 @@ ls -l /usr/share/doona/index.html
 ```
 
 發布的 RPM 未簽章；第 3 步在安裝前驗證其總和檢查碼。`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件只包含 doona 的網頁檔案與文件，不安裝任何服務。
+
+選用的 `doona-precompressed` 套件在網頁檔案旁加入 `.br` 與 `.gz` 副本，讓伺服器傳送預先壓縮的回應。須與 `doona` 安裝相同版本；未安裝時主套件保持不變。
 
 可選：`doona-fonts` 套件為中文介面加入 Noto Sans TC 與 SC 字型。
 

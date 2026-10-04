@@ -4,8 +4,6 @@ English / [简体中文](../zh-CN/common-tasks.md) / [繁體中文](../zh-TW/com
 
 # Common tasks
 
-This page collects short procedures for frequent changes to routing, traffic inspection and honk maintenance. Each procedure states the result to expect and links to the section that describes the page in detail.
-
 <a name="one-site"></a>
 
 ## Send one site through a proxy from a live connection
@@ -66,11 +64,11 @@ After Back to automatic, a notice names the member the group now uses; see [poli
 ## Add and refresh a subscription
 
 1. Open Routing > Nodes.
-2. Select Add subscription above the Node sources table. A dialog opens.
+2. Select Add subscription above the Node sources cards. A dialog opens.
 3. Enter Name and Subscription URL, then select Add.
-4. To update later, select the update button in the subscription's row of the Node sources table.
+4. To update later, select the update button on the subscription's card.
 
-After Add, doona selects the new row. If the backend can refresh subscriptions, doona refreshes it at once and the notice gives the node count or the failure. See [sources and nodes](routing.md#nodes).
+After Add, doona selects the new card. If the backend can refresh subscriptions, doona refreshes it at once and the notice gives the node count or the failure. See [sources and nodes](routing.md#nodes).
 
 <a name="global-mode"></a>
 

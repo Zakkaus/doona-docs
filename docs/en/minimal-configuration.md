@@ -186,7 +186,7 @@ Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless y
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The honk-core build pinned for this release embeds doona 0.1.0-beta.12, not the standalone beta.13 UI. To serve that embedded version at `/ui/`, replace the `ui` line above with:
+The pinned honk-core build embeds doona 0.1.0-beta.12, not the standalone beta.14 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded

@@ -17,7 +17,7 @@ The [example configuration](configuration.md#config) sets the options used by th
 | Configuration: new files                     | New file creates a `.dae` file that an `include` pattern of the main file loads, such as `config.d/rules.dae`. | `config_write: true`                                                                                                                |
 | Policies: edit groups | Edit group changes membership and policy in the shared dialog; Apply validates, writes and reloads. | `config_write: true`; the defining main or include file is writable |
 | Nodes: add nodes and subscriptions           | The Nodes page offers Paste node link and Add subscription.                                                    | `config_write: true`; the main file contains no secret                                                                              |
-| Nodes: update subscriptions | Each subscription row has Update {name}. | A `subscription` entry and backend subscription refresh support |
+| Nodes: update subscriptions | Each subscription card has Update {name}. | A `subscription` entry and backend subscription refresh support |
 | Settings: geodata sources                    | The Geodata card lists sources you can edit.                                                                   | The state database                                                                                                                |
 | Settings: geodata update and reset | The Geodata card lists files even without configurable sources. Update now updates the files; Reset to defaults removes overrides after confirmation. | File listing needs geodata read support; manual updates need configured URLs and update capability, not configurable settings; reset needs writable geodata settings |
 | Settings: temporary runtime overrides | Flow recording offers On flow demand, Always or Off; Log recording and DNS log offer On log demand and On DNS log demand respectively, Always or Off. | `record_flows`, `record_logs`, `record_dns_log` |
@@ -82,9 +82,30 @@ Every page remains in navigation. A page is marked unavailable only when every r
 
 ![The rules page](../screenshots/en/rules-light.webp)
 
+<a name="widgets"></a>
+
+## Widgets
+
+Activity's dashboard and the floating panel share a widget gallery. Both offer Outbound failures, Node availability, DNS latency and Subscription quota. Subscription quota is not in the default layout. It lists each subscription's expiry and quota meter, or its usage when the provider reports no allowance. Source health also meters usage when a provider reports an allowance.
+
+Memory defaults to a chart. Select Sparkline for a value tile like Download and Upload; dashboard widths range from one fifth of a row to full width. The panel's medium Memory widget shows resident memory and cgroup usage against its limit; its chart starts at the large size.
+
+The memory meter reads cgroup used. It shows no meter for a zero or absent limit and distinguishes an unreported limit from one reported as unset. The Key-value list also names OOM kills when any have occurred. A byte fraction with a shared unit writes it once, such as `70／268 MB`.
+
+- Chart cards at least two thirds of a row wide show each series' peak and average beside the chart. This includes Auto-width traffic cards and value tiles. Wide key-value metric cards show the same statistics beside their readings.
+- Wide list widgets with at least four rows use two columns. Long names wrap instead of being cut off. Notices grow with their contents rather than a row-count setting.
+- Donuts from two thirds of dashboard width draw larger rings and narrower legends. From half width, node latency puts its lowest and highest values on the legend line. A stacked waffle chart is centred above its legend.
+- Narrow donut legends keep names with their values and shares; large panel donuts show every entry without scrolling. Small panel notices take the whole row, and small node latency uses names and values instead of a cramped plot. Narrow area charts omit overlapping time labels.
+- Cumulative traffic, DNS answer and network splits offer widths up to half a row. The group switch goes up to two thirds and does not repeat its title. The two splits show every category, with no row-count setting. Saved sizes no longer offered use the nearest available size.
+- Panel key-value metric widgets do not offer a large size identical to medium. A waiting sparkline draws its baseline until its second sample; the speed legend keeps its height as rates change.
+
+See the [tour](tour.md) for panel movement, pinning, docking and editor scrolling.
+
 ## Theme gallery
 
 ![Every palette in light and dark](../screenshots/palettes.webp)
+
+Light themes use white text on notice badges and warning and information toasts, including yellow notices.
 
 | Palette | Light | Dark |
 | ------- | ----- | ---- |
@@ -111,6 +132,12 @@ In token mode, requests send the saved Token in `Authorization`; a pairing link 
 
 The saved theme and language are applied before the first paint, so a reload does not flash the default look.
 
+Settings > Appearance places Date format and Time format next to Language. Date format defaults to Automatic (browser region), independent of the interface language. Day/Month/Year, Month/Day/Year and Year-Month-Day override the browser's order.
+
+Time format defaults to 24-hour. 12-hour uses the interface language's AM/PM words; Automatic (browser region) follows the regional clock. It applies to every page time, including chart axes and the log heatmap, and works with each date format. The choices are saved in this browser.
+
 Over HTTPS or on localhost a service worker precaches the application shell and caches fonts and icons, so the pages open offline and the site can be installed as an app. API responses are never cached. See [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md) for reporting a vulnerability.
+
+Sign-in does not download the other pages before authentication. Installing an update does not download files the page already has.
 
 ![The activity page in dark mode](../screenshots/en/activity-dark.webp)

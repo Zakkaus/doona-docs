@@ -2,10 +2,10 @@ English / [简体中文](../zh-CN/install.md) / [繁體中文](../zh-TW/install.
 
 # Installation details
 
-Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first. The other pages under Install walk through the same installation one system at a time, starting with [Debian or Ubuntu](install-debian.md).
+Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first, or follow the [install page for your system](index.md#pages).
 
 > [!NOTE]
-> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@ Each doona release attaches honk-core builds with the native API, built from Gla
 For separate honk-core download, verification and installation commands, complete step 1, then follow steps 4–6 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.13               # the doona release, without v
+VERSION=0.1.0-beta.14               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -92,7 +92,7 @@ Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as des
 
 ## Install doona and start
 
-With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.12. To serve beta.13, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.12. To serve beta.14, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
 
 Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
 
@@ -101,7 +101,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 To download, verify and unpack the program and optional fonts step by step, follow steps 1–3 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.13   # the doona release, without v
+VERSION=0.1.0-beta.14   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -161,9 +161,13 @@ A reverse proxy keeps doona and honk on one origin. Forward the exact `/api` dis
 
 ### Distribution packages
 
-Each release attaches architecture-independent `deb`, `rpm`, `ipk` and Arch packages built by [nfpm](https://github.com/Zakkaus/doona/tree/main/install/nfpm) from the prebuilt program and font archives; `doona-fonts` is a separate optional package. The recipes in [install/](https://github.com/Zakkaus/doona/blob/main/install/README.md) for OpenWrt, Alpine, Gentoo and Nix are unpublished templates, currently versioned for beta.12. Adapt their versions and replace the marked hashes before packaging beta.13; [Install on Gentoo](install-gentoo.md) shows how to adapt the ebuild. The AUR `doona-bin` recipe lives in a separate repository. Use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts` when packaging a local build.
+Releases include architecture-independent `deb`, `rpm`, Arch, OpenWrt 24.10 `ipk`, OpenWrt 25.12 `apk` and Alpine `apk` packages. Follow the guide for [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch](install-arch.md), [OpenWrt](install-openwrt.md#openwrt-packages) or [Alpine](install-manual.md#install-alpine). OpenWrt signs its apk index; Alpine signs each apk package. Their files and keys are not interchangeable.
 
-On Debian and Ubuntu, the package is named `doona-web` and installs to `/usr/share/doona-web`; its optional font package is `doona-web-fonts`.
+`doona-fonts` adds optional Noto Sans TC and SC fonts. Without it, the UI uses fallback fonts and does not request the missing font files. `doona-precompressed` adds `.br` and `.gz` copies of text assets beside the originals so servers can send precompressed responses. It requires the main package of the same version, uses about 1.6 MB of storage and leaves the main package unchanged when not installed. For a manual install, extract `doona-precompressed-<version>.tar.gz` into the directory holding doona.
+
+The [OpenWrt, Alpine, Gentoo and Nix recipes](https://github.com/Zakkaus/doona/blob/main/install/README.md) are not yet in their distribution repositories. [Install on Gentoo](install-gentoo.md) uses the ebuild; the AUR `doona-bin` recipe lives in a separate repository. For local packaging, use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts`.
+
+On Debian and Ubuntu, the package is named `doona-web` and installs to `/usr/share/doona-web`; its optional packages are `doona-web-fonts` and `doona-web-precompressed`. Other formats install to `/usr/share/doona`.
 
 <a name="operation"></a>
 

@@ -2,10 +2,10 @@
 
 # 在 Debian 或 Ubuntu 上安装
 
-本页在 Debian、Ubuntu 及其他使用 APT 的系统上，用 `doona-web` `.deb` 软件包安装 doona，并从同一个 doona 发布版本安装 honk-core。完成最后一步后，请继续阅读[最小配置](minimal-configuration.md)。
+在 Debian、Ubuntu 或其他使用 APT 的系统上，从 `doona-web` `.deb` 软件包安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.13 下载文件尚未发布。本页命令须在[发布页](https://github.com/Zakkaus/doona/releases)提供文件后执行，详见[原生 API 状态](index.md#原生-api-状态)。
+> beta.14 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
 
 ## 开始之前
 
@@ -33,7 +33,7 @@ apt install curl ca-certificates
 设置发布版本号，然后把软件包与校验和文件下载到当前目录。
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -47,12 +47,12 @@ grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-web_0.1.0-beta.13-1_all.deb: OK
+doona-web_0.1.0-beta.14-1_all.deb: OK
 ```
 
 ## 4. 安装 doona
 
-设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.13 软件包，请设置 `ui: /usr/share/doona-web`，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.14 软件包，请设置 `ui: /usr/share/doona-web`，详见[最小配置](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
@@ -65,6 +65,8 @@ ls -l /usr/share/doona-web/index.html
 ```
 
 `ls` 输出一行以 `/usr/share/doona-web/index.html` 结尾的内容。`doona-web` 软件包将 doona 的网页文件安装到 `/usr/share/doona-web`，文档安装到 `/usr/share/doc/doona-web`，不安装任何服务。
+
+可选的 `doona-web-precompressed` 软件包在网页文件旁加入 `.br` 与 `.gz` 副本，让服务器发送预压缩响应。须与 `doona-web` 安装相同版本；不安装时主软件包保持不变。
 
 可选：`doona-web-fonts` 软件包将中文界面的 Noto Sans TC 与 SC 字体安装到 `/usr/share/doona-web/fonts`，依赖 `doona-web`。
 

@@ -2,10 +2,10 @@ English / [简体中文](../zh-CN/install-manual.md) / [繁體中文](../zh-TW/i
 
 # Install on other systems
 
-This page installs doona and honk-core from the release archives on a Linux system without a doona package, such as Alpine Linux. The system must be x86_64 or aarch64 and meet the kernel requirements below. After the last step, continue with [Minimal configuration](minimal-configuration.md).
+Install doona and honk-core from release archives on an x86_64 or aarch64 Linux system that meets the kernel requirements below. Alpine can use the [signed apk packages](#install-alpine) instead. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.13 commands require the assets to be published on the [release page](https://github.com/Zakkaus/doona/releases). They are not yet available; see [Native API status](index.md#native-api-status).
+> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -15,12 +15,45 @@ This page installs doona and honk-core from the release archives on a Linux syst
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
+<a name="install-alpine"></a>
+
+## Install on Alpine
+
+The Alpine `.apk` files are not interchangeable with OpenWrt's. In the current directory, download the Alpine packages, release key and checksums:
+
+```sh
+VERSION=0.1.0-beta.14
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${VERSION}-r0.alpine.apk" \
+  -O "$BASE/doona-precompressed-${VERSION}-r0.alpine.apk" \
+  -O "$BASE/doona-alpine.rsa.pub" -O "$BASE/SHA256SUMS"
+grep -E " (doona(-precompressed)?-${VERSION}-r0.alpine.apk|doona-alpine.rsa.pub)\$" SHA256SUMS | sha256sum -c -
+```
+
+Each release signs its packages with a new key. Keep the name `doona-alpine.rsa.pub` when installing it; a later release replaces it.
+
+```sh tab="sudo"
+sudo wget -O /etc/apk/keys/doona-alpine.rsa.pub "$BASE/doona-alpine.rsa.pub"
+sudo apk add ./doona-${VERSION}-r0.alpine.apk ./doona-precompressed-${VERSION}-r0.alpine.apk
+ls -l /usr/share/doona/index.html
+```
+
+```sh tab="root"
+wget -O /etc/apk/keys/doona-alpine.rsa.pub "$BASE/doona-alpine.rsa.pub"
+apk add ./doona-${VERSION}-r0.alpine.apk ./doona-precompressed-${VERSION}-r0.alpine.apk
+ls -l /usr/share/doona/index.html
+```
+
+`ls` must list `/usr/share/doona/index.html`. The optional `doona-precompressed` package adds `.br` and `.gz` copies for servers that serve precompressed responses; omit its download and install argument if not needed. The optional fonts package is `doona-fonts-${VERSION}-r0.alpine.apk`.
+
+Without the signing key, `apk add --allow-untrusted` can install the files directly. To install honk-core, continue at [step 4](#4-choose-the-honk-core-build) below and choose a musl build. The remaining numbered steps describe the archive route for other systems.
+
 ## 1. Download doona
 
 Set the release version, then download the program archive and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.13
+VERSION=0.1.0-beta.14
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -36,12 +69,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.13.tar.gz: OK
+doona-0.1.0-beta.14.tar.gz: OK
 ```
 
 ## 3. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.13 files installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.14 files installed here; see [Minimal configuration](minimal-configuration.md).
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 
@@ -72,6 +105,8 @@ curl -fL -O "$BASE/doona-fonts-${VERSION}.tar.gz"
 grep " doona-fonts-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf doona-fonts-${VERSION}.tar.gz -C /usr/share/doona
 ```
+
+The optional `doona-precompressed-${VERSION}.tar.gz` archive adds `.br` and `.gz` copies beside the web files so a server can send precompressed responses. Download and verify it from the same release, then extract it into `/usr/share/doona`, as with the fonts archive.
 
 ## 4. Choose the honk-core build
 
