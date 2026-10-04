@@ -53,12 +53,17 @@ function stylesheet() {
   if (!css.includes(marker)) throw new Error('site/styles/tokens.css: no /* palette */ line');
   const sizesMarker = '  /* sizes */\n';
   if (!css.includes(sizesMarker)) throw new Error('site/styles/tokens.css: no /* sizes */ line');
-  const motion = readFileSync(join(doona, 'src/ui/styles/motion.css'), 'utf8');
+  // The scale tokens moved from motion.css to foundations.css in doona 0.1.0-beta.14; read whichever files exist.
+  const motion = ['foundations.css', 'motion.css']
+    .map(file => join(doona, 'src/ui/styles', file))
+    .filter(path => existsSync(path))
+    .map(path => readFileSync(path, 'utf8'))
+    .join('\n');
   const scaleName = '--rp-(?:(?:r|text)-[\\w-]+|duration|ease)';
   const scale = new Map([...motion.matchAll(new RegExp(`(${scaleName}):\\s*(\\d+px|\\d+ms|cubic-bezier\\([\\d., ]+\\));`, 'g'))].map(match => [match[1], match[2]]));
   const used = new Set([...css.matchAll(new RegExp(`var\\((${scaleName})\\)`, 'g'))].map(match => match[1]));
   const missing = [...used].filter(name => !scale.has(name));
-  if (missing.length) throw new Error(`src/ui/styles/motion.css: no ${missing.join(', ')}`);
+  if (missing.length) throw new Error(`src/ui/styles/foundations.css or motion.css: no ${missing.join(', ')}`);
   const sizes = [...scale].filter(([name]) => used.has(name));
   return lower(
     css
