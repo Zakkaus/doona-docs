@@ -106,6 +106,10 @@ Export 下載已接受的來源檔案；Import 讀取 honk 啟動時 `-c` 指定
 
 「外觀」分頁包含下文的「外觀」卡片。`#/settings?tab=appearance` 可直接開啟此分頁；外觀設定的連結與搜尋結果也會開啟它。
 
+![一般設定及一般、外觀兩個分頁](../screenshots/zh-TW/settings-general.webp)
+
+![外觀設定中的四種玻璃配色](../screenshots/zh-TW/settings-appearance.webp)
+
 ### 後端
 
 1. 在「連線設定檔」中選擇設定檔即可切換。doona 儲存選擇後重新載入頁面，連線至該後端。

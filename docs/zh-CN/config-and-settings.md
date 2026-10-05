@@ -106,6 +106,10 @@ Export 下载已接受的源文件；Import 读取 honk 启动时 `-c` 指定的
 
 「外观」标签页包含下文的「外观」卡片。`#/settings?tab=appearance` 可直接打开此标签页；外观设置的链接与搜索结果也会打开它。
 
+![通用设置及通用、外观两个标签页](../screenshots/zh-CN/settings-general.webp)
+
+![外观设置中的四种玻璃配色](../screenshots/zh-CN/settings-appearance.webp)
+
 ### 后端
 
 1. 在「配置方案」中选择方案即可切换。doona 保存选择后重新加载页面，连接该后端。

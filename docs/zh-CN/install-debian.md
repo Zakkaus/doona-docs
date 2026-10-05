@@ -52,7 +52,7 @@ doona-web_0.1.0-beta.15-1_all.deb: OK
 
 ## 4. 安装 doona
 
-设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.15 软件包，请设置 `ui: /usr/share/doona-web`，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.14，无需单独安装软件包。如需提供此处安装的 beta.15 软件包，请设置 `ui: /usr/share/doona-web`，详见[最小配置](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
@@ -138,7 +138,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.3.native-api.2
+honk-core debug.2026.10.6.native-api.1
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。

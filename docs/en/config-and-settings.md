@@ -106,6 +106,10 @@ In the Settings hub, open Settings. The page opens without a connected backend, 
 
 The Appearance tab holds the Appearance card, described below. `#/settings?tab=appearance` opens it directly; links and search results for an appearance setting also open this tab.
 
+![General settings with the General and Appearance tabs](../screenshots/en/settings-general.webp)
+
+![Appearance settings with all four Glass palettes](../screenshots/en/settings-appearance.webp)
+
 ### Backend
 
 1. Choose a profile from Profile to switch to it. doona saves the choice and reloads the page with that backend.
