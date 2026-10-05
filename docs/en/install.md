@@ -34,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.2
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.6.native-api.1
 ```
 
 To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf,native-api`. `native-api` is opt-in; release builds include it; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
@@ -94,7 +94,7 @@ Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as des
 
 ## Install doona and start
 
-With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.12. To serve beta.15, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.14. To serve beta.15, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
 
 Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
 

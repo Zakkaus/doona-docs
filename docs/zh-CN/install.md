@@ -34,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.3.native-api.2
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.6.native-api.1
 ```
 
 如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，按 honk 快速入门的步骤构建：先构建 eBPF 对象，再执行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要显式启用，发布构建已包含此功能；未启用 `ebpf` 时 honk 没有数据路径。发布页同时附有该提交的源码包 `honk-source-<commit>.tar.gz`。
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ## 安装 doona 并启动
 
-设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.12。如需提供 beta.15，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.14。如需提供 beta.15，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
 
 同时下载 doona 发布包与 `SHA256SUMS`，再将发布包解压到 `/usr/share/doona`，即 `ui` 指定的目录。最后一条命令必须列出 `index.html`，否则 honk 无法启动。
 

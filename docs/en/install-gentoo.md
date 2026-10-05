@@ -106,7 +106,7 @@ The last command prints `>>> Creating Manifest for` and the package directory, `
 
 ## 5. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.12, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.15 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.15 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
 
@@ -182,7 +182,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.3.native-api.2
+honk-core debug.2026.10.6.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release names the build it carries.

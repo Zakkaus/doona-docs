@@ -51,7 +51,7 @@ doona-0.1.0beta15-1-any.pkg.tar.zst: OK
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.15 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.15 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
@@ -137,7 +137,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.10.3.native-api.2
+honk-core debug.2026.10.6.native-api.1
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。

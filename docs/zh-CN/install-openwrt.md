@@ -111,7 +111,7 @@ doona-0.1.0-beta.15.tar.gz: OK
 
 ## 4. 安装 doona
 
-设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.12，无需单独安装软件包。如需提供此处安装的 beta.15 文件，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.14，无需单独安装软件包。如需提供此处安装的 beta.15 文件，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
 
 把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
 
@@ -169,7 +169,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.3.native-api.2
+honk-core debug.2026.10.6.native-api.1
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。
