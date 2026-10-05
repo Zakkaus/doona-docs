@@ -187,6 +187,8 @@ honk-core debug.2026.10.3.native-api.2
 
 同一个发布版本中的 `HONK-SOURCE.txt` 注明其附带的构建。
 
+首次启动 honk 前，请按[目录与地理数据](install.md#directories-and-geodata)安装 `geosite.dat` 与 `geoip.dat`。
+
 下一步：[最小配置](minimal-configuration.md)。服务相关步骤只涵盖 systemd 与 OpenWrt 的 procd；doona 与 honk 都不提供 OpenRC 脚本。使用 OpenRC 时，[服务管理](service-management.md)给出在前台运行 honk 的命令，用于完成首次登录。
 
 ## 遇到问题时

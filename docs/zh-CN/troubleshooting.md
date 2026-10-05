@@ -45,6 +45,22 @@ daeuniverse/honk `main` 分支的构建没有原生 API，会以 `unknown experi
 
 `listen` 为 loopback 地址且设置 `allow_anonymous_loopback: true` 时，读取请求无需 Token。配置写入与受保护的设置修改仍需要凭据。此模式仅用于本地开发。
 
+<a name="offline-dependency"></a>
+
+## 应用失败：找不到配置所需的文件
+
+honk 写入配置前会检查配置依赖的本地文件，缺少或无法读取时拒绝写入。doona 显示下面的说明；API 返回表中的某个代码，缺少文件时的消息为 `required offline configuration dependency is unavailable`。错误不会指出具体文件，最常见的原因是缺少地理数据。
+
+1. 分流方式或规则使用 `geosite:` 或 `geoip:` 时，请按[目录与地理数据](install.md#directories-and-geodata)安装 `geosite.dat` 与 `geoip.dat`。OpenWrt 请按[安装地理数据](install-openwrt.md#install-geodata)使用 `/etc/honk/data`，不要使用重启后会清空的 `/var/lib/honk`。然后再次应用；仍然报错时，重启 honk。设置 → 地理数据 → 立即更新只能更新已加载的文件，不能安装缺少的文件。
+2. 订阅或节点报错时，恢复缺少的本地文件；订阅缓存内容无效时，刷新该订阅。检查节点的 `ech_config_path` 文件；`dns` 报错时，检查 hosts 文件。请将新的依赖文件放在配置目录或 `data_dir` 中，并授予运行 honk 的用户读取权限。
+
+| 代码 | 含义 | 处理方法 |
+| --- | --- | --- |
+| `missing-offline-dependency` | 缺少必需的本地依赖。 | 安装地理数据或恢复引用的文件。 |
+| `offline-dependency-denied` | 文件不在允许的路径内，或没有读取权限。 | 使用允许的路径，并授予运行 honk 的用户读取权限。 |
+| `invalid-offline-dependency` | 依赖内容格式错误。 | 替换为有效文件，或刷新受影响的订阅。 |
+| `unreadable-offline-dependency` | 其他 I/O 错误导致依赖无法读取。 | 检查文件、存储与系统日志，再重试。 |
+
 <a name="state-db"></a>
 
 ## 状态数据库问题

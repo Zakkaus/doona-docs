@@ -139,6 +139,8 @@ Use Simple for templates; the source actions shown below belong to Advanced and 
 
 Simple selects the detected template name when one file's top-level `routing` matches a template. Otherwise, the rules are custom: no template is selected, and a notice says the current rules match no mode. Routing spread over several files is also custom.
 
+Routing-mode templates that use `geosite:` or `geoip:` require `geosite.dat` and `geoip.dat`; install them before applying the template, as described in [Offline dependency errors](troubleshooting.md#offline-dependency).
+
 1. Under Routing mode, choose Bypass mainland China, GFW list only or Global proxy. More templates offers Single proxy group, Groups by service, Groups by service and region, and Back to mainland China.
 2. Change the template or its options, then choose Apply to review the confirmation dialog. It names the target file: the file containing top-level `routing`, or the main file if none exists.
 3. Review Groups to create and Existing groups used. Existing groups, including those declared in other loaded files, keep their settings; missing groups are added to the target file. A warning marks reused groups that select one exact node name or use a `fixed` policy. A new group whose name matches a node gets a warning: rules using that name will reach the group instead of the node.

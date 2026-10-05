@@ -143,6 +143,8 @@ honk-core debug.2026.10.3.native-api.2
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
+首次啟動 honk 前，請按[目錄與地理資料](install.md#directories-and-geodata)安裝 `geosite.dat` 與 `geoip.dat`。
+
 下一步：[最小組態](minimal-configuration.md)。
 
 ## 如果 apt 將 doona 替換為無關套件
