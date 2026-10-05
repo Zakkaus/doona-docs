@@ -141,6 +141,8 @@ honk-core debug.2026.10.3.native-api.2
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
+Before starting honk, follow [Directories and geodata](install.md#directories-and-geodata) to install `geosite.dat` and `geoip.dat`.
+
 Next: [Minimal configuration](minimal-configuration.md).
 
 ## If it doesn’t work

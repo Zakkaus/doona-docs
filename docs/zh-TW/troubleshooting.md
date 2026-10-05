@@ -45,6 +45,22 @@ daeuniverse/honk `main` 分支的建置沒有原生 API，會以 `unknown experi
 
 `listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，讀取請求無需 Token。組態寫入與受保護的設定變更仍需要憑證。此模式僅用於本機開發。
 
+<a name="offline-dependency"></a>
+
+## 套用失敗：找不到組態所需的檔案
+
+honk 寫入組態前會檢查組態依賴的本地檔案，缺少或無法讀取時拒絕寫入。doona 顯示下面的說明；API 回傳表中的某個代碼，缺少檔案時的訊息為 `required offline configuration dependency is unavailable`。錯誤不會指出具體檔案，最常見的原因是缺少地理資料。
+
+1. 分流方式或規則使用 `geosite:` 或 `geoip:` 時，請按[目錄與地理資料](install.md#directories-and-geodata)安裝 `geosite.dat` 與 `geoip.dat`。OpenWrt 請按[安裝地理資料](install-openwrt.md#install-geodata)使用 `/etc/honk/data`，不要使用重啟後會清空的 `/var/lib/honk`。然後再次套用；仍然報錯時，重啟 honk。設定 → 地理資料 → 立即更新只能更新已載入的檔案，不能安裝缺少的檔案。
+2. 訂閱或節點報錯時，恢復缺少的本地檔案；訂閱快取內容無效時，重新整理該訂閱。檢查節點的 `ech_config_path` 檔案；`dns` 報錯時，檢查 hosts 檔案。請將新的相依檔案放在組態目錄或 `data_dir` 中，並授予執行 honk 的使用者讀取權限。
+
+| 代碼 | 含義 | 處理方法 |
+| --- | --- | --- |
+| `missing-offline-dependency` | 缺少必需的本地相依檔案。 | 安裝地理資料或恢復引用的檔案。 |
+| `offline-dependency-denied` | 檔案不在允許的路徑內，或沒有讀取權限。 | 使用允許的路徑，並授予執行 honk 的使用者讀取權限。 |
+| `invalid-offline-dependency` | 相依檔案內容格式錯誤。 | 替換為有效檔案，或重新整理受影響的訂閱。 |
+| `unreadable-offline-dependency` | 其他 I/O 錯誤導致相依檔案無法讀取。 | 檢查檔案、儲存裝置與系統日誌，再重試。 |
+
 <a name="state-db"></a>
 
 ## 狀態資料庫問題

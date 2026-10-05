@@ -174,6 +174,27 @@ honk-core debug.2026.10.3.native-api.2
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
+<a name="install-geodata"></a>
+
+## 8. Install geodata
+
+Routing modes and rules using `geosite:` or `geoip:` need `geosite.dat` or `geoip.dat`, respectively. Create the directories and download both files before the first start:
+
+```sh
+mkdir -p /etc/honk/config.d /etc/honk/data
+chmod 0700 /etc/honk /etc/honk/config.d /etc/honk/data
+curl -fL --retry 3 -o /etc/honk/data/geosite.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
+curl -fL --retry 3 -o /etc/honk/data/geoip.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
+```
+
+The OpenWrt configuration in [Minimal configuration](minimal-configuration.md) sets `data_dir` to `/etc/honk/data`, which survives reboot. Keep that setting: `/var` is in memory, so files in the default `/var/lib/honk` are lost at reboot.
+
+After signing in, Settings → Geodata → Update now updates the files honk has loaded, writing replacements into `data_dir`. This option requires installed, loaded files; if either file is missing, download it with curl first, then [restart honk](service-management.md).
+
+Alternatively, install `v2ray-geosite` and `v2ray-geoip` with `apk` or `opkg` and ensure `/usr/share/dae/geosite.dat` and `/usr/share/dae/geoip.dat` link to `../v2ray/geosite.dat` and `../v2ray/geoip.dat`. honk searches `/usr/share/dae`; it does not search `/usr/share/v2ray` directly.
+
 Next: [Minimal configuration](minimal-configuration.md). Take the OpenWrt tab there wherever one is offered.
 
 ## Keep honk across sysupgrade

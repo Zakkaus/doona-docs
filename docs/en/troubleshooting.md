@@ -45,6 +45,22 @@ A build of daeuniverse/honk `main` has no native API and rejects every `native_a
 
 `allow_anonymous_loopback: true` with a loopback `listen` admits read requests without a token. Configuration writes and protected settings changes still require credentials. Use it for local development only.
 
+<a name="offline-dependency"></a>
+
+## Apply fails: a file the configuration needs was not found
+
+honk checks the local files a configuration depends on before writing it, and refuses the write when one is missing or unreadable. doona shows the explanation below; the API reports one of the codes in the table, with the message `required offline configuration dependency is unavailable` for a missing file. The error does not name the file. Most often it is geodata.
+
+1. For a routing mode or a rule using `geosite:` or `geoip:`, install `geosite.dat` and `geoip.dat` as in [Directories and geodata](install.md#directories-and-geodata). On OpenWrt, use `/etc/honk/data` as in [Install geodata](install-openwrt.md#install-geodata), not the volatile `/var/lib/honk`. Then apply again; if the error remains, restart honk. Settings → Geodata → Update now updates loaded files; it cannot install missing ones.
+2. For subscription or node errors, restore missing local files or refresh invalid cached subscription content. Check the node’s `ech_config_path` file; for `dns` errors, check hosts files. Put new dependency files inside the configuration directory or `data_dir`, with read access for the user running honk.
+
+| Code | Meaning | Fix |
+| --- | --- | --- |
+| `missing-offline-dependency` | A required local dependency is missing. | Install the geodata or restore the referenced file. |
+| `offline-dependency-denied` | The file is outside allowed paths or read permission is denied. | Use an allowed path and let the user running honk read the file. |
+| `invalid-offline-dependency` | The dependency content is malformed. | Replace it with a valid file or refresh the affected subscription. |
+| `unreadable-offline-dependency` | Another I/O error prevents reading the dependency. | Check the file, storage and system log, then retry. |
+
 <a name="state-db"></a>
 
 ## State database problems

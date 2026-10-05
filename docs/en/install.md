@@ -41,6 +41,8 @@ To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build i
 
 The binary embeds the eBPF object; no separate object file is needed.
 
+<a name="directories-and-geodata"></a>
+
 ### Directories and geodata
 
 Create the configuration and data directories, then download the geosite and geoip files that the example rules use. honk finds them in `data_dir`; these are the files its geodata update downloads.
@@ -197,7 +199,7 @@ Extract the new release into `/usr/share/doona` and reload the page in the brows
 
 ### Update geodata
 
-In Settings → Geodata, Update now downloads both files and activates changed content. Identical files are not rewritten; an entirely unchanged update succeeds without activation or reload. Automatic updates are on by default and check every 24 hours; the same card turns them off or changes Interval (hours). Reset to defaults asks for confirmation, then removes all geodata overrides and values taken from the configuration file, restoring the built-in sources and defaults. The installed geodata files are listed in this card.
+In Settings → Geodata, Update now updates the files honk has loaded and activates changed content. Replacements for packaged files go into `data_dir`. It cannot install missing files: download them as in [Directories and geodata](#directories-and-geodata), then restart honk. Identical files are not rewritten; an entirely unchanged update succeeds without activation or reload. Automatic updates are on by default and check every 24 hours; the same card turns them off or changes Interval (hours). Reset to defaults asks for confirmation, then removes all geodata overrides and values taken from the configuration file, restoring the built-in sources and defaults. The installed geodata files are listed in this card.
 
 ### Where things live
 

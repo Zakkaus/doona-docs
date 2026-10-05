@@ -174,6 +174,27 @@ honk-core debug.2026.10.3.native-api.2
 
 同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
 
+<a name="install-geodata"></a>
+
+## 8. 安裝地理資料
+
+使用 `geosite:` 或 `geoip:` 的分流方式與規則分別需要 `geosite.dat` 或 `geoip.dat`。首次啟動前，建立目錄並下載兩個檔案：
+
+```sh
+mkdir -p /etc/honk/config.d /etc/honk/data
+chmod 0700 /etc/honk /etc/honk/config.d /etc/honk/data
+curl -fL --retry 3 -o /etc/honk/data/geosite.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
+curl -fL --retry 3 -o /etc/honk/data/geoip.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
+```
+
+[最小組態](minimal-configuration.md)中的 OpenWrt 組態將 `data_dir` 設為 `/etc/honk/data`，重啟後仍會保留。請保留此設定：`/var` 位於記憶體中，預設目錄 `/var/lib/honk` 中的檔案會在重啟後遺失。
+
+登入後，可在設定 → 地理資料 → 立即更新中更新 honk 已載入的檔案，替換檔案會寫入 `data_dir`。此方式要求檔案已安裝並載入；若缺少任一檔案，請先用 curl 下載，再[重啟 honk](service-management.md)。
+
+也可用 `apk` 或 `opkg` 安裝 `v2ray-geosite` 與 `v2ray-geoip`，並確保 `/usr/share/dae/geosite.dat` 與 `/usr/share/dae/geoip.dat` 分別連結到 `../v2ray/geosite.dat` 與 `../v2ray/geoip.dat`。honk 會搜尋 `/usr/share/dae`，不會直接搜尋 `/usr/share/v2ray`。
+
 下一步：[最小組態](minimal-configuration.md)。該頁凡是提供「OpenWrt」分頁的地方，都選擇它。
 
 ## 系統升級時保留 honk

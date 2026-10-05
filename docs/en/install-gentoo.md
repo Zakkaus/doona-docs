@@ -187,6 +187,8 @@ honk-core debug.2026.10.3.native-api.2
 
 `HONK-SOURCE.txt` in the same release names the build it carries.
 
+Before starting honk, follow [Directories and geodata](install.md#directories-and-geodata) to install `geosite.dat` and `geoip.dat`.
+
 Next: [Minimal configuration](minimal-configuration.md). The service steps cover systemd and OpenWrt’s procd only; doona and honk ship no OpenRC script. With OpenRC, [Service management](service-management.md) gives the foreground command that runs honk for the first sign-in.
 
 ## If it doesn’t work
