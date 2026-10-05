@@ -5,7 +5,7 @@
 在 Arch Linux 或其他使用 pacman 的系統上，從 `.pkg.tar.zst` 套件安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.14 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> beta.15 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 ## 開始之前
 
@@ -31,8 +31,8 @@ pacman -Syu --needed curl ca-certificates
 設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。Arch 套件名稱中的預發行版本號去掉了 `-` 與 `.`，`PKGVER` 儲存這種寫法。
 
 ```sh
-VERSION=0.1.0-beta.14
-PKGVER=0.1.0beta14
+VERSION=0.1.0-beta.15
+PKGVER=0.1.0beta15
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
 ```
@@ -46,12 +46,12 @@ grep " doona-${PKGVER}-1-any.pkg.tar.zst\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0beta14-1-any.pkg.tar.zst: OK
+doona-0.1.0beta15-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.14 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.12，不需單獨安裝套件。如需提供此處安裝的 beta.15 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst

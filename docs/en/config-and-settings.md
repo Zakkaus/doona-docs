@@ -77,7 +77,7 @@ Modules is an overview, not an inline editor. Edit whole files on Config files. 
 ## Global settings
 
 1. Open Global settings and choose a section from Config file. The picker includes `global` sections in the main file and includes; a main file without one can receive a new section.
-2. Edit the offered fields for interfaces, dialing and TLS, node checks, logging, storage, bandwidth and preconnection. Each field shows its configuration key and any units or range. Not set uses the engine default; duplicate fields must be resolved on Config files.
+2. Edit the offered fields for interfaces, dialing and TLS, node checks, logging, storage, bandwidth and preconnection. Each field shows its configuration key and any units or range. Not set uses the engine default; duplicate fields must be resolved on Config files. Transparent proxy and profiling ports use number fields with decrease and increase buttons; a port reads `8080`, not `8,080`, and clearing it leaves it unset. A number typed below a field's minimum stays as typed until you finish, and whole-number fields do not accept a decimal point.
 3. Press Write and reload to validate, write and apply the change. Discard changes drops the draft.
 
 Only writable files with complete text can be changed. A file changed on disk blocks the save. A restart-required change is refused without writing and lists the settings to edit on disk. If the write succeeds but the new configuration cannot be read, the draft stays and Retry is offered.
@@ -96,14 +96,15 @@ If an accepted import or restore has an unknown result, reopen this tab and use 
 
 ## Settings page
 
-In the Settings hub, open Settings. The page opens without a connected backend, so you can correct the backend address there. Its cards appear in this order:
+In the Settings hub, open Settings. The page opens without a connected backend, so you can correct the backend address there. It has two tabs, General and Appearance. General opens by default, with these cards in order:
 
 1. Backend
 2. Temporary runtime overrides
 3. Geodata, when the backend provides geodata
-4. Appearance
-5. Latency probes
-6. About
+4. Latency probes
+5. About
+
+The Appearance tab holds the Appearance card, described below. `#/settings?tab=appearance` opens it directly; links and search results for an appearance setting also open this tab.
 
 ### Backend
 
@@ -155,7 +156,17 @@ Choose Language, Palette, Color scheme, Wordmark and Notification position. Turn
 
 Date format defaults to Automatic (browser region); Day/Month/Year, Month/Day/Year and Year-Month-Day override the date order. Time format defaults to 24-hour; 12-hour uses the interface language's AM/PM words, and Automatic (browser region) follows the regional clock. Both apply throughout the pages, including chart axes and the log heatmap, and are saved in this browser.
 
-The Palette picker filters choices by name. Only its option list scrolls; the search field stays visible.
+Palette shows each palette as a box with a small window drawn in its light and dark colors. The Glass section offers Liquid Glass, Glass, Frosted and Tinted. Liquid Glass refracts through the lens only in Chromium browsers; Firefox and Safari draw it as Glass, with blur and fill. Frosted applies one even blur to every surface. Tinted has nearly opaque surfaces and no blur.
+
+Reduce Transparency, Increase Contrast and forced colors make these palettes solid with clear edges.
+
+A Glass material chosen with the earlier Settings switch carries over to its palette.
+
+With a Glass palette selected, Wallpaper > Choose image replaces the wallpaper behind the pages and the sign-in page; Use default restores the built-in one. The image is scaled to at most 2560 pixels on its long edge and stored only in this browser's IndexedDB. If the browser cannot store it, it is kept for this session only.
+
+Once you choose an image, Readability veil lays white over it in light mode or black in dark mode. It is on by default, and Dim sets its strength up to 60%, which is also the default. Turned off, the image shows as it is.
+
+Blur scales the blur of every Liquid Glass, Glass and Frosted surface from 0% to 150%, with or without a custom image. Below 100% the surfaces' fill thickens so text stays readable. Tinted has no blur and shows no Blur control.
 
 Show country flags controls flags before node names and does not affect routing. Show trends on activity cards controls recent-value sparklines on Activity's traffic, CPU and latency cards.
 

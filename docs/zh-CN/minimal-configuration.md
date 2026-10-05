@@ -186,7 +186,7 @@ cat /etc/honk/config.d/api.dae
 
 每个 `native_api` 字段都要重启后才生效。其余字段见[字段表](configuration.md#config)。
 
-固定的 honk-core 构建嵌入 doona 0.1.0-beta.12，并非独立的 beta.14 界面。要在 `/ui/` 提供嵌入版本，将上面的 `ui` 行改为：
+固定的 honk-core 构建嵌入 doona 0.1.0-beta.12，并非独立的 beta.15 界面。要在 `/ui/` 提供嵌入版本，将上面的 `ui` 行改为：
 
 ```dae
 ui: embedded

@@ -109,6 +109,10 @@ See the [tour](tour.md) for panel movement, pinning, docking and editor scrollin
 
 Light themes use white text on notice badges and warning and information toasts, including yellow notices.
 
+The Glass section has four palettes: Liquid Glass, Glass, Frosted and Tinted. Liquid Glass refracts only in Chromium browsers; Firefox and Safari draw it as Glass.
+
+[Settings > Appearance](config-and-settings.md#settings-page) shows the palette boxes and, with a Glass palette selected, the wallpaper, readability veil and blur controls. A custom wallpaper also appears behind the sign-in page.
+
 | Palette | Light | Dark |
 | ------- | ----- | ---- |
 | Rosé Pine Dawn / Main | [Dawn](../screenshots/en/theme-rose-pine-light.webp) | [Main](../screenshots/en/theme-rose-pine-main-dark.webp) |
@@ -121,14 +125,17 @@ Light themes use white text on notice badges and warning and information toasts,
 | Ant Design | [Default](../screenshots/en/theme-antd-light.webp) | [Dark](../screenshots/en/theme-antd-dark.webp) |
 | Arco Design | [Light](../screenshots/en/theme-arco-light.webp) | [Dark](../screenshots/en/theme-arco-dark.webp) |
 | Semi Design | [Light](../screenshots/en/theme-semi-light.webp) | [Dark](../screenshots/en/theme-semi-dark.webp) |
-| Glass | [Light](../screenshots/en/theme-glass-light.webp) | [Dark](../screenshots/en/theme-glass-dark.webp) |
+| Liquid Glass | [Light](../screenshots/en/theme-glass-light.webp) | [Dark](../screenshots/en/theme-glass-dark.webp) |
+| Glass | [Light](../screenshots/en/theme-glass-clear-light.webp) | [Dark](../screenshots/en/theme-glass-clear-dark.webp) |
+| Frosted | [Light](../screenshots/en/theme-glass-frosted-light.webp) | [Dark](../screenshots/en/theme-glass-frosted-dark.webp) |
+| Tinted | [Light](../screenshots/en/theme-glass-tinted-light.webp) | [Dark](../screenshots/en/theme-glass-tinted-dark.webp) |
 | Qiangguo | [Day shift](../screenshots/en/theme-qiangguo-light.webp) | [Night shift](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## Settings stored in the browser
 
 ![Storage boundaries between localStorage, sessionStorage and honk](../images/storage-boundary.svg)
 
-`localStorage` holds this origin's preferences, layouts and connection profiles, including the Token; `sessionStorage` holds the password sign-in session token for this tab. honk stores the backend configuration and manages password sessions; clearing browser data loses the saved profiles and preferences, not honk's configuration.
+`localStorage` holds this origin's preferences, layouts and connection profiles, including the Token, and the password sign-in session token. The session is shared by every tab and lasts until you sign out, honk answers 401 or its profile is deleted; closing a tab does not end it. `sessionStorage` keeps only per-tab state, such as each section's last page. honk stores the backend configuration and manages password sessions; it limits a session to 12 hours and forgets sessions when it restarts. Clearing browser data loses the saved profiles, preferences and session token, not honk's configuration.
 
 In token mode, requests send the saved Token in `Authorization`; a pairing link may carry it in the URL fragment, removed on load. For storage keys, see [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts).
 

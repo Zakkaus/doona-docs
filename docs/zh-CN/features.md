@@ -109,6 +109,10 @@
 
 浅色主题的提示徽标、警告与信息提示消息使用白色文字，包括黄色提示。
 
+「玻璃」分区有「液态玻璃」「玻璃」「毛玻璃」与「着色」四种配色。「液态玻璃」仅在 Chromium 内核浏览器中产生折射，Firefox 与 Safari 将其绘制为「玻璃」。
+
+[设置 > 外观](config-and-settings.md#settings-page)提供配色方框；选择玻璃配色后，还提供背景图片、可读性遮罩与模糊程度控制项。自定义背景图片也显示在登录页后方。
+
 | 配色 | 浅色 | 深色 |
 | ---- | ---- | ---- |
 | Rosé Pine Dawn / Main | [Dawn](../screenshots/en/theme-rose-pine-light.webp) | [Main](../screenshots/en/theme-rose-pine-main-dark.webp) |
@@ -121,14 +125,17 @@
 | Ant Design | [默认](../screenshots/en/theme-antd-light.webp) | [深色](../screenshots/en/theme-antd-dark.webp) |
 | Arco Design | [浅色](../screenshots/en/theme-arco-light.webp) | [深色](../screenshots/en/theme-arco-dark.webp) |
 | Semi Design | [浅色](../screenshots/en/theme-semi-light.webp) | [深色](../screenshots/en/theme-semi-dark.webp) |
-| 玻璃 | [浅色](../screenshots/en/theme-glass-light.webp) | [深色](../screenshots/en/theme-glass-dark.webp) |
+| 液态玻璃 | [浅色](../screenshots/en/theme-glass-light.webp) | [深色](../screenshots/en/theme-glass-dark.webp) |
+| 玻璃 | [浅色](../screenshots/en/theme-glass-clear-light.webp) | [深色](../screenshots/en/theme-glass-clear-dark.webp) |
+| 毛玻璃 | [浅色](../screenshots/en/theme-glass-frosted-light.webp) | [深色](../screenshots/en/theme-glass-frosted-dark.webp) |
+| 着色 | [浅色](../screenshots/en/theme-glass-tinted-light.webp) | [深色](../screenshots/en/theme-glass-tinted-dark.webp) |
 | 强国 | [白班](../screenshots/en/theme-qiangguo-light.webp) | [夜班](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## 浏览器中保存的设置
 
 ![localStorage、sessionStorage 与 honk 的存储边界](../images/storage-boundary.svg)
 
-`localStorage` 保存当前网站来源的偏好、布局与连接配置方案，包括 Token；`sessionStorage` 保存当前标签页的密码登录会话 token。honk 保存后端配置并管理密码会话；清除浏览器数据会丢失配置方案与偏好，不会删除 honk 的配置。
+`localStorage` 保存当前网站来源的偏好、布局与连接配置方案，包括 Token，以及密码登录的会话 token。会话由所有标签页共享，保留至退出登录、honk 返回 401 或其配置方案被删除，关闭标签页不会结束会话。`sessionStorage` 只保存各标签页自己的状态，例如各分区最后访问的页面。honk 保存后端配置并管理密码会话，会话时限为 12 小时，重启后会话失效。清除浏览器数据会丢失配置方案、偏好与会话 token，不会删除 honk 的配置。
 
 Token 模式下，请求通过 `Authorization` 发送已保存的 Token；配对链接可通过网址片段传递 Token，加载后移除该片段。存储键见 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
 

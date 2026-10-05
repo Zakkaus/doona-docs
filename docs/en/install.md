@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install.md) / [繁體中文](../zh-TW/install.
 Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first, or follow the [install page for your system](index.md#pages).
 
 > [!NOTE]
-> These beta.14 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> These beta.15 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@ Each doona release attaches honk-core builds with the native API, built from Gla
 For separate honk-core download, verification and installation commands, complete step 1, then follow steps 4–6 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.14               # the doona release, without v
+VERSION=0.1.0-beta.15               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -94,7 +94,7 @@ Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as des
 
 ## Install doona and start
 
-With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.12. To serve beta.14, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.12. To serve beta.15, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
 
 Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
 
@@ -103,7 +103,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 To download, verify and unpack the program and optional fonts step by step, follow steps 1–3 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.14   # the doona release, without v
+VERSION=0.1.0-beta.15   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
