@@ -109,6 +109,10 @@
 
 亮色主題的提示徽章、警告與資訊提示訊息使用白色文字，包括黃色提示。
 
+「玻璃」分區有「液態玻璃」「玻璃」「毛玻璃」與「著色」四種配色。「液態玻璃」僅在 Chromium 核心的瀏覽器中產生折射，Firefox 與 Safari 將其繪製為「玻璃」。
+
+[設定 > 外觀](config-and-settings.md#settings-page)提供配色方框；選擇玻璃配色後，還提供背景圖片、可讀性遮罩與模糊程度控制項。自訂背景圖片也顯示在登入頁後方。
+
 | 配色 | 亮色 | 暗色 |
 | ---- | ---- | ---- |
 | Rosé Pine Dawn / Main | [Dawn](../screenshots/en/theme-rose-pine-light.webp) | [Main](../screenshots/en/theme-rose-pine-main-dark.webp) |
@@ -121,14 +125,17 @@
 | Ant Design | [預設](../screenshots/en/theme-antd-light.webp) | [暗色](../screenshots/en/theme-antd-dark.webp) |
 | Arco Design | [亮色](../screenshots/en/theme-arco-light.webp) | [暗色](../screenshots/en/theme-arco-dark.webp) |
 | Semi Design | [亮色](../screenshots/en/theme-semi-light.webp) | [暗色](../screenshots/en/theme-semi-dark.webp) |
-| 玻璃 | [亮色](../screenshots/en/theme-glass-light.webp) | [暗色](../screenshots/en/theme-glass-dark.webp) |
+| 液態玻璃 | [亮色](../screenshots/en/theme-glass-light.webp) | [暗色](../screenshots/en/theme-glass-dark.webp) |
+| 玻璃 | [亮色](../screenshots/en/theme-glass-clear-light.webp) | [暗色](../screenshots/en/theme-glass-clear-dark.webp) |
+| 毛玻璃 | [亮色](../screenshots/en/theme-glass-frosted-light.webp) | [暗色](../screenshots/en/theme-glass-frosted-dark.webp) |
+| 著色 | [亮色](../screenshots/en/theme-glass-tinted-light.webp) | [暗色](../screenshots/en/theme-glass-tinted-dark.webp) |
 | 強國 | [白班](../screenshots/en/theme-qiangguo-light.webp) | [夜班](../screenshots/en/theme-qiangguo-dark.webp) |
 
 ## 瀏覽器中儲存的設定
 
 ![localStorage、sessionStorage 與 honk 的儲存邊界](../images/storage-boundary.svg)
 
-`localStorage` 儲存目前網站來源的偏好、布局與連線設定檔，包括 Token；`sessionStorage` 儲存目前分頁的密碼登入工作階段 token。honk 儲存後端組態並管理密碼工作階段；清除瀏覽器資料會遺失連線設定檔與偏好，不會刪除 honk 的組態。
+`localStorage` 儲存目前網站來源的偏好、布局與連線設定檔，包括 Token，以及密碼登入的工作階段 token。工作階段由所有分頁共用，保留至登出、honk 傳回 401 或其連線設定檔被刪除，關閉分頁不會結束工作階段。`sessionStorage` 只儲存各分頁自己的狀態，例如各分區最近造訪的頁面。honk 儲存後端組態並管理密碼工作階段，工作階段時限為 12 小時，重新啟動後會失效。清除瀏覽器資料會遺失連線設定檔、偏好與工作階段 token，不會刪除 honk 的組態。
 
 Token 模式下，請求透過 `Authorization` 傳送已儲存的 Token；配對連結可透過網址片段傳遞 Token，載入後移除該片段。儲存鍵見 [storage.ts](https://github.com/Zakkaus/doona/blob/main/src/api/storage.ts)。
 

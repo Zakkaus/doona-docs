@@ -137,7 +137,7 @@ Logs streams the engine log.
 ![Logs with the activity chart by level and the Level and Module filters](../screenshots/en/logs.webp)
 
 - Levels below what the engine records are marked; lower the engine's level under Recording settings in [Temporary runtime overrides](config-and-settings.md#runtime-options).
-- Pause keeps only the newest records until you resume. Clear empties this page only; Export downloads the received records.
+- Pause keeps only the newest records until you resume. Clear empties this page only; Export downloads the received records. Each row’s Copy record button copies it in the same format as Export.
 - After a reconnection, retained records are replayed; the list marks a gap when replay is no longer possible.
 - Log recording is disabled in the configuration means you must change the honk [configuration](configuration.md#config); Turn on log recording in Settings first means Recording settings is enough.
 
@@ -150,6 +150,6 @@ Events shows the backend's event stream, newest first.
 1. Kind starts at Exclude runtime updates. Choose All kinds, or one kind the backend advertises.
 2. The list shows Time, Kind and Summary. The toolbar shows the connection state, the number of events kept and, when available, Resumes from the last position.
 3. Select an event to read its full summary. A Configuration activated event links to View configuration. A Flow records lost event links to View flow record and Recording settings.
-4. Select Export JSON to download the events currently shown.
+4. Select Export JSON to download the events currently shown. Each row’s Copy record button copies it in the same format.
 
 After a disconnection, retained events are replayed. If the replay cursor has expired, a row in the list marks the lost events.

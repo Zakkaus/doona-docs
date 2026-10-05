@@ -32,13 +32,13 @@ Press `?` to open Keyboard shortcuts. Press `g` and then a page letter within 80
 3. When rules are held, a check-mark button with their count appears. Its name is Apply N rule or Apply N rules, depending on the count; when several files are involved, the name also includes writes F files. Select it to write every held rule; see [the held list](routing.md#held-rules).
 4. Select Reload honk and confirm in the Reload honk? dialog. honk reads its configuration files again and reloads; held rules are not written. The button appears only when the backend offers a reload.
 5. Select Refresh, or press `r`, to read all displayed data from the backend again. A Data refreshed. toast confirms it. Refresh does not write anything and does not reload honk.
-6. Select the Theme button to switch between light and dark. When the theme follows the system, it switches to the opposite scheme; the next press returns to System. The Language and Palette menus sit beside it; Palette also holds the Wordmark choice.
+6. Select the Theme button to switch between light and dark. When the theme follows the system, it switches to the opposite scheme; the next press returns to System. The Language and Palette menus sit beside it. Palette lists one line per palette and ends with Appearance settings, which opens the Appearance tab, where Wordmark is also set.
 
 The held-rule apply button and Reload honk wait for each other: while one runs, the other is disabled.
 
 ![Searching for palette, then opening the focused Appearance control](../screenshots/en/search-settings.webp)
 
-Search `palette` and select the Settings result to open and focus Appearance. Selecting a result navigates to its control; it does not run an update, import or other action.
+Search `palette` and select the Settings result to open the Appearance tab and focus the palette boxes. Selecting a result navigates to its control; it does not run an update, import or other action.
 
 <a name="panels"></a>
 
@@ -50,9 +50,13 @@ Search `palette` and select the Settings result to open and focus Appearance. Se
 4. Open More actions (the vertical dots button) for the other commands. On a connection, these include Show matched rule, View flow, Trace this connection and Close connection; the destructive command is last.
 5. Close the panel with Close or `Esc`.
 
+On first load, tables show placeholder rows at the real row height; pages, cards, charts and forms show placeholders matching their contents. Sign-in and search keep a spinner. A button waiting on the backend replaces its label with a spinner after one second and keeps its size.
+
 Searchable pickers keep the search field visible while only the options list scrolls.
 
-Page tabs use the large segmented control: 40 px high with 16 px labels. The Policies kind switch uses the same size; page controls below them normally use the medium, 32 px size.
+Page tabs and the Policies kind switch use medium segmented controls: 32 px high with 14 px labels, like the other segmented controls.
+
+Enter submits the sign-in form, runtime settings and the node, subscription, check, profile name, custom geodata URL, rule and routing template dialogs, just like their main button. While a dialog is open, toasts appear at the top center regardless of Notification position, and the dialog starts below them.
 
 <a name="commit-verbs"></a>
 
@@ -80,7 +84,7 @@ The panel starts unpinned and open. Pin panel locks its position and size: you c
 
 The docked header has no title. Undock replaces the pin button there and is no longer in Panel options.
 
-An unsized floating panel is 280 px wide and can be resized down to 200 px. Narrowing it from a side or by keyboard lets its height grow with the content, up to the window height, without cutting off Apply. Resizing its top or bottom edge keeps the chosen height even if the pointer drifts sideways. Glass gives it a frosted fill and blur.
+An unsized floating panel is 280 px wide and can be resized down to 200 px. Narrowing it from a side or by keyboard lets its height grow with the content, up to the window height, without cutting off Apply. Resizing its top or bottom edge keeps the chosen height even if the pointer drifts sideways. The Glass palettes draw it as glass.
 
 A narrow collapsed panel keeps both rates visible beside its buttons. The edge-hidden handle keeps spacing around its rates and controls.
 
@@ -106,7 +110,7 @@ If a write fails, the toast shows the reason, and held rules that were not writt
 
 ![Phone layout: page strip and bottom bar, the More options menu, and its Palette submenu](../screenshots/en/phone.webp)
 
-Below 1024 px wide, a bottom bar and a page strip replace the sidebar. Each section reopens the page you last visited in it during this browser session. Search, Refresh and the held-rule apply button stay in the top bar; the other top-bar controls move into More options, and a page toolbar keeps only its first action as a button.
+Below 1024 px wide, a bottom bar and a page strip replace the sidebar. Each section reopens the page you last visited in it during this browser session. Search, Refresh and the held-rule apply button stay in the top bar; the other top-bar controls move into More options, and a page toolbar keeps only its first action as a button. The phone’s Palette submenu also ends with Appearance settings, opening the Appearance tab.
 
 Below 600 px, pages use phone padding and wrapping. At 600 px and above, they use the wider layout.
 

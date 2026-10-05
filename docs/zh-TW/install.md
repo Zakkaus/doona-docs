@@ -5,7 +5,7 @@
 先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。開始前確認[系統需求](requirements.md#requirements)，或依[對應系統的安裝頁](index.md#頁面)操作。
 
 > [!NOTE]
-> beta.14 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> beta.15 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@
 如需分別下載、驗證與安裝 honk-core，請先完成[在其他系統上安裝](install-manual.md)的第 1 步，再依第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.14               # the doona release, without v
+VERSION=0.1.0-beta.15               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ## 安裝 doona 並啟動
 
-設定 `ui: embedded` 時，honk 提供執行檔中內建的 doona，而非此處安裝的檔案。目前固定的 honk 建置內建 doona 0.1.0-beta.12。如需提供 beta.14，請設定 `ui: /usr/share/doona` 並依下文安裝發布檔案，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供執行檔中內建的 doona，而非此處安裝的檔案。目前固定的 honk 建置內建 doona 0.1.0-beta.12。如需提供 beta.15，請設定 `ui: /usr/share/doona` 並依下文安裝發布檔案，詳見[最小組態](minimal-configuration.md)。
 
 同時下載 doona 發布套件與 `SHA256SUMS`，再將套件解壓縮到 `/usr/share/doona`，也就是 `ui` 指定的目錄。最後一個指令必須列出 `index.html`，否則 honk 無法啟動。
 
@@ -103,7 +103,7 @@ WantedBy=multi-user.target
 如需逐步下載、驗證並解壓縮程式與選用字型，請依[在其他系統上安裝](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.14   # the doona release, without v
+VERSION=0.1.0-beta.15   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -

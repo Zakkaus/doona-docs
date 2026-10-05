@@ -92,10 +92,10 @@ Empty file sources stay in Node sources with their status and a removal action w
 
 Adding or removing subscriptions and file sources requires the backend to allow source management; adding or removing individual nodes requires it to allow node management. Both need a writable main configuration; see [read-only sources](troubleshooting.md#read-only).
 
-1. Choose Add subscription. Enter a Name and a Subscription URL (HTTP or HTTPS). Depending on the backend, the dialog also offers Auto-update, User-Agent and Cache the subscription.
+1. Choose Add subscription. Enter a Name and a Subscription URL (HTTP or HTTPS). Depending on the backend, the dialog also offers Auto-update, User-Agent and Cache the subscription. A URL without a scheme gets `https://` added when the field loses focus or is saved. An unusable URL is explained below the field.
 2. Choose Add. The backend writes the subscription into the subscription section of the main configuration. The URL is stored and never shown again.
 3. A new subscription has no nodes until it is fetched. When the backend can refresh subscriptions, doona refreshes it at once, and the toast reports the node count. If that refresh fails, the toast offers Retry.
-4. To add a single node, choose Paste node link above the node table. Enter a Name and a Node link such as `vless://…`, then choose Add. The node goes into the node section of the main configuration.
+4. To add a single node, choose Paste node link above the node table. Enter a Name and a Node link such as `vless://…`, then choose Add. The node goes into the node section of the main configuration. An unusable node link is explained below its field.
 
 ### Refresh a subscription
 
@@ -146,7 +146,7 @@ Routing-mode templates that use `geosite:` or `geoip:` require `geosite.dat` and
 3. Review Groups to create and Existing groups used. Existing groups, including those declared in other loaded files, keep their settings; missing groups are added to the target file. A warning marks reused groups that select one exact node name or use a `fixed` policy. A new group whose name matches a node gets a warning: rules using that name will reach the group instead of the node.
 4. Rule files no longer included lists `include` paths inside the routing being replaced. Applying drops those statements, so their rules no longer apply through those includes; the files stay on disk. Expand Changes to {file} to review the diff.
 5. If no loaded file has a `dns` block, Also add DNS routing appears and is checked by default. It adds a `dns` block to the target file: `geosite:cn` queries use `alidns` at `223.5.5.5`; other queries use `cloudflare` at `1.1.1.1` over DNS over TLS. Clear the checkbox to omit the new `dns` block.
-6. Confirm with Apply. Only the target file's top-level `routing` is replaced (or added if absent), along with the missing groups and optional DNS block. Existing DNS routing, other content and other files stay unchanged. The write reloads the configuration.
+6. Confirm with Apply. Only the target file's top-level `routing` is replaced (or added if absent), along with the missing groups and optional DNS block. Existing DNS routing, other content and other files stay unchanged. The write reloads the configuration. If the backend refuses the mode, the dialog stays open and lists each validation error with its line.
 
 All templates offer three options:
 

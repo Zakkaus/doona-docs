@@ -21,7 +21,7 @@ doona finds honk’s API at the same address and saves it as its backend. If no 
 
 ![Administrator setup with Language, Palette and Color scheme controls at the upper right](../screenshots/en/login-setup.webp)
 
-Use the three icons at the upper right to change Language, Palette and Color scheme before signing in.
+Use the three icons at the upper right to change Language, Palette and Color scheme before signing in. The sign-in form is one centered card on every screen size. With a Glass palette, a [custom wallpaper](config-and-settings.md#settings-page) also appears behind the card.
 
 ## 2. Create the administrator
 
@@ -30,6 +30,8 @@ Use the three icons at the upper right to change Language, Palette and Color sch
 3. Select Create and sign in.
 
 doona signs you in and opens the Activity page. honk keeps the account in its state database, `/var/lib/honk/state/honk.db` (`/etc/honk/data/state/honk.db` on OpenWrt). From now on the page is titled Sign in and asks for this username and password.
+
+The password session is kept in this browser and shared by all tabs on this origin. Closing a tab does not end it; sign-out, honk’s 401 response or deleting the profile clears it. honk limits sessions to 12 hours and forgets them when it restarts.
 
 ## 3. Check System status
 
