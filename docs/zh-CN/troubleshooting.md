@@ -165,7 +165,7 @@ honk 会在挂载前拒绝低于 6.12 的内核。验证器拒绝编译后的分
 
 - 首次设置只能在网关本机或私有网络中的客户端上完成。
 - 「设置」中出现网络或跨域请求失败：无法通过 `listen` 地址访问 honk，或 doona 所在来源未列入 `allow_origins` 与 `allowed_hosts`。
-- 通过 `openwrt.lan` 访问 API 时，若主机名与端口不在 `native_api` 的 `allowed_hosts` 中，会返回 403。请改用局域网 IP，或在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan:9527'` 并重启 honk。未指定端口的主机条目表示端口 80。
+- 使用 `openwrt.lan` 等域名时，须分别在 `allowed_hosts` 中配置主机与端口，在 `allow_origins` 中配置浏览器来源，然后重启 honk。语法与 403 检查步骤见[域名与来源访问](install.md#other-origin)。
 - 忘记密码：停止 honk，执行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上执行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再启动 honk 重新设置。
 - HTTPS 页面无法访问 HTTP API，请参阅[从其他来源打开 doona](install.md#other-origin)。
 
@@ -223,7 +223,7 @@ journalctl -u honk-core -b       # systemd
 
 Service worker 在更新完成前会提供缓存的版本。请刷新页面一到两次，或关闭所有 doona 标签页后重新打开。
 
-使用 `ui: embedded` 时，界面版本由 honk 构建固定。当前固定的构建嵌入 beta.14；安装独立的 beta.15 文件，并将 `ui` 指向其目录，才能使用新版界面。
+使用 `ui: embedded` 时，界面版本由 honk 构建固定。当前固定的构建嵌入 beta.14；安装独立的 beta.16 文件，并将 `ui` 指向其目录，才能使用新版界面。
 
 ## 通过 HTTP 登录时出现 crypto.randomUUID is not a function
 

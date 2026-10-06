@@ -165,7 +165,7 @@ Find the latest `honk-core <version> starting` line in the current boot’s `jou
 
 - First-time setup works only from the gateway or a private-network client.
 - A network or CORS failure in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
-- A request to the API through `openwrt.lan` returns 403 unless the host and port are in `native_api { allowed_hosts }`. Use the LAN IP instead, or add `allowed_hosts: 'openwrt.lan:9527'` inside `native_api` and restart honk. Host entries without a port mean port 80.
+- For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the host and port and `allow_origins` for the browser origin, then restart honk. See [hostname and origin access](install.md#other-origin) for the syntax and 403 checks.
 - A forgotten password: stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), and start honk to set up again.
 - An HTTPS page cannot reach an HTTP API; see [doona on another origin](install.md#other-origin).
 
@@ -223,7 +223,7 @@ Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
 
-With `ui: embedded`, the honk build fixes the interface version. The pinned build embeds beta.14; install standalone beta.15 files and point `ui` at their directory to use the newer interface.
+With `ui: embedded`, the honk build fixes the interface version. The pinned build embeds beta.14; install standalone beta.16 files and point `ui` at their directory to use the newer interface.
 
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 

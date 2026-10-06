@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-arch.md) / [繁體中文](../zh-TW/ins
 Install doona from its `.pkg.tar.zst` package and honk-core from the same release on Arch Linux or another pacman-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.15 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> These beta.16 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -31,8 +31,8 @@ pacman -Syu --needed curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory. Arch package names write the prerelease without its `-` and `.`, so `PKGVER` holds that form.
 
 ```sh
-VERSION=0.1.0-beta.15
-PKGVER=0.1.0beta15
+VERSION=0.1.0-beta.16
+PKGVER=0.1.0beta16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
 ```
@@ -46,12 +46,12 @@ grep " doona-${PKGVER}-1-any.pkg.tar.zst\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0beta15-1-any.pkg.tar.zst: OK
+doona-0.1.0beta16-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.15 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.16 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst

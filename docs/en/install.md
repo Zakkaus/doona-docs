@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install.md) / [繁體中文](../zh-TW/install.
 Install honk, write its configuration, then install doona and start honk. Check [Requirements](requirements.md#requirements) first, or follow the [install page for your system](index.md#pages).
 
 > [!NOTE]
-> These beta.15 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> These beta.16 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@ Each doona release attaches honk-core builds with the native API, built from Gla
 For separate honk-core download, verification and installation commands, complete step 1, then follow steps 4–6 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.15               # the doona release, without v
+VERSION=0.1.0-beta.16               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -94,7 +94,7 @@ Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as des
 
 ## Install doona and start
 
-With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.14. To serve beta.15, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.14. To serve beta.16, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
 
 Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
 
@@ -103,7 +103,7 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 To download, verify and unpack the program and optional fonts step by step, follow steps 1–3 of [Install on other systems](install-manual.md).
 
 ```sh
-VERSION=0.1.0-beta.15   # the doona release, without v
+VERSION=0.1.0-beta.16   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -151,9 +151,26 @@ To replace a forgotten administrator, stop honk and run `sudo /usr/local/bin/hon
 
 <a name="other-origin"></a>
 
-### doona on another origin
+### Access through a hostname or another origin
 
 When doona is served elsewhere, the browser sends cross-origin requests, and honk accepts only origins listed in `allow_origins` and hosts listed in `allowed_hosts`. In Settings, enter the server root, such as `http://192.168.1.1:9527`, without `/api/v1`. Test connection checks discovery before saving, and saving reloads the page.
+
+For `http://owrt.lan:9527/ui/`, add the following entries to the allowlists in your existing `experimental` → `native_api` block. This is an excerpt, not a replacement configuration: retain other list entries and the existing `listen`, `secret`, `password_auth` and `ui` settings.
+
+```dae
+experimental {
+    native_api {
+        allowed_hosts: 'owrt.lan:9527'
+        allow_origins: 'http://owrt.lan:9527'
+    }
+}
+```
+
+`allowed_hosts` permits the request's `Host`: hostname and port, without a scheme or path. It does not automatically permit an `Origin`. `allow_origins` permits an HTTP origin: scheme, hostname and port, without `/ui/`, another path or a trailing slash. For multiple entries, quote each value separately and separate them with commas; do not use JSON brackets or quote the entire list.
+
+If the HTML opens but JavaScript or CSS requests return 403, inspect those requests in the browser's Network panel. Compare `Host` and `Origin`, including their ports, with these settings. Restart honk after changing them; a configuration reload is insufficient. Reload the page and check that the failed requests succeed.
+
+Administrator creation has a separate restriction: honk checks the actual connection peer for a loopback, private or link-local address. The Host and Origin allowlists do not change that restriction.
 
 A page loaded over HTTPS cannot call an API over plain HTTP; browsers block it as mixed content. Open doona from honk at `/ui/`, or put honk behind a TLS reverse proxy.
 

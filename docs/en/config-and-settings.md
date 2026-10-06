@@ -82,6 +82,8 @@ Modules is an overview, not an inline editor. Edit whole files on Config files. 
 
 Only writable files with complete text can be changed. A file changed on disk blocks the save. A restart-required change is refused without writing and lists the settings to edit on disk. If the write succeeds but the new configuration cannot be read, the draft stays and Retry is offered.
 
+With honk, Store subscriptions (`global.store_subscribe`) stores successfully fetched and accepted subscription bodies in the `subscription_body` table of `<data_dir>/state/honk.db`, normally `/var/lib/honk/state/honk.db`. Changing this setting requires restarting honk; a subscription with `cache: false` skips storage and recovery. Separate `.sub` files belong to legacy storage; see the [pinned honk reference](https://github.com/Glassyiris/honk/blob/a949f1f1ff7e8e8852e76e02b60870e6bb1fd440/doc/en/reference/subscription.md#fetch-persistence-and-recovery) for startup migration.
+
 ## Backups and revisions
 
 ![Export, Import and revision Restore use different configuration sources](../images/config-recovery.svg)
@@ -160,7 +162,7 @@ Choose Language, Palette, Color scheme, Wordmark and Notification position. Turn
 
 Date format defaults to Automatic (browser region); Day/Month/Year, Month/Day/Year and Year-Month-Day override the date order. Time format defaults to 24-hour; 12-hour uses the interface language's AM/PM words, and Automatic (browser region) follows the regional clock. Both apply throughout the pages, including chart axes and the log heatmap, and are saved in this browser.
 
-Palette shows each palette as a box with a small window drawn in its light and dark colors. The Glass section offers Liquid Glass, Glass, Frosted and Tinted. Liquid Glass refracts through the lens only in Chromium browsers; Firefox and Safari draw it as Glass, with blur and fill. Frosted applies one even blur to every surface. Tinted has nearly opaque surfaces and no blur.
+Palette shows each palette as a box with a small window drawn in its light and dark colors. The Glass section offers Liquid Glass, Glass, Frosted and Tinted. Liquid Glass refracts through the lens only in Chromium browsers; Firefox and Safari draw it as Glass, with blur and fill. Frosted applies one even blur to every surface. Tinted has nearly opaque surfaces and no blur. Liquid Glass Events and Logs tables retain blur, transparency and colour but omit refraction and the bright rim.
 
 Reduce Transparency, Increase Contrast and forced colors make these palettes solid with clear edges.
 

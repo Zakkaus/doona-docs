@@ -173,7 +173,7 @@ cat /etc/honk/config.d/api.dae
 
 The printed file shows your address on the `listen` line, such as `listen: '192.168.1.1:9527'`.
 
-Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless you add `allowed_hosts: 'openwrt.lan:9527'` inside `native_api` and restart honk. Host entries without a port mean port 80.
+For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the host and port and `allow_origins` for the browser origin, then restart honk. See [hostname and origin access](install.md#other-origin) for the syntax and 403 checks.
 
 | Line                         | What it does                                                                                                                                  |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -186,7 +186,7 @@ Use the LAN IP in the URL. A hostname such as `openwrt.lan` returns 403 unless y
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The pinned honk-core build embeds doona 0.1.0-beta.14, not the standalone beta.15 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
+The pinned honk-core build embeds doona 0.1.0-beta.14, not the standalone beta.16 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded

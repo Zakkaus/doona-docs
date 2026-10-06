@@ -52,7 +52,7 @@ mountpoint /sys/fs/bpf
 
 ## honk 版本
 
-- 各 doona 發行版本附帶 Glassyiris/honk `feat/native-api` debug 標籤的 honk-core 建置，已啟用需明確選擇的 `native-api` 建置功能。發布流程固定 honk 提交 `a949f1f`（`debug.2026.10.6.native-api.1`），其嵌入介面為 doona beta.14。`HONK-SOURCE.txt` 記錄標籤與完整提交。安裝獨立的 beta.15 檔案才能使用本文描述的介面。
+- 各 doona 發行版本附帶 Glassyiris/honk `feat/native-api` debug 標籤的 honk-core 建置，已啟用需明確選擇的 `native-api` 建置功能。發布流程固定 honk 提交 `a949f1f`（`debug.2026.10.6.native-api.1`），其嵌入介面為 doona beta.14。`HONK-SOURCE.txt` 記錄標籤與完整提交。安裝獨立的 beta.16 檔案才能使用本文描述的介面。
 - daeuniverse/honk `main` 分支的建置沒有原生 API。honk 會以 `unknown experimental setting` 拒絕所有 `native_api` 設定，存取 `/api` 與 `/ui/` 會回傳 404。
 - `feat/native-api` 分支的建置若未啟用 `native-api` 功能，啟用 `native_api` 時會以 `native-api feature is required` 阻止啟動。
 - 早期的 `feat/native-api` 建置可以更新地理資料，但無法設定來源。doona beta.8 和 beta.9 附上的建置兩者皆支援。

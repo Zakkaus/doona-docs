@@ -5,7 +5,7 @@
 先安装 honk 并编写配置，再安装 doona 并启动 honk。开始前确认[系统要求](requirements.md#requirements)，或按[对应系统的安装页](index.md#页面)操作。
 
 > [!NOTE]
-> beta.15 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
+> beta.16 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
 
 <a name="install"></a>
 
@@ -27,7 +27,7 @@
 如需分别下载、校验和安装 honk-core，请先完成[在其他系统上安装](install-manual.md)的第 1 步，再按第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.15               # the doona release, without v
+VERSION=0.1.0-beta.16               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ## 安装 doona 并启动
 
-设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.14。如需提供 beta.15，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.14。如需提供 beta.16，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
 
 同时下载 doona 发布包与 `SHA256SUMS`，再将发布包解压到 `/usr/share/doona`，即 `ui` 指定的目录。最后一条命令必须列出 `index.html`，否则 honk 无法启动。
 
@@ -103,7 +103,7 @@ WantedBy=multi-user.target
 如需逐步下载、校验并解压程序与可选字体，请按[在其他系统上安装](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.15   # the doona release, without v
+VERSION=0.1.0-beta.16   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
@@ -151,9 +151,26 @@ http://192.168.1.1:9527/ui/#/settings?api=http://192.168.1.1:9527&token=…
 
 <a name="other-origin"></a>
 
-### 从其他来源打开 doona
+### 通过域名或其他来源访问
 
 doona 由其他服务器提供时，浏览器会发送跨域请求，honk 只接受 `allow_origins` 中列出的来源与 `allowed_hosts` 中列出的主机。请在设置中填写服务器根地址，例如 `http://192.168.1.1:9527`，不要附加 `/api/v1`。“测试连接”在保存前先检查发现端点，保存后页面会重新加载。
+
+通过 `http://owrt.lan:9527/ui/` 访问时，将以下两个值加入现有 `experimental` → `native_api` 配置块的允许列表。这是配置片段，不可用它替换完整配置；保留列表中的其他值，以及现有的 `listen`、`secret`、`password_auth` 和 `ui` 设置。
+
+```dae
+experimental {
+    native_api {
+        allowed_hosts: 'owrt.lan:9527'
+        allow_origins: 'http://owrt.lan:9527'
+    }
+}
+```
+
+`allowed_hosts` 允许请求的 `Host`，值为域名和端口，不含协议或路径；它不会自动允许 `Origin`。`allow_origins` 允许 HTTP 来源，值包含协议、域名和端口，不含 `/ui/`、其他路径或末尾的斜杠。填写多个值时，每个值分别加引号，以逗号分隔；不要使用 JSON 方括号，也不要把整个列表放在同一对引号内。
+
+HTML 可以打开，但 JavaScript 或 CSS 请求返回 403 时，在浏览器的网络面板查看这些请求。核对 `Host`、`Origin` 及其端口是否符合上述设置。修改后须重启 honk，仅重新加载配置不足以生效。然后重新加载页面，检查原先失败的请求是否成功。
+
+创建管理员另有限制：honk 检查实际连接来源是否为本机、私有网络或链路本地地址。Host 和 Origin 允许列表不会改变这项限制。
 
 通过 HTTPS 加载的页面无法访问纯 HTTP 的 API，浏览器会将其作为混合内容拦截。请从 honk 的 `/ui/` 打开 doona，或将 honk 置于 TLS 反向代理之后。
 

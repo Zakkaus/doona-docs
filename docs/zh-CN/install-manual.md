@@ -5,7 +5,7 @@
 在符合以下内核要求的 x86_64 或 aarch64 Linux 系统上，从发布归档安装 doona 与 honk-core。Alpine 也可使用[已签名的 apk 软件包](#install-alpine)。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.15 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
+> beta.16 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
 
 ## 开始之前
 
@@ -22,7 +22,7 @@
 Alpine 的 `.apk` 文件不能与 OpenWrt 的混用。在当前目录下载 Alpine 软件包、发布公钥与校验和：
 
 ```sh
-VERSION=0.1.0-beta.15
+VERSION=0.1.0-beta.16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-r0.alpine.apk" \
   -O "$BASE/doona-precompressed-${VERSION}-r0.alpine.apk" \
@@ -53,7 +53,7 @@ ls -l /usr/share/doona/index.html
 设置发布版本号，然后把程序归档文件与校验和文件下载到当前目录。
 
 ```sh
-VERSION=0.1.0-beta.15
+VERSION=0.1.0-beta.16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -69,12 +69,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.15.tar.gz: OK
+doona-0.1.0-beta.16.tar.gz: OK
 ```
 
 ## 3. 安装 doona
 
-设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.14，无需单独安装软件包。如需提供此处安装的 beta.15 文件，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，honk 提供内置的 doona，目前为 beta.14，无需单独安装软件包。如需提供此处安装的 beta.16 文件，请设置 `ui: /usr/share/doona`，详见[最小配置](minimal-configuration.md)。
 
 把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
 
