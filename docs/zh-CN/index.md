@@ -10,9 +10,9 @@ doona 是 daeuniverse 引擎共用原生 API 的静态 Web 界面：目前对接
 
 ## 原生 API 状态
 
-本文档说明 doona v0.1.0-beta.15。doona 使用各发布版本附带的 honk-core 构建中的原生 API，构建来自 Glassyiris/honk `feat/native-api` 的 debug 标签。`HONK-SOURCE.txt` 注明附带的构建，见 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供该 API。上游 honk 正式发布之前，配置键与默认值仍可能变化。
+本文档说明 doona v0.1.0-beta.16。doona 使用各发布版本附带的 honk-core 构建中的原生 API，构建来自 Glassyiris/honk `feat/native-api` 的 debug 标签。`HONK-SOURCE.txt` 注明附带的构建，见 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供该 API。上游 honk 正式发布之前，配置键与默认值仍可能变化。
 
-安装示例使用 beta.15 文件名。下载前确认[发布页](https://github.com/Zakkaus/doona/releases)已提供对应文件。
+安装示例使用 beta.16 文件名。下载前确认[发布页](https://github.com/Zakkaus/doona/releases)已提供对应文件。
 
 ## 页面
 

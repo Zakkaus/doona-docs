@@ -173,7 +173,7 @@ cat /etc/honk/config.d/api.dae
 
 輸出的檔案中，`listen` 一行應為你的位址，例如 `listen: '192.168.1.1:9527'`。
 
-存取 API 時請使用區域網路 IP。使用 `openwrt.lan` 等主機名稱時，須在 `native_api` 中加入 `allowed_hosts: 'openwrt.lan:9527'` 並重新啟動 honk，否則會回傳 403。未指定連接埠的主機項目表示連接埠 80。
+使用 `openwrt.lan` 等網域名稱時，須分別在 `allowed_hosts` 中設定主機與連接埠，在 `allow_origins` 中設定瀏覽器來源，然後重新啟動 honk。語法與 403 檢查步驟見[網域名稱與來源存取](install.md#other-origin)。
 
 | 行                           | 作用                                                                                                                     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -186,7 +186,7 @@ cat /etc/honk/config.d/api.dae
 
 每個 `native_api` 欄位都要重新啟動後才生效。其餘欄位見[欄位表](configuration.md#config)。
 
-固定的 honk-core 建置嵌入 doona 0.1.0-beta.14，並非獨立的 beta.15 介面。要在 `/ui/` 提供嵌入版本，將上面的 `ui` 行改為：
+固定的 honk-core 建置嵌入 doona 0.1.0-beta.14，並非獨立的 beta.16 介面。要在 `/ui/` 提供嵌入版本，將上面的 `ui` 行改為：
 
 ```dae
 ui: embedded

@@ -5,7 +5,7 @@
 在 OpenWrt 25.12 上，從發行套件或封存檔安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.15 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> beta.16 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 OpenWrt 25.12 使用 apk-tools 3；24.10 及更早版本使用 opkg 與 `.ipk` 檔案。Alpine 的 apk 套件不能用於 OpenWrt。官方 24.10 使用 Linux 6.6，低於 honk 要求的 6.12。
 
@@ -45,8 +45,8 @@ apk update
 apk add curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.15
-APKVER=0.1.0_beta15
+VERSION=0.1.0-beta.16
+APKVER=0.1.0_beta16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
   -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
@@ -64,7 +64,7 @@ opkg update
 opkg install curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.15
+VERSION=0.1.0-beta.16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
   -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
@@ -92,7 +92,7 @@ apk add curl ca-bundle
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.15
+VERSION=0.1.0-beta.16
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -106,12 +106,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.15.tar.gz: OK
+doona-0.1.0-beta.16.tar.gz: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.15 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.16 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
