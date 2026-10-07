@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-gentoo.md) / [繁體中文](../zh-TW/i
 Install doona with Portage from the repository's ebuild in a local ebuild repository, and honk-core from the same release. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.16 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> These beta.17 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -45,11 +45,11 @@ The last command lists `local` next to `gentoo`.
 
 ## 2. Add the doona ebuild
 
-Set the release version and its Gentoo form. The ebuild is fetched from the `v0.1.0-beta.16` tag commit, and its download URLs follow `PV`.
+Set the release version and its Gentoo form. The ebuild is fetched from the `v0.1.0-beta.17` tag commit, and its download URLs follow `PV`.
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.16
-PV=0.1.0_beta16
+VERSION=0.1.0-beta.17
+PV=0.1.0_beta17
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -58,8 +58,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.16
-PV=0.1.0_beta16
+VERSION=0.1.0-beta.17
+PV=0.1.0_beta17
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -80,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.16.tar.gz: OK
-doona-fonts-0.1.0-beta.16.tar.gz: OK
+doona-0.1.0-beta.17.tar.gz: OK
+doona-fonts-0.1.0-beta.17.tar.gz: OK
 ```
 
 ## 4. Hand the archives to Portage
@@ -106,7 +106,7 @@ The last command prints `>>> Creating Manifest for` and the package directory, `
 
 ## 5. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.16 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.17 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
 

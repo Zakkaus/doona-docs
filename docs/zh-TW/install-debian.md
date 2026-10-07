@@ -5,7 +5,7 @@
 在 Debian、Ubuntu 或其他使用 APT 的系統上，從 `doona-web` `.deb` 套件安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.16 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> beta.17 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 ## 開始之前
 
@@ -33,7 +33,7 @@ apt install curl ca-certificates
 設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.16
+VERSION=0.1.0-beta.17
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -47,12 +47,12 @@ grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-web_0.1.0-beta.16-1_all.deb: OK
+doona-web_0.1.0-beta.17-1_all.deb: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.16 套件，請設定 `ui: /usr/share/doona-web`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.17 套件，請設定 `ui: /usr/share/doona-web`，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb

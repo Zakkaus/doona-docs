@@ -186,7 +186,7 @@ For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the hos
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The pinned honk-core build embeds doona 0.1.0-beta.14, not the standalone beta.16 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
+The pinned honk-core build embeds doona 0.1.0-beta.14, not the standalone beta.17 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded
