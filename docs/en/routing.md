@@ -48,7 +48,7 @@ In Edit group, Interrupt existing connections on switch is staged until Apply. I
 ### Arrange group membership
 
 1. Use Edit group on a card, or New group above the cards. Both open the shared group editor.
-2. Choose included regions, subscriptions, individual nodes or nested groups. The dialog previews Matching nodes.
+2. Choose included regions, subscriptions, individual nodes or nested groups. Region choices start collapsed; select Regions to expand them, while selected region tags remain visible. The dialog previews Matching nodes.
 3. Use a member's remove button to undo its inclusion. A node still matching another filter remains included; change that filter to remove it.
 4. Add filter supports name and `subtag` matches. Add OR match joins alternatives; multiple conditions in one filter must all match. A custom expression stays editable as text.
 5. In New group, enter Group name and choose Selection policy and members. An empty filter includes every node, so explicitly choose the intended membership.
