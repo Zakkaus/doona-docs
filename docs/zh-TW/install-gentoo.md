@@ -5,7 +5,7 @@
 在本機 ebuild 儲存庫中，用 Portage 從 doona 的 ebuild 安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.16 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> beta.17 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
 
 ## 開始之前
 
@@ -45,11 +45,11 @@ portageq get_repos /
 
 ## 2. 加入 doona 的 ebuild
 
-設定發行版本號及其 Gentoo 寫法。ebuild 取自 `v0.1.0-beta.16` 標籤對應的提交，下載網址由 `PV` 決定。
+設定發行版本號及其 Gentoo 寫法。ebuild 取自 `v0.1.0-beta.17` 標籤對應的提交，下載網址由 `PV` 決定。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.16
-PV=0.1.0_beta16
+VERSION=0.1.0-beta.17
+PV=0.1.0_beta17
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -58,8 +58,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.16
-PV=0.1.0_beta16
+VERSION=0.1.0-beta.17
+PV=0.1.0_beta17
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -80,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.16.tar.gz: OK
-doona-fonts-0.1.0-beta.16.tar.gz: OK
+doona-0.1.0-beta.17.tar.gz: OK
+doona-fonts-0.1.0-beta.17.tar.gz: OK
 ```
 
 ## 4. 把封存檔交給 Portage
@@ -106,7 +106,7 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 5. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.16 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.17 套件，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
 
 該 ebuild 的關鍵字為測試分支（`~amd64`、`~arm64` 等），需要先為這個套件接受測試關鍵字。請把 `~amd64` 換成本機架構的關鍵字。
 

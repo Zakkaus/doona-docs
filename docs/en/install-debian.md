@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-debian.md) / [繁體中文](../zh-TW/i
 Install doona from the `doona-web` `.deb` package and honk-core from the same release on Debian, Ubuntu or another APT-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.16 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> These beta.17 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
 
 ## Before you start
 
@@ -33,7 +33,7 @@ apt install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.16
+VERSION=0.1.0-beta.17
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -47,12 +47,12 @@ grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-web_0.1.0-beta.16-1_all.deb: OK
+doona-web_0.1.0-beta.17-1_all.deb: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona-web` to serve the beta.16 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona-web` to serve the beta.17 package installed here; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
