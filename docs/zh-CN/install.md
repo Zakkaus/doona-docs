@@ -11,7 +11,7 @@
 
 ## 安装 honk
 
-每个 doona 发布版本都附带提供原生 API 的 honk-core 构建，构建来自 Glassyiris/honk `feat/native-api` 的 debug 标签。`HONK-SOURCE.txt` 注明构建所用的 honk 提交。请从同一个发行版下载适合网关的归档文件与 `SHA256SUMS`。只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，且须启用 `native-api`；daeuniverse/honk `main` 分支的构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。
+doona beta.17 发布版中已修正的 honk-core 附件来自 Glassyiris/honk `feat/native-api` 标签 `debug.2026.10.7.native-api.1`。`HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。请从同一个发布版下载适合网关的归档文件与 `SHA256SUMS`。如果已经下载旧的 beta.17 honk 附件，请用已修正的发布附件替换；如果 honk 正在运行，请重启 honk。只有 Glassyiris/honk `feat/native-api` 分支的构建提供原生 API，且须启用 `native-api`；daeuniverse/honk `main` 分支的构建没有原生 API，详见 [honk 版本](requirements.md#honk-version)。
 
 - [doona 发布页](https://github.com/Zakkaus/doona/releases)：下载 honk-core 构建
 - [honk 快速入门](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
@@ -34,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.6.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.7.native-api.1
 ```
 
 如需自行构建 honk，请检出 `HONK-SOURCE.txt` 注明的提交，按 honk 快速入门的步骤构建：先构建 eBPF 对象，再执行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要显式启用，发布构建已包含此功能；未启用 `ebpf` 时 honk 没有数据路径。发布页同时附有该提交的源码包 `honk-source-<commit>.tar.gz`。
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ## 安装 doona 并启动
 
-设置 `ui: embedded` 时，honk 提供二进制文件中内置的 doona，而非此处安装的文件。当前固定的 honk 构建内置 doona 0.1.0-beta.14。如需提供 beta.17，请设置 `ui: /usr/share/doona` 并按下文安装发布文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，doona beta.17 发布版中已修正的 honk 附件提供内置的 doona 0.1.0-beta.17，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供按下文安装的发布文件，详见[最小配置](minimal-configuration.md)。
 
 同时下载 doona 发布包与 `SHA256SUMS`，再将发布包解压到 `/usr/share/doona`，即 `ui` 指定的目录。最后一条命令必须列出 `index.html`，否则 honk 无法启动。
 

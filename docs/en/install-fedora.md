@@ -50,7 +50,7 @@ doona-0.1.0-beta.17-1.noarch.rpm: OK
 
 ## 4. Install doona
 
-With `ui: embedded`, honk serves its built-in doona, currently beta.14, and needs no separate package. Set `ui: /usr/share/doona` to serve the beta.17 package installed here; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the corrected honk assets in the doona beta.17 release serve bundled doona 0.1.0-beta.17 without a separate UI package. If you already downloaded the old honk asset, replace it with the corrected release asset and restart honk if it is running. You can also serve the beta.17 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -136,10 +136,10 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.6.native-api.1
+honk-core debug.2026.10.7.native-api.1
 ```
 
-`HONK-SOURCE.txt` in the same release names the build it carries.
+`HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.
 
 Before starting honk, follow [Directories and geodata](install.md#directories-and-geodata) to install `geosite.dat` and `geoip.dat`.
 

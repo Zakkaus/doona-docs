@@ -186,13 +186,13 @@ For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the hos
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The pinned honk-core build embeds doona 0.1.0-beta.14, not the standalone beta.17 UI. To serve the embedded version at `/ui/`, replace the `ui` line above with:
+The corrected honk-core assets in the doona beta.17 release embed doona 0.1.0-beta.17. If you already downloaded the old honk asset, replace it with the corrected release asset and restart honk if it is running. To serve the bundled UI at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded
 ```
 
-With `ui: embedded`, the standalone UI package is optional. The embedded version is pinned by the honk build and omits Noto Sans TC/SC, so the browser uses system fonts. For those fonts or a newer doona, install `doona` and `doona-fonts` and point `ui` at their installation directory, such as `/usr/share/doona`; on Debian or Ubuntu, use `doona-web`, `doona-web-fonts` and `/usr/share/doona-web`.
+With `ui: embedded`, the standalone UI package is optional. The bundled UI omits Noto Sans TC/SC, so the browser uses system fonts. To serve external UI files or those fonts, install `doona` and `doona-fonts` and point `ui` at their installation directory, such as `/usr/share/doona`; on Debian or Ubuntu, use `doona-web`, `doona-web-fonts` and `/usr/share/doona-web`.
 
 ## 5. Check the configuration
 
@@ -213,7 +213,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk keeps running in the foreground. Each line starts with a timestamp; among them you should see:
 
 ```text
-INFO honk_core: honk-core debug.2026.10.6.native-api.1 starting
+INFO honk_core: honk-core debug.2026.10.7.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
