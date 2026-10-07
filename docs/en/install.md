@@ -11,7 +11,7 @@ Install honk, write its configuration, then install doona and start honk. Check 
 
 ## Install honk
 
-Each doona release attaches honk-core builds with the native API, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` names the honk commit they were built from. Download the archive for the gateway and `SHA256SUMS` from the same release. The native API exists only in builds from Glassyiris/honk `feat/native-api`, where the `native-api` feature must be enabled. Builds of daeuniverse/honk `main` have no native API; see [honk version](requirements.md#honk-version).
+The corrected honk-core assets in the doona beta.17 release come from Glassyiris/honk `feat/native-api` tag `debug.2026.10.7.native-api.1`. `HONK-SOURCE.txt` records the honk build and links both its source and the matching doona source. Download the archive for the gateway and `SHA256SUMS` from the same release. If you already downloaded the old beta.17 honk asset, replace it with the corrected release asset and restart honk if it is running. The native API exists only in builds from Glassyiris/honk `feat/native-api`, where the `native-api` feature must be enabled. Builds of daeuniverse/honk `main` have no native API; see [honk version](requirements.md#honk-version).
 
 - [doona releases](https://github.com/Zakkaus/doona/releases) for honk-core downloads
 - [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
@@ -34,7 +34,7 @@ curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.6.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.7.native-api.1
 ```
 
 To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf,native-api`. `native-api` is opt-in; release builds include it; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
@@ -94,7 +94,7 @@ Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as des
 
 ## Install doona and start
 
-With `ui: embedded`, honk serves the doona version built into its binary, not the files installed here. The pinned honk build embeds doona 0.1.0-beta.14. To serve beta.17, set `ui: /usr/share/doona` and install the release files below; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the corrected honk assets in the doona beta.17 release serve bundled doona 0.1.0-beta.17 without a separate UI package. To serve the release files installed below, set `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
 

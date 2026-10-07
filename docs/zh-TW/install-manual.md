@@ -74,7 +74,7 @@ doona-0.1.0-beta.17.tar.gz: OK
 
 ## 3. 安裝 doona
 
-設定 `ui: embedded` 時，honk 提供內建的 doona，目前為 beta.14，不需單獨安裝套件。如需提供此處安裝的 beta.17 檔案，請設定 `ui: /usr/share/doona`，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，doona beta.17 發行版中已修正的 honk 附件提供內建的 doona 0.1.0-beta.17，不需單獨安裝介面套件。如果已經下載舊的 honk 附件，請用已修正的發行附件替換；如果 honk 正在運作，請重新啟動 honk。也可以設定 `ui: /usr/share/doona`，提供此處安裝的 beta.17 檔案，詳見[最小組態](minimal-configuration.md)。
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
@@ -164,10 +164,10 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.10.6.native-api.1
+honk-core debug.2026.10.7.native-api.1
 ```
 
-同一個發行版本中的 `HONK-SOURCE.txt` 註明其附帶的建置。
+同一個發行版本中的 `HONK-SOURCE.txt` 記錄 honk 建置，並提供 honk 原始碼與對應 doona 原始碼的連結。
 
 首次啟動 honk 前，請按[目錄與地理資料](install.md#directories-and-geodata)安裝 `geosite.dat` 與 `geoip.dat`。
 

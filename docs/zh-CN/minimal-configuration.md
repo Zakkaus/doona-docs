@@ -186,13 +186,13 @@ cat /etc/honk/config.d/api.dae
 
 每个 `native_api` 字段都要重启后才生效。其余字段见[字段表](configuration.md#config)。
 
-固定的 honk-core 构建嵌入 doona 0.1.0-beta.14，并非独立的 beta.17 界面。要在 `/ui/` 提供嵌入版本，将上面的 `ui` 行改为：
+doona beta.17 发布版中已修正的 honk-core 附件内置 doona 0.1.0-beta.17。已经下载旧的 honk 附件时，请用已修正的发布附件替换；如果 honk 正在运行，请重启 honk。要在 `/ui/` 提供内置界面，将上面的 `ui` 行改为：
 
 ```dae
 ui: embedded
 ```
 
-使用 `ui: embedded` 时，可省略独立 UI 软件包。嵌入版本由 honk 构建固定，不含 Noto Sans TC/SC，浏览器使用系统字体。如需这些字体或新版 doona，安装 `doona` 与 `doona-fonts`，并将 `ui` 指向实际安装目录，例如 `/usr/share/doona`；Debian 或 Ubuntu 使用 `doona-web`、`doona-web-fonts` 与 `/usr/share/doona-web`。
+使用 `ui: embedded` 时，独立的界面软件包是可选项。内置界面不含 Noto Sans TC/SC，浏览器会使用系统字体。如需提供外部界面文件或这些字体，安装 `doona` 和 `doona-fonts`，并将 `ui` 指向安装目录，例如 `/usr/share/doona`；Debian 或 Ubuntu 则使用 `doona-web`、`doona-web-fonts` 和 `/usr/share/doona-web`。
 
 ## 5. 检查配置
 
@@ -213,7 +213,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前台持续运行。每行以时间戳开头，其中应当包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.10.6.native-api.1 starting
+INFO honk_core: honk-core debug.2026.10.7.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected
