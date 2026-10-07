@@ -69,6 +69,8 @@ With no subscriptions or proxy nodes, Nodes offers Add subscription and Paste no
 1. Node sources shows a card for each source with its kind, state, node count, update times, expiry and usage. A reported traffic allowance adds a quota meter below the usage. Update, edit and removal controls appear when available, beside the page's lead line and on the cards.
 2. Select a card, or use the arrow keys to move between cards and select a source. The node table below lists its nodes. Search nodes covers every source; Group and Protocol filter the table.
 
+When the backend reports a node's configured transport, Protocol shows it in parentheses after the protocol. If the field is absent or null, the display stays unchanged. The Protocol filter still matches the protocol.
+
 Expiry is shown to the minute, with seconds in the tooltip. Dates and times follow [Date format and Time format](features.md#settings-stored-in-the-browser); the default clock is 24-hour.
 
 ![Node details with probe results and the Add to group submenu](../screenshots/en/node-actions.webp)
@@ -96,6 +98,8 @@ Adding or removing subscriptions and file sources requires the backend to allow 
 2. Choose Add. The backend writes the subscription into the subscription section of the main configuration. The URL is stored and never shown again.
 3. A new subscription has no nodes until it is fetched. When the backend can refresh subscriptions, doona refreshes it at once, and the toast reports the node count. If that refresh fails, the toast offers Retry.
 4. To add a single node, choose Paste node link above the node table. Enter a Name and a Node link such as `vless://…`, then choose Add. The node goes into the node section of the main configuration. An unusable node link is explained below its field.
+
+With honk, paste a Trojan, VMess or VLESS share link to use XHTTP over H2 only. `xhttp` and its alias `splithttp` select this transport; supported modes are `auto`, `packet-up`, `stream-up` and `stream-one`. honk rejects unsupported options, including `xmux` and `downloadSettings`. See [honk's XHTTP reference](https://github.com/daeuniverse/honk/blob/72d7c7f01d5c88629381c6010b9052fe36d3cdeb/doc/en/reference/nodes.md#xhttp-over-h2) for link options and limits.
 
 ### Refresh a subscription
 
