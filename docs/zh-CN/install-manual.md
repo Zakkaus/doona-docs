@@ -5,7 +5,7 @@
 在符合以下内核要求的 x86_64 或 aarch64 Linux 系统上，从发布归档安装 doona 与 honk-core。Alpine 也可使用[已签名的 apk 软件包](#install-alpine)。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下载 beta.18 附件。
+> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下载 beta.19 附件。
 
 ## 开始之前
 
@@ -22,7 +22,7 @@
 Alpine 的 `.apk` 文件不能与 OpenWrt 的混用。在当前目录下载 Alpine 软件包、发布公钥与校验和：
 
 ```sh
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-r0.alpine.apk" \
   -O "$BASE/doona-precompressed-${VERSION}-r0.alpine.apk" \
@@ -53,7 +53,7 @@ ls -l /usr/share/doona/index.html
 设置发布版本号，然后把程序归档文件与校验和文件下载到当前目录。
 
 ```sh
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -69,12 +69,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.18.tar.gz: OK
+doona-0.1.0-beta.19.tar.gz: OK
 ```
 
 ## 3. 安装 doona
 
-设置 `ui: embedded` 时，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供内置的 doona 0.1.0-beta.18，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.18 文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供内置的 doona 0.1.0-beta.19，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.19 文件，详见[最小配置](minimal-configuration.md)。
 
 把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
 
@@ -164,7 +164,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。

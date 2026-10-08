@@ -5,7 +5,7 @@
 在本地 ebuild 仓库中，用 Portage 从 doona 的 ebuild 安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下载 beta.18 附件。
+> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下载 beta.19 附件。
 
 ## 开始之前
 
@@ -45,11 +45,11 @@ portageq get_repos /
 
 ## 2. 加入 doona 的 ebuild
 
-设置发布版本号及其 Gentoo 写法。ebuild 取自 `v0.1.0-beta.18` 标签对应的提交，下载网址由 `PV` 决定。
+设置发布版本号及其 Gentoo 写法。ebuild 取自 `v0.1.0-beta.19` 标签对应的提交，下载网址由 `PV` 决定。
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.18
-PV=0.1.0_beta18
+VERSION=0.1.0-beta.19
+PV=0.1.0_beta19
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -58,8 +58,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.18
-PV=0.1.0_beta18
+VERSION=0.1.0-beta.19
+PV=0.1.0_beta19
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -80,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.18.tar.gz: OK
-doona-fonts-0.1.0-beta.18.tar.gz: OK
+doona-0.1.0-beta.19.tar.gz: OK
+doona-fonts-0.1.0-beta.19.tar.gz: OK
 ```
 
 ## 4. 把归档文件交给 Portage
@@ -106,7 +106,7 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 5. 安装 doona
 
-设置 `ui: embedded` 时，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供内置的 doona 0.1.0-beta.18，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.18 软件包，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供内置的 doona 0.1.0-beta.19，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.19 软件包，详见[最小配置](minimal-configuration.md)。
 
 该 ebuild 的关键字为测试分支（`~amd64`、`~arm64` 等），需要先为这个软件包接受测试关键字。请把 `~amd64` 换成本机架构的关键字。
 
@@ -182,7 +182,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。

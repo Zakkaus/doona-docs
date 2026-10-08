@@ -126,6 +126,8 @@ DNS has Statistics, Resolution log, Cache and Query tabs, as far as the backend 
 - Cache lives in memory and is cleared on restart. Show expired includes expired entries on request. Its meter compares usage with a nonzero entry capacity; zero capacity shows no meter. Cache filters entries by full name, suffix, keyword or regex, by record type, or both, even when the backend does not support deletion. When the backend supports deletion, you can delete matching entries after confirmation. The confirmation shows the matching count. Clear all cache cannot be undone.
 - Query results are diagnostic and do not appear in Resolution log. Upstream offers Automatic, which follows `dns.routing`, or a named `dns.upstream`. Bypass cache is off by default.
 
+An empty cache shows No cache entries. When filters match no entries, it shows No matching cache entries.
+
 Keywords match text anywhere in the name: `cdn` matches `cdn.example.com`. The suffix `cdn` matches only `cdn` or names ending in `.cdn`. A record type further narrows the results. Clear filters resets the matching criteria and removes any domain filter from the page URL.
 
 ![Cache with Show expired on and an expired entry, beside the cache usage meter on Statistics](../screenshots/en/dns-cache-expired.webp)
