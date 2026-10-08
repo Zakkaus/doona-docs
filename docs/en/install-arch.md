@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-arch.md) / [繁體中文](../zh-TW/ins
 Install doona from its `.pkg.tar.zst` package and honk-core from the same release on Arch Linux or another pacman-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.17 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> Download the beta.18 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18).
 
 ## Before you start
 
@@ -31,8 +31,8 @@ pacman -Syu --needed curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory. Arch package names write the prerelease without its `-` and `.`, so `PKGVER` holds that form.
 
 ```sh
-VERSION=0.1.0-beta.17
-PKGVER=0.1.0beta17
+VERSION=0.1.0-beta.18
+PKGVER=0.1.0beta18
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${PKGVER}-1-any.pkg.tar.zst" -O "$BASE/SHA256SUMS"
 ```
@@ -46,12 +46,12 @@ grep " doona-${PKGVER}-1-any.pkg.tar.zst\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0beta17-1-any.pkg.tar.zst: OK
+doona-0.1.0beta18-1-any.pkg.tar.zst: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, the corrected honk assets in the doona beta.17 release serve bundled doona 0.1.0-beta.17 without a separate UI package. If you already downloaded the old honk asset, replace it with the corrected release asset and restart honk if it is running. You can also serve the beta.17 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) serve bundled doona 0.1.0-beta.18 without a separate UI package. You can also serve the beta.18 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
@@ -137,7 +137,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.7.native-api.1
+honk-core debug.2026.10.8.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.

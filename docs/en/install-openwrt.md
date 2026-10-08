@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-openwrt.md) / [繁體中文](../zh-TW/
 Install doona from a release package or archive and honk-core from the same release on OpenWrt 25.12. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> These beta.17 commands need the matching assets on the [release page](https://github.com/Zakkaus/doona/releases). Check that the release is published before downloading.
+> Download the beta.18 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18).
 
 OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and `.ipk` files. Alpine apk packages do not work on OpenWrt. Stock 24.10 runs Linux 6.6, below honk's 6.12 requirement.
 
@@ -45,8 +45,8 @@ apk update
 apk add curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.17
-APKVER=0.1.0_beta17
+VERSION=0.1.0-beta.18
+APKVER=0.1.0_beta18
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
   -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
@@ -64,7 +64,7 @@ opkg update
 opkg install curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.17
+VERSION=0.1.0-beta.18
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
   -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
@@ -92,7 +92,7 @@ Work in `/tmp`, which is in memory and is cleared at reboot. Set the release ver
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.17
+VERSION=0.1.0-beta.18
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -106,12 +106,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.17.tar.gz: OK
+doona-0.1.0-beta.18.tar.gz: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, the corrected honk assets in the doona beta.17 release serve bundled doona 0.1.0-beta.17 without a separate UI package. If you already downloaded the old honk asset, replace it with the corrected release asset and restart honk if it is running. You can also serve the beta.17 files installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) serve bundled doona 0.1.0-beta.18 without a separate UI package. You can also serve the beta.18 files installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 
@@ -169,7 +169,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.7.native-api.1
+honk-core debug.2026.10.8.native-api.1
 ```
 
 `HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.

@@ -186,7 +186,7 @@ cat /etc/honk/config.d/api.dae
 
 每个 `native_api` 字段都要重启后才生效。其余字段见[字段表](configuration.md#config)。
 
-doona beta.17 发布版中已修正的 honk-core 附件内置 doona 0.1.0-beta.17。已经下载旧的 honk 附件时，请用已修正的发布附件替换；如果 honk 正在运行，请重启 honk。要在 `/ui/` 提供内置界面，将上面的 `ui` 行改为：
+doona beta.18 的 honk-core `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）内置 doona 0.1.0-beta.18。要在 `/ui/` 提供内置界面，将上面的 `ui` 行改为：
 
 ```dae
 ui: embedded
@@ -213,7 +213,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk 在前台持续运行。每行以时间戳开头，其中应当包括：
 
 ```text
-INFO honk_core: honk-core debug.2026.10.7.native-api.1 starting
+INFO honk_core: honk-core debug.2026.10.8.native-api.1 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected

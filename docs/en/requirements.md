@@ -52,7 +52,7 @@ mountpoint /sys/fs/bpf
 
 ## honk version
 
-- The corrected honk-core assets in the doona beta.17 release use Glassyiris/honk `feat/native-api` commit `45d953d` (`debug.2026.10.7.native-api.1`). They include the opt-in `native-api` build feature and embed doona 0.1.0-beta.17. `HONK-SOURCE.txt` records the tag and full honk commit and links both honk source and matching doona source. If you already downloaded the old beta.17 honk asset, replace it with the corrected release asset and restart honk if it is running. With `ui: embedded`, no standalone UI package is needed; an external `ui` directory remains an option.
+- The honk-core assets for doona beta.18 come from Glassyiris/honk `feat/native-api` tag `debug.2026.10.8.native-api.1`, commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`. They include the opt-in `native-api` build feature and embed doona 0.1.0-beta.18. `HONK-SOURCE.txt` records the tag and full honk commit and links both honk source and matching doona source. With `ui: embedded`, no standalone UI package is needed; an external `ui` directory remains an option.
 - Builds of daeuniverse/honk `main` have no native API. honk rejects every `native_api` setting as `unknown experimental setting`, and `/api` and `/ui/` answer 404.
 - A build from `feat/native-api` without the `native-api` feature stops startup with `native-api feature is required` when `native_api` is enabled.
 - Early `feat/native-api` builds update geodata but have no configurable sources. The builds attached to doona beta.8 and beta.9 have both.

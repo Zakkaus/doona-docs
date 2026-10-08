@@ -5,13 +5,13 @@
 先安裝 honk 並撰寫組態，再安裝 doona 並啟動 honk。開始前確認[系統需求](requirements.md#requirements)，或依[對應系統的安裝頁](index.md#頁面)操作。
 
 > [!NOTE]
-> beta.17 指令需要[發布頁](https://github.com/Zakkaus/doona/releases)上的對應檔案。下載前先確認版本已發布。
+> 從[發布頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下載 beta.18 附件。
 
 <a name="install"></a>
 
 ## 安裝 honk
 
-doona beta.17 發行版中已修正的 honk-core 附件來自 Glassyiris/honk `feat/native-api` 標籤 `debug.2026.10.7.native-api.1`。`HONK-SOURCE.txt` 記錄 honk 建置，並提供 honk 原始碼與對應 doona 原始碼的連結。請從同一個發行版下載適合閘道器的封存檔與 `SHA256SUMS`。如果已經下載舊的 beta.17 honk 附件，請用已修正的發行附件替換；如果 honk 正在運作，請重新啟動 honk。只有 Glassyiris/honk `feat/native-api` 分支的建置提供原生 API，且須啟用 `native-api`；daeuniverse/honk `main` 分支的建置沒有原生 API，詳見 [honk 版本](requirements.md#honk-version)。
+doona beta.18 的 honk-core 附件來自 Glassyiris/honk `feat/native-api` 標籤 `debug.2026.10.8.native-api.1`，提交為 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`。`HONK-SOURCE.txt` 記錄 honk 建置，並提供 honk 原始碼與對應 doona 原始碼的連結。請從同一個發行版下載適合閘道器的封存檔與 `SHA256SUMS`。只有 Glassyiris/honk `feat/native-api` 分支的建置提供原生 API，且須啟用 `native-api`；daeuniverse/honk `main` 分支的建置沒有原生 API，詳見 [honk 版本](requirements.md#honk-version)。
 
 - [doona 發布頁](https://github.com/Zakkaus/doona/releases)：下載 honk-core 建置
 - [honk 快速入門](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
@@ -27,14 +27,14 @@ doona beta.17 發行版中已修正的 honk-core 附件來自 Glassyiris/honk `f
 如需分別下載、驗證與安裝 honk-core，請先完成[在其他系統上安裝](install-manual.md)的第 1 步，再依第 4 至 6 步操作。
 
 ```sh
-VERSION=0.1.0-beta.17               # the doona release, without v
+VERSION=0.1.0-beta.18               # the doona release, without v
 TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
 grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
 tar -xzf honk-core-debug-$TARGET.tar.gz
 sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-honk-core --version   # prints the tag the build came from, such as debug.2026.10.7.native-api.1
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.8.native-api.1
 ```
 
 如需自行建置 honk，請簽出 `HONK-SOURCE.txt` 註明的提交，依 honk 快速入門的步驟建置：先建置 eBPF 物件，再執行 `cargo build --release -p honk-core --features ebpf,native-api`。`native-api` 需要明確啟用，發布建置已包含此功能；未啟用 `ebpf` 時 honk 沒有資料路徑。發布頁同時附有該提交的原始碼封存 `honk-source-<commit>.tar.gz`。
@@ -94,7 +94,7 @@ WantedBy=multi-user.target
 
 ## 安裝 doona 並啟動
 
-設定 `ui: embedded` 時，doona beta.17 發行版中已修正的 honk 附件提供內建的 doona 0.1.0-beta.17，不需單獨安裝介面套件。也可以設定 `ui: /usr/share/doona`，提供依下文安裝的發行檔案，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供內建的 doona 0.1.0-beta.18，不需單獨安裝介面套件。也可以設定 `ui: /usr/share/doona`，提供依下文安裝的發行檔案，詳見[最小組態](minimal-configuration.md)。
 
 同時下載 doona 發布套件與 `SHA256SUMS`，再將套件解壓縮到 `/usr/share/doona`，也就是 `ui` 指定的目錄。最後一個指令必須列出 `index.html`，否則 honk 無法啟動。
 
@@ -103,7 +103,7 @@ WantedBy=multi-user.target
 如需逐步下載、驗證並解壓縮程式與選用字型，請依[在其他系統上安裝](install-manual.md)的第 1 至 3 步操作。
 
 ```sh
-VERSION=0.1.0-beta.17   # the doona release, without v
+VERSION=0.1.0-beta.18   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
