@@ -5,7 +5,7 @@
 在 Debian、Ubuntu 或其他使用 APT 的系统上，从 `doona-web` `.deb` 软件包安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> beta.17 命令需要[发布页](https://github.com/Zakkaus/doona/releases)上的对应文件。下载前先确认版本已发布。
+> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下载 beta.18 附件。
 
 ## 开始之前
 
@@ -33,7 +33,7 @@ apt install curl ca-certificates
 设置发布版本号，然后把软件包与校验和文件下载到当前目录。
 
 ```sh
-VERSION=0.1.0-beta.17
+VERSION=0.1.0-beta.18
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
 ```
@@ -47,12 +47,12 @@ grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-web_0.1.0-beta.17-1_all.deb: OK
+doona-web_0.1.0-beta.18-1_all.deb: OK
 ```
 
 ## 4. 安装 doona
 
-设置 `ui: embedded` 时，doona beta.17 发布版中已修正的 honk 附件提供内置的 doona 0.1.0-beta.17，无需单独安装界面软件包。如果已经下载旧的 honk 附件，请用已修正的发布附件替换；如果 honk 正在运行，请重启 honk。也可以设置 `ui: /usr/share/doona-web`，提供此处安装的 beta.17 软件包，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供内置的 doona 0.1.0-beta.18，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona-web`，提供此处安装的 beta.18 软件包，详见[最小配置](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
@@ -138,7 +138,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最后一条命令输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.7.native-api.1
+honk-core debug.2026.10.8.native-api.1
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。

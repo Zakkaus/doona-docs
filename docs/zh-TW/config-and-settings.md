@@ -82,7 +82,7 @@
 
 只有可寫且文字完整的檔案能修改。磁碟檔案已變更時不能儲存。需重新啟動才生效的修改會遭拒絕，且不會寫入；提示列出須在磁碟上修改的設定。寫入成功但無法讀取新組態時，草稿保留並提供「重試」。
 
-honk 的儲存訂閱內容（`global.store_subscribe`）將成功取得並通過檢查的訂閱內容儲存到 `<data_dir>/state/honk.db` 的 `subscription_body` 表，預設路徑為 `/var/lib/honk/state/honk.db`。變更這項設定須重新啟動 honk；訂閱的 `cache: false` 會停用其內容儲存與還原。獨立的 `.sub` 檔案屬於舊版儲存格式，啟動時的遷移規則見[固定版本的 honk 參考文件](https://github.com/Glassyiris/honk/blob/45d953d8dc97c1438de96b6bdd31c8860766d2fe/doc/en/reference/subscription.md#fetch-persistence-and-recovery)。
+honk 的儲存訂閱內容（`global.store_subscribe`）將成功取得並通過檢查的訂閱內容儲存到 `<data_dir>/state/honk.db` 的 `subscription_body` 表，預設路徑為 `/var/lib/honk/state/honk.db`。變更這項設定須重新啟動 honk；訂閱的 `cache: false` 會停用其內容儲存與還原。獨立的 `.sub` 檔案屬於舊版儲存格式，啟動時的遷移規則見[固定版本的 honk 參考文件](https://github.com/Glassyiris/honk/blob/6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df/doc/en/reference/subscription.md#fetch-persistence-and-recovery)。
 
 ## 備份與修訂
 

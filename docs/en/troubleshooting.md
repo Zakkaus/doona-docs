@@ -223,7 +223,7 @@ Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
 
-With `ui: embedded`, the UI version comes from the honk binary. The corrected honk assets in the doona beta.17 release embed doona 0.1.0-beta.17. If you already downloaded the old honk asset, replace it with the corrected release asset and restart honk. You can also install standalone beta.17 files and point `ui` at their directory.
+With `ui: embedded`, the UI version comes from the honk binary. The honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) embed doona 0.1.0-beta.18. You can also install standalone beta.18 files and point `ui` at their directory.
 
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 
