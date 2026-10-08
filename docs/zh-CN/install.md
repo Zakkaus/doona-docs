@@ -212,7 +212,7 @@ sudo journalctl -u honk-core -e    # look for applied or rejected
 
 ### 更新 doona
 
-将新版本解压到 `/usr/share/doona`，然后在浏览器中重新加载页面。honk 无需重启。
+设置 `ui: /usr/share/doona` 时，将新版本解压到该目录，然后在浏览器中重新加载页面，honk 无需重启。设置 `ui: embedded` 时，须安装内置新版 doona 的 honk-core 构建（见“更新 honk”），或将新版本安装到 `/usr/share/doona` 并设置 `ui: /usr/share/doona`。完成任一修改后，重启 honk 并重新加载页面。
 
 ### 更新地理数据
 
