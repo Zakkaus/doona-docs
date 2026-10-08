@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-fedora.md) / [繁體中文](../zh-TW/i
 Install doona from its `.rpm` package and honk-core from the same release on Fedora, RHEL or another DNF-based system. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> Download the beta.18 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18).
+> Download the beta.19 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
 
 ## Before you start
 
@@ -31,7 +31,7 @@ dnf install curl ca-certificates
 Set the release version, then download the package and the checksum file into the current directory.
 
 ```sh
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-1.noarch.rpm" -O "$BASE/SHA256SUMS"
 ```
@@ -45,12 +45,12 @@ grep " doona-${VERSION}-1.noarch.rpm\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.18-1.noarch.rpm: OK
+doona-0.1.0-beta.19-1.noarch.rpm: OK
 ```
 
 ## 4. Install doona
 
-With `ui: embedded`, the honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) serve bundled doona 0.1.0-beta.18 without a separate UI package. You can also serve the beta.18 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) serve bundled doona 0.1.0-beta.19 without a separate UI package. You can also serve the beta.19 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -136,7 +136,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 `HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.

@@ -5,7 +5,7 @@ English / [简体中文](../zh-CN/install-gentoo.md) / [繁體中文](../zh-TW/i
 Install doona with Portage from the repository's ebuild in a local ebuild repository, and honk-core from the same release. Then continue with [Minimal configuration](minimal-configuration.md).
 
 > [!NOTE]
-> Download the beta.18 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18).
+> Download the beta.19 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
 
 ## Before you start
 
@@ -45,11 +45,11 @@ The last command lists `local` next to `gentoo`.
 
 ## 2. Add the doona ebuild
 
-Set the release version and its Gentoo form. The ebuild is fetched from the `v0.1.0-beta.18` tag commit, and its download URLs follow `PV`.
+Set the release version and its Gentoo form. The ebuild is fetched from the `v0.1.0-beta.19` tag commit, and its download URLs follow `PV`.
 
 ```sh tab="sudo"
-VERSION=0.1.0-beta.18
-PV=0.1.0_beta18
+VERSION=0.1.0-beta.19
+PV=0.1.0_beta19
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -58,8 +58,8 @@ cd -
 ```
 
 ```sh tab="root"
-VERSION=0.1.0-beta.18
-PV=0.1.0_beta18
+VERSION=0.1.0-beta.19
+PV=0.1.0_beta19
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 mkdir -p "$REPO/net-proxy/doona"
 cd "$REPO/net-proxy/doona"
@@ -80,8 +80,8 @@ grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
 You should see:
 
 ```text
-doona-0.1.0-beta.18.tar.gz: OK
-doona-fonts-0.1.0-beta.18.tar.gz: OK
+doona-0.1.0-beta.19.tar.gz: OK
+doona-fonts-0.1.0-beta.19.tar.gz: OK
 ```
 
 ## 4. Hand the archives to Portage
@@ -106,7 +106,7 @@ The last command prints `>>> Creating Manifest for` and the package directory, `
 
 ## 5. Install doona
 
-With `ui: embedded`, the honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) serve bundled doona 0.1.0-beta.18 without a separate UI package. You can also serve the beta.18 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
+With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) serve bundled doona 0.1.0-beta.19 without a separate UI package. You can also serve the beta.19 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
 The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
 
@@ -182,7 +182,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 The last command prints the honk build, for example:
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 `HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.

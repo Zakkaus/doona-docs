@@ -10,9 +10,9 @@ doona is a static web UI for the native API that the daeuniverse engines share: 
 
 ## Native API status
 
-These pages cover doona v0.1.0-beta.18. doona uses honk's native API from the honk-core builds attached to each release, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` identifies the bundled build; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
+These pages cover doona v0.1.0-beta.19. doona uses honk's native API from the honk-core builds attached to each release, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` identifies the bundled build; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
 
-Installation examples use beta.18 asset names and the matching honk tag `debug.2026.10.8.native-api.1`. The assets are published on the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18).
+Installation examples use beta.19 asset names and the matching honk tag `debug.2026.10.9.native-api.2`. The assets are published on the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
 
 ## Pages
 

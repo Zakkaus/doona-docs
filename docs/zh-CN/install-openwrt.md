@@ -5,7 +5,7 @@
 在 OpenWrt 25.12 上，从发布软件包或归档安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
 
 > [!NOTE]
-> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下载 beta.18 附件。
+> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下载 beta.19 附件。
 
 OpenWrt 25.12 使用 apk-tools 3；24.10 及更早版本使用 opkg 与 `.ipk` 文件。Alpine 的 apk 软件包不能用于 OpenWrt。官方 24.10 使用 Linux 6.6，低于 honk 要求的 6.12。
 
@@ -45,8 +45,8 @@ apk update
 apk add curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.18
-APKVER=0.1.0_beta18
+VERSION=0.1.0-beta.19
+APKVER=0.1.0_beta19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
   -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
@@ -64,7 +64,7 @@ opkg update
 opkg install curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
   -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
@@ -92,7 +92,7 @@ apk add curl ca-bundle
 
 ```sh
 cd /tmp
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 ```
@@ -106,12 +106,12 @@ grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 应当显示：
 
 ```text
-doona-0.1.0-beta.18.tar.gz: OK
+doona-0.1.0-beta.19.tar.gz: OK
 ```
 
 ## 4. 安装 doona
 
-设置 `ui: embedded` 时，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供内置的 doona 0.1.0-beta.18，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.18 文件，详见[最小配置](minimal-configuration.md)。
+设置 `ui: embedded` 时，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供内置的 doona 0.1.0-beta.19，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.19 文件，详见[最小配置](minimal-configuration.md)。
 
 把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
 
@@ -169,7 +169,7 @@ rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.t
 `honk-core --version` 输出 honk 的构建版本，例如：
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。

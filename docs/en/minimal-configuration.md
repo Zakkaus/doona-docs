@@ -186,7 +186,7 @@ For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the hos
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
 
-The honk-core `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) embed doona 0.1.0-beta.18. To serve the bundled UI at `/ui/`, replace the `ui` line above with:
+The honk-core `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) embed doona 0.1.0-beta.19. To serve the bundled UI at `/ui/`, replace the `ui` line above with:
 
 ```dae
 ui: embedded
@@ -213,7 +213,7 @@ honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --mock-ebpf
 honk keeps running in the foreground. Each line starts with a timestamp; among them you should see:
 
 ```text
-INFO honk_core: honk-core debug.2026.10.8.native-api.1 starting
+INFO honk_core: honk-core debug.2026.10.9.native-api.2 starting
 INFO honk_core: Config: /etc/honk/config.dae
 INFO honk_core: Loaded 2 nodes, 0 groups, 0 routing rules
 WARN honk_core: NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled requested=true reason=the mock eBPF backend was selected

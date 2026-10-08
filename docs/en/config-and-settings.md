@@ -82,7 +82,7 @@ Modules is an overview, not an inline editor. Edit whole files on Config files. 
 
 Only writable files with complete text can be changed. A file changed on disk blocks the save. A restart-required change is refused without writing and lists the settings to edit on disk. If the write succeeds but the new configuration cannot be read, the draft stays and Retry is offered.
 
-With honk, Store subscriptions (`global.store_subscribe`) stores successfully fetched and accepted subscription bodies in the `subscription_body` table of `<data_dir>/state/honk.db`, normally `/var/lib/honk/state/honk.db`. Changing this setting requires restarting honk; a subscription with `cache: false` skips storage and recovery. Separate `.sub` files belong to legacy storage; see the [pinned honk reference](https://github.com/Glassyiris/honk/blob/6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df/doc/en/reference/subscription.md#fetch-persistence-and-recovery) for startup migration.
+With honk, Store subscriptions (`global.store_subscribe`) stores successfully fetched and accepted subscription bodies in the `subscription_body` table of `<data_dir>/state/honk.db`, normally `/var/lib/honk/state/honk.db`. Changing this setting requires restarting honk; a subscription with `cache: false` skips storage and recovery. Separate `.sub` files belong to legacy storage; see the [pinned honk reference](https://github.com/Glassyiris/honk/blob/eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e/doc/en/reference/subscription.md#fetch-persistence-and-recovery) for startup migration.
 
 ## Backups and revisions
 

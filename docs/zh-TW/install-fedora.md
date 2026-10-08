@@ -5,7 +5,7 @@
 在 Fedora、RHEL 或其他使用 DNF 的系統上，從 `.rpm` 套件安裝 doona，並從同一個發行版本安裝 honk-core。之後繼續閱讀[最小組態](minimal-configuration.md)。
 
 > [!NOTE]
-> 從[發布頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.18)下載 beta.18 附件。
+> 從[發布頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下載 beta.19 附件。
 
 ## 開始之前
 
@@ -31,7 +31,7 @@ dnf install curl ca-certificates
 設定發行版本號，然後把套件與總和檢查碼檔案下載到目前目錄。
 
 ```sh
-VERSION=0.1.0-beta.18
+VERSION=0.1.0-beta.19
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}-1.noarch.rpm" -O "$BASE/SHA256SUMS"
 ```
@@ -45,12 +45,12 @@ grep " doona-${VERSION}-1.noarch.rpm\$" SHA256SUMS | sha256sum -c -
 應顯示：
 
 ```text
-doona-0.1.0-beta.18-1.noarch.rpm: OK
+doona-0.1.0-beta.19-1.noarch.rpm: OK
 ```
 
 ## 4. 安裝 doona
 
-設定 `ui: embedded` 時，doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）提供內建的 doona 0.1.0-beta.18，不需單獨安裝介面套件。也可以設定 `ui: /usr/share/doona`，提供此處安裝的 beta.18 套件，詳見[最小組態](minimal-configuration.md)。
+設定 `ui: embedded` 時，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供內建的 doona 0.1.0-beta.19，不需單獨安裝介面套件。也可以設定 `ui: /usr/share/doona`，提供此處安裝的 beta.19 套件，詳見[最小組態](minimal-configuration.md)。
 
 ```sh tab="sudo"
 sudo dnf install ./doona-${VERSION}-1.noarch.rpm
@@ -136,7 +136,7 @@ install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
 最後一條命令輸出 honk 的建置版本，例如：
 
 ```text
-honk-core debug.2026.10.8.native-api.1
+honk-core debug.2026.10.9.native-api.2
 ```
 
 同一個發行版本中的 `HONK-SOURCE.txt` 記錄 honk 建置，並提供 honk 原始碼與對應 doona 原始碼的連結。

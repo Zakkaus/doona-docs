@@ -163,7 +163,7 @@ Find the latest `honk-core <version> starting` line in the current boot’s `jou
 
 ## Sign-in and cross-origin failures
 
-- First-time setup works only from the gateway or a private-network client.
+- First-time setup works only from the gateway, a private-network client or a client with a link-local address.
 - A network or CORS failure in Settings: honk is not reachable at the `listen` address, or doona runs on an origin missing from `allow_origins` and `allowed_hosts`.
 - For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the host and port and `allow_origins` for the browser origin, then restart honk. See [hostname and origin access](install.md#other-origin) for the syntax and 403 checks.
 - A forgotten password: stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), and start honk to set up again.
@@ -223,7 +223,7 @@ Check `lan_interface`: on OpenWrt, use `br-lan` to handle LAN devices’ traffic
 
 The service worker serves the cached build until it updates. Reload the page once or twice, or close every doona tab and open it again.
 
-With `ui: embedded`, the UI version comes from the honk binary. The honk `debug.2026.10.8.native-api.1` assets for doona beta.18 (commit `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`) embed doona 0.1.0-beta.18. You can also install standalone beta.18 files and point `ui` at their directory.
+With `ui: embedded`, the UI version comes from the honk binary. The honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) embed doona 0.1.0-beta.19. You can also install standalone beta.19 files and point `ui` at their directory.
 
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 

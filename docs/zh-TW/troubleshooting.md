@@ -163,7 +163,7 @@ honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分
 
 ## 登入與跨網域失敗
 
-- 首次設定只能在閘道器本機或私有網路中的用戶端完成。
+- 首次設定只能在閘道器本機、私有網路中的用戶端或使用鏈路本地位址的用戶端完成。
 - 「設定」中出現網路或跨網域請求失敗：無法透過 `listen` 位址存取 honk，或 doona 所在來源未列入 `allow_origins` 與 `allowed_hosts`。
 - 使用 `openwrt.lan` 等網域名稱時，須分別在 `allowed_hosts` 中設定主機與連接埠，在 `allow_origins` 中設定瀏覽器來源，然後重新啟動 honk。語法與 403 檢查步驟見[網域名稱與來源存取](install.md#other-origin)。
 - 忘記密碼：停止 honk，執行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上執行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再啟動 honk 重新設定。
@@ -223,7 +223,7 @@ journalctl -u honk-core -b       # systemd
 
 Service worker 在更新完成前會提供快取的版本。請重新載入頁面一至兩次，或關閉所有 doona 分頁後重新開啟。
 
-使用 `ui: embedded` 時，介面版本由 honk 執行檔決定。doona beta.18 的 honk `debug.2026.10.8.native-api.1` 附件（提交 `6ad0ab89bfdf2a72d3e08b00714bb8434ffdc1df`）內建 doona 0.1.0-beta.18。也可以安裝獨立的 beta.18 檔案，並將 `ui` 指向其目錄。
+使用 `ui: embedded` 時，介面版本由 honk 執行檔決定。doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）內建 doona 0.1.0-beta.19。也可以安裝獨立的 beta.19 檔案，並將 `ui` 指向其目錄。
 
 ## 透過 HTTP 登入時出現 crypto.randomUUID is not a function
 
