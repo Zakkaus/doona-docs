@@ -212,7 +212,7 @@ Download the honk-core archive from a newer [doona release](https://github.com/Z
 
 ### Update doona
 
-Extract the new release into `/usr/share/doona` and reload the page in the browser. honk needs no restart.
+With `ui: /usr/share/doona`, extract the new release into that directory and reload the browser page; honk needs no restart. With `ui: embedded`, you must install a honk-core build that embeds the newer doona (see Update honk), or install the new release into `/usr/share/doona` and set `ui: /usr/share/doona`. After either change, restart honk and reload the page.
 
 ### Update geodata
 
