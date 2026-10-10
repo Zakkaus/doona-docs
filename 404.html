@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Error 404: Page not found</title>
+<link rel="icon" href="/doona-docs/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/doona-docs/site.css?v=584e5489c1">
+<script>
+try {
+  const theme = localStorage.getItem('doona-docs-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+} catch {}
+</script>
+<script type="module" src="/doona-docs/site.js?v=342d2fa644"></script>
+<script>
+(function () {
+  var base = "/doona-docs/";
+  var path = location.pathname;
+  var page = path.indexOf(base) === 0 && /^([a-z-]+)(\.html|\.md)?$/.exec(path.slice(base.length));
+  if (!page || ["index","requirements","install-debian","install-fedora","install-arch","install-gentoo","install-openwrt","install-manual","install","minimal-configuration","service-management","first-sign-in","tour","observe","routing","config-and-settings","common-tasks","configuration","features","troubleshooting","development"].indexOf(page[1]) < 0) return;
+  var locale = (function () {
+  try {
+    var chosen = localStorage.getItem('doona-docs-locale');
+    if (["en","zh-CN","zh-TW"].indexOf(chosen) >= 0) return chosen;
+  } catch (e) {}
+  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+  for (var i = 0; i < tags.length; i++) {
+    var tag = String(tags[i]).toLowerCase();
+    if (/^zh(-|$)/.test(tag)) return /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
+    if (/^en(-|$)/.test(tag)) break;
+  }
+  return 'en';
+})();
+  var file = page[2] === '.md' ? page[1] + '.md' : page[1] === 'index' ? '' : page[1] + '.html';
+  location.replace(base + locale + '/' + file + location.hash);
+})();
+</script>
+</head>
+<body>
+<header class="top"><a class="brand" href="/doona-docs/"><img src="/doona-docs/logo.svg" alt="" width="28" height="28"><span>doona</span></a></header>
+<main id="content" class="not-found">
+<section class="illustrated-message" lang="en">
+<svg class="illustration" viewBox="0 0 96 96" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M75.5 23C75.5 19.6863 72.8137 17 69.5 17H17.5C14.1863 17 11.5 19.6863 11.5 23V29H75.5V23ZM11.5 67V33H75.5V51C75.5 52.1046 76.3954 53 77.5 53C78.6046 53 79.5 52.1046 79.5 51V23C79.5 17.4772 75.0229 13 69.5 13H17.5C11.9771 13 7.5 17.4772 7.5 23V67C7.5 72.5228 11.9771 77 17.5 77H53.5C54.6046 77 55.5 76.1046 55.5 75C55.5 73.8954 54.6046 73 53.5 73H17.5C14.1863 73 11.5 70.3137 11.5 67ZM16.5 23C16.5 24.3807 17.6193 25.5 19 25.5C20.3807 25.5 21.5 24.3807 21.5 23C21.5 21.6193 20.3807 20.5 19 20.5C17.6193 20.5 16.5 21.6193 16.5 23ZM58.25 70.5C58.25 62.3534 64.8534 55.75 73 55.75C81.1466 55.75 87.75 62.3534 87.75 70.5C87.75 78.6466 81.1466 85.25 73 85.25C64.8534 85.25 58.25 78.6466 58.25 70.5ZM79.2928 76.7928C80.0744 76.0112 80.0744 74.7386 79.2928 73.957H79.3128L75.8558 70.5L79.3128 67.043C80.0944 66.2614 80.0944 64.9888 79.3128 64.2072C78.5312 63.4256 77.2587 63.4256 76.4771 64.2072L73.02 67.6642L69.563 64.2072C68.7814 63.4256 67.5088 63.4256 66.7272 64.2072C65.9457 64.9888 65.9457 66.2614 66.7272 67.043L70.1843 70.5L66.7272 73.957C65.9457 74.7386 65.9457 76.0112 66.7272 76.7928C67.118 77.1836 67.6291 77.384 68.1401 77.384C68.6512 77.384 69.1622 77.1836 69.553 76.7928L73.01 73.3358L76.467 76.7928C76.8578 77.1836 77.3689 77.384 77.8799 77.384C78.391 77.384 78.902 77.1836 79.2928 76.7928Z"/></svg>
+<h1>Error 404: Page not found</h1>
+<p>This page does not exist or has moved. Check the URL, or go to the documentation home.</p>
+<a class="link-button" href="/doona-docs/en/">Documentation home</a>
+</section>
+<section class="illustrated-message" lang="zh-CN" hidden>
+<svg class="illustration" viewBox="0 0 96 96" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M75.5 23C75.5 19.6863 72.8137 17 69.5 17H17.5C14.1863 17 11.5 19.6863 11.5 23V29H75.5V23ZM11.5 67V33H75.5V51C75.5 52.1046 76.3954 53 77.5 53C78.6046 53 79.5 52.1046 79.5 51V23C79.5 17.4772 75.0229 13 69.5 13H17.5C11.9771 13 7.5 17.4772 7.5 23V67C7.5 72.5228 11.9771 77 17.5 77H53.5C54.6046 77 55.5 76.1046 55.5 75C55.5 73.8954 54.6046 73 53.5 73H17.5C14.1863 73 11.5 70.3137 11.5 67ZM16.5 23C16.5 24.3807 17.6193 25.5 19 25.5C20.3807 25.5 21.5 24.3807 21.5 23C21.5 21.6193 20.3807 20.5 19 20.5C17.6193 20.5 16.5 21.6193 16.5 23ZM58.25 70.5C58.25 62.3534 64.8534 55.75 73 55.75C81.1466 55.75 87.75 62.3534 87.75 70.5C87.75 78.6466 81.1466 85.25 73 85.25C64.8534 85.25 58.25 78.6466 58.25 70.5ZM79.2928 76.7928C80.0744 76.0112 80.0744 74.7386 79.2928 73.957H79.3128L75.8558 70.5L79.3128 67.043C80.0944 66.2614 80.0944 64.9888 79.3128 64.2072C78.5312 63.4256 77.2587 63.4256 76.4771 64.2072L73.02 67.6642L69.563 64.2072C68.7814 63.4256 67.5088 63.4256 66.7272 64.2072C65.9457 64.9888 65.9457 66.2614 66.7272 67.043L70.1843 70.5L66.7272 73.957C65.9457 74.7386 65.9457 76.0112 66.7272 76.7928C67.118 77.1836 67.6291 77.384 68.1401 77.384C68.6512 77.384 69.1622 77.1836 69.553 76.7928L73.01 73.3358L76.467 76.7928C76.8578 77.1836 77.3689 77.384 77.8799 77.384C78.391 77.384 78.902 77.1836 79.2928 76.7928Z"/></svg>
+<h1>错误 404：找不到页面</h1>
+<p>此页面不存在或已移动。请检查网址，或前往文档首页。</p>
+<a class="link-button" href="/doona-docs/zh-CN/">文档首页</a>
+</section>
+<section class="illustrated-message" lang="zh-TW" hidden>
+<svg class="illustration" viewBox="0 0 96 96" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M75.5 23C75.5 19.6863 72.8137 17 69.5 17H17.5C14.1863 17 11.5 19.6863 11.5 23V29H75.5V23ZM11.5 67V33H75.5V51C75.5 52.1046 76.3954 53 77.5 53C78.6046 53 79.5 52.1046 79.5 51V23C79.5 17.4772 75.0229 13 69.5 13H17.5C11.9771 13 7.5 17.4772 7.5 23V67C7.5 72.5228 11.9771 77 17.5 77H53.5C54.6046 77 55.5 76.1046 55.5 75C55.5 73.8954 54.6046 73 53.5 73H17.5C14.1863 73 11.5 70.3137 11.5 67ZM16.5 23C16.5 24.3807 17.6193 25.5 19 25.5C20.3807 25.5 21.5 24.3807 21.5 23C21.5 21.6193 20.3807 20.5 19 20.5C17.6193 20.5 16.5 21.6193 16.5 23ZM58.25 70.5C58.25 62.3534 64.8534 55.75 73 55.75C81.1466 55.75 87.75 62.3534 87.75 70.5C87.75 78.6466 81.1466 85.25 73 85.25C64.8534 85.25 58.25 78.6466 58.25 70.5ZM79.2928 76.7928C80.0744 76.0112 80.0744 74.7386 79.2928 73.957H79.3128L75.8558 70.5L79.3128 67.043C80.0944 66.2614 80.0944 64.9888 79.3128 64.2072C78.5312 63.4256 77.2587 63.4256 76.4771 64.2072L73.02 67.6642L69.563 64.2072C68.7814 63.4256 67.5088 63.4256 66.7272 64.2072C65.9457 64.9888 65.9457 66.2614 66.7272 67.043L70.1843 70.5L66.7272 73.957C65.9457 74.7386 65.9457 76.0112 66.7272 76.7928C67.118 77.1836 67.6291 77.384 68.1401 77.384C68.6512 77.384 69.1622 77.1836 69.553 76.7928L73.01 73.3358L76.467 76.7928C76.8578 77.1836 77.3689 77.384 77.8799 77.384C78.391 77.384 78.902 77.1836 79.2928 76.7928Z"/></svg>
+<h1>錯誤 404：找不到頁面</h1>
+<p>此頁面不存在或已移動。請檢查網址，或前往文件首頁。</p>
+<a class="link-button" href="/doona-docs/zh-TW/">文件首頁</a>
+</section>
+<noscript><ul><li><a href="/doona-docs/zh-CN/" lang="zh-CN" hreflang="zh-CN">简体中文</a></li><li><a href="/doona-docs/zh-TW/" lang="zh-TW" hreflang="zh-TW">繁體中文</a></li></ul></noscript>
+</main>
+<script>
+(function () {
+  var locale = (function () {
+  try {
+    var chosen = localStorage.getItem('doona-docs-locale');
+    if (["en","zh-CN","zh-TW"].indexOf(chosen) >= 0) return chosen;
+  } catch (e) {}
+  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+  for (var i = 0; i < tags.length; i++) {
+    var tag = String(tags[i]).toLowerCase();
+    if (/^zh(-|$)/.test(tag)) return /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
+    if (/^en(-|$)/.test(tag)) break;
+  }
+  return 'en';
+})();
+  var sections = document.querySelectorAll('main section[lang]');
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].hidden = sections[i].lang !== locale;
+    if (!sections[i].hidden) document.title = sections[i].querySelector('h1').textContent;
+  }
+  document.documentElement.lang = locale;
+})();
+</script>
+</body>
+</html>

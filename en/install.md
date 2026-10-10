@@ -1,0 +1,228 @@
+# Installation details
+
+Install honk, write its configuration, then install doona and start honk. Check [Requirements](https://zakkaus.github.io/doona-docs/en/requirements.md#requirements) first, or follow the [install page for your system](https://zakkaus.github.io/doona-docs/en/index.md#pages).
+
+> [!NOTE]
+> Download the beta.19 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
+
+<a name="install"></a>
+
+## Install honk
+
+The honk-core assets for doona beta.19 come from Glassyiris/honk `feat/native-api` tag `debug.2026.10.9.native-api.2`, commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`. `HONK-SOURCE.txt` records the honk build and links both its source and the matching doona source. Download the archive for the gateway and `SHA256SUMS` from the same release. The native API exists only in builds from Glassyiris/honk `feat/native-api`, where the `native-api` feature must be enabled. Builds of daeuniverse/honk `main` have no native API; see [honk version](https://zakkaus.github.io/doona-docs/en/requirements.md#honk-version).
+
+- [doona releases](https://github.com/Zakkaus/doona/releases) for honk-core downloads
+- [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
+
+| Asset name part      | Use                                                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `x86_64`, `aarch64`  | The gateway's CPU, as `uname -m` prints it.                                                                |
+| `unknown-linux-musl` | Static binary for gateways. Choose this one when unsure.                                                   |
+| `unknown-linux-gnu`  | Linked against glibc, for ordinary distributions.                                                          |
+| no suffix            | mimalloc, the default allocator.                                                                           |
+| `-stock` suffix      | The system allocator instead of mimalloc.                                                                 |
+
+For separate honk-core download, verification and installation commands, complete step 1, then follow steps 4–6 of [Install on other systems](https://zakkaus.github.io/doona-docs/en/install-manual.md).
+
+```sh
+VERSION=0.1.0-beta.19               # the doona release, without v
+TARGET=x86_64-unknown-linux-musl   # or aarch64-unknown-linux-musl, -gnu, and a -stock suffix
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz" -O "$BASE/SHA256SUMS"
+grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
+tar -xzf honk-core-debug-$TARGET.tar.gz
+sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
+honk-core --version   # prints the tag the build came from, such as debug.2026.10.9.native-api.2
+```
+
+To build honk yourself, check out the commit `HONK-SOURCE.txt` names and build it as honk’s quick start describes: the eBPF object first, then `cargo build --release -p honk-core --features ebpf,native-api`. `native-api` is opt-in; release builds include it; without `ebpf` honk has no datapath. The release also attaches that commit’s source archive, `honk-source-<commit>.tar.gz`.
+
+The binary embeds the eBPF object; no separate object file is needed.
+
+<a name="directories-and-geodata"></a>
+
+### Directories and geodata
+
+Create the configuration and data directories, then download the geosite and geoip files that the example rules use. honk finds them in `data_dir`; these are the files its geodata update downloads.
+
+```sh
+sudo install -d -m 0700 /etc/honk /etc/honk/config.d /var/lib/honk
+sudo curl -fL --retry 3 -o /var/lib/honk/geosite.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
+sudo curl -fL --retry 3 -o /var/lib/honk/geoip.dat \
+  https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
+```
+
+### systemd service
+
+The release ships no unit. Create `/etc/systemd/system/honk-core.service`:
+
+```ini
+[Unit]
+Description=honk transparent proxy engine
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+User=root
+WorkingDirectory=/var/lib/honk
+ExecStart=/usr/local/bin/honk-core --config /etc/honk/config.dae --disable-timestamp
+ExecReload=/usr/local/bin/honk-core reload
+Restart=on-failure
+RestartSec=2s
+TimeoutStopSec=30s
+LimitNOFILE=1048576
+LimitMEMLOCK=infinity
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Do not start the service yet. The example configuration serves doona from `/usr/share/doona`, and honk refuses to start until that directory holds `index.html`; [Install doona and start](https://zakkaus.github.io/doona-docs/en/install.md#doona) starts honk.
+
+Do not add `NoNewPrivileges=yes`, capability bounding or a read-only `/proc/sys`: startup needs BPF, network administration, namespace, mount and sysctl privileges.
+
+## Write the configuration
+
+Write and install `/etc/honk/config.dae` and `/etc/honk/config.d/api.dae` as described in [Configuration](https://zakkaus.github.io/doona-docs/en/configuration.md#config), then continue below.
+
+<a name="doona"></a>
+
+## Install doona and start
+
+With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) serve bundled doona 0.1.0-beta.19 without a separate UI package. To serve the release files installed below, set `ui: /usr/share/doona`; see [Minimal configuration](https://zakkaus.github.io/doona-docs/en/minimal-configuration.md).
+
+Download a doona release archive and `SHA256SUMS`, then extract the archive into `/usr/share/doona`, the directory `ui` names. The last command must list `index.html`; without it honk does not start.
+
+- [doona releases](https://github.com/Zakkaus/doona/releases)
+
+To download, verify and unpack the program and optional fonts step by step, follow steps 1–3 of [Install on other systems](https://zakkaus.github.io/doona-docs/en/install-manual.md).
+
+```sh
+VERSION=0.1.0-beta.19   # the doona release, without v
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep -E " doona(-fonts)?-${VERSION}\.tar\.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona
+sudo tar -xzf "doona-${VERSION}.tar.gz" -C /usr/share/doona
+# Optional Noto Sans TC and SC fonts:
+if [ -f "doona-fonts-${VERSION}.tar.gz" ]; then
+    sudo tar -xzf "doona-fonts-${VERSION}.tar.gz" -C /usr/share/doona
+fi
+ls -l /usr/share/doona/index.html
+```
+
+honk reads these files from disk on each request, so replacing them later needs no restart.
+
+### Start honk
+
+Enable and start the service, then read its log:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable --now honk-core
+sudo systemctl status honk-core
+sudo journalctl -u honk-core -e
+```
+
+honk is ready when the log shows `honk-core is running`.
+
+### State database
+
+honk opens `<data_dir>/state/honk.db` by default: `global.store_subscribe` is on unless turned off, and `native_api` is enabled here. There is no switch to add. The database keeps the administrator account, the geodata sources and other state honk persists. honk creates `state/` and `honk.db` itself, and creates `/var/lib/honk` when it is missing. The user honk runs as, root here, must be able to create that directory in `/var/lib` and write to it.
+
+With `password_auth: true`, as in this example, honk does not start when the database cannot be opened. In token mode, an unavailable, unsafe or administrator-reset-locked database allows startup with a warning and no persistence. A foreign database, a newer schema or a database already used by another honk process still prevents startup. See [State database problems](https://zakkaus.github.io/doona-docs/en/troubleshooting.md#state-db) for the log messages.
+
+### First sign-in
+
+1. Open `http://192.168.1.1:9527/ui/`, the `listen` address. doona finds the API on the same origin and saves it as a backend.
+2. Password mode: the sign-in page shows Create the administrator. From the gateway or a device on the LAN, enter a username and password, confirm the password, then select Create and sign in. This creates the account and signs you in.
+3. Token mode: enter the `secret` as the token, or open a pairing link. doona removes the token from the address bar after loading.
+
+```text
+http://192.168.1.1:9527/ui/#/settings?api=http://192.168.1.1:9527&token=…
+```
+
+To replace a forgotten administrator, stop honk and run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`); the next start opens setup again.
+
+<a name="other-origin"></a>
+
+### Access through a hostname or another origin
+
+When doona is served elsewhere, the browser sends cross-origin requests, and honk accepts only origins listed in `allow_origins` and hosts listed in `allowed_hosts`. In Settings, enter the server root, such as `http://192.168.1.1:9527`, without `/api/v1`. Test connection checks discovery before saving, and saving reloads the page.
+
+For `http://owrt.lan:9527/ui/`, add the following entries to the allowlists in your existing `experimental` → `native_api` block. This is an excerpt, not a replacement configuration: retain other list entries and the existing `listen`, `secret`, `password_auth` and `ui` settings.
+
+```dae
+experimental {
+    native_api {
+        allowed_hosts: 'owrt.lan:9527'
+        allow_origins: 'http://owrt.lan:9527'
+    }
+}
+```
+
+`allowed_hosts` permits the request's `Host`: hostname and port, without a scheme or path. It does not automatically permit an `Origin`. `allow_origins` permits an HTTP origin: scheme, hostname and port, without `/ui/`, another path or a trailing slash. For multiple entries, quote each value separately and separate them with commas; do not use JSON brackets or quote the entire list.
+
+If the HTML opens but JavaScript or CSS requests return 403, inspect those requests in the browser's Network panel. Compare `Host` and `Origin`, including their ports, with these settings. Restart honk after changing them; a configuration reload is insufficient. Reload the page and check that the failed requests succeed.
+
+Administrator creation has a separate restriction: honk checks the actual connection peer for a loopback, private or link-local address. The Host and Origin allowlists do not change that restriction.
+
+A page loaded over HTTPS cannot call an API over plain HTTP; browsers block it as mixed content. Open doona from honk at `/ui/`, or put honk behind a TLS reverse proxy.
+
+Any static server can serve the extracted files, at the web root or under a prefix such as `/ui/`. The pages use hash routes (`/ui/#/activity`), so no rewrite rules are needed.
+
+A reverse proxy keeps doona and honk on one origin. Forward the exact `/api` discovery endpoint and the `/api/` subtree to honk's listener, and serve the files under `/ui/`. Preserve any configured proxy prefix for both API routes.
+
+### Distribution packages
+
+Releases include architecture-independent `deb`, `rpm`, Arch, OpenWrt 24.10 `ipk`, OpenWrt 25.12 `apk` and Alpine `apk` packages. Follow the guide for [Debian or Ubuntu](https://zakkaus.github.io/doona-docs/en/install-debian.md), [Fedora or RHEL](https://zakkaus.github.io/doona-docs/en/install-fedora.md), [Arch](https://zakkaus.github.io/doona-docs/en/install-arch.md), [OpenWrt](https://zakkaus.github.io/doona-docs/en/install-openwrt.md#openwrt-packages) or [Alpine](https://zakkaus.github.io/doona-docs/en/install-manual.md#install-alpine). OpenWrt signs its apk index; Alpine signs each apk package. Their files and keys are not interchangeable.
+
+`doona-fonts` adds optional Noto Sans TC and SC fonts. Without it, the UI uses fallback fonts and does not request the missing font files. `doona-precompressed` adds `.br` and `.gz` copies of text assets beside the originals so servers can send precompressed responses. It requires the main package of the same version, uses about 1.6 MB of storage and leaves the main package unchanged when not installed. For a manual install, extract `doona-precompressed-<version>.tar.gz` into the directory holding doona.
+
+The [OpenWrt, Alpine, Gentoo and Nix recipes](https://github.com/Zakkaus/doona/blob/main/install/README.md) are not yet in their distribution repositories. [Install on Gentoo](https://zakkaus.github.io/doona-docs/en/install-gentoo.md) uses the ebuild; the AUR `doona-bin` recipe lives in a separate repository. For local packaging, use `make install DESTDIR=… PREFIX=/usr` and `make install-fonts`.
+
+On Debian and Ubuntu, the package is named `doona-web` and installs to `/usr/share/doona-web`; its optional packages are `doona-web-fonts` and `doona-web-precompressed`. Other formats install to `/usr/share/doona`.
+
+<a name="operation"></a>
+
+## Everyday operation
+
+<a name="reload-and-restart"></a>
+
+### Reload and restart
+
+```sh
+sudo systemctl reload honk-core    # re-read the configuration
+sudo systemctl restart honk-core   # needed for native_api, interfaces, data_dir
+sudo journalctl -u honk-core -e    # look for applied or rejected
+```
+
+A reload re-reads the configuration and logs `applied` or `rejected`. honk rejects changes to restart-only settings and names the fields in the log. These include `native_api`, interfaces, TPROXY settings, `data_dir`, `log_level`, `log_file`, `check_interval`, `tcp_check_url`, `tcp_check_http_method`, `udp_check_dns`, `store_subscribe`, `nfqueue_enable`, `dns.bind`, Clash API settings, `auto_config_kernel_parameter`, `pprof_port`, `so_mark_from_dae` and `experimental.cache_file`. Switching `tls_implementation` into or out of `utls` also needs a restart.
+
+Configuration applies reloadable edits automatically. If an edit requires a restart, the API refuses it before writing; doona lists the settings and the restart command. Edit those settings on the host, then restart honk.
+
+### Update honk
+
+Download the honk-core archive from a newer [doona release](https://github.com/Zakkaus/doona/releases), install it as in [Install honk](https://zakkaus.github.io/doona-docs/en/install.md#install), then run `sudo systemctl restart honk-core` and check `honk-core --version`. Compare the version with the one [honk version](https://zakkaus.github.io/doona-docs/en/requirements.md#honk-version) names.
+
+### Update doona
+
+With `ui: /usr/share/doona`, extract the new release into that directory and reload the browser page; honk needs no restart. With `ui: embedded`, you must install a honk-core build that embeds the newer doona (see Update honk), or install the new release into `/usr/share/doona` and set `ui: /usr/share/doona`. After either change, restart honk and reload the page.
+
+### Update geodata
+
+In Settings → Geodata, Update now updates the files honk has loaded and activates changed content. Replacements for packaged files go into `data_dir`. It cannot install missing files: download them as in [Directories and geodata](https://zakkaus.github.io/doona-docs/en/install.md#directories-and-geodata), then restart honk. Identical files are not rewritten; an entirely unchanged update succeeds without activation or reload. Automatic updates are on by default and check every 24 hours; the same card turns them off or changes Interval (hours). Reset to defaults asks for confirmation, then removes all geodata overrides and values taken from the configuration file, restoring the built-in sources and defaults. The installed geodata files are listed in this card.
+
+### Where things live
+
+| Path                          | Contents                                   |
+| ----------------------------- | ------------------------------------------ |
+| `/etc/honk/config.dae`        | Main configuration                         |
+| `/etc/honk/config.d/api.dae`  | Native API block                           |
+| `/var/lib/honk/`              | `data_dir`: geodata files and runtime data |
+| `/var/lib/honk/state/honk.db` | State database                             |
+| `/usr/share/doona/`           | doona files served at `/ui/`               |
+| `journalctl -u honk-core`     | honk’s log                                 |

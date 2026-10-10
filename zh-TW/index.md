@@ -1,0 +1,39 @@
+# doona 文件
+
+doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接 honk，dae 實作同一份契約後也可對接。honk 是以 Rust 撰寫的 Linux 透明代理引擎，可自行在 `/ui/` 提供 doona，也可由任一 Web 伺服器提供。doona 顯示引擎目前的狀態，並管理節點、群組、路由規則與組態檔案。
+
+[使用範例資料體驗示範版](https://demo.daeuniverse.org/)。
+
+![活動頁](https://zakkaus.github.io/doona-docs/screenshots/zh-TW/activity-light.webp)
+
+## 原生 API 狀態
+
+本文件介紹 doona v0.1.0-beta.19。doona 使用各發行版本附帶的 honk-core 建置中的原生 API，建置來自 Glassyiris/honk `feat/native-api` 的 debug 標籤。`HONK-SOURCE.txt` 註明附帶的建置，見 [honk 版本](https://zakkaus.github.io/doona-docs/zh-TW/requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
+
+安裝範例使用 beta.19 檔名與對應的 honk 標籤 `debug.2026.10.9.native-api.2`。附件已在[發布頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)發布。
+
+## 頁面
+
+部署新的閘道器時，請先閱讀系統需求與對應系統的安裝頁，再依序閱讀「首次執行」下的最小組態、服務管理與首次登入。首次登入後，請繼續閱讀「指南」中的介面導覽。
+
+1. [系統需求](https://zakkaus.github.io/doona-docs/zh-TW/requirements.md)：核心、honk 建置、瀏覽器與建置工具。
+2. 在 [Debian 或 Ubuntu](https://zakkaus.github.io/doona-docs/zh-TW/install-debian.md)、[Fedora 或 RHEL](https://zakkaus.github.io/doona-docs/zh-TW/install-fedora.md)、[Arch Linux](https://zakkaus.github.io/doona-docs/zh-TW/install-arch.md)、[Gentoo](https://zakkaus.github.io/doona-docs/zh-TW/install-gentoo.md)、[OpenWrt](https://zakkaus.github.io/doona-docs/zh-TW/install-openwrt.md)、[Alpine](https://zakkaus.github.io/doona-docs/zh-TW/install-manual.md#install-alpine) 或[其他系統](https://zakkaus.github.io/doona-docs/zh-TW/install-manual.md)上安裝 doona 與 honk-core。
+3. [安裝詳解](https://zakkaus.github.io/doona-docs/zh-TW/install.md)：在一頁內完成手動安裝，以及從其他來源開啟 doona、發行版套件與更新。
+4. [最小組態](https://zakkaus.github.io/doona-docs/zh-TW/minimal-configuration.md)：能提供 doona 的最小組態，以及檢查方法。
+5. [服務管理](https://zakkaus.github.io/doona-docs/zh-TW/service-management.md)：以 systemd 或 procd 服務執行 honk，啟動、停止、重載並查看日誌。
+6. [首次登入](https://zakkaus.github.io/doona-docs/zh-TW/first-sign-in.md)：建立管理員並檢查系統狀態。
+7. [介面導覽](https://zakkaus.github.io/doona-docs/zh-TW/tour.md)：頁面、頂端列、詳細資料面板與變更的提交方式。
+8. [觀測流量](https://zakkaus.github.io/doona-docs/zh-TW/observe.md)：活動、系統狀態、連線、分流、DNS、日誌與事件頁面。
+9. [路由、節點與規則](https://zakkaus.github.io/doona-docs/zh-TW/routing.md)：策略群組、節點與訂閱、規則與追蹤模擬。
+10. [組態與設定](https://zakkaus.github.io/doona-docs/zh-TW/config-and-settings.md)：組態頁與設定頁。
+11. [常見操作](https://zakkaus.github.io/doona-docs/zh-TW/common-tasks.md)：常見變更的操作步驟。
+12. [組態](https://zakkaus.github.io/doona-docs/zh-TW/configuration.md)：啟用原生 API 的 honk 範例組態，以及每個 `native_api` 欄位啟用的功能。
+13. [功能](https://zakkaus.github.io/doona-docs/zh-TW/features.md)：逐項檢查 doona 功能所需的設定、各頁面讀取的資源，以及 doona 在瀏覽器中儲存的設定。
+14. [疑難排解](https://zakkaus.github.io/doona-docs/zh-TW/troubleshooting.md)：啟動錯誤、狀態資料庫、缺少原生 API、登入與唯讀的組態檔案。
+15. [開發](https://zakkaus.github.io/doona-docs/zh-TW/development.md)：建置與測試 doona、原始碼配置與 API 契約。
+
+## 連結
+
+- [doona 發布頁](https://github.com/Zakkaus/doona/releases)：下載 honk-core 建置
+- [honk 快速入門](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
+- [doona issues](https://github.com/Zakkaus/doona/issues)；引擎問題請回報給 [honk](https://github.com/daeuniverse/honk) 或 [dae](https://github.com/daeuniverse/dae)
