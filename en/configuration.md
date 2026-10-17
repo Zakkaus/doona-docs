@@ -1,0 +1,169 @@
+<a name="config"></a>
+
+# Configuration
+
+The main file is `/etc/honk/config.dae`; its `include` loads every `.dae` file in `config.d/`, with relative paths resolved against the main file's directory.
+
+![Main configuration includes API and routing files, with listener secrets outside writable sources](https://zakkaus.github.io/doona-docs/images/include-boundary.svg)
+
+Keep the API in `config.d/api.dae` and any added routing files separate from listener secrets. Configuration writes require `config_write: true`, complete text and a writable source; the dashed boundary marks a listener-secret file, not a file doona can write back.
+
+## Main file
+
+```dae
+# /etc/honk/config.dae
+include {
+    config.d/*.dae
+}
+
+global {
+    # The interface LAN clients reach the gateway through.
+    # Remove it to proxy only the gateway's own traffic.
+    lan_interface: br-lan
+    # Follow the IPv4 default-route interface.
+    wan_interface: auto
+    data_dir: '/var/lib/honk'
+    log_level: info
+    dial_mode: domain
+    auto_config_kernel_parameter: true
+    # Resolves proxy and download hostnames without passing through honk.
+    bootstrap_resolver: '1.1.1.1:53'
+}
+
+subscription {
+    # Replace with your provider's subscription URL.
+    my_sub: 'https://subscription.example/sub'
+}
+
+node {
+    # An optional static node; replace or remove it.
+    backup: 'socks5://192.0.2.2:1080'
+}
+
+group {
+    proxy {
+        filter: subtag('my_sub')
+        filter: name('backup')
+        policy: min_moving_avg
+    }
+}
+
+routing {
+    # Keep private destinations off the proxy; this also bypasses private DNS servers.
+    dip(geoip: private) -> direct(must)
+    domain(geosite: cn) -> direct
+    dip(geoip: cn) -> direct
+    fallback: proxy
+}
+
+dns {
+    upstream {
+        local_dns: 'udp://223.5.5.5:53' -> direct
+        remote_dns: 'https://dns.google/dns-query' -> proxy
+    }
+    routing {
+        request {
+            qname(geosite: cn) -> local_dns
+            fallback: remote_dns
+        }
+    }
+}
+
+assets {
+    geodata {
+        geosite: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat'
+        geoip: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat'
+    }
+}
+```
+
+- `lan_interface`: replace `br-lan` with the interface LAN clients use to reach the gateway. Remove this field to proxy only the gateway’s own traffic. `wan_interface: auto` also covers the gateway’s own traffic.
+- `data_dir`: the runtime root, `/var/lib/honk` by default. It holds the geodata files and the state database `state/honk.db`.
+- `bootstrap_resolver`: resolves proxy server names and geodata download hosts without honk intercepting the query. A direct download from a URL with a hostname needs it; by default downloads follow the routing rules.
+- `subscription` and `node`: replace them with your own. doona’s Nodes page adds more later.
+- `group proxy`: the subscription's nodes plus the static node; `min_moving_avg` is an alias for honk's URLTest policy, which selects by moving-average latency and respects the switch tolerance.
+- `routing`: private destinations first with `direct(must)`, then Chinese mainland domains and IP addresses directly, everything else through `proxy`.
+- `dns`: Chinese mainland domains go to a local resolver, the rest to DNS over HTTPS through the proxy.
+- `assets.geodata`: final HTTP(S) download URLs. Without a state database, manual updates need configured URLs for the loaded assets. With a state database, startup seeds the stored URLs from these fields; later changes in Settings last until the next startup.
+
+## API file
+
+```dae
+# /etc/honk/config.d/api.dae
+# Every native_api field needs a restart; a reload rejects changes.
+experimental {
+    native_api {
+        enabled: true
+        # The gateway's LAN address. The default, 127.0.0.1:9527,
+        # is reachable only from the gateway itself.
+        listen: '192.168.1.1:9527'
+        # Administrator password login. For token mode, delete this
+        # line and set secret instead; the two cannot be combined.
+        password_auth: true
+        # secret: 'replace-with-a-long-random-token'
+        config_write: true
+        # Debian/Ubuntu doona-web: /usr/share/doona-web.
+        # On other platforms, use the package's installation path.
+        ui: '/usr/share/doona'
+        # On by default; listed so the names are known.
+        record_flows: true
+        record_traffic: true
+        record_memory: true
+        record_logs: true
+        record_dns_log: true
+        # Asset download URLs belong to assets.geodata in the main file.
+    }
+}
+```
+
+Replace `192.168.1.1` with the gateway's LAN address. A file containing `secret` in `native_api` or `clash_api`, or any text equal to a listener secret of at least 8 bytes, is read-only, including its groups; honk masks secrets of at least 8 bytes, and writing masked text would lose them.
+
+Adding nodes and subscriptions writes the main file, so keep it free of secrets.
+
+When doona is opened from another origin, such as a TLS reverse proxy, also add:
+
+```dae
+experimental {
+    native_api {
+        # Only when doona is opened from another origin, such as a TLS reverse proxy.
+        allow_origins: 'https://panel.example'
+        allowed_hosts: 'panel.example'
+    }
+}
+```
+
+### native_api fields
+
+`allow_anonymous_loopback: true` with a loopback `listen` admits read requests without a token. Configuration writes and protected settings changes still require credentials. Use it for local development only.
+
+| Field                                        | Default            | What it enables in doona                                                                                                                |
+| -------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`                                    | `false`            | The API listener. Requires `secret`, `password_auth: true`, or `allow_anonymous_loopback: true` with a loopback `listen`.                                                                                                  |
+| `listen`                                     | `'127.0.0.1:9527'` | The address doona connects to. A numeric IP and a port; the default is reachable only from the gateway.                                 |
+| `password_auth`                              | `false`            | Sign-in with an administrator username and password. Cannot be combined with `secret` or `allow_anonymous_loopback`.                                                  |
+| `secret`                                     | `''`               | Token mode: doona asks for this token. No minimum length; use visible ASCII without whitespace or commas. Cannot be combined with `password_auth`.                                                         |
+| `config_write`                               | `false`            | Editing and adding sources, managing nodes, subscriptions, groups and rules, and geodata updates. Requires `password_auth` or `secret`. |
+| `ui`                                         | `''`               | Serves doona at `/ui/`. A directory must hold `index.html`; a missing directory stops startup. `embedded` requires `native-ui`, included in release builds, which embed doona at packaging time.                                        |
+| `record_flows`                               | `true`             | Flow records on Connections and Rules, on demand since beta.9. `false` also disables the runtime switch.                         |
+| `record_traffic`                             | `true`             | Traffic history charts.                                                                                                                 |
+| `record_memory`                              | `true`             | Memory history charts.                                                                                                                  |
+| `record_logs`                                | `true`             | The Logs page.                                                                                                                          |
+| `record_dns_log`                             | `true`             | The DNS log.                                                                                                                            |
+| `geosite_download_url`, `geoip_download_url` | `''`               | Legacy aliases for `assets.geodata.geosite` and `assets.geodata.geoip`, accepted with warnings. Use `assets.geodata` in new configurations. |
+| `allow_origins`, `allowed_hosts`             | empty              | doona served from another origin or through a reverse proxy.                                                                            |
+
+Every `native_api` field needs a restart. A reload rejects a change to one and keeps the running listener.
+
+With the state database open, Settings stores geodata sources, the update schedule and Verify checksum in that database, not in `native_api`. The switch is on by default; a 404 for a missing `.sha256sum` already allows an unverified file. Turn it off only for a trusted mirror whose checksum URL returns another error; see [update failures](https://zakkaus.github.io/doona-docs/en/troubleshooting.md#geodata-update).
+
+For geodata problems, see [sources cannot be edited](https://zakkaus.github.io/doona-docs/en/troubleshooting.md#geodata-sources), [reason unsafe](https://zakkaus.github.io/doona-docs/en/troubleshooting.md#state-unsafe) and [update failures](https://zakkaus.github.io/doona-docs/en/troubleshooting.md#geodata-update).
+
+## Install the files
+
+```sh
+sudo install -d -m 0700 /etc/honk /etc/honk/config.d /var/lib/honk
+sudo install -m 0600 config.dae /etc/honk/config.dae
+sudo install -m 0600 api.dae /etc/honk/config.d/api.dae
+```
+
+Install doona next, as in [Install doona and start](https://zakkaus.github.io/doona-docs/en/install.md#doona); honk starts after that.

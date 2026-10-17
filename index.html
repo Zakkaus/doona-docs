@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>doona</title>
+<link rel="icon" href="/doona-docs/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/doona-docs/site.css?v=584e5489c1">
+<script>
+try {
+  const theme = localStorage.getItem('doona-docs-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+} catch {}
+</script>
+<script type="module" src="/doona-docs/site.js?v=342d2fa644"></script>
+<script>
+location.replace("/doona-docs/" + (function () {
+  try {
+    var chosen = localStorage.getItem('doona-docs-locale');
+    if (["en","zh-CN","zh-TW"].indexOf(chosen) >= 0) return chosen;
+  } catch (e) {}
+  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+  for (var i = 0; i < tags.length; i++) {
+    var tag = String(tags[i]).toLowerCase();
+    if (/^zh(-|$)/.test(tag)) return /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
+    if (/^en(-|$)/.test(tag)) break;
+  }
+  return 'en';
+})() + '/');
+</script>
+</head>
+<body>
+<main id="content" class="choose">
+<a class="brand" href="/doona-docs/"><img src="/doona-docs/logo.svg" alt="" width="28" height="28"><span>doona</span></a>
+<ul><li><a href="/doona-docs/en/" lang="en" hreflang="en">English</a></li><li><a href="/doona-docs/zh-CN/" lang="zh-CN" hreflang="zh-CN">简体中文</a></li><li><a href="/doona-docs/zh-TW/" lang="zh-TW" hreflang="zh-TW">繁體中文</a></li></ul>
+</main>
+</body>
+</html>
