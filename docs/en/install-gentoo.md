@@ -110,18 +110,40 @@ With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona be
 
 The ebuild is keyworded testing (`~amd64`, `~arm64` and others), so accept it for this package first. Replace `~amd64` with your architecture’s keyword.
 
-```sh tab="sudo"
+For doona lite, use the archive; there are no lite distribution packages yet. Follow [Install doona lite](lite.md#lite-install), set `ui: /usr/share/doona-lite`, then continue with the honk steps on this page. Choose the tab for your edition and shell.
+
+```sh tab="Standard edition (sudo)"
 sudo mkdir -p /etc/portage/package.accept_keywords
 echo 'net-proxy/doona ~amd64' | sudo tee /etc/portage/package.accept_keywords/doona
 sudo emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
 ```
 
-```sh tab="root"
+```sh tab="Standard edition (root)"
 mkdir -p /etc/portage/package.accept_keywords
 echo 'net-proxy/doona ~amd64' > /etc/portage/package.accept_keywords/doona
 emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite (sudo)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
+```
+
+```sh tab="doona lite (root)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 Portage ends with `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`, and `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds doona’s web files and documentation; it installs no service. Set `USE=-fonts` for `net-proxy/doona` to leave out the Noto Sans TC and SC fonts.

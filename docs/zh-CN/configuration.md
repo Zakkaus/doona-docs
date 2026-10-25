@@ -145,7 +145,7 @@ experimental {
 | `password_auth`                              | `false`            | 以管理员用户名与密码登录，不能与 `secret` 或 `allow_anonymous_loopback` 同时使用。                                               |
 | `secret`                                     | `''`               | Token 模式，doona 会要求输入此 Token。没有最短长度限制；只接受不含空白或逗号的可见 ASCII。不能与 `password_auth` 同时使用。                            |
 | `config_write`                               | `false`            | 编辑与新建配置文件，管理节点、订阅、组与规则，以及更新地理数据。需要 `password_auth` 或 `secret`。 |
-| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目录中必须有 `index.html`；目录不存在时 honk 无法启动。`embedded` 需要 `native-ui`；发布构建已包含此功能，并在打包时嵌入 doona。                      |
+| `ui`                                         | `''`               | 在 `/ui/` 提供 doona。目录中必须有 `index.html`；目录不存在时 honk 无法启动。`embedded` 需要 `native-ui`；发布构建已包含此功能，并在打包时嵌入 doona。 doona lite 的压缩包安装到 `/usr/share/doona-lite`，并设置 `ui: /usr/share/doona-lite`。`ui: embedded` 仅提供标准版。修改 `ui` 后必须重启 honk。 |
 | `record_flows`                               | `true`             | 从 beta.9 起，连接页和规则页按需显示流程记录。设为 `false` 时运行时开关也无法开启。                               |
 | `record_traffic`                             | `true`             | 流量历史图表。                                                                                     |
 | `record_memory`                              | `true`             | 内存历史图表。                                                                                     |

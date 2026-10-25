@@ -36,6 +36,8 @@ Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r
 
 ## Package routes
 
+For doona lite, use the [lite archive installation](lite.md#lite-install); lite has no distribution packages yet. The package commands below install the standard edition.
+
 In a root shell, download the packages into `/tmp/doona`. Choose the commands for your package manager. Both install the web files into `/usr/share/doona`.
 
 OpenWrt 25.12 signs the index, not the individual packages. Keep `doona-openwrt.adb` and the packages together, then install the public key and use that index:
@@ -115,10 +117,22 @@ With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona be
 
 Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
 
-```sh
+For doona lite, use the archive; there are no lite distribution packages yet. Follow [Install doona lite](lite.md#lite-install), set `ui: /usr/share/doona-lite`, then continue with the honk steps on this page. Choose the tab for your edition and shell.
+
+```sh tab="Standard edition"
 mkdir -p /usr/share/doona
 tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 `ls` prints a line ending in `/usr/share/doona/index.html`. The optional font archive, `doona-fonts-${VERSION}.tar.gz`, adds the Noto Sans TC and SC fonts; skip it where storage is short.

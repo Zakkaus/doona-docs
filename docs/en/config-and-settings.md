@@ -6,6 +6,8 @@ English / [简体中文](../zh-CN/config-and-settings.md) / [繁體中文](../zh
 
 Configuration reads, validates and applies honk's configuration files. Settings manages backend profiles, temporary runtime overrides, geodata, appearance and latency probes. Activity's [Getting started](observe.md#activity) card links to the setup steps.
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 <a name="config-page"></a>
 
 ## Open the Configuration page

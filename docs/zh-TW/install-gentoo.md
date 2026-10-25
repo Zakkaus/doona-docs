@@ -110,18 +110,40 @@ ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 該 ebuild 的關鍵字為測試分支（`~amd64`、`~arm64` 等），需要先為這個套件接受測試關鍵字。請把 `~amd64` 換成本機架構的關鍵字。
 
-```sh tab="sudo"
+doona lite 使用壓縮檔，暫不提供發行版套件。請按[安裝 doona lite](lite.md#lite-install)操作，設定 `ui: /usr/share/doona-lite`，然後繼續本頁的 honk 步驟。選擇所需版本與 shell 對應的分頁。
+
+```sh tab="標準版 (sudo)"
 sudo mkdir -p /etc/portage/package.accept_keywords
 echo 'net-proxy/doona ~amd64' | sudo tee /etc/portage/package.accept_keywords/doona
 sudo emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
 ```
 
-```sh tab="root"
+```sh tab="標準版 (root)"
 mkdir -p /etc/portage/package.accept_keywords
 echo 'net-proxy/doona ~amd64' > /etc/portage/package.accept_keywords/doona
 emerge --ask net-proxy/doona
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite (sudo)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
+```
+
+```sh tab="doona lite (root)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 Portage 最後輸出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件包含 doona 的網頁檔案與文件，不安裝任何服務。如不需要 Noto Sans TC 與 SC 字型，請為 `net-proxy/doona` 設定 `USE=-fonts`。

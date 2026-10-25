@@ -6,6 +6,8 @@ English / [简体中文](../zh-CN/routing.md) / [繁體中文](../zh-TW/routing.
 
 Policies manages group selection and membership. Nodes manages sources, subscriptions and probes. Rules edits routing and DNS rules and simulates routes with Trace.
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 <a name="policies"></a>
 
 ## Policy groups

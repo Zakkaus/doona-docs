@@ -4,6 +4,8 @@ English / [简体中文](../zh-CN/common-tasks.md) / [繁體中文](../zh-TW/com
 
 # Common tasks
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 <a name="one-site"></a>
 
 ## Send one site through a proxy from a live connection

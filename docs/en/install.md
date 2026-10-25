@@ -102,7 +102,9 @@ Download a doona release archive and `SHA256SUMS`, then extract the archive into
 
 To download, verify and unpack the program and optional fonts step by step, follow steps 1–3 of [Install on other systems](install-manual.md).
 
-```sh
+For doona lite, use the archive; there are no lite distribution packages yet. Follow [Install doona lite](lite.md#lite-install), set `ui: /usr/share/doona-lite`, then continue with the honk steps on this page. Choose the tab for your edition and shell.
+
+```sh tab="Standard edition"
 VERSION=0.1.0-beta.19   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
@@ -114,6 +116,16 @@ if [ -f "doona-fonts-${VERSION}.tar.gz" ]; then
     sudo tar -xzf "doona-fonts-${VERSION}.tar.gz" -C /usr/share/doona
 fi
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 honk reads these files from disk on each request, so replacing them later needs no restart.

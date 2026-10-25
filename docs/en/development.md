@@ -56,3 +56,13 @@ The screenshot tool creates `docs/screenshots/` when run; screenshots are not pa
 [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) records the pin of [openapi.yaml](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/openapi.yaml). After moving the pin, run `pnpm gen:api` to regenerate [src/api/types.ts](https://github.com/Zakkaus/doona/blob/main/src/api/types.ts). `node tools/conformance.mjs http://router:9527 --token …` checks a live backend's discovery, capabilities and read-only responses against the contract without sending a mutation.
 
 See [CHANGELOG.md](https://github.com/Zakkaus/doona/blob/main/CHANGELOG.md) for release notes.
+
+## doona lite
+
+The [doona lite source](https://github.com/Zakkaus/doona/tree/main/apps/lite) is in `apps/lite`. From the doona repository root, after installing the repository dependencies, build it with:
+
+```sh
+pnpm --dir apps/lite build
+```
+
+The output is `apps/lite/dist`.

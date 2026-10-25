@@ -192,6 +192,8 @@ The honk-core `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `e
 ui: embedded
 ```
 
+For doona lite, install its archive into `/usr/share/doona-lite` and set `ui: /usr/share/doona-lite`. `ui: embedded` is the standard edition only. Changing `ui` requires restarting honk.
+
 With `ui: embedded`, the standalone UI package is optional. The bundled UI omits Noto Sans TC/SC, so the browser uses system fonts. To serve external UI files or those fonts, install `doona` and `doona-fonts` and point `ui` at their installation directory, such as `/usr/share/doona`; on Debian or Ubuntu, use `doona-web`, `doona-web-fonts` and `/usr/share/doona-web`.
 
 ## 5. Check the configuration

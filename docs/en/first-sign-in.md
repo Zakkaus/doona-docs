@@ -4,6 +4,8 @@ English / [简体中文](../zh-CN/first-sign-in.md) / [繁體中文](../zh-TW/fi
 
 This page opens doona in a browser, creates the administrator account and checks that doona shows the running honk. honk must be running, as [Service management](service-management.md) leaves it.
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 ## Before you start
 
 - A computer or phone on the LAN, or the gateway itself. honk accepts the administrator setup only from loopback, private or link-local addresses.

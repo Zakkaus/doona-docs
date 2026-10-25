@@ -6,6 +6,8 @@
 
 策略管理群組選擇與成員。節點管理來源、訂閱與探測。規則編輯路由與 DNS 規則，並用追蹤模擬檢查路由。
 
+本頁介紹標準版；doona lite 請參閱 [doona lite](lite.md)。
+
 <a name="policies"></a>
 
 ## 策略群組

@@ -228,3 +228,11 @@ With `ui: embedded`, the UI version comes from the honk binary. The honk `debug.
 ## Sign-in over plain HTTP fails with crypto.randomUUID is not a function
 
 doona before 0.1.0-beta.8 needs a secure context for this call, which plain HTTP on the LAN is not. Upgrade doona to 0.1.0-beta.8 or later.
+
+<a name="lite-trouble"></a>
+
+## doona lite
+
+- honk does not start and reports a missing `index.html`: check that `ui` points at `/usr/share/doona-lite` and that the directory contains the extracted [lite files](lite.md#lite-install).
+- `/ui/` still shows the other edition after changing `ui`: restart honk, then reload the page. Reloading the configuration does not apply `native_api` changes.
+- Cross-origin requests return 403: check the [sign-in and origin settings](#sign-in). For mixed content, use the same origin or HTTPS for the backend as described in [Access through a hostname or another origin](install.md#other-origin).

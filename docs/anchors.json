@@ -66,5 +66,22 @@
   "dns-resolution": "common-tasks",
   "update-geodata": "common-tasks",
   "reload-honk": "common-tasks",
-  "changed-on-disk": "common-tasks"
+  "changed-on-disk": "common-tasks",
+  "choose-edition": "index",
+  "editions": "editions",
+  "editions-compare": "editions",
+  "editions-switch": "editions",
+  "lite": "lite",
+  "lite-install": "lite",
+  "lite-switch": "lite",
+  "lite-connect": "lite-connect",
+  "lite-tasks": "lite-tasks",
+  "lite-trouble": "troubleshooting",
+  "lite-task-import": "lite-tasks",
+  "lite-task-subscription": "lite-tasks",
+  "lite-task-group": "lite-tasks",
+  "lite-task-rule": "lite-tasks",
+  "lite-task-dns": "lite-tasks",
+  "lite-task-setting": "lite-tasks",
+  "lite-task-share": "lite-tasks"
 }

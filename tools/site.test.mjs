@@ -178,10 +178,10 @@ describe('icons', () => {
   });
 });
 
-// The site script over a sidebar and phone menu that each hold the install and guides sections, with storage holding
+// The site script over a sidebar and phone menu that each hold the install and standard sections, with storage holding
 // `stored`, or throwing it when it is an Error.
 function navSections(stored, current) {
-  const details = ['install', 'guides', 'install', 'guides'].map(group => ({
+  const details = ['install', 'standard', 'install', 'standard'].map(group => ({
     dataset: {group},
     open: true,
     querySelector: selector => (selector === '[aria-current="page"]' && group === current ? {} : null),
@@ -234,33 +234,34 @@ describe('navigation', () => {
   });
 
   it('keeps the pages in section order', () => {
-    expect(Object.keys(groups)).toEqual(['start', 'install', 'firstRun', 'guides', 'contributing']);
-    expect(groups.start).toEqual(['index', 'requirements']);
-    expect(groups.install.at(-1)).toBe('install');
+    expect(Object.keys(groups)).toEqual(['start', 'install', 'standard', 'lite', 'reference']);
+    expect(groups.start).toEqual(['index', 'editions', 'requirements']);
+    expect(groups.install.slice(-2)).toEqual(['minimal-configuration', 'service-management']);
+    expect(groups.lite).toEqual(['lite', 'lite-connect', 'lite-tasks']);
     expect(pages).toEqual(Object.values(groups).flat());
     const listed = [...site.get('llms.txt').text.matchAll(/\/([a-zA-Z-]+)\/([a-z-]+)\.md\)/g)];
     for (const locale of locales) expect(listed.filter(match => match[1] === locale).map(match => match[2])).toEqual(pages);
   });
 
   it('remembers the sections the visitor closes', () => {
-    const {sections: open, saved} = navSections(JSON.stringify(['guides']));
-    expect(open()).toEqual({install: true, guides: false});
+    const {sections: open, saved} = navSections(JSON.stringify(['standard']));
+    expect(open()).toEqual({install: true, standard: false});
     open.toggle('install', false);
-    expect(open()).toEqual({install: false, guides: false});
-    expect(JSON.parse(saved.at(-1))).toEqual(['guides', 'install']);
-    open.toggle('guides', true);
+    expect(open()).toEqual({install: false, standard: false});
+    expect(JSON.parse(saved.at(-1))).toEqual(['standard', 'install']);
+    open.toggle('standard', true);
     expect(JSON.parse(saved.at(-1))).toEqual(['install']);
   });
 
   it('opens the section holding the current page even when it was closed', () => {
-    const {sections: open, saved} = navSections(JSON.stringify(['install', 'guides']), 'guides');
-    expect(open()).toEqual({install: false, guides: true});
+    const {sections: open, saved} = navSections(JSON.stringify(['install', 'standard']), 'standard');
+    expect(open()).toEqual({install: false, standard: true});
     expect(saved).toEqual([]);
   });
 
   it('leaves every section open when storage throws', () => {
     const {sections: open} = navSections(new Error('SecurityError'));
-    expect(open()).toEqual({install: true, guides: true});
+    expect(open()).toEqual({install: true, standard: true});
     expect(() => open.toggle('install', false)).not.toThrow();
   });
 

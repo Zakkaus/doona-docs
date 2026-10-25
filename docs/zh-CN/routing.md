@@ -6,6 +6,8 @@
 
 策略管理组选择与成员。节点管理来源、订阅与探测。规则编辑路由与 DNS 规则，并用追踪模拟检查路由。
 
+本页介绍标准版；doona lite 请参阅 [doona lite](lite.md)。
+
 <a name="policies"></a>
 
 ## 策略组

@@ -36,6 +36,8 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 ## 软件包安装方式
 
+doona lite 暂无发行版软件包，请使用 [lite 压缩包安装步骤](lite.md#lite-install)。以下软件包命令安装标准版。
+
 在 root shell 中把软件包下载到 `/tmp/doona`，选择适合当前软件包管理器的命令。两种方式都将网页文件安装到 `/usr/share/doona`。
 
 OpenWrt 25.12 只签名索引，不签名单个软件包。将 `doona-openwrt.adb` 与软件包放在同一目录，安装公钥后通过索引安装：
@@ -115,10 +117,22 @@ doona-0.1.0-beta.19.tar.gz: OK
 
 把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
 
-```sh
+doona lite 使用压缩包，暂不提供发行版软件包。请按[安装 doona lite](lite.md#lite-install)操作，设置 `ui: /usr/share/doona-lite`，然后继续本页的 honk 步骤。选择所需版本与 shell 对应的标签页。
+
+```sh tab="标准版"
 mkdir -p /usr/share/doona
 tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 `ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。可选的字体归档文件 `doona-fonts-${VERSION}.tar.gz` 包含 Noto Sans TC 与 SC 字体，存储空间不足时可以不装。

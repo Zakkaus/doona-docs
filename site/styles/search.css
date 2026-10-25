@@ -138,9 +138,9 @@ body:has(#docs-search[open]) { overflow: hidden; }
 /* Each section starts its gradient from its own palette colour, so the cards of a query's results tell their sections
    apart; all of them end in pine. */
 .search-card[data-group='install'] { --card-tint: var(--rp-foam); }
-.search-card[data-group='firstRun'] { --card-tint: var(--rp-rose); }
-.search-card[data-group='guides'] { --card-tint: var(--rp-love); }
-.search-card[data-group='contributing'] { --card-tint: var(--rp-subtle); }
+.search-card[data-group='lite'] { --card-tint: var(--rp-rose); }
+.search-card[data-group='standard'] { --card-tint: var(--rp-love); }
+.search-card[data-group='reference'] { --card-tint: var(--rp-subtle); }
 .card-art .icon { width: 64px; height: 64px; }
 /* A logo fills its whole viewBox, where a Spectrum icon leaves a margin, so a logo draws smaller to match. */
 .card-art .logo { width: 48px; height: 48px; }
