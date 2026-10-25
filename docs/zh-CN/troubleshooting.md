@@ -228,3 +228,11 @@ Service worker 在更新完成前会提供缓存的版本。请刷新页面一�
 ## 通过 HTTP 登录时出现 crypto.randomUUID is not a function
 
 0.1.0-beta.8 之前的 doona 需要安全上下文才能调用此函数，而局域网上的纯 HTTP 不属于安全上下文。请将 doona 升级到 0.1.0-beta.8 或更高版本。
+
+<a name="lite-trouble"></a>
+
+## doona lite
+
+- honk 因缺少 `index.html` 而无法启动：检查 `ui` 是否指向 `/usr/share/doona-lite`，且目录中包含已解压的 [lite 文件](lite.md#lite-install)。
+- 修改 `ui` 后，`/ui/` 仍显示另一个版本：重启 honk，再重新加载页面。重载配置不能使 `native_api` 修改生效。
+- 跨来源请求返回 403：检查[登录与来源设置](#sign-in)。混合内容问题请按[通过主机名或其他来源访问](install.md#other-origin)使用同源地址，或为后端启用 HTTPS。

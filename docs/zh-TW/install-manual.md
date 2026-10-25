@@ -19,6 +19,8 @@
 
 ## 在 Alpine 上安裝
 
+doona lite 暫無發行版套件，請使用 [lite 壓縮檔安裝步驟](lite.md#lite-install)。以下套件命令安裝標準版。
+
 Alpine 的 `.apk` 檔案不能與 OpenWrt 的混用。在目前目錄下載 Alpine 套件、發行公鑰與總和檢查碼：
 
 ```sh
@@ -78,16 +80,38 @@ doona-0.1.0-beta.19.tar.gz: OK
 
 把封存檔解壓縮到 `/usr/share/doona`，honk 從這個目錄提供 doona。
 
-```sh tab="sudo"
+doona lite 使用壓縮檔，暫不提供發行版套件。請按[安裝 doona lite](lite.md#lite-install)操作，設定 `ui: /usr/share/doona-lite`，然後繼續本頁的 honk 步驟。選擇所需版本與 shell 對應的分頁。
+
+```sh tab="標準版 (sudo)"
 sudo mkdir -p /usr/share/doona
 sudo tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
 ```
 
-```sh tab="root"
+```sh tab="標準版 (root)"
 mkdir -p /usr/share/doona
 tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite (sudo)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
+```
+
+```sh tab="doona lite (root)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 `ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。

@@ -56,3 +56,13 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) 记录 [openapi.yaml](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/openapi.yaml) 的钉点。移动钉点后执行 `pnpm gen:api` 重新生成 [src/api/types.ts](https://github.com/Zakkaus/doona/blob/main/src/api/types.ts)。`node tools/conformance.mjs http://router:9527 --token …` 按契约检查线上后端的发现端点、能力与只读响应，不发送任何修改。
 
 版本变更见 [CHANGELOG.md](https://github.com/Zakkaus/doona/blob/main/CHANGELOG.md)。
+
+## doona lite
+
+[doona lite 源码](https://github.com/Zakkaus/doona/tree/main/apps/lite)位于 `apps/lite`。安装仓库依赖后，在 doona 仓库根目录执行：
+
+```sh
+pnpm --dir apps/lite build
+```
+
+构建输出为 `apps/lite/dist`。

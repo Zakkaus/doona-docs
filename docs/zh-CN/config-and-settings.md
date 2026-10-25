@@ -6,6 +6,8 @@
 
 「配置」页读取、校验并应用 honk 的配置文件。「设置」页管理配置方案、临时运行时覆盖、地理数据、外观与延迟探测。「活动」的[开始使用](observe.md#activity)卡片链接到设置步骤。
 
+本页介绍标准版；doona lite 请参阅 [doona lite](lite.md)。
+
 <a name="config-page"></a>
 
 ## 打开「配置」页

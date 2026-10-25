@@ -54,14 +54,36 @@ doona-web_0.1.0-beta.19-1_all.deb: OK
 
 設定 `ui: embedded` 時，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供內建的 doona 0.1.0-beta.19，不需單獨安裝介面套件。也可以設定 `ui: /usr/share/doona-web`，提供此處安裝的 beta.19 套件，詳見[最小組態](minimal-configuration.md)。
 
-```sh tab="sudo"
+doona lite 使用壓縮檔，暫不提供發行版套件。請按[安裝 doona lite](lite.md#lite-install)操作，設定 `ui: /usr/share/doona-lite`，然後繼續本頁的 honk 步驟。選擇所需版本與 shell 對應的分頁。
+
+```sh tab="標準版 (sudo)"
 sudo apt install ./doona-web_${VERSION}-1_all.deb
 ls -l /usr/share/doona-web/index.html
 ```
 
-```sh tab="root"
+```sh tab="標準版 (root)"
 apt install ./doona-web_${VERSION}-1_all.deb
 ls -l /usr/share/doona-web/index.html
+```
+
+```sh tab="doona lite (sudo)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
+```
+
+```sh tab="doona lite (root)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 `ls` 輸出一行以 `/usr/share/doona-web/index.html` 結尾的內容。`doona-web` 套件將 doona 的網頁檔案安裝至 `/usr/share/doona-web`，文件安裝至 `/usr/share/doc/doona-web`，不安裝任何服務。

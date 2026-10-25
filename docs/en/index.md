@@ -4,6 +4,19 @@ English / [简体中文](../zh-CN/index.md) / [繁體中文](../zh-TW/index.md)
 
 doona is a static web UI for the native API that the daeuniverse engines share: honk today, dae once it implements the same contract. honk is a Rust transparent-proxy engine for Linux gateways; it serves doona itself at `/ui/`, or any web server can. doona shows what the engine is doing and manages nodes, groups, routing rules and configuration files.
 
+<a name="choose-edition"></a>
+
+## Choose an edition
+
+| Standard edition | doona lite |
+| --- | --- |
+| For managing configuration and observing traffic | For beginners editing configuration |
+| Traffic pages, configuration forms, source editor and Trace | Nodes, subscriptions, groups, routing, DNS and global settings |
+| [Install the standard edition](install.md#doona) | [Install doona lite](lite.md#lite-install) |
+| [Standard demo](https://demo.daeuniverse.org/) | [lite demo](https://demo.daeuniverse.org/lite/) |
+
+See [Standard edition and doona lite](editions.md) for features and switching.
+
 [Try the demo with sample data](https://demo.daeuniverse.org/).
 
 ![The activity page](../screenshots/en/activity-light.webp)
@@ -16,23 +29,13 @@ Installation examples use beta.19 asset names and the matching honk tag `debug.2
 
 ## Pages
 
-For a new gateway, read Requirements and the install page for your system, then the First run pages in order: Minimal configuration, Service management and First sign-in. After the first sign-in, continue with the Interface tour in Guides.
+For a new gateway, start with Requirements, install honk and an edition, then follow Minimal configuration and Service management. Continue with First sign-in for the standard edition or Connect doona lite.
 
-1. [Requirements](requirements.md): the kernel, the honk build, browsers and build tools.
-2. Install doona and honk-core on [Debian or Ubuntu](install-debian.md), [Fedora or RHEL](install-fedora.md), [Arch Linux](install-arch.md), [Gentoo](install-gentoo.md), [OpenWrt](install-openwrt.md), [Alpine](install-manual.md#install-alpine) or [another system](install-manual.md).
-3. [Installation details](install.md): the manual installation in one page, doona on another origin, distribution packages and updates.
-4. [Minimal configuration](minimal-configuration.md): the smallest configuration that serves doona, and how to check it.
-5. [Service management](service-management.md): run honk as a systemd or procd service; start, stop, reload and read the log.
-6. [First sign-in](first-sign-in.md): create the administrator and check System status.
-7. [Interface tour](tour.md): pages, the top bar, panels and how changes are held, applied or saved.
-8. [Watching traffic](observe.md): Activity, System status, Connections, Routing log, DNS, Logs and Events.
-9. [Routing, nodes and rules](routing.md): policy groups, nodes and subscriptions, rules and Trace.
-10. [Config and settings](config-and-settings.md): the Configuration and Settings pages.
-11. [Common tasks](common-tasks.md): step-by-step procedures for frequent changes.
-12. [Configuration](configuration.md): an example honk configuration with the native API, and what each `native_api` field enables.
-13. [Features](features.md): check each doona feature against the settings it needs, the resources each page reads, and the settings doona keeps in the browser.
-14. [Troubleshooting](troubleshooting.md): startup errors, the state database, a missing native API, sign-in and read-only sources.
-15. [Development](development.md): build and test doona, the source layout and the API contract.
+1. Start: [Standard edition and doona lite](editions.md), [Requirements](requirements.md).
+2. Install and first run: [Install on Debian or Ubuntu](install-debian.md), [Install on Fedora or RHEL](install-fedora.md), [Install on Arch Linux](install-arch.md), [Install on Gentoo](install-gentoo.md), [Install on OpenWrt](install-openwrt.md), [Install on other systems](install-manual.md), [Installation details](install.md), [Minimal configuration](minimal-configuration.md), [Service management](service-management.md).
+3. Standard edition: [First sign-in](first-sign-in.md), [Interface tour](tour.md), [Watching traffic](observe.md), [Routing, nodes and rules](routing.md), [Config and settings](config-and-settings.md), [Common tasks](common-tasks.md), [Features](features.md).
+4. doona lite: [doona lite](lite.md), [Connect doona lite](lite-connect.md), [Common tasks in doona lite](lite-tasks.md).
+5. Reference: [Configuration](configuration.md), [Troubleshooting](troubleshooting.md), [Development](development.md).
 
 ## Links
 

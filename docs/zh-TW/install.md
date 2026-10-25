@@ -102,7 +102,9 @@ WantedBy=multi-user.target
 
 如需逐步下載、驗證並解壓縮程式與選用字型，請依[在其他系統上安裝](install-manual.md)的第 1 至 3 步操作。
 
-```sh
+doona lite 使用壓縮檔，暫不提供發行版套件。請按[安裝 doona lite](lite.md#lite-install)操作，設定 `ui: /usr/share/doona-lite`，然後繼續本頁的 honk 步驟。選擇所需版本與 shell 對應的分頁。
+
+```sh tab="標準版"
 VERSION=0.1.0-beta.19   # the doona release, without v
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/doona-fonts-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
@@ -114,6 +116,16 @@ if [ -f "doona-fonts-${VERSION}.tar.gz" ]; then
     sudo tar -xzf "doona-fonts-${VERSION}.tar.gz" -C /usr/share/doona
 fi
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 honk 每次請求都從磁碟讀取這些檔案，因此日後替換檔案不需重新啟動。

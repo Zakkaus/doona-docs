@@ -4,6 +4,8 @@
 
 本页在浏览器中打开 doona，创建管理员账户，并检查 doona 是否显示正在运行的 honk。honk 必须处于运行状态，即[服务管理](service-management.md)完成后的状态。
 
+本页介绍标准版；doona lite 请参阅 [doona lite](lite.md)。
+
 ## 开始之前
 
 - 局域网中的电脑或手机，或网关本机。honk 只接受来自本机、私有网络或链路本地地址的管理员创建请求。

@@ -73,6 +73,10 @@ export const icons = {
 // covers.
 export const pageIcons = {
   index: icon('Home'),
+  editions: workflow('Apps'),
+  lite: workflow('Settings'),
+  'lite-connect': workflow('Key'),
+  'lite-tasks': icon('Edit'),
   requirements: workflow('ListMultiSelect'),
   'install-debian': distro('debian'),
   'install-fedora': distro('fedora'),

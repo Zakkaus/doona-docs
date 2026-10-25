@@ -6,6 +6,8 @@ English / [简体中文](../zh-CN/features.md) / [繁體中文](../zh-TW/feature
 
 First confirm that the gateway carries traffic. Replace the example subscription and node with working ones, then from a real LAN client test direct and proxied TCP, UDP and DNS. `honk-core is running`, the `dae0` link or a reachable API does not prove that traffic flows.
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 ## Check every feature
 
 The [example configuration](configuration.md#config) sets the options used by the features below. Replace the placeholder subscription and node, then verify each feature.

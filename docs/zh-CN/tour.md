@@ -6,6 +6,8 @@
 
 用导航打开页面，用顶部栏搜索或刷新，用标签页切换视图。暂存、应用与保存的写入范围不同。
 
+本页介绍标准版；doona lite 请参阅 [doona lite](lite.md)。
+
 <a name="navigation"></a>
 
 ## 查找页面

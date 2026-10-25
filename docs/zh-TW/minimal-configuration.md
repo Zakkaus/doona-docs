@@ -192,6 +192,8 @@ doona beta.19 的 honk-core `debug.2026.10.9.native-api.2` 附件（提交 `eac5
 ui: embedded
 ```
 
+doona lite 的壓縮檔安裝到 `/usr/share/doona-lite`，並設定 `ui: /usr/share/doona-lite`。`ui: embedded` 僅提供標準版。修改 `ui` 後必須重新啟動 honk。
+
 使用 `ui: embedded` 時，獨立的介面套件是可選項。內建介面不含 Noto Sans TC/SC，瀏覽器會使用系統字型。如需提供外部介面檔案或這些字型，安裝 `doona` 和 `doona-fonts`，並將 `ui` 指向安裝目錄，例如 `/usr/share/doona`；Debian 或 Ubuntu 則使用 `doona-web`、`doona-web-fonts` 和 `/usr/share/doona-web`。
 
 ## 5. 檢查組態

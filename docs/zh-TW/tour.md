@@ -6,6 +6,8 @@
 
 用導覽開啟頁面，用頂端列搜尋或重新整理，用分頁切換檢視。暫存、套用與儲存的寫入範圍不同。
 
+本頁介紹標準版；doona lite 請參閱 [doona lite](lite.md)。
+
 <a name="navigation"></a>
 
 ## 尋找頁面

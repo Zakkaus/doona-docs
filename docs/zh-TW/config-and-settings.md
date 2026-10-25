@@ -6,6 +6,8 @@
 
 「組態」頁讀取、驗證並套用 honk 的設定檔。「設定」頁管理連線設定檔、暫時執行時期覆寫、地理資料、外觀與延遲探測。「活動」的[開始使用](observe.md#activity)卡片連結到設定步驟。
 
+本頁介紹標準版；doona lite 請參閱 [doona lite](lite.md)。
+
 <a name="config-page"></a>
 
 ## 開啟「組態」頁

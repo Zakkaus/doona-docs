@@ -53,14 +53,36 @@ doona-0.1.0beta19-1-any.pkg.tar.zst: OK
 
 With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) serve bundled doona 0.1.0-beta.19 without a separate UI package. You can also serve the beta.19 package installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
 
-```sh tab="sudo"
+For doona lite, use the archive; there are no lite distribution packages yet. Follow [Install doona lite](lite.md#lite-install), set `ui: /usr/share/doona-lite`, then continue with the honk steps on this page. Choose the tab for your edition and shell.
+
+```sh tab="Standard edition (sudo)"
 sudo pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
 ls -l /usr/share/doona/index.html
 ```
 
-```sh tab="root"
+```sh tab="Standard edition (root)"
 pacman -U ./doona-${PKGVER}-1-any.pkg.tar.zst
 ls -l /usr/share/doona/index.html
+```
+
+```sh tab="doona lite (sudo)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+sudo mkdir -p /usr/share/doona-lite
+sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
+```
+
+```sh tab="doona lite (root)"
+VERSION=0.1.0-beta.19
+BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
+curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
+grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+mkdir -p /usr/share/doona-lite
+tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
+ls -l /usr/share/doona-lite/index.html
 ```
 
 `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds doona’s web files and documentation; it installs no service.

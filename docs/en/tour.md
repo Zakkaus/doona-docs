@@ -6,6 +6,8 @@ English / [简体中文](../zh-CN/tour.md) / [繁體中文](../zh-TW/tour.md)
 
 Use the navigation to open a page, the top bar to search or refresh, and the page tabs to change views. Hold, Apply and Save have different write scopes.
 
+This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+
 <a name="navigation"></a>
 
 ## Find a page

@@ -4,6 +4,8 @@
 
 # 常見操作
 
+本頁介紹標準版；doona lite 請參閱 [doona lite](lite.md)。
+
 <a name="one-site"></a>
 
 ## 從現有連線讓一個網站經由代理
