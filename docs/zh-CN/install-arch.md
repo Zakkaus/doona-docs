@@ -14,6 +14,8 @@
 - 能够访问 github.com。
 - 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `VERSION`、`PKGVER`、`BASE` 与 `TARGET` 变量。
 
+安装 lite 时，请先确保 curl 与 CA 证书已安装，再直接前往[4. 安装 doona](#4-安装-doona)，选择 doona lite 标签页。此前的标准版软件包、仓库、下载与校验步骤均可跳过。
+
 ## 1. 安装 curl 与 CA 证书
 
 honk 使用系统 CA 证书校验通过 HTTPS 下载的订阅与地理数据。
@@ -84,6 +86,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+安装 lite 后，`ls` 须列出 `/usr/share/doona-lite/index.html`。请继续[5. 选择 honk-core 构建](#5-选择-honk-core-构建)，跳过下方的标准版结果说明与可选软件包。在[最小配置](minimal-configuration.md)中，将 `ui` 设为 `/usr/share/doona-lite`。
+
+以下为标准版的结果与可选组件：
 
 `ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。该软件包包含 doona 的网页文件与文档，不安装任何服务。
 

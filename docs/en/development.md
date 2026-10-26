@@ -59,10 +59,12 @@ See [CHANGELOG.md](https://github.com/Zakkaus/doona/blob/main/CHANGELOG.md) for 
 
 ## doona lite
 
-The [doona lite source](https://github.com/Zakkaus/doona/tree/main/apps/lite) is in `apps/lite`. From the doona repository root, after installing the repository dependencies, build it with:
+The [doona lite source](https://github.com/Zakkaus/doona/tree/main/apps/lite) is in `apps/lite`, with its own lockfile. Install both sets of dependencies from the doona repository root, then build lite:
 
 ```sh
+pnpm install --frozen-lockfile
+pnpm --dir apps/lite install --frozen-lockfile
 pnpm --dir apps/lite build
 ```
 
-The output is `apps/lite/dist`.
+The output is `apps/lite/dist`. Use `pnpm --dir apps/lite dev` for the development server. lite has its own UI and state, and reuses the standard edition’s API client and generated types; see [backend requirements](editions.md#backend-requirements).

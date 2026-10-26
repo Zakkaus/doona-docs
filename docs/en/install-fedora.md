@@ -14,6 +14,8 @@ Install doona from its `.rpm` package and honk-core from the same release on Fed
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
+For lite, ensure curl and CA certificates are installed, then go directly to [4. Install doona](#4-install-doona) and select the doona lite tab. Skip the standard edition’s package, repository, download and verification steps before it.
+
 ## 1. Install curl and CA certificates
 
 honk uses the system CA certificates to verify HTTPS subscription and geodata downloads.
@@ -83,6 +85,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+For lite, `ls` must list `/usr/share/doona-lite/index.html`. Continue at [5. Choose the honk-core build](#5-choose-the-honk-core-build); skip the standard edition results and optional packages below. In [Minimal configuration](minimal-configuration.md), set `ui` to `/usr/share/doona-lite`.
+
+For the standard edition:
 
 The release RPM is unsigned; step 3 verifies its checksum before installation. `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds only doona’s web files and documentation; it installs no service.
 

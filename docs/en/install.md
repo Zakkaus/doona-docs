@@ -151,6 +151,8 @@ With `password_auth: true`, as in this example, honk does not start when the dat
 
 ### First sign-in
 
+For lite, follow [Connect doona lite](lite-connect.md), including entering the backend address and checking the connection. The steps and pairing link below apply to the standard edition.
+
 1. Open `http://192.168.1.1:9527/ui/`, the `listen` address. doona finds the API on the same origin and saves it as a backend.
 2. Password mode: the sign-in page shows Create the administrator. From the gateway or a device on the LAN, enter a username and password, confirm the password, then select Create and sign in. This creates the account and signs you in.
 3. Token mode: enter the `secret` as the token, or open a pairing link. doona removes the token from the address bar after loading.

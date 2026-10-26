@@ -15,6 +15,8 @@ Install doona with Portage from the repository's ebuild in a local ebuild reposi
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `REPO`, `VERSION`, `PV`, `BASE` and `TARGET` variables that earlier steps set.
 
+For lite, ensure curl and CA certificates are installed, then go directly to [5. Install doona](#5-install-doona) and select the doona lite tab. Skip the standard edition’s package, repository, download and verification steps before it.
+
 ## 1. Create a local repository
 
 Set `REPO` to the repository path. If you already have a local ebuild repository, set `REPO` to its path and skip the rest of this step.
@@ -145,6 +147,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+For lite, `ls` must list `/usr/share/doona-lite/index.html`. Continue at [6. Choose the honk-core build](#6-choose-the-honk-core-build); skip the standard edition results and optional packages below. In [Minimal configuration](minimal-configuration.md), set `ui` to `/usr/share/doona-lite`.
+
+For the standard edition:
 
 Portage ends with `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`, and `ls` prints a line ending in `/usr/share/doona/index.html`. The package holds doona’s web files and documentation; it installs no service. Set `USE=-fonts` for `net-proxy/doona` to leave out the Noto Sans TC and SC fonts.
 
