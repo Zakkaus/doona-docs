@@ -11,7 +11,7 @@ doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接
 | 標準版 | doona lite |
 | --- | --- |
 | 適合管理組態並觀測流量 | 適合只需編輯組態的初學者 |
-| 流量頁面、組態表單、組態來源編輯器與 Trace | 節點、訂閱、群組、路由、DNS 與全域設定 |
+| 流量頁面、組態表單、組態來源編輯器與追蹤 | 節點、訂閱、群組、路由、DNS 與全域設定 |
 | [安裝標準版](install.md#doona) | [安裝 doona lite](lite.md#lite-install) |
 | [標準版示範](https://demo.daeuniverse.org/) | [lite 示範](https://demo.daeuniverse.org/lite/) |
 

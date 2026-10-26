@@ -15,6 +15,8 @@ Install doona and honk-core from release archives on an x86_64 or aarch64 Linux 
 - Access to github.com.
 - Run every step in the same terminal: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
 
+For lite, ensure curl and CA certificates are installed, then go directly to [3. Install doona](#3-install-doona) and select the doona lite tab. Skip the standard edition’s package, repository, download and verification steps before it.
+
 <a name="install-alpine"></a>
 
 ## Install on Alpine
@@ -113,6 +115,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+For lite, `ls` must list `/usr/share/doona-lite/index.html`. Continue at [4. Choose the honk-core build](#4-choose-the-honk-core-build); skip the standard edition results and optional packages below. In [Minimal configuration](minimal-configuration.md), set `ui` to `/usr/share/doona-lite`.
+
+For the standard edition:
 
 `ls` prints a line ending in `/usr/share/doona/index.html`.
 

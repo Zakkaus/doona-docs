@@ -59,10 +59,12 @@ pnpm package                     # release/doona-<version>.tar.gz, doona-fonts-<
 
 ## doona lite
 
-[doona lite 原始碼](https://github.com/Zakkaus/doona/tree/main/apps/lite)位於 `apps/lite`。安裝儲存庫相依套件後，在 doona 儲存庫根目錄執行：
+[doona lite 原始碼](https://github.com/Zakkaus/doona/tree/main/apps/lite)位於 `apps/lite`，具有獨立的鎖定檔。在 doona 儲存庫根目錄分別安裝兩組相依套件，再建置 lite：
 
 ```sh
+pnpm install --frozen-lockfile
+pnpm --dir apps/lite install --frozen-lockfile
 pnpm --dir apps/lite build
 ```
 
-建置輸出為 `apps/lite/dist`。
+輸出目錄為 `apps/lite/dist`。使用 `pnpm --dir apps/lite dev` 啟動開發伺服器。lite 具有獨立的介面與狀態，重用標準版的 API 用戶端與產生的型別；詳見[後端要求](editions.md#backend-requirements)。

@@ -32,6 +32,8 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 官方 OpenWrt 24.10 及更早版本的内核低于 6.12，请先用 `uname -r` 对照[系统要求](requirements.md#requirements)确认内核版本。
 
+安装 lite 时，请先完成上方的内核模块准备，并安装 curl 与 CA 证书，再直接前往[4. 安装 doona](#4-安装-doona)，选择 doona lite 标签页。此前的标准版软件包、下载与校验步骤均可跳过。
+
 <a name="openwrt-packages"></a>
 
 ## 软件包安装方式
@@ -134,6 +136,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+安装 lite 后，`ls` 须列出 `/usr/share/doona-lite/index.html`。请继续[5. 选择 honk-core 构建](#5-选择-honk-core-构建)，跳过下方的标准版结果说明与可选软件包。在[最小配置](minimal-configuration.md)中，将 `ui` 设为 `/usr/share/doona-lite`。
+
+以下为标准版的结果与可选组件：
 
 `ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。可选的字体归档文件 `doona-fonts-${VERSION}.tar.gz` 包含 Noto Sans TC 与 SC 字体，存储空间不足时可以不装。
 

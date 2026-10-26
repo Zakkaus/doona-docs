@@ -32,6 +32,8 @@ opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
 
 Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r` against [Requirements](requirements.md#requirements) first.
 
+For lite, complete the kernel-module prerequisites above and install curl and CA certificates, then go directly to [4. Install doona](#4-install-doona) and select the doona lite tab. Skip the standard edition’s package, download and verification steps before it.
+
 <a name="openwrt-packages"></a>
 
 ## Package routes
@@ -134,6 +136,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+For lite, `ls` must list `/usr/share/doona-lite/index.html`. Continue at [5. Choose the honk-core build](#5-choose-the-honk-core-build); skip the standard edition results and optional packages below. In [Minimal configuration](minimal-configuration.md), set `ui` to `/usr/share/doona-lite`.
+
+For the standard edition:
 
 `ls` prints a line ending in `/usr/share/doona/index.html`. The optional font archive, `doona-fonts-${VERSION}.tar.gz`, adds the Noto Sans TC and SC fonts; skip it where storage is short.
 

@@ -151,6 +151,8 @@ honk 默认会打开 `<data_dir>/state/honk.db`：`global.store_subscribe` 默�
 
 ### 首次登录
 
+lite 用户请按[连接 doona lite](lite-connect.md)输入后端地址并检查连接。下方步骤与配对链接仅适用于标准版。
+
 1. 打开 `http://192.168.1.1:9527/ui/`，即 `listen` 地址。doona 会在同一来源找到 API，并将其保存为后端。
 2. 密码模式：登录页面显示“创建管理员”。请在网关本机或局域网设备上填写用户名、密码与确认密码，再点击“创建并登录”。创建账户后会自动登录。
 3. Token 模式：输入 `secret` 作为 Token，或打开配对链接。doona 加载后会从地址栏移除 Token。

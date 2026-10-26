@@ -15,6 +15,8 @@
 - 能夠連線到 github.com。
 - 所有步驟都在同一個終端機中執行：後面的步驟會用到前面設定的 `REPO`、`VERSION`、`PV`、`BASE` 與 `TARGET` 變數。
 
+安裝 lite 時，請先確保 curl 與 CA 憑證已安裝，再直接前往[5. 安裝 doona](#5-安裝-doona)，選擇 doona lite 頁籤。此前的標準版套件、儲存庫、下載與驗證步驟均可略過。
+
 ## 1. 建立本機儲存庫
 
 把 `REPO` 設為儲存庫路徑。如果已有本機 ebuild 儲存庫，把 `REPO` 設為該儲存庫的路徑，並跳過此步其餘的命令。
@@ -145,6 +147,10 @@ mkdir -p /usr/share/doona-lite
 tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
+
+安裝 lite 後，`ls` 須列出 `/usr/share/doona-lite/index.html`。請繼續[6. 選擇 honk-core 建置](#6-選擇-honk-core-建置)，略過下方的標準版結果說明與選用套件。在[最小組態](minimal-configuration.md)中，將 `ui` 設為 `/usr/share/doona-lite`。
+
+以下為標準版的結果與選用元件：
 
 Portage 最後輸出 `Point the engine's ui setting at /usr/share/doona, or serve that directory with any web server.`，`ls` 輸出一行以 `/usr/share/doona/index.html` 結尾的內容。該套件包含 doona 的網頁檔案與文件，不安裝任何服務。如不需要 Noto Sans TC 與 SC 字型，請為 `net-proxy/doona` 設定 `USE=-fonts`。
 

@@ -8,7 +8,7 @@ doona lite edits honk configuration through a smaller interface for beginners.
 
 Pages: **Nodes**, **Subscriptions**, **Groups**, **Routing**, **DNS**. The Settings dialog edits global settings. Search finds resources, and manual nodes can be shared as links or QR codes. The demo works with sample data.
 
-There are no traffic pages, Trace or Configuration source editor page. See [the edition comparison](editions.md#editions-compare).
+There are no traffic pages, advanced Trace tab or full configuration source editor. **Routing** offers **Test rules** to check matched rules and outbounds. See [the edition comparison](editions.md#editions-compare).
 
 ![Nodes](../images/lite-nodes-light.webp)
 
@@ -33,7 +33,7 @@ ls -l /usr/share/doona-lite/index.html
 The checksum must report `OK`, and `ls` must list `/usr/share/doona-lite/index.html`. In the existing `experimental` → `native_api` block, set:
 
 ```dae
-ui: /usr/share/doona-lite
+ui: '/usr/share/doona-lite'
 ```
 
 [Restart honk](service-management.md), then open its `/ui/` address, for example `http://192.168.1.1:9527/ui/`. Continue with [Connect doona lite](lite-connect.md).

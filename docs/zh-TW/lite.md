@@ -8,7 +8,7 @@ doona lite 為初學者提供較小的介面，用於編輯 honk 組態。
 
 頁面包括：**節點**、**訂閱**、**策略群組**、**路由**、**DNS**。**設定**對話框用於編輯全域設定。搜尋可尋找資源，手動節點可透過連結或 QR code 分享。示範模式使用範例資料。
 
-lite 不提供流量頁面、Trace 或組態來源編輯器頁面，見[功能比較](editions.md#editions-compare)。
+不提供流量頁面、進階追蹤頁籤或完整組態來源編輯器。**路由**中的**測試規則**可檢查命中規則與出站。見[功能比較](editions.md#editions-compare)。
 
 ![節點](../images/lite-nodes-light.webp)
 
@@ -33,7 +33,7 @@ ls -l /usr/share/doona-lite/index.html
 驗證結果應為 `OK`，`ls` 應列出 `/usr/share/doona-lite/index.html`。在現有 `experimental` → `native_api` 區塊中設定：
 
 ```dae
-ui: /usr/share/doona-lite
+ui: '/usr/share/doona-lite'
 ```
 
 [重新啟動 honk](service-management.md)，然後開啟其 `/ui/` 位址，例如 `http://192.168.1.1:9527/ui/`。繼續閱讀[連線 doona lite](lite-connect.md)。

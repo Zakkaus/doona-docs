@@ -70,6 +70,7 @@
   "choose-edition": "index",
   "editions": "editions",
   "editions-compare": "editions",
+  "backend-requirements": "editions",
   "editions-switch": "editions",
   "lite": "lite",
   "lite-install": "lite",

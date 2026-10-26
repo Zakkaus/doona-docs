@@ -4,23 +4,36 @@ English / [简体中文](../zh-CN/lite-tasks.md) / [繁體中文](../zh-TW/lite-
 
 # Common tasks in doona lite
 
-Use doona lite to import resources and edit honk configuration. [Connect first](lite-connect.md); editing requires `config_write` and a writable main configuration. You can practice with **Try the demo**, where changes reset on reload.
+Use doona lite to import resources and edit honk configuration. [Connect first](lite-connect.md). Editing requires all of the following:
+
+- honk permits configuration writes.
+- honk supports tracking operations and full configuration validation.
+- The main configuration is writable, and honk returns its complete content with a matching content hash.
+
+You can practice with **Try the demo**, where changes reset on reload.
 
 <a name="lite-task-import"></a>
 
 ## Import nodes from share links
 
-1. Open **Nodes** and select **Import**.
-2. Paste one link per line into **Share links**, then select **Check links**.
-3. Check the parsed nodes, then select **Save nodes**. The imported nodes appear in the list.
+1. Open **Nodes** and select **Add node**.
+2. In the **Paste links** tab, paste one link per line into **Share links**. Links are recognized automatically.
+3. Check the recognized protocols and addresses, and correct any invalid lines.
+4. Select **Add N nodes** for multiple nodes, or **Add** for one node. This writes and applies the nodes directly; they appear in the list.
+
+Share-link import also requires honk to support syntax validation.
 
 <a name="lite-task-subscription"></a>
 
 ## Add a subscription
 
 1. Open **Subscriptions** and select **Add subscription**.
-2. Enter **Name** and **Subscription URL**.
-3. Select **Save**. The subscription appears in the list.
+2. Enter **Subscription link**. You may fill in **Name (optional)** or leave it empty to use the suggested name.
+3. Select **Save**. The subscription appears as a draft row; honk has not saved it yet.
+4. Select **Review and apply**, check the changes, then select **Apply**.
+5. Wait for the success notification: “Configuration saved and applied.” The subscription is now applied.
+
+Editing and deleting subscriptions use the same draft and review flow. An existing subscription cannot be renamed here.
 
 <a name="lite-task-group"></a>
 
@@ -57,9 +70,9 @@ The **Rebuild rules from a template** dialog can replace the routing rules in th
 
 1. Open **Settings** and choose **Sniffing**.
 2. Set **Sniffing timeout** to `200` and its **Duration unit** to `ms`.
-3. Select **Review change**, review the change, then select **Apply**.
+3. Select **Review and apply**, review the change, then select **Apply**.
 
-Settings that require a restart are disabled here. Edit them on the backend and restart honk.
+Settings that require a restart appear as read-only values with a **Copy** button for the setting line. Follow the dialog’s instructions to edit the file’s `global` section on the honk host and restart honk; copying the restart command does not run it.
 
 <a name="lite-task-share"></a>
 
