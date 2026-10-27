@@ -1,4 +1,4 @@
-[English](../en/install-manual.md) / [简体中文](../zh-CN/install-manual.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/install-manual.md) / [English](../en/install-manual.md)
 
 # 透過壓縮檔或在 Alpine 上安裝
 

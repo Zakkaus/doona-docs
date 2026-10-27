@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/what-doona-can-change.md) / [繁體中文](../zh-TW/what-doona-can-change.md)
+[繁體中文](../zh-TW/what-doona-can-change.md) / [简体中文](../zh-CN/what-doona-can-change.md) / English
 
 # What doona can change
 

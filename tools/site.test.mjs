@@ -43,7 +43,7 @@ function copyButton(writeText) {
 }
 
 describe('link check', () => {
-  const file = join(docs, 'en', 'link-test.md');
+  const file = join(docs, 'zh-TW', 'link-test.md');
   const failures = text => linkFailures(file, text);
 
   it('reports a relative link into doona, which GitHub cannot resolve', () => {
@@ -510,12 +510,17 @@ describe('root page', () => {
   it('follows the browser language', () => {
     expect(rootLocale(null, ['zh-HK', 'en'])).toBe('/doona-docs/zh-TW/');
     expect(rootLocale(null, ['zh-Hans-SG'])).toBe('/doona-docs/zh-CN/');
-    expect(rootLocale(null, ['fr-FR'])).toBe('/doona-docs/en/');
+    expect(rootLocale(null, ['zh'])).toBe('/doona-docs/zh-CN/');
+    expect(rootLocale(null, ['zh-SG'])).toBe('/doona-docs/zh-CN/');
+    expect(rootLocale(null, ['en-US'])).toBe('/doona-docs/zh-TW/');
+    expect(rootLocale(null, ['fr-FR'])).toBe('/doona-docs/zh-TW/');
+    expect(rootLocale(null, [])).toBe('/doona-docs/zh-TW/');
   });
 
   it('prefers the language chosen from the menu', () => {
     expect(rootLocale('zh-CN', ['en-US'])).toBe('/doona-docs/zh-CN/');
-    expect(rootLocale('xx', ['en-US'])).toBe('/doona-docs/en/');
+    expect(rootLocale('en', ['zh-TW'])).toBe('/doona-docs/en/');
+    expect(rootLocale('xx', ['en-US'])).toBe('/doona-docs/zh-TW/');
   });
 });
 
@@ -525,20 +530,20 @@ describe('404 page', () => {
       '/doona-docs/zh-TW/troubleshooting.html#no-native-api'
     );
     expect(redirect('zh-CN', ['en'], '404.html', '/doona-docs/features.md')).toBe('/doona-docs/zh-CN/features.md');
-    expect(redirect(null, ['en'], '404.html', '/doona-docs/index')).toBe('/doona-docs/en/');
+    expect(redirect(null, ['en'], '404.html', '/doona-docs/index')).toBe('/doona-docs/zh-TW/');
   });
 
   it('shows one heading, in the visitor language, with the other languages linked without script', () => {
     const html = render().get('404.html').text;
     const sections = [...html.matchAll(/<section class="illustrated-message" lang="([^"]+)"( hidden)?>\n(<svg class="illustration"[^]*?<\/svg>)\n<h1>([^<]+)<\/h1>/g)];
     expect(sections.map(match => match[1])).toEqual(locales);
-    expect(sections.filter(match => !match[2]).map(match => match[4])).toEqual(['Error 404: Page not found']);
+    expect(sections.filter(match => !match[2]).map(match => match[4])).toEqual(['錯誤 404：找不到頁面']);
     expect(html.match(/<h1>/g)).toHaveLength(locales.length);
     expect(sections[0][3]).toContain('aria-hidden="true"');
     const noscript = /<noscript>([^]*?)<\/noscript>/.exec(html)[1];
     expect([...noscript.matchAll(/hreflang="([^"]+)"/g)].map(match => match[1])).toEqual(locales.slice(1));
     const script = [...html.matchAll(/<script>\n([^]*?)<\/script>/g)].map(match => match[1]).find(text => text.includes('section[lang]'));
-    const fake = locales.map(lang => ({lang, hidden: lang !== 'en', querySelector: () => ({textContent: `title ${lang}`})}));
+    const fake = locales.map(lang => ({lang, hidden: lang !== 'zh-TW', querySelector: () => ({textContent: `title ${lang}`})}));
     const document = {documentElement: {}, querySelectorAll: () => fake};
     runInNewContext(script, {document, localStorage: {getItem: () => null}, navigator: {languages: ['zh-HK']}});
     expect(fake.filter(section => !section.hidden).map(section => section.lang)).toEqual(['zh-TW']);

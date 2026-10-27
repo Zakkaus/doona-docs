@@ -1,4 +1,4 @@
-[English](../en/observe.md) / [简体中文](../zh-CN/observe.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/observe.md) / [English](../en/observe.md)
 
 <a name="observe"></a>
 

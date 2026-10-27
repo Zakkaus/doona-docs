@@ -1,4 +1,4 @@
-[English](../en/development.md) / [简体中文](../zh-CN/development.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/development.md) / [English](../en/development.md)
 
 # 開發
 

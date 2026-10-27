@@ -1,4 +1,4 @@
-[English](../en/first-sign-in.md) / [简体中文](../zh-CN/first-sign-in.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/first-sign-in.md) / [English](../en/first-sign-in.md)
 
 # 首次登入
 

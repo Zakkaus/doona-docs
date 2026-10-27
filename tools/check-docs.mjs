@@ -27,7 +27,7 @@ const pageSets = new Map(
       .sort()
   ])
 );
-const reference = pageSets.get('en');
+const reference = pageSets.get('zh-TW');
 if (
   reference.join() !==
   pageOrder
@@ -35,19 +35,19 @@ if (
     .sort()
     .join()
 )
-  fail(join(docs, 'en'), `pages ${reference.join(', ')} differ from the navigation in site/docs.mjs: ${pageOrder.join(', ')}`);
+  fail(join(docs, 'zh-TW'), `pages ${reference.join(', ')} differ from the navigation in site/docs.mjs: ${pageOrder.join(', ')}`);
 for (const locale of locales) {
   const names = pageSets.get(locale);
-  if (names.join() !== reference.join()) fail(join(docs, locale), `pages ${names.join(', ')} differ from en: ${reference.join(', ')}`);
+  if (names.join() !== reference.join()) fail(join(docs, locale), `pages ${names.join(', ')} differ from zh-TW: ${reference.join(', ')}`);
   for (const name of names) {
     const file = join(docs, locale, name);
     checkLinks(file);
-    const counterpart = join(docs, 'en', name);
-    if (locale === 'en' || !existsSync(counterpart)) continue;
+    const counterpart = join(docs, 'zh-TW', name);
+    if (locale === 'zh-TW' || !existsSync(counterpart)) continue;
     const mine = page(file);
     const theirs = page(counterpart);
-    if (mine.names.join() !== theirs.names.join()) fail(file, `anchors ${mine.names.join(', ')} differ from en: ${theirs.names.join(', ')}`);
-    if (mine.levels.join() !== theirs.levels.join()) fail(file, `heading levels ${mine.levels.join('')} differ from en: ${theirs.levels.join('')}`);
+    if (mine.names.join() !== theirs.names.join()) fail(file, `anchors ${mine.names.join(', ')} differ from zh-TW: ${theirs.names.join(', ')}`);
+    if (mine.levels.join() !== theirs.levels.join()) fail(file, `heading levels ${mine.levels.join('')} differ from zh-TW: ${theirs.levels.join('')}`);
   }
 }
 

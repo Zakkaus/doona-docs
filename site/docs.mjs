@@ -32,7 +32,7 @@ export function locate(absolute) {
 export const awaitsScreenshots = path => !existsSync(screenshots) && path.split(sep).join('/').startsWith('screenshots/');
 
 // In the order of the language line at the top of every page.
-export const locales = ['en', 'zh-CN', 'zh-TW'];
+export const locales = ['zh-TW', 'zh-CN', 'en'];
 
 // Navigation order, in the sections the sidebar shows under the headings in site/strings.mjs; docs/<locale>/ holds
 // exactly these pages.

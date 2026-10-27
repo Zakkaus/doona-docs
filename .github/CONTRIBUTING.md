@@ -1,6 +1,6 @@
 # Contributing to doona docs
 
-The pages are Markdown in `docs/<locale>/`, one set each in English (`en`), Simplified Chinese (`zh-CN`) and Traditional Chinese (`zh-TW`). The site code in `site/` turns them into the site. Most changes touch only the pages; the rest of this guide covers the site code for when a page needs something new.
+The pages are Markdown in `docs/<locale>/`, one set each in Traditional Chinese (`zh-TW`, the default), Simplified Chinese (`zh-CN`) and English (`en`). The site code in `site/` turns them into the site. Most changes touch only the pages; the rest of this guide covers the site code for when a page needs something new.
 
 ## Set up
 
@@ -23,7 +23,7 @@ python3 -m http.server 4197 --bind 127.0.0.1 -d dist-docs
 
 Edit `docs/<locale>/<name>.md` and make the same change in the other two locales. A page follows these rules, which the build enforces:
 
-- The first paragraph is the language line, which links the page in the other two locales in the order `en`, `zh-CN`, `zh-TW`. The site replaces it with its language menu.
+- The first paragraph is the language line, which links the page in the other two locales in the order `zh-TW`, `zh-CN`, `en`. The site replaces it with its language menu.
 - A page may open with front matter holding one line, `keywords: word, word`, before the language line. Search ranks a keyword match below the title and the section headings and above the text.
 - The page has exactly one `#` heading, its title. The paragraph right under it introduces the page, and its first sentence is the page's description in search and in `llms.txt`.
 - Every fenced code block names its language: `dae`, `sh`, `bash`, `shell`, `ini` or `text`. Two or more adjacent blocks with `tab="label"` after the language, such as `sh tab="sudo"` and `sh tab="root"`, become one box with tabs.
@@ -34,7 +34,7 @@ Link other pages by their relative path, such as `install.md#install`. A link to
 
 ## Add a page
 
-1. Create `docs/en/<name>.md`, `docs/zh-CN/<name>.md` and `docs/zh-TW/<name>.md`, with the same file name, headings at the same levels, and the same anchors.
+1. Create `docs/zh-TW/<name>.md`, `docs/zh-CN/<name>.md` and `docs/en/<name>.md`, with the same file name, headings at the same levels, and the same anchors.
 2. Add `<name>` to its section in `groups` in `site/docs.mjs`. The order there is the order of the navigation. A new section also needs its label under `groups` for every locale in `site/strings.mjs`.
 3. Add each new anchor to `docs/anchors.json`, mapped to `<name>`. An anchor lives on one page only.
 4. Run the checks below.

@@ -1,4 +1,4 @@
-[English](../en/feature-requirements.md) / [简体中文](../zh-CN/feature-requirements.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/feature-requirements.md) / [English](../en/feature-requirements.md)
 
 # 功能啟用條件
 

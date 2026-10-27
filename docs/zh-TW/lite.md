@@ -1,4 +1,4 @@
-[English](../en/lite.md) / [简体中文](../zh-CN/lite.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/lite.md) / [English](../en/lite.md)
 
 <a name="lite"></a>
 

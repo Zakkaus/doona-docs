@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/lite-connect.md) / [繁體中文](../zh-TW/lite-connect.md)
+[繁體中文](../zh-TW/lite-connect.md) / [简体中文](../zh-CN/lite-connect.md) / English
 
 <a name="lite-connect"></a>
 

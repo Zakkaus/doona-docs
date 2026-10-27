@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/config-and-settings.md) / [繁體中文](../zh-TW/config-and-settings.md)
+[繁體中文](../zh-TW/config-and-settings.md) / [简体中文](../zh-CN/config-and-settings.md) / English
 
 <a name="config-and-settings"></a>
 

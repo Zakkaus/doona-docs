@@ -6,13 +6,13 @@
 
 **[doona](https://github.com/Zakkaus/doona)（daeuniverse 引擎的 Web 界面）的文档，以及由此构建的文档站点。**
 
-[English](README.md) / 简体中文 / [繁體中文](README.zh-TW.md)
+[繁體中文](README.md) / 简体中文 / [English](README.en.md)
 
-[阅读文档](https://zakkaus.github.io/doona-docs/zh-CN/) / [构建](#构建) / [目录结构](#目录结构) / [贡献指南](.github/CONTRIBUTING.md)
+[阅读文档](https://doona.daeuniverse.org/zh-CN/) / [构建](#构建) / [目录结构](#目录结构) / [贡献指南](.github/CONTRIBUTING.md)
 
 </div>
 
-页面是 `docs/<locale>/` 下的 Markdown，有英文、简体中文与繁体中文三种语言，在 GitHub 与站点上都可阅读。`main` 发布于 https://zakkaus.github.io/doona-docs/。
+页面是 `docs/<locale>/` 下的 Markdown，有英文、简体中文与繁体中文三种语言，在 GitHub 与站点上都可阅读。`main` 发布于 https://doona.daeuniverse.org/。
 
 ## 构建
 
@@ -28,7 +28,7 @@ pnpm test                            # 站点脚本与标题 id 的测试
 
 `DOCS_BASE=/ pnpm docs:build` 为独立域名构建。CI 以 doona 的 `main` 构建；设置仓库变量 `DOONA_REF` 可改为固定的 tag。
 
-doona 不在 git 中保存截图。推送到 `main` 或手动运行工作流时，CI 在构建前用 doona 的 `tools/screenshots.mjs` 将截图生成到该 checkout 的 `docs/screenshots/`，构建再把全部截图发布到 <https://zakkaus.github.io/doona-docs/screenshots/>，doona 的 README 从这里引用。没有该目录时，检查会跳过指向截图的链接。
+doona 不在 git 中保存截图。推送到 `main` 或手动运行工作流时，CI 在构建前用 doona 的 `tools/screenshots.mjs` 将截图生成到该 checkout 的 `docs/screenshots/`，构建再把全部截图发布到 <https://doona.daeuniverse.org/screenshots/>，doona 的 README 从这里引用。没有该目录时，检查会跳过指向截图的链接。
 
 ## 目录结构
 

@@ -1,4 +1,4 @@
-[English](../en/tutorial.md) / [简体中文](../zh-CN/tutorial.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/tutorial.md) / [English](../en/tutorial.md)
 
 # 為第一條連線設定路由
 
