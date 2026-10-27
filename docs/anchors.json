@@ -112,5 +112,16 @@
   "req-reload-suspend": "feature-requirements",
   "req-process-routing": "feature-requirements",
   "req-persistence": "feature-requirements",
-  "req-browser-settings": "feature-requirements"
+  "req-browser-settings": "feature-requirements",
+  "change-sources": "what-doona-can-change",
+  "change-groups": "what-doona-can-change",
+  "change-runtime": "what-doona-can-change",
+  "change-geodata": "what-doona-can-change",
+  "restart-dns": "what-doona-can-change",
+  "restart-global": "what-doona-can-change",
+  "restart-native": "what-doona-can-change",
+  "restart-clash": "what-doona-can-change",
+  "restart-cache": "what-doona-can-change",
+  "restart-assets": "what-doona-can-change",
+  "startup-preconnect": "what-doona-can-change"
 }

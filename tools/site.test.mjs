@@ -238,6 +238,7 @@ describe('navigation', () => {
     expect(groups.start).toEqual(['index', 'quick-start', 'editions', 'requirements']);
     expect(groups.reference).toEqual(['configuration', 'what-doona-can-change', 'feature-requirements', 'troubleshooting', 'development']);
     expect(groups.install.slice(-2)).toEqual(['minimal-configuration', 'service-management']);
+    expect(groups.standard).toEqual(['tutorial', 'first-sign-in', 'tour', 'observe', 'routing', 'config-and-settings', 'common-tasks', 'features']);
     expect(groups.lite).toEqual(['lite', 'lite-connect', 'lite-tasks']);
     expect(pages).toEqual(Object.values(groups).flat());
     const listed = [...site.get('llms.txt').text.matchAll(/\/([a-zA-Z-]+)\/([a-z-]+)\.md\)/g)];

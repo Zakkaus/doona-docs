@@ -39,7 +39,7 @@ export const locales = ['en', 'zh-CN', 'zh-TW'];
 export const groups = {
   start: ['index', 'quick-start', 'editions', 'requirements'],
   install: ['install-debian', 'install-fedora', 'install-arch', 'install-gentoo', 'install-openwrt', 'install-manual', 'install', 'minimal-configuration', 'service-management'],
-  standard: ['first-sign-in', 'tour', 'observe', 'routing', 'config-and-settings', 'common-tasks', 'features'],
+  standard: ['tutorial', 'first-sign-in', 'tour', 'observe', 'routing', 'config-and-settings', 'common-tasks', 'features'],
   lite: ['lite', 'lite-connect', 'lite-tasks'],
   reference: ['configuration', 'what-doona-can-change', 'feature-requirements', 'troubleshooting', 'development']
 };
