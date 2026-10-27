@@ -4,65 +4,97 @@ English / [简体中文](../zh-CN/requirements.md) / [繁體中文](../zh-TW/req
 
 # Requirements
 
+Check the gateway and browser before installing doona and honk. For an individual page or action, use [Feature requirements](feature-requirements.md).
+
 ## Gateway
 
-honk runs on Linux as `root`. It loads eBPF programs, creates the `dae0` link and the `daens` namespace, and changes sysctls, so keep a second way into the machine, such as a console, during the first start.
+| Component | Requirement |
+| --- | --- |
+| Operating system | Linux; run honk's real transparent-proxy backend as root. |
+| Kernel | Linux 6.12 or later. The real eBPF backend rejects older kernels. |
+| cgroup | cgroup v2 with BPF support. Required socket hooks must attach successfully. |
+| Kernel type information | Raw BTF matching the running kernel, available at one of the locations below. |
+| BPF filesystem | bpffs mounted at `/sys/fs/bpf` for the default pin directory. |
+| HTTPS downloads | A system CA certificate store. Install the certificate package from your distribution's installation guide. |
 
-- Linux 6.12 or later. honk rejects an older kernel before it attaches anything.
-- The kernel options below. Desktop and server distributions usually enable them; OpenWrt, Armbian and VyOS need checking.
-- cgroup v2 for `pname(...)` rules. Without it honk starts, and process-name routing stays off.
-- bpffs mounted at `/sys/fs/bpf`.
-- CA certificates, such as the `ca-certificates` package. Without them honk stops with “subscription network startup failed”.
-- Geodata updates can raise memory use on small routers. honk streams them to disk; on OpenWrt with a mimalloc build, keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) to return freed memory promptly.
+Keep console access or another way into the gateway for the first real start: honk changes its networking.
+
+### Check the kernel
+
+Run on the gateway:
 
 ```sh
 uname -r
 zcat /proc/config.gz 2>/dev/null || cat /boot/config-$(uname -r)
 ```
 
+The real backend needs these kernel options:
+
 ```text
 CONFIG_BPF=y
 CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
-CONFIG_DEBUG_INFO_BTF=y
 CONFIG_CGROUP_BPF=y
-CONFIG_NET_CLS_BPF=y|m
-CONFIG_NET_SCH_INGRESS=y|m
+CONFIG_NET_SCHED=y
 CONFIG_NET_CLS_ACT=y
+CONFIG_NET_XGRESS=y
 CONFIG_NET_NS=y
-# Held-first-packet UDP (NFQUEUE, on by default) also needs:
+```
+
+`CONFIG_NET_XGRESS` is selected by `CONFIG_NET_CLS_ACT`. The TCX backend does not require the legacy `CONFIG_NET_CLS_BPF` or `CONFIG_NET_SCH_INGRESS` options.
+
+The default held-first-packet UDP path also needs:
+
+```text
 CONFIG_NF_TABLES=y|m
 CONFIG_NF_TABLES_INET=y|m
 CONFIG_NFT_CT=y|m
-CONFIG_NETFILTER_NETLINK_QUEUE=y|m
 CONFIG_NFT_QUEUE=y|m
+CONFIG_NETFILTER_NETLINK_QUEUE=y|m
 ```
 
-Mount bpffs if the system does not:
+honk reads raw BTF from `HONK_VMLINUX_BTF` if set. Otherwise it tries `/sys/kernel/btf/vmlinux`, then `/usr/lib/debug/boot/vmlinux`. OpenWrt's `vmlinux-btf` package supplies the latter; an ELF debug image is not a raw BTF file.
+
+### Check bpffs
+
+Run on the gateway, omitting sudo in a root shell:
 
 ```sh
 sudo install -d -m 0755 /sys/fs/bpf
 mountpoint -q /sys/fs/bpf || sudo mount -t bpf bpf /sys/fs/bpf
 mountpoint /sys/fs/bpf
-# To mount it at boot, add this line to /etc/fstab:
-# bpf /sys/fs/bpf bpf defaults 0 0
+```
+
+The last command must report that `/sys/fs/bpf` is a mountpoint.
+
+If the system does not mount bpffs automatically, add this entry to `/etc/fstab`:
+
+```text
+bpf /sys/fs/bpf bpf defaults 0 0
 ```
 
 <a name="honk-version"></a>
 
 ## honk version
 
-- The honk-core assets for doona beta.19 come from Glassyiris/honk `feat/native-api` tag `debug.2026.10.9.native-api.2`, commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`. They include the opt-in `native-api` build feature and embed doona 0.1.0-beta.19. `HONK-SOURCE.txt` records the tag and full honk commit and links both honk source and matching doona source. With `ui: embedded`, no standalone UI package is needed; an external `ui` directory remains an option.
-- Builds of daeuniverse/honk `main` have no native API. honk rejects every `native_api` setting as `unknown experimental setting`, and `/api` and `/ui/` answer 404.
-- A build from `feat/native-api` without the `native-api` feature stops startup with `native-api feature is required` when `native_api` is enabled.
-- Early `feat/native-api` builds update geodata but have no configurable sources. The builds attached to doona beta.8 and beta.9 have both.
+Use a honk build that implements doona's native API contract and includes the `native-api` build feature. A version number alone does not establish compatibility; a build without that feature cannot serve the API even if you add its configuration block.
 
-Run `honk-core --version` to check the installed binary. To check the running version, use the Engine card on System status or the bottom of the side navigation.
+Choose a compatible honk-core archive using the [installation guide](install.md). The app's [contract pin](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) identifies the API it expects.
 
-## Browser and build
+On the gateway, run:
 
-| Component | Requirement                                                                                                                                                             |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Backend   | An engine implementing the native API contract pinned in [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md), with its API listener enabled                           |
-| Browser   | Chrome or Edge 120, Firefox 121, Safari 17 or later. These are the CSS build targets; the JavaScript target is ES2022. Browser tests use Chromium; CI adds WebKit and a Firefox Nightly compatibility run. |
-| Build     | Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1, only to build doona from source; GNU tar, gzip and sha256sum for the archives |
+```sh
+honk-core --version
+```
+
+After signing in, compare the running engine version on **System status** with the installed binary. For a missing API or a rejected build, see [native API troubleshooting](troubleshooting.md#no-native-api).
+
+## Browser and source builds
+
+| Component | Requirement |
+| --- | --- |
+| Browser | Standard-edition build targets: Chrome or Edge 120, Firefox 121, Safari 17 or later; JavaScript target ES2022. |
+| Build the app | Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1. |
+| Build this documentation site | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0` and pnpm 11.15.1. |
+
+Node and pnpm are only needed for [development](development.md), not to serve a prebuilt interface. Process-name routing has additional [feature requirements](feature-requirements.md#req-process-routing).

@@ -2,65 +2,45 @@ English / [简体中文](../zh-CN/first-sign-in.md) / [繁體中文](../zh-TW/fi
 
 # First sign-in
 
-This page opens doona in a browser, creates the administrator account and checks that doona shows the running honk. honk must be running, as [Service management](service-management.md) leaves it.
+Connect the standard edition to a running honk, create its administrator if needed, and check the backend status. Complete [Service management](service-management.md) first; lite users should follow [Connect doona lite](lite-connect.md).
 
-This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+## 1. Open the interface
 
-## Before you start
+From the gateway or a device on its LAN, open `http://192.168.1.1:9527/ui/`, replacing the address with your gateway's API listener address. For a hostname or a separately hosted interface, follow [hostname and origin access](install.md#other-origin).
 
-- A computer or phone on the LAN, or the gateway itself. honk accepts the administrator setup only from loopback, private or link-local addresses.
-- The `listen` address from [Minimal configuration](minimal-configuration.md), such as `192.168.1.1:9527`.
+On first use, with no saved backend profile, the interface discovers the API at the hosting address. If the form points at the wrong backend, select **Change backend URL**. Check [sign-in requirements](feature-requirements.md#req-sign-in) if discovery or authentication is unavailable.
 
-## 1. Open doona
+Before signing in, use the upper-right controls to change the language, palette and color scheme.
 
-Open this address in the browser, with your address in place of `192.168.1.1`:
+## 2. Follow the form you see
 
-```text
-http://192.168.1.1:9527/ui/
-```
+| Form | Action |
+| --- | --- |
+| **Create the administrator** | Enter **Username**, **Password** and **Confirm password**, then select **Create and sign in**. |
+| **Sign in** | Enter the existing administrator's **Username** and **Password**, then select **Sign in**. |
+| **Token required** | Enter the backend's configured secret in **Token**, then select **Connect**. |
 
-doona finds honk’s API at the same address and saves it as its backend. If no administrator exists, it opens Create the administrator.
+For a new account, use 1 to 64 ASCII letters, digits, underscores, periods or hyphens for the username, and 8 to 128 characters for the password. The password confirmation must match.
 
-![Administrator setup with username, password and confirmation fields](../screenshots/en/login-setup.webp)
+In token mode, use the **Token** field's show/hide control to check the entered secret before connecting.
 
-Use the three icons at the upper right to change Language, Palette and Color scheme before signing in. The sign-in form is one centered card on every screen size. With a Glass palette, a [custom wallpaper](config-and-settings.md#settings-page) also appears behind the card.
+![Administrator setup](../screenshots/en/login-setup.webp)
 
-![The sign-in card over the Glass wallpaper](../screenshots/en/login-wallpaper.webp)
+## 3. Check the backend
 
-## 2. Create the administrator
+1. Open **System status**. On a phone, choose **Activity** in the bottom bar first.
+2. Check the lifecycle status and the **Engine** card. Confirm that the engine is honk and the version is the build you installed.
+3. Inspect **Backend features**. Use [feature requirements](feature-requirements.md) to interpret unavailable controls.
 
-1. Enter a Username: letters, digits, `_`, `.` and `-`, 1 to 64 characters.
-2. Enter a Password of 8 to 128 characters, and the same password under Confirm password.
-3. Select Create and sign in.
+Continue with [Route your first connection](tutorial.md) to add a subscription and test a proxy route, or use the [interface tour](tour.md) to find a page.
 
-doona signs you in and opens the Activity page. honk keeps the account in its state database, `/var/lib/honk/state/honk.db` (`/etc/honk/data/state/honk.db` on OpenWrt). From now on the page is titled Sign in and asks for this username and password.
+## If sign-in fails
 
-The password session is kept in this browser and shared by all tabs on this origin. Closing a tab or the browser does not end it; sign-out, honk’s 401 response or deleting the profile clears it. honk limits sessions to 12 hours and forgets them when it restarts.
+| Symptom | Next step |
+| --- | --- |
+| The browser cannot open the page | Run `curl http://192.168.1.1:9527/api` on the gateway, replacing the IP. If it works there but the LAN browser cannot connect, check whether the gateway firewall blocks port 9527. If it fails on the gateway too, check the service and listener in [Service management](service-management.md). |
+| The form reports no native API | Check [honk version](requirements.md#honk-version). |
+| Administrator setup is refused | Check the allowed client addresses under [sign-in requirements](feature-requirements.md#req-sign-in). |
+| Credentials are rejected or you forgot the password | Follow [sign-in troubleshooting](troubleshooting.md#sign-in). |
 
-## 3. Check System status
-
-Select System status in the side navigation. On a phone, select Activity in the bottom bar, then System status in the page strip. With honk running, it shows:
-
-- Running at the top of the page.
-- The Engine card: under Engine, `honk` and its version; under API, `daeuniverse/native v1 (draft)`; under Build, the honk commit and the build target you installed.
-- The Backend features card, listing what this honk provides, such as Connections, Logs and Configuration.
-
-The backend indicator opens a popover with the honk version and connection state. Traffic counters stay at 0 until traffic passes through honk.
-
-Setup is complete. To route LAN devices, add nodes and rules, see [Configuration](configuration.md#config) and [Features](features.md#features).
-
-## If it doesn’t work
-
-| You see                                                                                    | Cause and fix                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| The browser cannot connect                                                                 | honk is not running, or the address differs from `listen`. Check [step 3 of Service management](service-management.md) and `curl http://192.168.1.1:9527/api` on the gateway. A firewall on the gateway can also block port 9527. |
-| This honk build has no native API                                                      | The installed honk-core lacks the native API. Install the build from the doona release; see [honk version](requirements.md#honk-version).                                                             |
-| The backend accepts administrator setup only from loopback, private or link-local addresses. | The browser reached honk from a public address. Open doona from a device on the LAN, or on the gateway itself.                                                                                         |
-| The username or password is incorrect.                                                 | Enter them again. To replace a forgotten administrator, stop honk, run `sudo /usr/local/bin/honk-core admin reset` (without `sudo` in a root shell; on OpenWrt, `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`), then start honk; the setup page opens again.                                                    |
-| Token required instead of the setup page                                               | `api.dae` sets `secret` instead of `password_auth: true`. Enter that secret as the token, or change `api.dae` as in [Minimal configuration](minimal-configuration.md) and restart honk.                 |
-
-![Token sign-in with the Token field, show/hide control and Connect button](../screenshots/en/login-token.webp)
-
-Enter the backend secret in Token, use the show/hide control to check it, then select Connect. doona saves the Token in the current browser's connection profile.
-
-For more, see [Sign-in problems](troubleshooting.md#sign-in).
+The authentication keys are documented in [Configuration](configuration.md). Do not put a password or token in a screenshot or issue report.

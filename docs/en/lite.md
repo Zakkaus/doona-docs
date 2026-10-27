@@ -4,11 +4,9 @@ English / [简体中文](../zh-CN/lite.md) / [繁體中文](../zh-TW/lite.md)
 
 # doona lite
 
-doona lite edits honk configuration through a smaller interface for beginners.
+doona lite provides forms for common honk configuration tasks. It is a preview in testing; see the [edition comparison](editions.md) before choosing it for your gateway.
 
-Pages: **Nodes**, **Subscriptions**, **Groups**, **Routing**, **DNS**. The Settings dialog edits global settings. Search finds resources, and manual nodes can be shared as links or QR codes. The demo works with sample data.
-
-There are no traffic pages, advanced Trace tab or full configuration source editor. **Routing** offers **Test rules** to check matched rules and outbounds. See [the edition comparison](editions.md#editions-compare).
+Use **Nodes**, **Subscriptions**, **Groups**, **Routing** and **DNS** to manage resources, and **Settings** for global settings. Begin with [Connect doona lite](lite-connect.md), then follow [Common tasks](lite-tasks.md).
 
 ![Nodes](../images/lite-nodes-light.webp)
 
@@ -16,30 +14,36 @@ There are no traffic pages, advanced Trace tab or full configuration source edit
 
 ## Install doona lite
 
-Install honk and write its [minimal configuration](minimal-configuration.md) first. In a writable working directory, download the lite archive and `SHA256SUMS` from the same release, verify the download, and extract it. These commands use sudo; omit it in a root shell.
-
-[doona releases](https://github.com/Zakkaus/doona/releases)
+1. Install a [compatible honk build](requirements.md#honk-version) and prepare its [minimal configuration](minimal-configuration.md).
+2. In a writable download directory on the gateway, download and verify the archive. These commands use sudo; omit it in a root shell.
 
 ```sh
-VERSION=0.1.0-beta.19
+VERSION=0.1.0-rc.2
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-sudo mkdir -p /usr/share/doona-lite
+```
+
+3. Continue only if the checksum reports `OK`. Extract the archive:
+
+```sh
+sudo install -d -m 0755 /usr/share/doona-lite
 sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
 
-The checksum must report `OK`, and `ls` must list `/usr/share/doona-lite/index.html`. In the existing `experimental` → `native_api` block, set:
+4. Confirm that `index.html` exists. In the existing `experimental.native_api` block, set:
 
 ```dae
 ui: '/usr/share/doona-lite'
 ```
 
-[Restart honk](service-management.md), then open its `/ui/` address, for example `http://192.168.1.1:9527/ui/`. Continue with [Connect doona lite](lite-connect.md).
+5. Apply the [UI restart rule](what-doona-can-change.md#restart-native), using [Service management](service-management.md). Open honk's `/ui/` address and follow [Connect doona lite](lite-connect.md).
+
+For the other API fields, use the [configuration reference](configuration.md).
 
 <a name="lite-switch"></a>
 
-## Switch back to the standard edition
+## Switch to the standard edition
 
-Set `ui` to the installed standard edition directory, normally `/usr/share/doona` (`/usr/share/doona-web` for Debian or Ubuntu packages), or use `ui: embedded`. Restart honk and reload `/ui/`. You can keep both directories installed; see [Install and switch editions](editions.md#editions-switch).
+Follow [Install and switch editions](editions.md#editions-switch) to select the standard edition's files or embedded UI.

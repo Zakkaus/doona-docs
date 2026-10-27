@@ -4,158 +4,164 @@ English / [简体中文](../zh-CN/observe.md) / [繁體中文](../zh-TW/observe.
 
 # Watching traffic
 
-Use Activity and System status to read engine health, and Connections, Routing log and DNS to inspect traffic. Logs and Events show the backend streams.
+Use this page to choose a monitoring view and understand what its data covers in the standard edition. For step-by-step checks, see [common tasks](common-tasks.md); for the smaller edition, see [doona lite](lite.md).
 
-This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+| What you need | Where to look |
+| --- | --- |
+| Current traffic and engine health | [Activity](#activity) |
+| Backend version, warnings or a missing feature | [System status](#overview) |
+| A live connection's route | [Connections](#connections) |
+| Recorded routing decisions | [Routing log](#flows) |
+| DNS answers, cache or resolution history | [DNS](#dns) |
+| Engine messages | [Logs](#logs) |
+| Configuration and runtime events | [Events](#events) |
 
 <a name="activity"></a>
 
 ## Activity
 
-Activity opens by default; Open at startup in [Appearance](config-and-settings.md#settings-page) picks another page.
+**Activity** combines traffic, connection, latency and system cards. If setup is incomplete, **Getting started** links to the remaining setup tasks; use [the tutorial](tutorial.md) to complete them.
 
-![Default Activity layout: outbound controls and status, then download, upload, connections, latency and CPU](../screenshots/en/activity-light.webp)
+Each step completes automatically when its condition is met:
 
-The status card shows the number of features that are off, or View details when none are; both open System status.
+- A subscription or proxy node exists.
+- Routing has been chosen.
+- A group's selected proxy node has a successful latency result.
 
-### Getting started
+Completing all steps or dismissing the card hides it; this browser remembers that state.
 
-When setup is incomplete and the backend provides the required data, Getting started shows three steps:
+![Activity dashboard](../screenshots/en/activity-light.webp)
 
-1. Add a subscription or nodes. Add subscription opens the dialog on [Nodes](routing.md#nodes); adding a subscription or a proxy node completes this step.
-2. Choose routing rules. Choose rules opens Rules. An applied template or custom routing completes this step.
-3. Check the connection. Check connection opens [Policies](routing.md#policies). Measure the selected node; a successful latency result for a node selected by a group completes this step.
+| Card or control | How to read it |
+| --- | --- |
+| **Outbound mode** and **Global outbound** | Follow [switching mode](common-tasks.md#global-mode) to change them. |
+| **Download** and **Upload** | Open the traffic view on Connections. Read any coverage warning before treating the values as totals for the gateway. |
+| **Active connections** | Opens the connection list. |
+| **Latency** | Follows a policy group's selected node. |
+| **CPU usage** | Opens System status. |
+| Top devices and domains | Ranks the returned connection sample. |
+| Notifications | Combines repeated notices and shows their repeat count. |
 
-The steps update automatically. The card hides when all three are complete or you press the close icon. doona remembers this in the browser.
+Unavailable history or metrics depend on [runtime status](feature-requirements.md#req-runtime-status) and [history recording](feature-requirements.md#req-traffic-history).
 
-### Outbound mode
+Select **Latency** to open its node on Nodes. **Automatic** follows the policy group with the most active connections; a manual group choice is kept in this browser and affects only this card.
 
-1. In the Outbound mode card, select Rule, Direct or Global.
-2. For Global, choose an outbound in the Global outbound card. Until one is chosen, Apply stays disabled and the card shows Global mode needs an outbound. Choosing an outbound also selects Global.
-3. Select Apply beside the changed mode or outbound. doona writes the change into the main configuration and reloads it, and a toast confirms the new mode. Selecting a mode without Apply changes nothing.
+CPU and latency trends need two samples. Failed latency probes leave gaps, and changing the selection restarts its series. Muted runtime figures retain the last successful reading while a read is failing.
 
-If the card shows Read-only, doona cannot write the main configuration. Select Read-only to see the reason, then see [read-only sources](troubleshooting.md#read-only). If it shows Not provided by this backend, the backend does not offer a configuration this card can edit.
+The notification badge counts distinct folded notices, not their repeat counts. **Stream ready** remains on Events. A flow gap with reason `recording_changed` and no specific record marks a recording-history boundary; it does not necessarily mean records were lost.
 
-### Cards
+Change the startup page under [Appearance](config-and-settings.md#settings-page); **Show trends on activity cards** there controls activity-card trends.
 
-Download and Upload open Connections > Traffic, Active connections opens the list, Latency opens its node on [Nodes](routing.md#nodes) and CPU opens System status.
+Use **Edit dashboard** to add, move, resize or remove cards. **Done** saves the layout. To discard edits, select **Cancel** and confirm. Layout storage has [browser requirements](feature-requirements.md#req-browser-settings).
 
-- Latency follows one policy group's selected node. Automatic follows the group with the most active connections; the choice is kept in this browser and changes only this card.
-- CPU and Latency draw trends after two samples. Failed probes leave gaps, and changing the group restarts the series. Settings > Appearance > Show trends on activity cards turns them off.
-- Top devices / domains covers only the returned connection sample.
-- If a runtime read fails, the last figures stay muted until a read succeeds.
-- When an eBPF backend reports only userspace traffic, the Traffic title's help explains that kernel-forwarded direct connections are not counted. Connections > Traffic shows the same warning beside its title.
-- Notifications folds identical notices into one row with a repeat count; its badge counts distinct notices. Stream ready events stay on Events, not this card. A flow gap without a record reads Flow records lost: recording changed.
+Each widget can be placed at most three times. Available sizes depend on the widget, and resizing one card does not resize its neighbours. Removing a card offers **Undo** while the editor remains open.
 
-![Memory as a value tile with its sparkline, and a full-width Memory card listing peak and average](../screenshots/en/widgets-memory-wide.webp)
+The gallery includes **Subscription quota**, **Outbound failures**, **Node availability** and **DNS latency**. Memory can use a chart or a **Sparkline** value tile. Wide charts show peak and average statistics beside the chart. See [Widgets](features.md#widgets) for the shared dashboard and floating-panel gallery.
 
-![Notifications card on Activity with an information toast in white on blue](../screenshots/en/notices-light.webp)
-
-### Edit the dashboard
-
-![Edit dashboard with the Download card at width 1/3 and Tall, its handles and the free space left in the row](../screenshots/en/dashboard-settings.webp)
-
-Sizes differ by card, and resizing one card leaves its neighbours alone. Remove offers Undo; Done saves the layout in this browser and Cancel discards it.
-
-![Widget gallery with size previews and placed counts](../screenshots/en/dashboard-gallery.webp)
-
-Each widget can be placed at most three times.
-
-![Speed card as an Area chart with download and upload in one chart](../screenshots/en/dashboard-speed-area.webp)
-
-The default dashboard keeps Download and Upload as separate cards.
-
-The gallery includes Subscription quota, Outbound failures, Node availability and DNS latency. Memory can be a chart or a Sparkline value tile. Wide cards show peak and average statistics beside their charts; see [Widgets](features.md#widgets).
+![Dashboard editor](../screenshots/en/dashboard-settings.webp)
 
 <a name="overview"></a>
 
 ## System status
 
-Open System status from the navigation, or from View details or the CPU usage value on Activity. The header shows the engine state, Config version, Uptime, CPU usage and Last reload. Config version identifies the configuration revision in effect; it is not the `generation` number.
+**System status** is the place to check the backend before diagnosing an unavailable feature.
 
-1. Engine shows the engine version, API, Build, Instance, Started and Configuration activated. A badge shows the backend's profile: Base or Full observability.
-2. Traffic counters shows TCP connections, UDP connections, Total connections, Upload, Download and Rate interval. The line below gives the counter start time and whether the counters cover all traffic or visible traffic.
-3. Memory shows Resident memory, the cgroup figures and OOM events when reported. Its named meter compares cgroup usage with a nonzero limit; zero or missing limits show no meter.
-4. Datapath shows the checks of the eBPF programs, hooks and maps in the kernel, and an Attachments table. Datapath errors and runtime degradations appear as warnings under the card.
-5. Backend features lists the features the backend provides. Select one to open the page that uses it.
-6. Features that are off appears only when some features are off. Each row names the cause and the affected features. How to turn on shows the settings to add; Possible causes explains why; other rows link to Temporary runtime overrides or Geodata in Settings, or to this guide.
-7. Select Export state JSON to download the reported state. Reload, Suspend and Resume appear only when the backend allows them; a toast reports each result.
+The header shows engine state, **Config version**, **Uptime**, **CPU usage** and **Last reload**. Config version identifies the active configuration revision, not its `generation` number.
 
-Status cards keep their space with skeleton placeholders while data loads. Loading notices show a progress circle. Meters expose their names and value text to assistive technology.
+| Section | What to check |
+| --- | --- |
+| **Engine** | Engine version and build, API and instance information. Also shows start and configuration activation times and the **Base** or **Full observability** profile. |
+| **Traffic counters** | Counter start time and coverage, as well as upload, download and connection counts. TCP and UDP counts are separate; the rate interval gives the measurement period. |
+| **Memory** | Reported process and cgroup memory. The cgroup meter compares usage with a nonzero limit; a zero or missing limit shows no meter. |
+| **Datapath** | Kernel attachment checks and degradation warnings, including state database failures. Includes program, hook and map checks and an attachments table. |
+| **Backend features** | Features advertised by this backend. Select an entry to open its corresponding page. |
+| **Features that are off** | Each limitation's cause and the available help or settings link. Appears only when limitations exist. |
 
-![System status with the cgroup memory meter in the Memory card](../screenshots/en/system-status-meters.webp)
+Select **Export state JSON** to save the reported state. For absent fields or actions, see [status requirements](feature-requirements.md#req-runtime-status) and [reload, suspend and resume requirements](feature-requirements.md#req-reload-suspend).
+
+Status cards retain their space with placeholders while loading. Loading notices show progress indicators, and meters expose their names and value text to assistive technology.
+
+![System status](../screenshots/en/system-status-meters.webp)
 
 <a name="connections"></a>
 
 ## Connections
 
-Connections opens on the Traffic tab; a link that filters the list or selects a connection opens the Connections tab.
+**Connections** opens on **Traffic**. Choose **List** to inspect individual connections; links to a connection or a filtered list open that tab directly.
 
-![Traffic tab: upload against download per connection, and node latency](../screenshots/en/connections-traffic.webp)
+![Traffic view](../screenshots/en/connections-traffic.webp)
 
-Select a point to open that connection. Node latency is not limited to TCP probes.
+Select a chart point or list row to inspect the connection. Its details show the outbound, chain and matched rule when reported. Use [the outbound investigation steps](common-tasks.md#why-outbound) to open the rule or run a trace.
 
-![Connections tab with filters, grouping and the connection list](../screenshots/en/connections-list.webp)
+![Connection list](../screenshots/en/connections-list.webp)
 
-- Filter also matches the outbound, chain and rule. Export CSV downloads the filtered list.
-- A truncation notice, Partial connection visibility or No connection visibility means an empty list does not prove the device has no connections.
-- A row's add-rule icon opens the [rule dialog](routing.md#add-rule). A disabled icon means the connection has no domain or IP address to match.
-- More actions offers Show matched rule, Edit matched rule's outbound settings, View flow, Trace this connection ([Trace](routing.md#trace)), Only this device and Close connection. Close connection is disabled for connections observed only by eBPF, because the kernel forwards them.
-- Close all with only a device and network filter closes every matching connection, including ones opened after the dialog. Any other filter, or a truncated list, closes the listed connections one by one. Kernel-direct connections are skipped.
+Filters also search the outbound, chain and rule. **Export CSV** exports the filtered list. Read truncation and visibility notices before interpreting an empty list; the [connection requirements](feature-requirements.md#req-connections) explain coverage and which connections can be closed.
+
+A row's add-rule icon is unavailable when the connection has no usable address or domain. **More actions** also offers **Edit matched rule's outbound settings**, **View flow**, **Only this device** and **Close connection** when supported.
+
+**Close all** with only device and network filters targets every matching live connection, including connections opened after confirmation. An outbound, rule or text filter, a truncated list, or an exceeded bulk limit restricts closing to the listed IDs. Kernel-direct connections are skipped.
 
 <a name="flows"></a>
 
 ## Routing log
 
-Routing log shows how honk routed recorded flows, on a Map and in Records.
+**Routing log** shows recorded flows in **Map** and **Records**. It depends on [flow recording](feature-requirements.md#req-flows).
 
-![Routing map: selecting a rule, then a node, pins its path](../screenshots/en/routing.webp)
+![Routing map](../screenshots/en/routing.webp)
 
-Show the N flows on this path opens Records filtered to the pinned path; Clear path filter removes the pin.
+Select a path in **Map**, then use its flow-count button to open the matching records. In **Records**, select a row to read its routing trace. Read the reason when a trace is incomplete. **View connection** opens the associated live connection if it still exists.
 
-In Records, select a flow to read its trace. A Partial trace states Why incomplete. View connection opens the live connection if it still exists. The add-rule icon is on the record row only. Recording settings opens [Temporary runtime overrides](config-and-settings.md#runtime-options).
+Select **Clear path filter** to remove the pinned path. To create a rule from a recorded flow, use the add-rule icon on its record row; the detail panel does not contain that icon.
+
+**Recording settings** opens the recording controls. Their scope and lifetime are described under [runtime changes](what-doona-can-change.md#change-runtime).
 
 <a name="dns"></a>
 
 ## DNS
 
-DNS has Statistics, Resolution log, Cache and Query tabs, as far as the backend supports them.
+The available tabs depend on the backend's [query](feature-requirements.md#req-dns-query), [cache](feature-requirements.md#req-dns-cache) and [recording](feature-requirements.md#req-dns-log) capabilities.
 
-![DNS statistics: latency, outcomes, cache and top queries](../screenshots/en/dns.webp)
+![DNS statistics](../screenshots/en/dns.webp)
 
-- Statistics covers only the latest page of the resolution log. Select a top query to open Resolution log filtered to it.
-- In Resolution log, a row's add-rule icon opens a DNS request rule for the exact domain, or a routing rule when DNS rules are unavailable. Choose Domain suffix to include subdomains. Export CSV covers only the loaded records.
-- Cache lives in memory and is cleared on restart. Show expired includes expired entries on request. Its meter compares usage with a nonzero entry capacity; zero capacity shows no meter. Cache filters entries by full name, suffix, keyword or regex, by record type, or both, even when the backend does not support deletion. When the backend supports deletion, you can delete matching entries after confirmation. The confirmation shows the matching count. Clear all cache cannot be undone.
-- Query results are diagnostic and do not appear in Resolution log. Upstream offers Automatic, which follows `dns.routing`, or a named `dns.upstream`. Bypass cache is off by default.
+| Tab | Data and actions |
+| --- | --- |
+| **Statistics** | Summarizes the latest resolution-log page and cache information. Select a ranked domain to filter the log. |
+| **Resolution log** | Select a row for the recorded request and answer. **Export CSV** exports loaded records, not the full history. |
+| **Cache** | Filter cached entries by name and record type. **Show expired** includes expired entries. Read the confirmation before deleting matches or clearing the cache. |
+| **Query** | Runs a diagnostic lookup. Follow [the query steps](common-tasks.md#dns-resolution). These lookups do not appear in the resolution log. |
 
-An empty cache shows No cache entries. When filters match no entries, it shows No matching cache entries.
+To create a rule from **Resolution log**, use a row's add-rule icon to create a DNS request rule for the exact domain. If DNS rules are unavailable, it opens a routing rule instead. Choose **Domain suffix** to include subdomains.
 
-Keywords match text anywhere in the name: `cdn` matches `cdn.example.com`. The suffix `cdn` matches only `cdn` or names ending in `.cdn`. A record type further narrows the results. Clear filters resets the matching criteria and removes any domain filter from the page URL.
+Cache filters support full names, suffixes, keywords and regular expressions, combined with a record type. A keyword matches anywhere: `cdn` matches `cdn.example.com`. The suffix `cdn` matches only `cdn` and names ending in `.cdn`.
 
-![Cache with Show expired on and an expired entry, beside the cache usage meter on Statistics](../screenshots/en/dns-cache-expired.webp)
+Filtering also works without deletion support. **Clear filters** resets the criteria and removes the domain filter from the page URL.
+
+When the cache reports memory-only storage, its entries are cleared on restart. When deleting matches, the confirmation shows the matching count, or the domain name and record type for name-based deletion; **Clear all cache** cannot be undone. **No cache entries** means the cache is empty, while **No matching cache entries** means the current filters matched nothing.
+
+![DNS cache with expired entries](../screenshots/en/dns-cache-expired.webp)
 
 <a name="logs"></a>
 
 ## Logs
 
-Logs streams the engine log.
+**Logs** displays engine log records. Check [log recording requirements](feature-requirements.md#req-logs) if no records arrive.
 
-![Logs with the activity chart by level and the Level and Module filters](../screenshots/en/logs.webp)
+![Engine logs](../screenshots/en/logs.webp)
 
-- Levels below what the engine records are marked; lower the engine's level under Recording settings in [Temporary runtime overrides](config-and-settings.md#runtime-options).
-- Pause keeps only the newest records until you resume. Clear empties this page only; Export downloads the received records. Each row’s Copy record button copies it in the same format as Export.
-- After a reconnection, retained records are replayed; the list marks a gap when replay is no longer possible.
-- Log recording is disabled in the configuration means you must change the honk [configuration](configuration.md#config); Turn on log recording in Settings first means Recording settings is enough.
+Use **Level** and **Module** to narrow the stream. **Pause** pauses display updates while the buffer retains only the newest records up to the page limit. **Clear** clears this page's records; **Export** downloads the received records, and **Copy record** copies one row in the same format used by **Export**.
+
+Levels below the engine's recording level are marked as not recorded. Change the engine level through **Recording settings**; selecting a lower display filter cannot recover unrecorded messages.
+
+A gap marker means some records could not be replayed after reconnecting. For messages from before recording began, use the [service log](service-management.md).
 
 <a name="events"></a>
 
 ## Events
 
-Events shows the backend's event stream, newest first.
+**Events** displays backend events, newest first. Check [event requirements](feature-requirements.md#req-events) if the stream is unavailable.
 
-1. Kind starts at Exclude runtime updates. Choose All kinds, or one kind the backend advertises.
-2. The list shows Time, Kind and Summary. The toolbar shows the connection state, the number of events kept and, when available, Resumes from the last position.
-3. Select an event to read its full summary. A Configuration activated event links to View configuration. A Flow records lost event links to View flow record and Recording settings.
-4. Select Export JSON to download the events currently shown. Each row’s Copy record button copies it in the same format.
+**Kind** starts at **Exclude runtime updates**. Choose **All kinds** or a specific kind, then select a row for its details and related links. **Export JSON** exports the events currently shown; **Copy record** copies one event in the export format, without the surrounding array.
 
-After a disconnection, retained events are replayed. If the replay cursor has expired, a row in the list marks the lost events.
+The list shows **Time**, **Kind** and **Summary**. Its toolbar reports connection state, retention limit and, when available, **Resumes from the last position**. **Configuration activated** offers **View configuration** when configuration is available; **Flow records lost** can offer **View flow record** and **Recording settings**.
+
+After reconnecting, retained events can be replayed. A gap marker means the earlier events are no longer available for replay.

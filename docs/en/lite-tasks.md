@@ -4,82 +4,89 @@ English / [简体中文](../zh-CN/lite-tasks.md) / [繁體中文](../zh-TW/lite-
 
 # Common tasks in doona lite
 
-Use doona lite to import resources and edit honk configuration. [Connect first](lite-connect.md). Editing requires all of the following:
+Import nodes and edit honk configuration after [connecting lite](lite-connect.md). Check [configuration write requirements](feature-requirements.md#req-config-edit), [full validation requirements](feature-requirements.md#req-validation), and the [lite backend requirements](editions.md#backend-requirements) if editing is unavailable.
 
-- honk permits configuration writes.
-- honk supports tracking operations and full configuration validation.
-- The main configuration is writable, and honk returns its complete content with a matching content hash.
+## Apply a draft
 
-You can practice with **Try the demo**, where changes reset on reload.
+For subscription, group, routing, DNS and global-setting edits, use this sequence after the task's steps:
+
+1. Select **Review and apply**.
+2. Check the proposed changes, then select **Apply**.
+3. Wait for **Configuration saved and applied.**, then check the resource again. If the notification reports a failure or unconfirmed result, read it before retrying.
+
+Node imports use the immediate apply flow described below. See [What doona can change](what-doona-can-change.md) for storage and activation rules.
 
 <a name="lite-task-import"></a>
 
 ## Import nodes from share links
 
 1. Open **Nodes** and select **Add node**.
-2. In the **Paste links** tab, paste one link per line into **Share links**. Links are recognized automatically.
-3. Check the recognized protocols and addresses, and correct any invalid lines.
-4. Select **Add N nodes** for multiple nodes, or **Add** for one node. This writes and applies the nodes directly; they appear in the list.
+2. Select **Paste links** and paste one link per line in **Share links**.
+3. Check the recognized nodes and correct invalid lines.
+4. Select **Add** for one node or **Add N nodes** for several. This writes and applies the nodes immediately; check that they appear in the list.
 
-Share-link import also requires honk to support syntax validation.
+See [node requirements](feature-requirements.md#req-nodes) and [syntax validation](feature-requirements.md#req-validation) if import is unavailable.
 
 <a name="lite-task-subscription"></a>
 
 ## Add a subscription
 
 1. Open **Subscriptions** and select **Add subscription**.
-2. Enter **Subscription link**. You may fill in **Name (optional)** or leave it empty to use the suggested name.
-3. Select **Save**. The subscription appears as a draft row; honk has not saved it yet.
-4. Select **Review and apply**, check the changes, then select **Apply**.
-5. Wait for the success notification: “Configuration saved and applied.” The subscription is now applied.
+2. Enter **Subscription link**. Fill in **Name (optional)** or leave it empty to use the suggested name.
+3. Select **Save**. The new row is a draft.
+4. Follow **Apply a draft** above, then check the subscription's nodes.
 
-Editing and deleting subscriptions use the same draft and review flow. An existing subscription cannot be renamed here.
+Editing and deleting subscriptions use the same review flow. For a failed fetch, check [subscription refresh requirements](feature-requirements.md#req-subscription-refresh).
 
 <a name="lite-task-group"></a>
 
-## Create a group and choose members
+## Create a group
 
 1. Open **Groups** and select **Create group**.
-2. Enter **Name**, choose **Policy** (for example **Manual choice**), then select **Create**.
-3. In **Edit group**, find a node under **Available nodes and subscriptions** and use its **Add** button. The node appears under **In this group**.
-4. Select **Review and apply**, review the group and its members, then select **Apply**.
+2. Enter **Name**, choose **Manual choice** under **Policy**, then select **Create**.
+3. In **Edit group**, find a node under **Available nodes and subscriptions** and select its **Add** button. Confirm that it appears under **In this group**.
+4. Follow **Apply a draft** above, then check the group's members.
+
+For group-related controls, see [group editing requirements](feature-requirements.md#req-group-edit).
 
 <a name="lite-task-rule"></a>
 
-## Add a routing rule
+## Add a domain rule
 
 1. Open **Routing** and select **Add rule**.
-2. For a domain rule, keep **Domain and subdomains**, enter `example.com` in **Values**, and press Enter.
-3. Choose a group under **Goes to** and choose **Position**. Select **Add**.
-4. Select **Review and apply**, check the rule, then select **Apply**.
+2. Choose **Domain and subdomains**, enter `example.com` in **Values**, and press Enter.
+3. Choose the destination group under **Goes to**, choose **Position**, then select **Add**.
+4. Follow **Apply a draft** above, then check that the domain rule appears.
 
-The **Rebuild rules from a template** dialog can replace the routing rules in the draft. Review its replacement list before saving; it does not merely append a rule.
+**Rebuild rules from a template** replaces rules in the draft. Review the replacement before applying it. See [rule requirements](feature-requirements.md#req-rules) if editing is unavailable.
 
 <a name="lite-task-dns"></a>
 
-## Change DNS upstreams
+## Add a DNS server
 
 1. Open **DNS** and select **Add DNS server**.
-2. Keep **Custom** under **Provider**. Enter a unique **Name** and **Server address**, for example `tls://1.1.1.1:853`, then select **Add**.
-3. Open that server’s **Actions** menu and select **Set as default** to use it for other domains.
-4. Select **Review and apply**, check the server and rule changes, then select **Apply**.
+2. Choose **Custom** under **Provider**, enter a unique **Name** and a **Server address**, such as `tls://1.1.1.1:853`, then select **Add**.
+3. Open the server's **Actions** menu and select **Set as default**.
+4. Follow **Apply a draft** above and check the server and default rule.
+
+For configuration fields, see [Configuration](configuration.md). For write conditions, see [rule requirements](feature-requirements.md#req-rules).
 
 <a name="lite-task-setting"></a>
 
 ## Change a global setting
 
 1. Open **Settings** and choose **Sniffing**.
-2. Set **Sniffing timeout** to `200` and its **Duration unit** to `ms`.
-3. Select **Review and apply**, review the change, then select **Apply**.
+2. Set **Sniffing timeout** to `200` and **Duration unit** to `ms`.
+3. Follow **Apply a draft** above, then reopen the setting to check its value.
 
-Settings that require a restart appear as read-only values with a **Copy** button for the setting line. Follow the dialog’s instructions to edit the file’s `global` section on the honk host and restart honk; copying the restart command does not run it.
+Restart-only settings show read-only values with a **Copy** button for the configuration line. Copy the line, edit the file's `global` section on the honk host, then restart honk. Copying the displayed restart command does not execute it. See [restart-only global settings](what-doona-can-change.md#restart-global) and the [configuration reference](configuration.md).
 
 <a name="lite-task-share"></a>
 
-## Share a node as a link or QR code
+## Share a manual node
 
-1. Open **Nodes** and find a manually added node.
-2. Open its **Actions** menu and select **Share** to open the link and QR code.
-3. Select **Copy link**, or scan the QR code. If copying is unavailable, select and copy the displayed link.
+1. Open **Nodes** and find the manually added node.
+2. Open its **Actions** menu and select **Share**.
+3. Select **Copy link** or scan the QR code. If copying is unavailable, select and copy the displayed link.
 
-Subscription nodes do not expose share links. A link that is too long may have no QR code; copy the link instead. Share links contain connection credentials.
+Subscription nodes do not expose share links here. If a link is too long for a QR code, copy the link. Share links contain connection credentials; share them only with intended recipients.

@@ -2,35 +2,18 @@ English / [简体中文](../zh-CN/service-management.md) / [繁體中文](../zh-
 
 # Service management
 
-This page runs honk as a systemd or OpenWrt procd service: it creates the service once, then lists the commands that start, stop, restart and reload honk and read its log. It has no OpenRC steps. Finish [Minimal configuration](minimal-configuration.md) first.
-
-No doona package installs a honk service, and honk’s release archives carry none, so step 1 creates it.
-
-| System                                           | Service manager | Tabs to use       |
-| ------------------------------------------------ | --------------- | ----------------- |
-| Debian, Ubuntu, Fedora, RHEL, Arch Linux, Gentoo with systemd | systemd | sudo or root |
-| OpenWrt                                          | procd           | OpenWrt       |
-| Gentoo or Alpine with OpenRC                     | OpenRC          | Not covered: see OpenRC below |
-
-## OpenRC
-
-doona and honk ship no OpenRC script. To reach [First sign-in](first-sign-in.md), start honk in the foreground with the command from step 6 of [Minimal configuration](minimal-configuration.md):
-
-```sh tab="sudo"
-sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
-```
-
-```sh tab="root"
-/usr/local/bin/honk-core --config /etc/honk/config.dae
-```
-
-honk runs until you press Ctrl+C or close the terminal, and prints its log there. It does not start at boot. The rest of this page applies to systemd and procd only.
+Create a honk service for systemd or OpenWrt procd, then use this page to control it and read its logs. Finish the configuration check in [Quick start](quick-start.md) or [Minimal configuration](minimal-configuration.md) first, and stop any foreground test process.
 
 ## 1. Create the service
 
-Do this once. The systemd unit is the one honk’s quick start gives; the procd script starts the same command with OpenWrt’s paths.
+Choose the section for your service manager. If a honk service already exists, inspect its executable and configuration paths before replacing it. The examples below use the paths from this site’s installation guides.
 
-```sh tab="sudo"
+### systemd
+
+Run on the gateway. In a root shell, omit `sudo`. This unit uses `/usr/local/bin/honk-core` and `/etc/honk/config.dae`.
+
+```sh
+sudo install -d -m 0700 /var/lib/honk
 sudo tee /etc/systemd/system/honk-core.service > /dev/null <<'EOF'
 [Unit]
 Description=honk transparent proxy engine
@@ -56,33 +39,13 @@ EOF
 sudo systemctl daemon-reload
 ```
 
-```sh tab="root"
-cat > /etc/systemd/system/honk-core.service <<'EOF'
-[Unit]
-Description=honk transparent proxy engine
-Wants=network-online.target
-After=network-online.target
+The unit follows [honk’s systemd example](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#run-with-systemd). Check that guide before adding privilege restrictions to the service.
 
-[Service]
-Type=notify
-User=root
-WorkingDirectory=/var/lib/honk
-ExecStart=/usr/local/bin/honk-core --config /etc/honk/config.dae --disable-timestamp
-ExecReload=/usr/local/bin/honk-core reload
-Restart=on-failure
-RestartSec=2s
-TimeoutStopSec=30s
-LimitNOFILE=1048576
-LimitMEMLOCK=infinity
-UMask=0077
+### OpenWrt procd
 
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload
-```
+Run as root on the router. This script uses `/usr/bin/honk-core` and the data directory prepared by [OpenWrt installation](install-openwrt.md#install-geodata).
 
-```sh tab="OpenWrt"
+```sh
 cat > /etc/init.d/honk-core <<'EOF'
 #!/bin/sh /etc/rc.common
 
@@ -91,175 +54,86 @@ STOP=10
 USE_PROCD=1
 
 start_service() {
-	procd_open_instance
-	procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
-	procd_set_param limits nofile="1048576 1048576"
-	procd_set_param env MIMALLOC_PURGE_DELAY=0
-	procd_set_param respawn
-	procd_set_param stdout 1
-	procd_set_param stderr 1
-	procd_close_instance
+    procd_open_instance
+    procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
+    procd_set_param limits nofile="1048576 1048576"
+    procd_set_param env MIMALLOC_PURGE_DELAY=0
+    procd_set_param respawn
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
 }
 
 reload_service() {
-	/usr/bin/honk-core reload
+    /usr/bin/honk-core reload
 }
 EOF
 chmod 0755 /etc/init.d/honk-core
 ```
 
-Do not add `NoNewPrivileges=yes`, capability limits or a read-only `/proc/sys` to the unit: honk needs BPF, network administration, namespace, mount and sysctl privileges at startup.
+`MIMALLOC_PURGE_DELAY=0` requests immediate purging from mimalloc. The setting is described in [honk’s CLI reference](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/cli.md).
 
-On OpenWrt with a mimalloc build, keep `MIMALLOC_PURGE_DELAY=0` in the procd script above so freed memory is returned promptly. Builds using the system allocator do not use this setting.
+## 2. Enable and start honk
 
-## 2. Start honk and start it at boot
-
-```sh tab="sudo"
+```sh tab="systemd"
 sudo systemctl enable --now honk-core
-```
-
-```sh tab="root"
-systemctl enable --now honk-core
+sudo systemctl status honk-core
 ```
 
 ```sh tab="OpenWrt"
 /etc/init.d/honk-core enable
 /etc/init.d/honk-core start
-```
-
-systemd prints `Created symlink '/etc/systemd/system/multi-user.target.wants/honk-core.service' → '/etc/systemd/system/honk-core.service'.` The command returns once honk reports that it is ready.
-
-## 3. Check that honk is running
-
-```sh tab="sudo"
-sudo systemctl status honk-core
-```
-
-```sh tab="root"
-systemctl status honk-core
-```
-
-```sh tab="OpenWrt"
 /etc/init.d/honk-core status
 ```
 
-A running honk looks like this. systemd on Debian 13:
+For systemd, look for `active (running)`. On OpenWrt, the status should report `running`. Repeat the API check from [Quick start](quick-start.md) to confirm that the listener is reachable.
 
-```text
-● honk-core.service - honk transparent proxy engine
-     Loaded: loaded (/etc/systemd/system/honk-core.service; enabled; preset: enabled)
-     Active: active (running) since …
-```
+## Read the logs
 
-procd prints `running`; after a stop it prints `inactive`.
-
-The log also shows `honk-core is running. Press Ctrl+C to stop.`, and `curl http://192.168.1.1:9527/api`, with your address, answers as in [step 5 of Minimal configuration](minimal-configuration.md).
-
-A reachable API does not prove transparent routing works. Check System status for datapath degradations and test traffic from a LAN client.
-
-## Read the log
-
-```sh tab="sudo"
+```sh tab="systemd"
 sudo journalctl -u honk-core -e
-```
-
-```sh tab="root"
-journalctl -u honk-core -e
 ```
 
 ```sh tab="OpenWrt"
 logread -e honk-core
 ```
 
-To follow new lines as they arrive:
+To follow new messages, use `sudo journalctl -u honk-core -f` on systemd or `logread -f -e honk-core` on OpenWrt. Press Ctrl+C to stop following. If startup fails, use the error in the log with [Troubleshooting](troubleshooting.md#troubleshooting).
 
-```sh tab="sudo"
-sudo journalctl -u honk-core -f
+The journal includes earlier service runs. Diagnose the current start from the latest `honk-core … starting` message, which also reports the engine version.
+
+## Reload, restart, or stop
+
+Check [What doona can change](what-doona-can-change.md) before choosing reload or restart. After either command, read the log to confirm the result.
+
+| Task | systemd | OpenWrt |
+| --- | --- | --- |
+| Start | `sudo systemctl start honk-core` | `/etc/init.d/honk-core start` |
+| Reload configuration | `sudo systemctl reload honk-core` | `/etc/init.d/honk-core reload` |
+| Restart | `sudo systemctl restart honk-core` | `/etc/init.d/honk-core restart` |
+| Stop | `sudo systemctl stop honk-core` | `/etc/init.d/honk-core stop` |
+| Disable startup at boot | `sudo systemctl disable honk-core` | `/etc/init.d/honk-core disable` |
+
+Disabling startup at boot does not stop a running service. To keep honk stopped after reboot, run both stop and disable.
+
+## Service and reload errors
+
+| Symptom or log message | Meaning and next step |
+| --- | --- |
+| systemd cannot find `honk-core.service` | Create the unit using step 1, run `sudo systemctl daemon-reload`, then start it using step 2. |
+| Reload reports `no running honk-core instance` | No real instance holds the process lock. A foreground process using `--mock-ebpf` does not hold that lock. Start the intended real service using step 2. |
+| `SIGHUP reload applied` | The new configuration was applied. |
+| `SIGHUP reload rejected` | Read the accompanying `stage` and errors to determine whether the new configuration was applied; for a restart-required rejection, edit the listed settings on the host and [restart honk](what-doona-can-change.md). |
+| `SIGHUP reload committed with degraded datapath` | The configuration was committed, but the datapath is degraded. Read the accompanying errors before treating the service as healthy. |
+
+A successful reload command alone does not prove that the configuration was applied; check the service log for the outcome.
+
+## OpenRC or a foreground test
+
+This page does not provide an OpenRC service script. After configuring honk, you can run it in a terminal to complete the first sign-in:
+
+```sh
+sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
 ```
 
-```sh tab="root"
-journalctl -u honk-core -f
-```
-
-```sh tab="OpenWrt"
-logread -f -e honk-core
-```
-
-Press Ctrl+C to stop following. The systemd journal keeps lines from earlier starts too; read from the last `starting` line.
-
-## Reload the configuration
-
-After editing a `.dae` file, reload honk. A reload re-reads the configuration without stopping honk.
-
-```sh tab="sudo"
-sudo systemctl reload honk-core
-```
-
-```sh tab="root"
-systemctl reload honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core reload
-```
-
-The log shows `SIGHUP reload request 1 started`, then `applied`, or `rejected` with `reload rejected: changed fields require process restart fields=[…]`. The listed fields, which include everything under `native_api`, `log_level` and the interfaces, need a restart. doona’s Configuration page reloads by itself after saving.
-
-## Restart
-
-A restart stops honk and starts it again.
-
-```sh tab="sudo"
-sudo systemctl restart honk-core
-```
-
-```sh tab="root"
-systemctl restart honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core restart
-```
-
-## Stop
-
-```sh tab="sudo"
-sudo systemctl stop honk-core
-```
-
-```sh tab="root"
-systemctl stop honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core stop
-```
-
-honk stays stopped until the next start or boot.
-
-## Stop starting at boot
-
-```sh tab="sudo"
-sudo systemctl disable honk-core
-```
-
-```sh tab="root"
-systemctl disable honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core disable
-```
-
-Next: [First sign-in](first-sign-in.md).
-
-## If it doesn’t work
-
-| You see                                                                 | Cause and fix                                                                                                         |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `Active: failed` or `activating (auto-restart)`                         | honk stopped at startup. The log names the reason on a `fatal error, shutting down:` line; [Minimal configuration](minimal-configuration.md) lists the common ones. |
-| systemd cannot find `honk-core.service`                                 | Step 1 was skipped, or `systemctl daemon-reload` did not run after it.                                                |
-| `Error: no running honk-core instance; /run/honk-core.lock does not exist` on reload | honk is not running, or it runs with `--mock-ebpf`, which takes no lock. Start the service instead of reloading. |
-| A change has no effect after a reload                                   | The log shows `reload rejected`. Restart instead.                                                                     |
-
-For more messages, see [Troubleshooting](troubleshooting.md#troubleshooting).
+Keep the terminal open and use the browser steps in [Quick start](quick-start.md). Logs appear in the terminal; Ctrl+C stops honk. This command does not enable startup at boot.

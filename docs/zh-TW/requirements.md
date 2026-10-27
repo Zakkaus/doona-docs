@@ -2,67 +2,99 @@
 
 <a name="requirements"></a>
 
-# 系統需求
+# 執行需求
+
+安裝 doona 與 honk 前，先檢查閘道器與瀏覽器。個別頁面或操作的條件見[功能需求](feature-requirements.md)。
 
 ## 閘道器
 
-honk 只能在 Linux 上以 `root` 身分執行。它會載入 eBPF 程式、建立 `dae0` 連結與 `daens` 命名空間並修改 sysctl，因此首次啟動時請保留主控台等第二條管理途徑。
+| 元件 | 需求 |
+| --- | --- |
+| 作業系統 | Linux；honk 的實際透明代理後端須以 root 身分運作。 |
+| 核心 | Linux 6.12 或更新版本，實際 eBPF 後端會拒絕更早的核心。 |
+| cgroup | 支援 BPF 的 cgroup v2，必要的 socket 掛鉤必須成功附加。 |
+| 核心型別資訊 | 與目前核心相符的原始 BTF，存放位置見下文。 |
+| BPF 檔案系統 | 預設固定目錄要求在 `/sys/fs/bpf` 掛載 bpffs。 |
+| HTTPS 下載 | 系統 CA 憑證庫，安裝方式見對應發行版的安裝指南。 |
 
-- Linux 6.12 或更新版本。核心版本過舊時，honk 會在掛載任何程式之前拒絕啟動。
-- 下列核心選項。桌面與伺服器發行版通常已啟用；OpenWrt、Armbian 與 VyOS 需要逐項檢查。
-- `pname(...)` 規則需要 cgroup v2。缺少 cgroup v2 時 honk 仍可啟動，但依程序名稱分流無法使用。
-- bpffs 掛載於 `/sys/fs/bpf`。
-- CA 憑證，例如 `ca-certificates` 套件。缺少時 honk 會以 `subscription network startup failed` 結束。
-- 地理資料更新可能增加小型路由器的記憶體用量。honk 將更新串流寫入磁碟；在 OpenWrt 上使用 mimalloc 建置時，請保留 [procd 服務](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，讓已釋放的記憶體及時歸還系統。
+首次啟動實際後端時，保留主控台或其他連接閘道器的方式，因為 honk 會修改閘道器的網路組態。
+
+### 檢查核心
+
+在閘道器上執行：
 
 ```sh
 uname -r
 zcat /proc/config.gz 2>/dev/null || cat /boot/config-$(uname -r)
 ```
 
+實際後端需要以下核心選項：
+
 ```text
 CONFIG_BPF=y
 CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
-CONFIG_DEBUG_INFO_BTF=y
 CONFIG_CGROUP_BPF=y
-CONFIG_NET_CLS_BPF=y|m
-CONFIG_NET_SCH_INGRESS=y|m
+CONFIG_NET_SCHED=y
 CONFIG_NET_CLS_ACT=y
+CONFIG_NET_XGRESS=y
 CONFIG_NET_NS=y
-# Held-first-packet UDP (NFQUEUE, on by default) also needs:
+```
+
+`CONFIG_NET_CLS_ACT` 會選取 `CONFIG_NET_XGRESS`。TCX 後端不要求舊的 `CONFIG_NET_CLS_BPF` 或 `CONFIG_NET_SCH_INGRESS` 選項。
+
+預設的 UDP 首包暫存處理還需要：
+
+```text
 CONFIG_NF_TABLES=y|m
 CONFIG_NF_TABLES_INET=y|m
 CONFIG_NFT_CT=y|m
-CONFIG_NETFILTER_NETLINK_QUEUE=y|m
 CONFIG_NFT_QUEUE=y|m
+CONFIG_NETFILTER_NETLINK_QUEUE=y|m
 ```
 
-系統未自動掛載 bpffs 時，請執行：
+設定了 `HONK_VMLINUX_BTF` 時，honk 從該路徑讀取原始 BTF。否則依序嘗試 `/sys/kernel/btf/vmlinux` 和 `/usr/lib/debug/boot/vmlinux`。OpenWrt 的 `vmlinux-btf` 套件提供後者；ELF 除錯映像不是原始 BTF 檔案。
+
+### 檢查 bpffs
+
+在閘道器上執行；root shell 中省略 sudo：
 
 ```sh
 sudo install -d -m 0755 /sys/fs/bpf
 mountpoint -q /sys/fs/bpf || sudo mount -t bpf bpf /sys/fs/bpf
 mountpoint /sys/fs/bpf
-# To mount it at boot, add this line to /etc/fstab:
-# bpf /sys/fs/bpf bpf defaults 0 0
+```
+
+最後一條命令應顯示 `/sys/fs/bpf` 是掛載點。
+
+如果系統不會自動掛載 bpffs，在 `/etc/fstab` 中新增以下項目：
+
+```text
+bpf /sys/fs/bpf bpf defaults 0 0
 ```
 
 <a name="honk-version"></a>
 
 ## honk 版本
 
-- doona beta.19 的 honk-core 附件來自 Glassyiris/honk `feat/native-api` 標籤 `debug.2026.10.9.native-api.2`，提交為 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`。附件啟用需明確選擇的 `native-api` 建置功能，並內建 doona 0.1.0-beta.19。`HONK-SOURCE.txt` 記錄標籤與完整 honk 提交，並提供 honk 原始碼與對應 doona 原始碼的連結。設定 `ui: embedded` 後不需單獨安裝介面套件，也可以將 `ui` 指向外部目錄。
-- daeuniverse/honk `main` 分支的建置沒有原生 API。honk 會以 `unknown experimental setting` 拒絕所有 `native_api` 設定，存取 `/api` 與 `/ui/` 會回傳 404。
-- `feat/native-api` 分支的建置若未啟用 `native-api` 功能，啟用 `native_api` 時會以 `native-api feature is required` 阻止啟動。
-- 早期的 `feat/native-api` 建置可以更新地理資料，但無法設定來源。doona beta.8 和 beta.9 附上的建置兩者皆支援。
+使用實作 doona 原生 API 契約、且啟用了 `native-api` 建置功能的 honk。僅憑版本號無法判斷相容性；缺少該建置功能的程式，即使新增 API 組態也無法提供 API。
 
-執行 `honk-core --version` 查看已安裝執行檔的版本；執行中的版本請查看 doona「系統狀態」頁的「引擎」卡片或側邊導覽列底部。
+按[安裝指南](install.md)選擇相容的 honk-core 封存檔。應用程式的[契約版本記錄](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)列出了預期的 API。
 
-## 瀏覽器與建置
+在閘道器上執行：
 
-| 元件   | 要求                                                                                                                                          |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 後端   | 實作 [SOURCE.md](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) 所釘契約並啟用 API 監聽的引擎                                                      |
-| 瀏覽器 | Chrome 或 Edge 120、Firefox 121、Safari 17 及以後。這些是 CSS 建置目標；JavaScript 建置目標是 ES2022。瀏覽器測試使用 Chromium；CI 另加 WebKit 與 Firefox Nightly 相容性測試。 |
-| 建置   | 僅從原始碼建置 doona 時需要 Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0` 與 pnpm 11.15.1；打包需要 GNU tar、gzip 與 sha256sum。 |
+```sh
+honk-core --version
+```
+
+登入後，在**系統狀態**中核對正在運作的引擎版本是否與已安裝的程式一致。API 缺失或建置遭拒時，查看[原生 API 疑難排解](troubleshooting.md#no-native-api)。
+
+## 瀏覽器與原始碼建置
+
+| 元件 | 需求 |
+| --- | --- |
+| 瀏覽器 | 標準版建置目標：Chrome 或 Edge 120、Firefox 121、Safari 17 或更新版本；JavaScript 目標為 ES2022。 |
+| 建置應用程式 | Node `^22.13.0 \|\| ^24.0.0 \|\| >=26.0.0`，pnpm 11.15.1。 |
+| 建置本文件網站 | Node `^22.18.0 \|\| ^24.0.0 \|\| >=26.0.0`，pnpm 11.15.1。 |
+
+只有[開發](development.md)時才需要 Node 與 pnpm，託管已建置的介面不需要。依程序名稱路由的額外條件見[功能需求](feature-requirements.md#req-process-routing)。

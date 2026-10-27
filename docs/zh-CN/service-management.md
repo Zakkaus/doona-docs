@@ -2,35 +2,18 @@
 
 # 服务管理
 
-本页把 honk 作为 systemd 或 OpenWrt procd 服务运行：先创建一次服务，再列出启动、停止、重启、重载 honk 以及查看日志的命令。本页不含 OpenRC 步骤。请先完成[最小配置](minimal-configuration.md)。
-
-doona 的软件包都不安装 honk 服务，honk 的发行归档文件中也没有服务文件，因此第 1 步需要自行创建。
-
-| 系统                                                       | 服务管理器 | 使用的标签页              |
-| ---------------------------------------------------------- | ---------- | ------------------------- |
-| Debian、Ubuntu、Fedora、RHEL、Arch Linux、使用 systemd 的 Gentoo | systemd | “sudo”或“root”     |
-| OpenWrt                                                    | procd      | “OpenWrt”              |
-| 使用 OpenRC 的 Gentoo 或 Alpine                            | OpenRC     | 不在本页范围内：见下文 OpenRC 一节 |
-
-## OpenRC
-
-doona 与 honk 都不提供 OpenRC 脚本。如需完成[首次登录](first-sign-in.md)，用[最小配置](minimal-configuration.md)第 6 步的命令在前台启动 honk：
-
-```sh tab="sudo"
-sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
-```
-
-```sh tab="root"
-/usr/local/bin/honk-core --config /etc/honk/config.dae
-```
-
-honk 持续运行，直到按下 Ctrl+C 或关闭终端，日志直接输出到该终端。honk 不会随开机启动。本页其余内容只适用于 systemd 与 procd。
+创建 systemd 或 OpenWrt procd 的 honk 服务，再按本页管理服务和查看日志。先完成[快速开始](quick-start.md)或[最小配置](minimal-configuration.md)中的配置检查，并停止前台测试进程。
 
 ## 1. 创建服务
 
-此步只需执行一次。systemd 单元与 honk 快速入门给出的相同；procd 脚本以 OpenWrt 的路径启动同一条命令。
+选择当前服务管理器对应的部分。已有 honk 服务时，替换前先检查可执行文件与配置路径。以下示例使用本站安装指南中的路径。
 
-```sh tab="sudo"
+### systemd
+
+在网关上执行。使用 root shell 时省略 `sudo`。此单元使用 `/usr/local/bin/honk-core` 和 `/etc/honk/config.dae`。
+
+```sh
+sudo install -d -m 0700 /var/lib/honk
 sudo tee /etc/systemd/system/honk-core.service > /dev/null <<'EOF'
 [Unit]
 Description=honk transparent proxy engine
@@ -56,33 +39,13 @@ EOF
 sudo systemctl daemon-reload
 ```
 
-```sh tab="root"
-cat > /etc/systemd/system/honk-core.service <<'EOF'
-[Unit]
-Description=honk transparent proxy engine
-Wants=network-online.target
-After=network-online.target
+此单元依据 [honk 的 systemd 示例](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#run-with-systemd)。为服务添加权限限制前，先检查该指南。
 
-[Service]
-Type=notify
-User=root
-WorkingDirectory=/var/lib/honk
-ExecStart=/usr/local/bin/honk-core --config /etc/honk/config.dae --disable-timestamp
-ExecReload=/usr/local/bin/honk-core reload
-Restart=on-failure
-RestartSec=2s
-TimeoutStopSec=30s
-LimitNOFILE=1048576
-LimitMEMLOCK=infinity
-UMask=0077
+### OpenWrt procd
 
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload
-```
+在路由器上以 root 执行。此脚本使用 `/usr/bin/honk-core`，以及 [OpenWrt 安装](install-openwrt.md#install-geodata)中准备的数据目录。
 
-```sh tab="OpenWrt"
+```sh
 cat > /etc/init.d/honk-core <<'EOF'
 #!/bin/sh /etc/rc.common
 
@@ -91,175 +54,86 @@ STOP=10
 USE_PROCD=1
 
 start_service() {
-	procd_open_instance
-	procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
-	procd_set_param limits nofile="1048576 1048576"
-	procd_set_param env MIMALLOC_PURGE_DELAY=0
-	procd_set_param respawn
-	procd_set_param stdout 1
-	procd_set_param stderr 1
-	procd_close_instance
+    procd_open_instance
+    procd_set_param command /usr/bin/honk-core --config /etc/honk/config.dae --data-dir /etc/honk/data --disable-timestamp
+    procd_set_param limits nofile="1048576 1048576"
+    procd_set_param env MIMALLOC_PURGE_DELAY=0
+    procd_set_param respawn
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
 }
 
 reload_service() {
-	/usr/bin/honk-core reload
+    /usr/bin/honk-core reload
 }
 EOF
 chmod 0755 /etc/init.d/honk-core
 ```
 
-不要在单元中加入 `NoNewPrivileges=yes`、能力限制或只读的 `/proc/sys`：honk 启动时需要 BPF、网络管理、命名空间、挂载与 sysctl 权限。
+`MIMALLOC_PURGE_DELAY=0` 要求 mimalloc 立即回收释放的内存页。说明见 [honk CLI 参考](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/cli.md)。
 
-在 OpenWrt 上使用 mimalloc 构建时，请保留上述 procd 脚本中的 `MIMALLOC_PURGE_DELAY=0`，让已释放的内存及时归还系统。使用系统分配器的构建不使用此设置。
+## 2. 启用并启动 honk
 
-## 2. 启动 honk 并设为开机启动
-
-```sh tab="sudo"
+```sh tab="systemd"
 sudo systemctl enable --now honk-core
-```
-
-```sh tab="root"
-systemctl enable --now honk-core
+sudo systemctl status honk-core
 ```
 
 ```sh tab="OpenWrt"
 /etc/init.d/honk-core enable
 /etc/init.d/honk-core start
-```
-
-systemd 输出 `Created symlink '/etc/systemd/system/multi-user.target.wants/honk-core.service' → '/etc/systemd/system/honk-core.service'.`。honk 报告就绪后，命令才返回。
-
-## 3. 检查 honk 是否在运行
-
-```sh tab="sudo"
-sudo systemctl status honk-core
-```
-
-```sh tab="root"
-systemctl status honk-core
-```
-
-```sh tab="OpenWrt"
 /etc/init.d/honk-core status
 ```
 
-正在运行的 honk 如下所示。Debian 13 上的 systemd：
-
-```text
-● honk-core.service - honk transparent proxy engine
-     Loaded: loaded (/etc/systemd/system/honk-core.service; enabled; preset: enabled)
-     Active: active (running) since …
-```
-
-procd 输出 `running`；停止后输出 `inactive`。
-
-日志中也会出现 `honk-core is running. Press Ctrl+C to stop.`；把地址换成你的地址后执行 `curl http://192.168.1.1:9527/api`，返回内容与[最小配置第 5 步](minimal-configuration.md)相同。
-
-API 可访问不代表透明分流正常。请在「系统状态」检查数据路径降级情况，并从局域网客户端测试流量。
+systemd 状态应显示 `active (running)`；OpenWrt 状态应显示 `running`。重复[快速开始](quick-start.md)中的 API 检查，确认监听地址可以访问。
 
 ## 查看日志
 
-```sh tab="sudo"
+```sh tab="systemd"
 sudo journalctl -u honk-core -e
-```
-
-```sh tab="root"
-journalctl -u honk-core -e
 ```
 
 ```sh tab="OpenWrt"
 logread -e honk-core
 ```
 
-如需持续显示新写入的日志：
+持续查看新消息时，systemd 使用 `sudo journalctl -u honk-core -f`，OpenWrt 使用 `logread -f -e honk-core`。按 Ctrl+C 停止跟踪。启动失败时，根据日志中的错误查阅[故障排查](troubleshooting.md#troubleshooting)。
 
-```sh tab="sudo"
-sudo journalctl -u honk-core -f
+journal 包含历次服务运行的日志。排查本次启动时，从最新的 `honk-core … starting` 消息开始查看；该消息也会显示引擎版本。
+
+## 重新加载、重启或停止
+
+选择重新加载或重启前，先查[doona 可以更改什么](what-doona-can-change.md)。执行后查看日志，确认结果。
+
+| 操作 | systemd | OpenWrt |
+| --- | --- | --- |
+| 启动 | `sudo systemctl start honk-core` | `/etc/init.d/honk-core start` |
+| 重新加载配置 | `sudo systemctl reload honk-core` | `/etc/init.d/honk-core reload` |
+| 重启 | `sudo systemctl restart honk-core` | `/etc/init.d/honk-core restart` |
+| 停止 | `sudo systemctl stop honk-core` | `/etc/init.d/honk-core stop` |
+| 禁用开机启动 | `sudo systemctl disable honk-core` | `/etc/init.d/honk-core disable` |
+
+禁用开机启动不会停止正在运行的服务。如需让 honk 在重启后仍保持停止状态，执行停止和禁用两项操作。
+
+## 服务与重新加载故障
+
+| 现象或日志消息 | 含义与处理方法 |
+| --- | --- |
+| systemd 找不到 `honk-core.service` | 按第 1 步创建 unit 并执行 `sudo systemctl daemon-reload`，再按第 2 步启动。 |
+| 重新加载时报 `no running honk-core instance` | 没有实际实例持有进程锁。使用 `--mock-ebpf` 的前台进程不会持有该锁；按第 2 步启动要使用的实际服务。 |
+| `SIGHUP reload applied` | 新配置已应用。 |
+| `SIGHUP reload rejected` | 结合 `stage` 和同时出现的错误，判断新配置是否已应用；若被拒绝是因为需要重启，在主机上编辑列出的设置后[重启 honk](what-doona-can-change.md)。 |
+| `SIGHUP reload committed with degraded datapath` | 配置已提交，但数据路径已降级。先检查同时出现的错误，再判断服务是否正常。 |
+
+重新加载命令成功退出，不代表新配置已经应用；必须查看服务日志中的结果。
+
+## OpenRC 或前台测试
+
+本页不提供 OpenRC 服务脚本。配置 honk 后，可在终端中启动它，完成首次登录：
+
+```sh
+sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
 ```
 
-```sh tab="root"
-journalctl -u honk-core -f
-```
-
-```sh tab="OpenWrt"
-logread -f -e honk-core
-```
-
-按 Ctrl+C 结束。systemd 日志中也保留了之前几次启动的内容，请从最后一行 `starting` 开始阅读。
-
-## 重载配置
-
-修改 `.dae` 文件后重载 honk。重载会重新读取配置，不停止 honk。
-
-```sh tab="sudo"
-sudo systemctl reload honk-core
-```
-
-```sh tab="root"
-systemctl reload honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core reload
-```
-
-日志先显示 `SIGHUP reload request 1 started`，随后显示 `applied`，或显示 `rejected` 与 `reload rejected: changed fields require process restart fields=[…]`。其中列出的字段需要重启才能生效，包括 `native_api` 下的全部字段、`log_level` 与各接口。doona 的“配置”页保存后会自动重载。
-
-## 重启
-
-重启会停止 honk 并再次启动。
-
-```sh tab="sudo"
-sudo systemctl restart honk-core
-```
-
-```sh tab="root"
-systemctl restart honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core restart
-```
-
-## 停止
-
-```sh tab="sudo"
-sudo systemctl stop honk-core
-```
-
-```sh tab="root"
-systemctl stop honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core stop
-```
-
-honk 保持停止，直到下次启动或开机。
-
-## 取消开机启动
-
-```sh tab="sudo"
-sudo systemctl disable honk-core
-```
-
-```sh tab="root"
-systemctl disable honk-core
-```
-
-```sh tab="OpenWrt"
-/etc/init.d/honk-core disable
-```
-
-下一步：[首次登录](first-sign-in.md)。
-
-## 遇到问题时
-
-| 看到的内容                                                              | 原因与处理                                                                                          |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `Active: failed` 或 `activating (auto-restart)`                         | honk 在启动阶段退出。日志中以 `fatal error, shutting down:` 开头的一行给出原因；常见原因见[最小配置](minimal-configuration.md)。 |
-| systemd 找不到 `honk-core.service`                                      | 跳过了第 1 步，或第 1 步之后没有执行 `systemctl daemon-reload`。                                    |
-| 重载时出现 `Error: no running honk-core instance; /run/honk-core.lock does not exist` | honk 没有运行，或以 `--mock-ebpf` 运行（这种方式不持有锁）。请启动服务，而不是重载。 |
-| 重载后修改没有生效                                                      | 日志中显示 `reload rejected`。请改为重启。                                                          |
-
-更多报错信息见[故障排查](troubleshooting.md#troubleshooting)。
+保持终端打开，并按[快速开始](quick-start.md)中的浏览器步骤操作。日志显示在终端中，Ctrl+C 停止 honk。此命令不会启用开机启动。

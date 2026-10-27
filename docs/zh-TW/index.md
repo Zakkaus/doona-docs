@@ -2,45 +2,39 @@
 
 # doona 文件
 
-首次啟動若只使用直連，請按[快速入門](quick-start.md)操作。
+doona 透過原生 API 管理 honk 並查看流量。本文件適用於 v0.1.0-rc.2。
 
-doona 是 daeuniverse 引擎共用原生 API 的靜態 Web 介面：目前對接 honk，dae 實作同一份契約後也可對接。honk 是以 Rust 撰寫的 Linux 透明代理引擎，可自行在 `/ui/` 提供 doona，也可由任一 Web 伺服器提供。doona 顯示引擎目前的狀態，並管理節點、群組、路由規則與組態檔案。
+## 從這裡開始
+
+| 你目前的情況 | 閱讀頁面 |
+| --- | --- |
+| 首次安裝 | [快速開始](quick-start.md)：安裝、登入並驗證直連組態 |
+| honk 已啟動，準備使用代理 | [路由你的第一條連線](tutorial.md)：新增訂閱、策略群組、路由規則和 DNS 規則 |
+| 需要適用於目前系統的安裝步驟 | [安裝](install.md)和[執行需求](requirements.md) |
+| 只需要可複製的組態 | [最小組態](minimal-configuration.md) |
+| 已登入，想找到某項操作 | [介面導覽](tour.md) |
 
 <a name="choose-edition"></a>
 
 ## 選擇版本
 
-| 標準版 | doona lite |
-| --- | --- |
-| 適合管理組態並觀測流量 | 適合只需編輯組態的初學者 |
-| 流量頁面、組態表單、組態來源編輯器與追蹤 | 節點、訂閱、群組、路由、DNS 與全域設定 |
-| [安裝標準版](install.md#doona) | [安裝 doona lite](lite.md#lite-install) |
-| [標準版示範](https://demo.daeuniverse.org/) | [lite 示範](https://demo.daeuniverse.org/lite/) |
+| 版本 | 用途 | 下一步 |
+| --- | --- | --- |
+| 標準版 | 編輯組態、觀測流量、診斷路由 | [安裝](install.md#doona)，然後[首次登入](first-sign-in.md) |
+| doona lite | 用較精簡的介面完成組態任務，目前為測試中的預覽版 | [安裝 lite](lite.md#lite-install)，然後[連線至後端](lite-connect.md) |
 
-功能與切換方式見[標準版與 doona lite](editions.md)。
+差異見[版本比較](editions.md)。如需用範例資料體驗介面，可開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
 
-[使用範例資料體驗示範版](https://demo.daeuniverse.org/)。
+![活動頁面](../screenshots/zh-TW/activity-light.webp)
 
-![活動頁](../screenshots/zh-TW/activity-light.webp)
+## 查找需求或排查問題
 
-## 原生 API 狀態
+- 頁面或操作無法使用：[功能需求](feature-requirements.md)。
+- 查找組態欄位：[組態參考](configuration.md)。
+- 確認修改儲存在哪裡、是否需要重新啟動：[doona 能修改什麼](what-doona-can-change.md)。
+- 連線、登入或寫入失敗：[疑難排解](troubleshooting.md)。
+- 建置或參與開發：[開發](development.md)。
 
-本文件介紹 doona v0.1.0-beta.19。doona 使用各發行版本附帶的 honk-core 建置中的原生 API，建置來自 Glassyiris/honk `feat/native-api` 的 debug 標籤。`HONK-SOURCE.txt` 註明附帶的建置，見 [honk 版本](requirements.md#honk-version)。上游 daeuniverse/honk `main` 不提供此 API。上游 honk 正式發布之前，組態鍵與預設值仍可能變更。
+下載見 [doona 發布頁面](https://github.com/Zakkaus/doona/releases)。介面問題請提交至 [doona issues](https://github.com/Zakkaus/doona/issues)。
 
-安裝範例使用 beta.19 檔名與對應的 honk 標籤 `debug.2026.10.9.native-api.2`。附件已在[發布頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)發布。
-
-## 頁面
-
-部署新的閘道器時，先閱讀系統需求，安裝 honk 與所選版本，再依序閱讀最小組態與服務管理。之後繼續閱讀標準版的首次登入或連線 doona lite。
-
-1. 入門：[標準版與 doona lite](editions.md)、[系統需求](requirements.md)。
-2. 安裝與首次執行：[在 Debian 或 Ubuntu 上安裝](install-debian.md)、[在 Fedora 或 RHEL 上安裝](install-fedora.md)、[在 Arch Linux 上安裝](install-arch.md)、[在 Gentoo 上安裝](install-gentoo.md)、[在 OpenWrt 上安裝](install-openwrt.md)、[在其他系統上安裝](install-manual.md)、[安裝詳解](install.md)、[最小組態](minimal-configuration.md)、[服務管理](service-management.md)。
-3. 標準版：[首次登入](first-sign-in.md)、[介面導覽](tour.md)、[觀測流量](observe.md)、[路由、節點與規則](routing.md)、[組態與設定](config-and-settings.md)、[常見操作](common-tasks.md)、[功能](features.md)。
-4. doona lite：[doona lite](lite.md)、[連線 doona lite](lite-connect.md)、[doona lite 常見操作](lite-tasks.md)。
-5. 參考：[組態](configuration.md)、[疑難排解](troubleshooting.md)、[開發](development.md)。
-
-## 連結
-
-- [doona 發布頁](https://github.com/Zakkaus/doona/releases)：下載 honk-core 建置
-- [honk 快速入門](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
-- [doona issues](https://github.com/Zakkaus/doona/issues)；引擎問題請回報給 [honk](https://github.com/daeuniverse/honk) 或 [dae](https://github.com/daeuniverse/dae)
+引擎問題請提交至 [honk issues](https://github.com/daeuniverse/honk/issues)。
