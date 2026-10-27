@@ -1,8 +1,8 @@
 // Renders docs/<locale>/*.md into a static site: one HTML page per Markdown page with the page's Markdown beside it,
 // llms.txt listing the Markdown pages, a root page that sends the browser to its language, and a 404 page.
 // `node site/build.mjs` writes dist-docs/ (or DOCS_OUT); tools/check-docs.mjs calls render() directly. DOCS_BASE is the
-// path the site is served under: /doona-docs/ on github.io, / on a domain of its own. DOCS_ORIGIN, such as
-// https://zakkaus.github.io, makes the Markdown pages and llms.txt link by full URL, so the links still work once the
+// path the site is served under: / on its own domain, /doona-docs/ on github.io. DOCS_ORIGIN, such as
+// https://doona.daeuniverse.org, makes the Markdown pages and llms.txt link by full URL, so the links still work once the
 // text is pasted elsewhere; without it they link by path. DOONA_DIR names the doona checkout the build reads the
 // app's styles, icons and logo from (site/docs.mjs).
 //

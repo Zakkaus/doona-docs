@@ -8,11 +8,11 @@
 
 English / [简体中文](README.zh-CN.md) / [繁體中文](README.zh-TW.md)
 
-[Read the docs](https://zakkaus.github.io/doona-docs/) / [Build](#build) / [Layout](#layout) / [Contributing](.github/CONTRIBUTING.md)
+[Read the docs](https://doona.daeuniverse.org/) / [Build](#build) / [Layout](#layout) / [Contributing](.github/CONTRIBUTING.md)
 
 </div>
 
-The pages are Markdown in `docs/<locale>/`, in English, Simplified Chinese and Traditional Chinese, and read on GitHub as well as on the site. `main` is published to https://zakkaus.github.io/doona-docs/.
+The pages are Markdown in `docs/<locale>/`, in English, Simplified Chinese and Traditional Chinese, and read on GitHub as well as on the site. `main` is published to https://doona.daeuniverse.org/.
 
 ## Build
 
@@ -30,7 +30,7 @@ pnpm test                            # the site script and the heading ids
 
 `DOCS_OUT=/absolute/path pnpm docs:build` writes the site outside the repository instead of `dist-docs/`. The build replaces the output directory.
 
-doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://zakkaus.github.io/doona-docs/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
+doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://doona.daeuniverse.org/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
 
 ## Layout
 
