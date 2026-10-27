@@ -65,6 +65,8 @@ honk checks the local files a configuration depends on before writing it, and re
 
 ## State database problems
 
+For the actions that need the database, see [geodata settings requirements](feature-requirements.md#req-geodata-settings).
+
 With `password_auth: true`, as in the example configuration, a database that cannot be opened stops honk at startup, and the log shows `state database:` with the reason. In token mode honk logs a warning and runs without it. Geodata files remain in Settings, but source and schedule controls disappear. Manual updates require a configured URL for every loaded asset. Find the cause in the log:
 
 ```sh
@@ -93,6 +95,8 @@ state database is corrupt
 
 ## Geodata sources cannot be edited, or auto-update never runs
 
+Check the separate [settings and update prerequisites](feature-requirements.md#req-geodata-settings).
+
 honk is running without its state database, which keeps the sources and the update schedule. The Datapath card on System status warns that the state database is unavailable, even when the datapath itself cannot be read. The `degradations` list on `/api/v1/runtime` shows it too; `<listen>` is the `listen` address and `<token>` the `secret`:
 
 ```sh
@@ -120,6 +124,8 @@ On OpenWrt `/var` is in memory, so the default `/var/lib/honk` loses the databas
 <a name="geodata-update"></a>
 
 ## Geodata update fails with checksum_unavailable
+
+Check [download, destination, and replacement requirements](feature-requirements.md#req-geodata-update), including `replacement_failed` and `directory_sync_failed`.
 
 The file downloaded, but `<url>.sha256sum` could not be fetched. A 404 is not a failure: honk keeps the file unverified. File downloads time out after 30 seconds without progress or 10 minutes in all; the checksum request has its own 10-second deadline. HTTP 403 or 429 or a failed route also stops the checksum request. Use another mirror, or turn off Verify checksum only for a trusted mirror whose checksum URL is known to fail.
 

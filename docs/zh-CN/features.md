@@ -4,6 +4,8 @@
 
 # 功能
 
+各项功能的前提条件与操作被禁用的原因，见[功能启用条件](feature-requirements.md)。
+
 首先确认网关能够转发流量。将示例订阅与节点替换为可用的订阅与节点，然后在真实的局域网客户端上分别测试直连与代理的 TCP、UDP 以及 DNS。`honk-core is running`、`dae0` 链路或可访问的 API 都不能证明流量正常。
 
 本页介绍标准版；doona lite 请参阅 [doona lite](lite.md)。

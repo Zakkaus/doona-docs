@@ -2,6 +2,8 @@
 
 # doona 文档
 
+首次启动若只使用直连，请按[快速入门](quick-start.md)操作。
+
 doona 是 daeuniverse 引擎共用原生 API 的静态 Web 界面：目前对接 honk，dae 实现同一份契约后也可对接。honk 是用 Rust 编写的 Linux 透明代理引擎，可以自己在 `/ui/` 提供 doona，也可以由任意 Web 服务器提供。doona 显示引擎当前的状态，并管理节点、组、路由规则与配置文件。
 
 <a name="choose-edition"></a>

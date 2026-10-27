@@ -65,6 +65,8 @@ honk 寫入組態前會檢查組態依賴的本地檔案，缺少或無法讀取
 
 ## 狀態資料庫問題
 
+哪些操作需要資料庫，見[地理資料設定的啟用條件](feature-requirements.md#req-geodata-settings)。
+
 範例組態設定了 `password_auth: true`，資料庫無法開啟時 honk 會在啟動時結束，日誌顯示 `state database:` 與原因。Token 模式下 honk 會記錄警告並在沒有資料庫的情況下執行。「設定」仍顯示地理資料檔案，但來源與排程控制項消失。手動更新需要為每個已載入資源設定網址。請在日誌中尋找原因：
 
 ```sh
@@ -93,6 +95,8 @@ state database is corrupt
 
 ## 地理資料來源無法編輯，或自動更新從未執行
 
+請分別檢查[設定與更新的前提條件](feature-requirements.md#req-geodata-settings)。
+
 honk 正在沒有狀態資料庫的情況下執行，而來源與更新排程都存在該資料庫中。「系統狀態」頁的「資料路徑」卡片會提示狀態資料庫無法使用，即使無法讀取資料路徑也會顯示。`/api/v1/runtime` 的 `degradations` 清單也會列出該項；`<listen>` 為 `listen` 位址，`<token>` 為 `secret`：
 
 ```sh
@@ -120,6 +124,8 @@ OpenWrt 的 `/var` 位於記憶體中，因此預設的 `/var/lib/honk` 每次�
 <a name="geodata-update"></a>
 
 ## 地理資料更新失敗並顯示 checksum_unavailable
+
+請檢查[下載、目標路徑與替換的條件](feature-requirements.md#req-geodata-update)，包括 `replacement_failed` 與 `directory_sync_failed`。
 
 檔案已下載，但無法取得 `<url>.sha256sum`。404 不算失敗：honk 會保留未經驗證的檔案。檔案下載連續 30 秒無進展或總計超過 10 分鐘時逾時；校驗和請求有獨立的 10 秒期限。HTTP 403、429 或路由故障也會讓校驗和請求失敗。可改用其他鏡像站；僅當可信鏡像站的 `.sha256sum` 網址確定無法使用時，才關閉「SHA-256 驗證」。
 

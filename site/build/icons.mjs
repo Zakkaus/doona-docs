@@ -73,6 +73,7 @@ export const icons = {
 // covers.
 export const pageIcons = {
   index: icon('Home'),
+  'quick-start': workflow('Prompt'),
   editions: workflow('Apps'),
   lite: workflow('Settings'),
   'lite-connect': workflow('Key'),
@@ -94,6 +95,8 @@ export const pageIcons = {
   'config-and-settings': icon('FileText'),
   'common-tasks': icon('Edit'),
   configuration: workflow('Settings'),
+  'what-doona-can-change': icon('Edit'),
+  'feature-requirements': workflow('ListMultiSelect'),
   features: workflow('Apps'),
   troubleshooting: workflow('HelpCircle'),
   development: workflow('Code')

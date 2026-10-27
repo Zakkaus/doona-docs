@@ -37,11 +37,11 @@ export const locales = ['en', 'zh-CN', 'zh-TW'];
 // Navigation order, in the sections the sidebar shows under the headings in site/strings.mjs; docs/<locale>/ holds
 // exactly these pages.
 export const groups = {
-  start: ['index', 'editions', 'requirements'],
+  start: ['index', 'quick-start', 'editions', 'requirements'],
   install: ['install-debian', 'install-fedora', 'install-arch', 'install-gentoo', 'install-openwrt', 'install-manual', 'install', 'minimal-configuration', 'service-management'],
   standard: ['first-sign-in', 'tour', 'observe', 'routing', 'config-and-settings', 'common-tasks', 'features'],
   lite: ['lite', 'lite-connect', 'lite-tasks'],
-  reference: ['configuration', 'troubleshooting', 'development']
+  reference: ['configuration', 'what-doona-can-change', 'feature-requirements', 'troubleshooting', 'development']
 };
 export const pages = Object.values(groups).flat();
 

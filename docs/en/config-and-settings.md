@@ -144,6 +144,8 @@ Edit persistent settings in Configuration opens Global settings for values writt
 
 ### Geodata
 
+Check [geodata requirements](feature-requirements.md#req-geodata) before changing settings or updating files.
+
 ![Geodata card with Update now, Reset to defaults and Details open, showing check times and file downloads above the file table](../screenshots/en/settings-geodata.webp)
 
 Reset to defaults asks first, then removes every override and every value taken from the configuration file. The file table shows even when sources cannot be configured.
