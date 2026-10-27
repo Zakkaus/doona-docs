@@ -84,10 +84,11 @@ jobs:
           node tools/screenshots.mjs
           kill "$server"
       - run: pnpm test
-      # The Markdown pages and llms.txt link by full URL on the published site.
+      # The site is served from the root of its own domain; the Markdown pages and llms.txt link by full URL there.
       - run: pnpm docs:build
         env:
-          DOCS_ORIGIN: https://zakkaus.github.io
+          DOCS_BASE: /
+          DOCS_ORIGIN: https://doona.daeuniverse.org
       - run: pnpm docs:check
       # A publishing run without screenshots would replace the site and drop every image doona's README links.
       - name: Require the screenshots
@@ -116,6 +117,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # gh-pages is replaced on every publish, so it carries the custom domain itself; without this file GitHub
+          # would drop the domain and serve the site under /doona-docs/ again, where its links no longer resolve.
+          printf '%s\n' doona.daeuniverse.org > CNAME
           git init -q -b gh-pages
           git add -A
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
