@@ -88,6 +88,7 @@ export const pageIcons = {
   install: icon('Download'),
   'minimal-configuration': workflow('Properties'),
   'service-management': icon('Refresh'),
+  tutorial: workflow('Play'),
   'first-sign-in': workflow('Key'),
   tour: icon('TextAlignLeft'),
   observe: icon('SpeedFast'),

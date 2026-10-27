@@ -12,12 +12,12 @@ doona 透過不同的控制項修改組態來源、執行期狀態、持久儲�
 
 | 更改 | 條件 | 儲存與生效方式 |
 | --- | --- | --- |
-| 組態來源文字：`node`、`subscription`、`group`、`routing`、`dns` 中除 `bind` 之外的欄位、可重載的 `global` 欄位，以及 `assets.subscription` | 組態來源權限、目前修訂、所需的本地依賴可用 | 檔案模式替換檔案；`--store db` 模式儲存修訂。寫入後重載。 |
+| <a name="change-sources"></a><span id="change-sources"></span>組態來源文字：`node`、`subscription`、`group`、`routing`、`dns` 中除 `bind` 之外的欄位、可重載的 `global` 欄位，以及 `assets.subscription` | 組態來源權限、目前修訂、所需的本地依賴可用 | 檔案模式替換檔案；`--store db` 模式儲存修訂。寫入後重載。 |
 | 新增或刪除受管節點和訂閱源 | 可寫的主組態來源及對應的 `can_manage` 能力 | 寫入後重載。受管刪除不適用於內建節點、訂閱源產生的節點或引入檔案中的宣告。 |
 | 編輯訂閱宣告 | 包含該宣告的組態來源完整且可寫 | 寫入組態來源後重載。 |
-| 群組欄位：`policy`、`default`、`final`、`tolerance`、`idle_timeout`、`interrupt_connections`、`check_url` | 所屬組態來源可寫，支援 `groups.config_patch`，且群組的 `mutable_config` 包含該欄位 | 寫入後重載。支援可寫的引入檔案。API 將 `default` 和 `final` 分別命名為 `default_member_id` 和 `final_outbound`。 |
-| 執行期 `record_flows`、`record_logs`、`record_dns_log`、`log.level`、`log.buffered_records`、`dns_log.max_records`、`flows.max_flows`、`flows.retention_seconds` | API 請求獲准、後端宣告支援該欄位、組態允許記錄且值未超出限制 | 即時生效。不需要 `config_write`。重新啟動或已接受的組態啟用會重置這些覆寫值。 |
-| 地理資料 URL 列表、下載路由、校驗和驗證、自動更新排程及重置 | 憑證、可用的狀態資料庫，以及後端宣告支援的對應設定 | 即時生效，儲存在狀態資料庫中。設定請求不下載或啟用檔案，也不需要 `config_write`。更新可用時，doona 在儲存來源 URL 後另行啟動更新。 |
+| <a name="change-groups"></a><span id="change-groups"></span>群組欄位：`policy`、`default`、`final`、`tolerance`、`idle_timeout`、`interrupt_connections`、`check_url` | 所屬組態來源可寫，支援 `groups.config_patch`，且群組的 `mutable_config` 包含該欄位 | 寫入後重載。支援可寫的引入檔案。API 將 `default` 和 `final` 分別命名為 `default_member_id` 和 `final_outbound`。 |
+| <a name="change-runtime"></a><span id="change-runtime"></span>執行期 `record_flows`、`record_logs`、`record_dns_log`、`log.level`、`log.buffered_records`、`dns_log.max_records`、`flows.max_flows`、`flows.retention_seconds` | API 請求獲准、後端宣告支援該欄位、組態允許記錄且值未超出限制 | 即時生效。不需要 `config_write`。重新啟動或已接受的組態啟用會重置這些覆寫值。 |
+| <a name="change-geodata"></a><span id="change-geodata"></span>地理資料 URL 列表、下載路由、校驗和驗證、自動更新排程及重置 | 憑證、可用的狀態資料庫，以及後端宣告支援的對應設定 | 即時生效，儲存在狀態資料庫中。設定請求不下載或啟用檔案，也不需要 `config_write`。更新可用時，doona 在儲存來源 URL 後另行啟動更新。 |
 | 更新地理資料檔案 | 組態寫入權限、憑證、已載入且具備路徑和 URL 的資源 | 下載、替換檔案，然後啟用。見[地理資料更新條件](feature-requirements.md#req-geodata-update)。 |
 | 選擇群組成員、固定自動策略的成員或取消固定 | 後端運作中、群組選擇能力，以及群組的 `can_select` 或 `can_override` | 即時生效的執行期操作。不寫入組態來源，也不需要 `config_write`。Selector 的持久儲存依賴狀態快取，且 `experimental.cache_file.enabled` 不能為 `false`。 |
 | 外觀、語言、佈局、旗幟覆寫和探測偏好 | 瀏覽器支援及儲存可用 | 在目前瀏覽器中即時生效，不修改 honk 組態。背景圖片透過 IndexedDB 持久儲存。 |
@@ -30,12 +30,12 @@ API 會在寫入前拒絕以下實際生效值的更改。請使用外部編輯�
 
 | 區塊 | 只能透過重新啟動生效的鍵 |
 | --- | --- |
-| `dns` | `bind` |
-| `global` | `check_interval`、`tcp_check_url`、`tcp_check_http_method`、`udp_check_dns`、`tls_implementation`、`tproxy_port`、`tproxy_port_protect`、`pprof_port`、`so_mark_from_dae`、`log_level`、`log_file`、`lan_interface`、`wan_interface`、`auto_config_kernel_parameter`、`data_dir`、`store_subscribe`、`nfqueue_enable` |
-| `experimental.native_api` | 所有欄位，包括認證、監聽器、介面、記錄和寫入設定 |
-| `experimental.clash_api` | `external_controller`、`external_ui`、`external_ui_download_url`、`external_ui_download_detour`、`secret`、`default_mode` |
-| `experimental.cache_file` | `enabled`、`store_dns` |
-| `assets` | `geodata.geosite`、`geodata.geoip`、`geodata.route`、`ui.url`、`ui.route`，以及繼承的 `route`，條件是更改影響了解析後的原生 API 或 Clash API 設定 |
+| <a name="restart-dns"></a><span id="restart-dns"></span>`dns` | `bind` |
+| <a name="restart-global"></a><span id="restart-global"></span>`global` | `check_interval`、`tcp_check_url`、`tcp_check_http_method`、`udp_check_dns`、`tls_implementation`、`tproxy_port`、`tproxy_port_protect`、`pprof_port`、`so_mark_from_dae`、`log_level`、`log_file`、`lan_interface`、`wan_interface`、`auto_config_kernel_parameter`、`data_dir`、`store_subscribe`、`nfqueue_enable` |
+| <a name="restart-native"></a><span id="restart-native"></span>`experimental.native_api` | 所有欄位，包括認證、監聽器、介面、記錄和寫入設定 |
+| <a name="restart-clash"></a><span id="restart-clash"></span>`experimental.clash_api` | `external_controller`、`external_ui`、`external_ui_download_url`、`external_ui_download_detour`、`secret`、`default_mode` |
+| <a name="restart-cache"></a><span id="restart-cache"></span>`experimental.cache_file` | `enabled`、`store_dns` |
+| <a name="restart-assets"></a><span id="restart-assets"></span>`assets` | `geodata.geosite`、`geodata.geoip`、`geodata.route`、`ui.url`、`ui.route`，以及繼承的 `route`，條件是更改影響了解析後的原生 API 或 Clash API 設定 |
 
 健康檢查比較的是實際生效的第一個 HTTP URL、請求方法，以及選定的 UDP DNS 目標。切換到 UTLS 模式或從該模式切出時，`tls_implementation` 需要重新啟動。日誌檔案比較的是實際生效路徑，包括命令列覆寫值。
 
@@ -66,7 +66,7 @@ API 會在寫入前拒絕以下實際生效值的更改。請使用外部編輯�
 
 | 欄位 | 實際行為 |
 | --- | --- |
-| `global.preconnect_node_count` | 供啟動預熱使用。接受組態來源編輯不會再次執行預熱。重新啟動 honk 後，啟動預熱才會使用新值。 |
+| <a name="startup-preconnect"></a><span id="startup-preconnect"></span>`global.preconnect_node_count` | 供啟動預熱使用。接受組態來源編輯不會再次執行預熱。重新啟動 honk 後，啟動預熱才會使用新值。 |
 | `global.tls_fragment`、`global.tls_fragment_length`、`global.tls_fragment_interval` | 為相容性而接受並儲存；此 honk 修訂沒有使用這些欄位進行執行期分片的實作。 |
 | `global.bandwidth_max_tx`、`global.bandwidth_max_rx` | 為相容性而接受並儲存；此 honk 修訂沒有使用這些欄位限制執行期頻寬的實作。 |
 

@@ -12,12 +12,12 @@ In this table, **source permission** means `experimental.native_api.config_write
 
 | Change | Condition | Storage and application |
 | --- | --- | --- |
-| Source text: `node`, `subscription`, `group`, `routing`, `dns` except `bind`, reloadable `global` fields, and `assets.subscription` | Source permission; current revision; required local dependencies available | File replacement in file mode; a stored revision with `--store db`. Write plus reload. |
+| <a name="change-sources"></a><span id="change-sources"></span>Source text: `node`, `subscription`, `group`, `routing`, `dns` except `bind`, reloadable `global` fields, and `assets.subscription` | Source permission; current revision; required local dependencies available | File replacement in file mode; a stored revision with `--store db`. Write plus reload. |
 | Add or delete managed nodes and providers | Writable main source and the corresponding `can_manage` capability | Write plus reload. Managed deletion excludes built-in nodes, provider-derived nodes, and declarations in includes. |
 | Edit a subscription declaration | Writable, complete source containing the declaration | Source write plus reload. |
-| Group fields: `policy`, `default`, `final`, `tolerance`, `idle_timeout`, `interrupt_connections`, `check_url` | Writable owning source, `groups.config_patch`, and the field in the group's `mutable_config` | Write plus reload. Writable includes are supported. The API names `default` and `final` as `default_member_id` and `final_outbound`. |
-| Runtime `record_flows`, `record_logs`, `record_dns_log`, `log.level`, `log.buffered_records`, `dns_log.max_records`, `flows.max_flows`, `flows.retention_seconds` | Admitted API request; advertised field; configured recorder permission and value bounds | Live. No `config_write` requirement. Restart or an accepted configuration activation resets these overrides. |
-| Geodata URL lists, download route, checksum verification, automatic-update schedule, and reset | Credentials and an available state database; corresponding settings advertised | Live, stored in the state database. The settings request does not download or activate files and does not require `config_write`. doona starts a separate update after saving source URLs when updates are available. |
+| <a name="change-groups"></a><span id="change-groups"></span>Group fields: `policy`, `default`, `final`, `tolerance`, `idle_timeout`, `interrupt_connections`, `check_url` | Writable owning source, `groups.config_patch`, and the field in the group's `mutable_config` | Write plus reload. Writable includes are supported. The API names `default` and `final` as `default_member_id` and `final_outbound`. |
+| <a name="change-runtime"></a><span id="change-runtime"></span>Runtime `record_flows`, `record_logs`, `record_dns_log`, `log.level`, `log.buffered_records`, `dns_log.max_records`, `flows.max_flows`, `flows.retention_seconds` | Admitted API request; advertised field; configured recorder permission and value bounds | Live. No `config_write` requirement. Restart or an accepted configuration activation resets these overrides. |
+| <a name="change-geodata"></a><span id="change-geodata"></span>Geodata URL lists, download route, checksum verification, automatic-update schedule, and reset | Credentials and an available state database; corresponding settings advertised | Live, stored in the state database. The settings request does not download or activate files and does not require `config_write`. doona starts a separate update after saving source URLs when updates are available. |
 | Update geodata files | Configuration-write authority, credentials, loaded assets with paths and URLs | Download, file replacement, then activation. See [geodata update requirements](feature-requirements.md#req-geodata-update). |
 | Select a group member, pin an automatic policy, or clear a pin | Running backend; group selection capability and the group's `can_select` or `can_override` | Live runtime action. No source write or `config_write` requirement. Selector persistence depends on the state cache and `experimental.cache_file.enabled` not being `false`. |
 | Appearance, language, layout, flag overrides, and probe preferences | Browser support and storage | Live in this browser. They do not modify honk configuration. Wallpaper persistence uses IndexedDB. |
@@ -30,12 +30,12 @@ The API refuses these effective changes before writing. Use an external editor, 
 
 | Section | Restart-only keys |
 | --- | --- |
-| `dns` | `bind` |
-| `global` | `check_interval`, `tcp_check_url`, `tcp_check_http_method`, `udp_check_dns`, `tls_implementation`, `tproxy_port`, `tproxy_port_protect`, `pprof_port`, `so_mark_from_dae`, `log_level`, `log_file`, `lan_interface`, `wan_interface`, `auto_config_kernel_parameter`, `data_dir`, `store_subscribe`, `nfqueue_enable` |
-| `experimental.native_api` | Every field, including authentication, listener, UI, recording, and write settings |
-| `experimental.clash_api` | `external_controller`, `external_ui`, `external_ui_download_url`, `external_ui_download_detour`, `secret`, `default_mode` |
-| `experimental.cache_file` | `enabled`, `store_dns` |
-| `assets` | `geodata.geosite`, `geodata.geoip`, `geodata.route`, `ui.url`, `ui.route`, and inherited `route` when they change the resolved native or Clash API settings |
+| <a name="restart-dns"></a><span id="restart-dns"></span>`dns` | `bind` |
+| <a name="restart-global"></a><span id="restart-global"></span>`global` | `check_interval`, `tcp_check_url`, `tcp_check_http_method`, `udp_check_dns`, `tls_implementation`, `tproxy_port`, `tproxy_port_protect`, `pprof_port`, `so_mark_from_dae`, `log_level`, `log_file`, `lan_interface`, `wan_interface`, `auto_config_kernel_parameter`, `data_dir`, `store_subscribe`, `nfqueue_enable` |
+| <a name="restart-native"></a><span id="restart-native"></span>`experimental.native_api` | Every field, including authentication, listener, UI, recording, and write settings |
+| <a name="restart-clash"></a><span id="restart-clash"></span>`experimental.clash_api` | `external_controller`, `external_ui`, `external_ui_download_url`, `external_ui_download_detour`, `secret`, `default_mode` |
+| <a name="restart-cache"></a><span id="restart-cache"></span>`experimental.cache_file` | `enabled`, `store_dns` |
+| <a name="restart-assets"></a><span id="restart-assets"></span>`assets` | `geodata.geosite`, `geodata.geoip`, `geodata.route`, `ui.url`, `ui.route`, and inherited `route` when they change the resolved native or Clash API settings |
 
 The health-check comparison uses the effective first HTTP URL and method, and the selected UDP DNS target. `tls_implementation` requires a restart when switching into or out of UTLS mode. The log-file comparison uses the effective path, including any command-line override.
 
@@ -66,7 +66,7 @@ Geodata updates have separate destination rules: packaged assets are normally re
 
 | Field | Actual behavior |
 | --- | --- |
-| `global.preconnect_node_count` | Consumed by startup warm-up. An accepted source edit does not rerun that warm-up. Restart honk to use the new value for startup. |
+| <a name="startup-preconnect"></a><span id="startup-preconnect"></span>`global.preconnect_node_count` | Consumed by startup warm-up. An accepted source edit does not rerun that warm-up. Restart honk to use the new value for startup. |
 | `global.tls_fragment`, `global.tls_fragment_length`, `global.tls_fragment_interval` | Accepted and stored for compatibility; no runtime fragmentation consumer in this honk revision. |
 | `global.bandwidth_max_tx`, `global.bandwidth_max_rx` | Accepted and stored for compatibility; no runtime bandwidth-limiting consumer in this honk revision. |
 
