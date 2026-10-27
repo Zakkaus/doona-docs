@@ -4,11 +4,9 @@
 
 # doona lite
 
-doona lite 为初学者提供较小的界面，用于编辑 honk 配置。
+doona lite 通过表单完成常见的 honk 配置任务，目前是测试中的预览版。为网关选择界面前，请先阅读[版本比较](editions.md)。
 
-页面包括：**节点**、**订阅**、**策略组**、**路由**、**DNS**。**设置**对话框用于编辑全局设置。搜索可查找资源，手动节点可通过链接或二维码分享。演示模式使用示例数据。
-
-不提供流量页面、进阶追踪标签页或完整配置源编辑器。**路由**中的**测试规则**可检查命中规则与出站。见[功能比较](editions.md#editions-compare)。
+使用**节点**、**订阅**、**策略组**、**路由**和 **DNS** 管理资源，通过**设置**修改全局设置。先[连接 doona lite](lite-connect.md)，再按[常用任务](lite-tasks.md)操作。
 
 ![节点](../images/lite-nodes-light.webp)
 
@@ -16,30 +14,36 @@ doona lite 为初学者提供较小的界面，用于编辑 honk 配置。
 
 ## 安装 doona lite
 
-先安装 honk 并写入[最小配置](minimal-configuration.md)。在可写的工作目录中，从同一发布版本下载 lite 压缩包和 `SHA256SUMS`，校验后解压。以下命令使用 sudo；在 root shell 中省略 sudo。
-
-[doona releases](https://github.com/Zakkaus/doona/releases)
+1. 安装[兼容的 honk 构建](requirements.md#honk-version)，准备[最小配置](minimal-configuration.md)。
+2. 在网关上可写的下载目录中，下载并校验归档。以下命令使用 sudo，root shell 中省略 sudo。
 
 ```sh
-VERSION=0.1.0-beta.19
+VERSION=0.1.0-rc.2
 BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
 curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
 grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-sudo mkdir -p /usr/share/doona-lite
+```
+
+3. 校验结果为 `OK` 后再解压：
+
+```sh
+sudo install -d -m 0755 /usr/share/doona-lite
 sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
 ls -l /usr/share/doona-lite/index.html
 ```
 
-校验结果应为 `OK`，`ls` 应列出 `/usr/share/doona-lite/index.html`。在现有 `experimental` → `native_api` 块中设置：
+4. 确认 `index.html` 存在。在已有的 `experimental.native_api` 块中设置：
 
 ```dae
 ui: '/usr/share/doona-lite'
 ```
 
-[重启 honk](service-management.md)，然后打开其 `/ui/` 地址，例如 `http://192.168.1.1:9527/ui/`。继续阅读[连接 doona lite](lite-connect.md)。
+5. 根据 [UI 重启规则](what-doona-can-change.md#restart-native)，按[服务管理](service-management.md)操作。打开 honk 的 `/ui/` 地址，按[连接 doona lite](lite-connect.md)继续。
+
+其他 API 字段见[配置参考](configuration.md)。
 
 <a name="lite-switch"></a>
 
-## 切回标准版
+## 切换到标准版
 
-将 `ui` 指向已安装的标准版目录，通常为 `/usr/share/doona`（Debian 或 Ubuntu 软件包使用 `/usr/share/doona-web`），也可使用 `ui: embedded`。重启 honk 并重新加载 `/ui/`。两个目录可以同时保留，见[安装与切换](editions.md#editions-switch)。
+按[安装与切换版本](editions.md#editions-switch)选择标准版文件或内嵌界面。

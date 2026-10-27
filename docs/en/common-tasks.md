@@ -4,133 +4,147 @@ English / [简体中文](../zh-CN/common-tasks.md) / [繁體中文](../zh-TW/com
 
 # Common tasks
 
-This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+Use these steps to change routing, manage subscriptions, and diagnose traffic in the standard edition. For a first configuration, follow [Route your first connection](tutorial.md); for the smaller edition, see [doona lite](lite.md).
+
+Before changing a rule, check [rule editing requirements](feature-requirements.md#req-rules). For when a saved change takes effect, see [configuration writes](what-doona-can-change.md#change-sources).
 
 <a name="one-site"></a>
 
-## Send one site through a proxy from a live connection
+## Send one site's traffic through a proxy
 
-1. Open Monitor > Connections and select the Connections tab.
-2. Find a connection to the site in the list.
-3. Use that row's add-rule icon to open the Add rule dialog.
-4. Set Match by to Full domain.
-5. Set Outbound to the proxy group. The dialog shows the connection's current outbound and the rule preview.
-6. Check Insert. If the dialog says earlier rules may still match this traffic first, choose an earlier position.
-7. Select Apply to write the rule and reload now, or Hold to write it later with the counted apply button in the top bar.
+1. Open **Connections** → **List** and find a connection to the site.
+2. Select its add-rule icon.
+3. Set **Match by** to **Full domain** and **Outbound** to your proxy group.
+4. Check the preview and **Insert**. Place the new rule before any rule that would match the same traffic first.
+5. Select **Apply** and check the success notice. To collect changes before applying them, use **Hold** and follow [held rules](routing.md#held-rules).
 
-After Apply, a notice says the new rule is in effect. In Rule mode, new connections that match use the new outbound unless an earlier rule matches them first; existing connections keep their route until they reconnect. The dialog has no Lock this outbound switch, so Global and Direct mode still override this rule; to keep the route in those modes, add the rule under Routing > Rules with Lock this outbound turned on. See [the held list](routing.md#held-rules) and [the Add rule dialog](routing.md#add-rule).
+To include subdomains or keep this route in Global and Direct modes, use [the domain rule procedure](#domain-family).
 
 <a name="domain-family"></a>
 
-## Send a domain and its subdomains through a group
+## Route a domain and its subdomains through a group
 
-1. Open Routing > Rules and select the Routing rules tab. Choose Advanced if the view switch is shown.
-2. Select Add rule. The Add rule dialog opens with Condition form set to Select.
-3. Set Match by to Domain suffix and enter the domain in Values. Separate several domains with commas.
-4. Set Outbound to the group.
-5. Turn on Lock this outbound if the rule must also apply in Global or Direct mode.
-6. Set Insert to a position before any rule that would match the same traffic first.
-7. Select Add rule in the dialog.
+1. Open **Rules** → **Routing rules**. Select **Advanced** if the view switch appears, then **Add rule**.
+2. Set **Match by** to **Domain suffix** and enter the domain in **Values**.
+3. Set **Outbound** to the group.
+4. Turn on **Lock this outbound** if this rule must also apply in Global or Direct mode.
+5. Set **Insert** before any earlier rule that would match the same traffic.
+6. Select **Add rule** in the dialog. Check the success notice and the new rule in the list.
 
-doona writes the rule to its source file and reloads. A notice says the new rule is in effect; existing connections keep their route until they reconnect. See [Routing, nodes and rules](routing.md#add-rule).
+For other conditions and rule ordering, see [the rule editor](routing.md#add-rule).
 
 <a name="device-bypass"></a>
 
 ## Make a device bypass the proxy
 
-The rule matches the device's source IP address, so the device needs a fixed address.
+Use a fixed IP address for the device so the rule continues to match it.
 
-1. On Routing > Rules, open Routing rules. If the view switch appears, change to Advanced.
-2. Select Add rule above the list.
-3. Set Match by to Source IP and enter the device's IP address in Values.
-4. Set Outbound to direct.
-5. Turn on Lock this outbound so that Global mode does not override the rule.
-6. Set Insert to a position before any rule that would match this address first.
-7. Submit the device rule with Add rule in the dialog.
+1. Open **Rules** → **Routing rules**. Select **Advanced** if shown, then **Add rule**.
+2. Set **Match by** to **Source IP** and enter the device's IP address in **Values**.
+3. Set **Outbound** to `direct` and enable **Lock this outbound**.
+4. Set **Insert** before any rule that would match this device first.
+5. Select **Add rule**. Check that the new rule contains the intended source address and outbound.
 
-After the write, new connections from that address go direct; existing connections keep their route until they reconnect. See [the rule dialog](routing.md#add-rule).
+Use [Trace simulation](routing.md#trace) with that source address to check which rule wins.
 
 <a name="group-node"></a>
 
-## Pick a group's node and return to automatic selection
+## Choose a group's node and return to automatic selection
 
-1. Open Routing > Policies.
-2. Find the group's card.
-3. Select a node in the card's node grid. A notice confirms the selection. If the node is pinned, the notice says the automatic policy is paused; otherwise it says whether existing connections were kept or interrupted.
-4. If the notice says the node is pinned and the automatic policy is paused, open the card's More actions menu and select Back to automatic to resume it.
+Check [selection and pinning requirements](feature-requirements.md#req-group-selection).
 
-After Back to automatic, a notice names the member the group now uses; see [policy groups](routing.md#policies).
+1. Open **Policies** and expand the group's card.
+2. Select a node in its node grid.
+3. Read the notice to confirm the selection and whether the automatic policy is paused.
+4. To clear a manual pin, open the card's **More actions** menu and select **Back to automatic**. Check the member reported by the resulting notice.
+
+For group policies, see [policy groups](routing.md#policies).
 
 <a name="subscription"></a>
 
-## Add and refresh a subscription
+## Add or refresh a subscription
 
-1. Open Routing > Nodes.
-2. Select Add subscription above the Node sources cards. A dialog opens.
-3. Enter Name and Subscription URL, then select Add.
-4. To update later, select the update button on the subscription's card.
+Check [subscription creation requirements](feature-requirements.md#req-nodes) and the separate [refresh requirements](feature-requirements.md#req-subscription-refresh).
 
-After Add, doona selects the new card. If the backend can refresh subscriptions, doona refreshes it at once and the notice gives the node count or the failure. See [sources and nodes](routing.md#nodes).
+1. Open **Nodes** and select **Add subscription**.
+2. Enter **Name** and **Subscription URL**, then select **Add**.
+3. Select the new subscription card and check its nodes. When refresh is supported, doona requests it after adding the subscription; the notice reports the result.
+4. To refresh later, use the update button on that card. If the declaration was saved but the refresh failed, resolve the reported error and use that button again.
+
+Continue with [creating a group](tutorial.md) when the subscription has nodes.
 
 <a name="global-mode"></a>
 
-## Switch to global mode and choose an outbound
+## Switch to Global mode
 
-1. Open Activity.
-2. On the Outbound mode card, select Global.
-3. On the Global outbound card, choose an outbound.
-4. Select Apply on the Outbound mode card.
+Check [outbound-mode requirements](feature-requirements.md#req-config-edit).
 
-doona writes the mode and outbound to the main configuration and reloads. A notice confirms the mode. See [Watching traffic](observe.md#activity).
+1. Open **Activity**.
+2. Select **Global** on **Outbound mode**, then choose a target on **Global outbound**.
+3. Select **Apply** and read the confirmation dialog.
+4. Select **Apply** in the dialog. Check the notice and the displayed mode.
+
+To return to rule-based routing, choose **Rule** and select **Apply**.
+
+Choosing a global outbound also selects Global mode. In Global mode, **Apply** is disabled until a target is selected. Changing the selection alone does not apply it. Select **Read-only** to inspect a write restriction; **Not provided by this backend** means the backend offers no configuration this control can edit.
 
 <a name="why-outbound"></a>
 
-## Find out why a connection took an outbound
+## Find why a connection used an outbound
 
-1. Open Monitor > Connections, select the Connections tab and select the connection.
-2. Read Outbound, Chain and Rule in the detail panel.
-3. To open the matched rule, open More actions in the detail panel and select Show matched rule. Routing > Rules opens with the rule selected.
-4. To test the route, open More actions and select Trace this connection. Trace simulation opens with the connection's details filled in.
-5. Select Run trace.
+1. Open **Connections** → **List** and select the connection.
+2. Read **Outbound**, **Chain** and **Rule** in its details.
+3. In **More actions**, choose **Show matched rule** when available to open the matching rule.
+4. To test the current configuration, choose **Trace this connection** and then **Run trace**.
 
-The trace simulates routing with the current configuration; it does not replay the connection. See [Watching traffic](observe.md#connections) and [Routing, nodes and rules](routing.md#trace).
+A trace evaluates routing; it does not replay the connection. For availability and interpretation, see [trace requirements](feature-requirements.md#req-routing-trace) and [connection details](observe.md#connections).
 
 <a name="dns-resolution"></a>
 
 ## Check how a domain resolves
 
-1. Open Monitor > DNS and select the Query tab.
-2. Enter the domain in Domain and choose a Type. When Upstream is available, keep Automatic to follow `dns.routing`, or choose an upstream from `dns.upstream`. Select Query.
-3. Read the result card: the cache status, State, Upstream, Route source, Route rule, Elapsed and the answers.
-4. To see earlier resolutions, select the Resolution log tab and select a row for its details.
+Check [DNS query requirements](feature-requirements.md#req-dns-query).
 
-The [DNS guide](observe.md#dns) describes the result fields and log controls.
+1. Open **DNS** → **Query**.
+2. Enter **Domain** and choose **Type**.
+3. If **Upstream** is offered, leave **Automatic** to follow the configured DNS routing, or select a named upstream.
+4. **Bypass cache** is off by default. Enable it when the diagnostic lookup must bypass cached answers.
+5. Select **Query**. Read the answers, status, upstream and routing information in the result.
+
+To inspect recorded traffic instead, open **Resolution log**. See [DNS data and its limits](observe.md#dns).
 
 <a name="update-geodata"></a>
 
 ## Update geodata
 
-1. Open Settings > Settings.
-2. In the Geodata card, select Update now next to Status when available. The card also lists the geodata files.
+Check [manual update requirements](feature-requirements.md#req-geodata-update) before starting.
 
-The update downloads the files and verifies them when checksum verification is enabled. Changed files replace the existing ones and the configuration reloads; identical files are not rewritten. An entirely unchanged update succeeds without activation or reload. A notice reports the result. Reset to defaults asks for confirmation, then removes geodata overrides and values taken from the configuration file so the built-in sources and defaults apply again. See [Config and settings](config-and-settings.md#geodata) and [Troubleshooting](troubleshooting.md#geodata-update).
+1. Open **Settings** and find **Geodata**.
+2. Select **Update now**.
+3. Wait for the operation to finish, then check its notice and the asset details.
+4. If it fails, use the reported stage in [geodata update failures](troubleshooting.md#geodata-update).
+
+Changing sources or the schedule is a separate task: see [geodata settings](config-and-settings.md#geodata) and [where those changes are stored](what-doona-can-change.md#change-geodata).
 
 <a name="reload-honk"></a>
 
-## Reload honk after editing files outside doona
+## Reload after editing files outside doona
 
-1. In the top bar, select Reload honk. On a narrow screen, open More options and select Reload honk.
-2. In the Reload honk? dialog, select Reload honk.
+First check whether the setting needs a [reload or a restart](what-doona-can-change.md). The reload action also has [backend requirements](feature-requirements.md#req-reload-suspend).
 
-honk reads its configuration files again and reloads. Held rules are not written. A setting that needs a restart does not take effect until honk restarts; see [Configuration](configuration.md#config). The top bar is described in the [Interface tour](tour.md#top-bar).
+1. Select **Reload honk** in the top bar. On a narrow screen, find it under **More options**.
+2. Select **Reload honk** in the confirmation dialog.
+3. Check the result notice before making another change.
+
+Reload does not apply the [held rules](routing.md#held-rules). Use their apply action separately.
 
 <a name="changed-on-disk"></a>
 
-## Resolve a file that changed on disk while you edited it
+## Resolve a file changed by another editor
 
-1. Open Settings > Configuration and select the Config files tab.
-2. Choose the file in Config file. If the file changed on disk after you started editing, an alert says so and Apply is disabled.
-3. To keep the change on disk, select Cancel. Your draft is discarded and the editor shows the file as it is now.
-4. To replace the change on disk with your draft, select Keep changes, then select Apply.
+1. Open **Configuration** → **Config files** and choose the file in **Config file**.
+2. If the page reports a disk change, compare your draft with the current file before deciding what to keep.
+3. To discard your draft, select **Cancel**. The editor returns to the current source.
+4. To replace the current source with your draft, select **Keep changes**, then **Apply**. Check the result and read the file back.
 
-Keep changes does not merge the two versions; Apply writes your draft over the file. See [Config and settings](config-and-settings.md#edit-source).
+**Keep changes** does not merge the two versions. For a refused write, see [read-only files and write errors](troubleshooting.md#read-only).

@@ -4,241 +4,222 @@
 
 # 疑難排解
 
-<a name="unknown-setting"></a>
+依遇到的症狀查找檢查步驟與處理方法。本頁涵蓋 doona 連接 honk 時的連線、編輯、記錄和地理資料故障。
 
-## native_api 設定寫在 native_api { } 之外
+| 症狀 | 從哪裡開始 |
+| --- | --- |
+| 控制項消失或無法操作 | [功能控制項](#控制項消失或無法操作) |
+| 檔案唯讀或套用失敗 | [組態寫入](#read-only) |
+| 登入失敗 | [登入](#sign-in) |
+| 沒有原生 API，或 `/ui/` 回傳 404 | [API 與介面存取](#no-native-api) |
+| 地理資料更新失敗 | [更新錯誤](#geodata-update) |
+| 缺少地理資料來源或排程控制項 | [地理資料設定](#geodata-sources) |
+| 監控頁面為空 | [記錄與可見範圍](#連線或規則頁保持空白) |
 
-`native_api` 的欄位直接寫在 `experimental` 下，honk 因此拒絕此組態。`fatal error, shutting down:` 一行會列出設定路徑與訊息，例如 `experimental.ui: native API setting belongs inside native_api { }`。`enabled` 與 `secret` 也屬於其他組態區塊，因此 honk 對這兩個欄位只回報 `unknown experimental setting`。請將欄位移入 `native_api { }`。
+## 控制項消失或無法操作
 
-> [!NOTE]
-> Debian 與 Ubuntu 的 `doona-web` 套件安裝至 `/usr/share/doona-web`。請在下文範例中使用 `ui: '/usr/share/doona-web'`。
+開啟**系統狀態**，閱讀**未開啟的功能**。doona 依後端宣告的能力，以及目前來源檔案或記錄狀態，決定提供哪些操作。
 
-```dae
-# Wrong: "native API setting belongs inside native_api { }"
-experimental {
-    ui: '/usr/share/doona'
-}
-
-# Wrong: "unknown experimental setting"
-experimental {
-    enabled: true
-}
-
-# Right
-experimental {
-    native_api {
-        enabled: true
-        password_auth: true
-        ui: '/usr/share/doona'
-    }
-}
-```
-
-daeuniverse/honk `main` 分支的建置沒有原生 API，會以 `unknown experimental setting` 拒絕所有 `native_api` 設定。Glassyiris/honk `feat/native-api` 分支的建置若未啟用 `native-api` 功能，啟用 `native_api` 時會以 `native-api feature is required` 阻止啟動。請執行 `honk-core --version` 檢查版本並安裝 doona 發行版附帶的建置，詳見 [honk 版本](requirements.md#honk-version)。
-
-## honk 拒絕 native_api 組態區塊
-
-- `configuration administration requires a bearer secret or password login`：`config_write: true` 需要 `password_auth: true` 或 `secret`。
-- `password login requires an empty secret; a configured secret selects token mode`：兩者只能保留一個。
-- `password login cannot be combined with anonymous loopback`：刪除 `allow_anonymous_loopback`。
-- `native API requires a secret, password login, or explicitly anonymous loopback`：`enabled: true` 需要 `secret`、`password_auth: true`，或 loopback `listen` 與 `allow_anonymous_loopback: true`。
-
-`listen` 為 loopback 位址且設定 `allow_anonymous_loopback: true` 時，讀取請求無需 Token。組態寫入與受保護的設定變更仍需要憑證。此模式僅用於本機開發。
-
-<a name="offline-dependency"></a>
-
-## 套用失敗：找不到組態所需的檔案
-
-honk 寫入組態前會檢查組態依賴的本地檔案，缺少或無法讀取時拒絕寫入。doona 顯示下面的說明；API 回傳表中的某個代碼，缺少檔案時的訊息為 `required offline configuration dependency is unavailable`。錯誤不會指出具體檔案，最常見的原因是缺少地理資料。
-
-1. 分流方式或規則使用 `geosite:` 或 `geoip:` 時，請按[目錄與地理資料](install.md#directories-and-geodata)安裝 `geosite.dat` 與 `geoip.dat`。OpenWrt 請按[安裝地理資料](install-openwrt.md#install-geodata)使用 `/etc/honk/data`，不要使用重啟後會清空的 `/var/lib/honk`。然後再次套用；仍然報錯時，重啟 honk。設定 → 地理資料 → 立即更新只能更新已載入的檔案，不能安裝缺少的檔案。
-2. 訂閱或節點報錯時，恢復缺少的本地檔案；訂閱快取內容無效時，重新整理該訂閱。檢查節點的 `ech_config_path` 檔案；`dns` 報錯時，檢查 hosts 檔案。請將新的相依檔案放在組態目錄或 `data_dir` 中，並授予執行 honk 的使用者讀取權限。
-
-| 代碼 | 含義 | 處理方法 |
-| --- | --- | --- |
-| `missing-offline-dependency` | 缺少必需的本地相依檔案。 | 安裝地理資料或恢復引用的檔案。 |
-| `offline-dependency-denied` | 檔案不在允許的路徑內，或沒有讀取權限。 | 使用允許的路徑，並授予執行 honk 的使用者讀取權限。 |
-| `invalid-offline-dependency` | 相依檔案內容格式錯誤。 | 替換為有效檔案，或重新整理受影響的訂閱。 |
-| `unreadable-offline-dependency` | 其他 I/O 錯誤導致相依檔案無法讀取。 | 檢查檔案、儲存裝置與系統日誌，再重試。 |
-
-<a name="state-db"></a>
-
-## 狀態資料庫問題
-
-哪些操作需要資料庫，見[地理資料設定的啟用條件](feature-requirements.md#req-geodata-settings)。
-
-範例組態設定了 `password_auth: true`，資料庫無法開啟時 honk 會在啟動時結束，日誌顯示 `state database:` 與原因。Token 模式下 honk 會記錄警告並在沒有資料庫的情況下執行。「設定」仍顯示地理資料檔案，但來源與排程控制項消失。手動更新需要為每個已載入資源設定網址。請在日誌中尋找原因：
-
-```sh
-sudo journalctl -u honk-core | grep -i 'state database'
-sudo ls -la /var/lib/honk/state/
-```
-
-日誌也會保留先前每次啟動的訊息，請查看最近一次啟動的記錄。
-
-```text
-state database is unavailable
-state database path is unsafe
-state database is locked by `honk-core admin reset`
-state database is corrupt
-```
-
-1. unavailable：`data_dir` 不存在時由 honk 建立，`state/` 也由 honk 在其中建立。執行 honk 的使用者必須能在父目錄中建立 `data_dir`，並能寫入該目錄；使用 [systemd 單元](service-management.md)時該使用者為 root。
-2. unsafe：`state/` 與 `honk.db` 必須屬於該使用者，且不授予群組或其他使用者任何權限。`honk.db` 必須是一般檔案，不能是符號連結，也不能在 honk 開啟時被替換。
-3. locked：等待 `honk-core admin reset` 執行完畢。
-4. corrupt：設定 `password_auth: true` 時 honk 會結束。Token 模式下 honk 會將檔案移至 `honk.db.corrupt` 並建立新的資料庫；若已存在較早的 `.corrupt` 檔案，honk 會保留兩者，並在該檔案刪除之前不使用資料庫執行。
-5. 修正後重新啟動 honk。
-
-`another honk-core has the state database open` 與 `state database has a foreign application id or a newer schema` 一律會阻止啟動：請停止另一個執行個體，或使用寫入該資料庫的 honk 版本。
-
-<a name="geodata-sources"></a>
-
-## 地理資料來源無法編輯，或自動更新從未執行
-
-請分別檢查[設定與更新的前提條件](feature-requirements.md#req-geodata-settings)。
-
-honk 正在沒有狀態資料庫的情況下執行，而來源與更新排程都存在該資料庫中。「系統狀態」頁的「資料路徑」卡片會提示狀態資料庫無法使用，即使無法讀取資料路徑也會顯示。`/api/v1/runtime` 的 `degradations` 清單也會列出該項；`<listen>` 為 `listen` 位址，`<token>` 為 `secret`：
-
-```sh
-curl -s -H 'Authorization: Bearer <token>' http://<listen>/api/v1/runtime
-```
-
-出現 `persistence_unavailable` 項目即可確認，其 `reason` 指出原因，請參閱[狀態資料庫問題](#state-db)。修正之前，手動更新使用組態中的 `assets.geodata.geosite` 與 `assets.geodata.geoip` 網址；`native_api` 中的下載網址欄位是舊別名。
-
-<a name="state-unsafe"></a>
-
-## persistence_unavailable 的 reason 為 unsafe
-
-honk 拒絕使用資料目錄中的 `state/` 或其中的 `honk.db`。兩者都必須屬於執行 honk 的使用者，不授予群組或其他使用者任何權限，且不能是符號連結。本指南使用預設的檔案儲存模式，目錄由 `global.data_dir` 指定，預設為 `/var/lib/honk`；`--data-dir` 不會覆寫此值。執行 `admin reset` 時，將同一目錄傳給 `--data-dir`。
-
-```sh
-ls -ld /var/lib/honk/state /var/lib/honk/state/honk.db
-chmod 700 /var/lib/honk/state
-chmod 600 /var/lib/honk/state/honk.db
-```
-
-只變更這兩項，不要遞迴變更；`/etc/honk` 與 `config.d/` 不受影響。若 `ls` 顯示擁有者不同，請以 `chown` 將兩者改為執行 honk 的使用者。之後重新啟動 honk。
-
-OpenWrt 的 `/var` 位於記憶體中，因此預設的 `/var/lib/honk` 每次重新開機都會遺失資料庫。請依[最小組態](minimal-configuration.md)將資料存放在 `/etc/honk/data`。
-
-<a name="geodata-update"></a>
-
-## 地理資料更新失敗並顯示 checksum_unavailable
-
-請檢查[下載、目標路徑與替換的條件](feature-requirements.md#req-geodata-update)，包括 `replacement_failed` 與 `directory_sync_failed`。
-
-檔案已下載，但無法取得 `<url>.sha256sum`。404 不算失敗：honk 會保留未經驗證的檔案。檔案下載連續 30 秒無進展或總計超過 10 分鐘時逾時；校驗和請求有獨立的 10 秒期限。HTTP 403、429 或路由故障也會讓校驗和請求失敗。可改用其他鏡像站；僅當可信鏡像站的 `.sha256sum` 網址確定無法使用時，才關閉「SHA-256 驗證」。
-
-| 階段                   | 意義                                                   | 處理方式                                                   |
-| ---------------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
-| `checksum_mismatch`    | 檔案與其 `.sha256sum` 不符。                           | 改用其他鏡像站；僅當確認可信鏡像站的`.sha256sum` 檔案有誤時，才關閉驗證。 |
-| `download_timeout`     | 檔案下載連續 30 秒無進展，或總計超過 10 分鐘。 | 改用較快的路由或較近的鏡像站。 |
-| `http_status_rejected` | 伺服器回應 200 與 404 以外的狀態碼，包括重新導向。     | 改用最終網址；遇到 403 或 429 時稍後重試。                 |
-| `http_not_found`       | 檔案網址回應 404。                                     | 檢查網址。                                                 |
-| `connection_failed`    | honk 無法連線到伺服器或節點。                          | 檢查節點；直接下載時檢查 `bootstrap_resolver`。            |
-| `tls_failed`           | TLS 交握或憑證檢查失敗。                               | 檢查閘道器的時鐘與網址的主機名稱。                         |
-| `group_unavailable`    | 下載所經的群組沒有可用節點。                           | 在「策略」頁檢查該群組。                                   |
-| `route_blocked`        | 路由規則將下載主機導向 `block`。                       | 修改符合該主機的規則。                                     |
-| `asset_too_large`      | 檔案超過 honk 的大小上限。                             | 確認網址指向地理資料檔案。                                 |
-| `invalid_source`       | 網址不是有效的 HTTP 或 HTTPS 網址。                    | 修正網址。                                                 |
-
-## 固定映射時出現 Invalid argument
-
-`/sys/fs/bpf` 不是 bpffs。請依[系統需求](requirements.md#requirements)掛載。
-
-## 核心版本過舊
-
-honk 會在掛載前拒絕早於 6.12 的核心。驗證器拒絕編譯後的分流程式時，請使用啟用 BPF 與 BTF 的 Linux 6.12 或更新版本，並保留完整的驗證器日誌以便回報。
-
-## 停止 OpenWrt 防火牆會刪除 honk 的 nft 表
-
-`service firewall stop` 會刪除 honk 的 nft 表，NFQUEUE staging 隨之失效。重新啟動防火牆後，執行 `/etc/init.d/honk-core restart`。`fw4 reload` 和 `service firewall restart` 不會刪除該表。
-
-<a name="no-native-api"></a>
-
-## 沒有原生 API，或 /api、/ui/ 回傳 404
-
-從 `journalctl -u honk-core -b` 的本次開機日誌中找到最近一筆 `honk-core <版本> starting`，再與 [honk 版本](requirements.md#honk-version)對照。
-
-- 無法連線到 `listen` 位址：honk 未執行、`enabled` 不是 `true`，或 `listen` 指向其他位址。`enabled: false` 時監聽不會啟動。
-- `/api` 回傳 404：該位址上的服務沒有原生 API，例如 daeuniverse/honk `main` 分支的建置。doona 的登入頁面此時顯示「此 honk 建置沒有提供原生 API」。請安裝 doona 發行版附帶的建置。
-- 只有 `/ui/` 回傳 404：原生 API 正在執行，但 `ui` 為空。
-- honk 啟動時以 `failed to inspect native UI directory`、`failed to inspect native UI index.html` 或 `native UI index.html must be a regular file` 結束：請依[安裝 doona 並啟動](install.md#doona)將 doona 解壓縮到 `ui` 目錄。
-
-<a name="sign-in"></a>
-
-## 登入與跨網域失敗
-
-- 首次設定只能在閘道器本機、私有網路中的用戶端或使用鏈路本地位址的用戶端完成。
-- 「設定」中出現網路或跨網域請求失敗：無法透過 `listen` 位址存取 honk，或 doona 所在來源未列入 `allow_origins` 與 `allowed_hosts`。
-- 使用 `openwrt.lan` 等網域名稱時，須分別在 `allowed_hosts` 中設定主機與連接埠，在 `allow_origins` 中設定瀏覽器來源，然後重新啟動 honk。語法與 403 檢查步驟見[網域名稱與來源存取](install.md#other-origin)。
-- 忘記密碼：停止 honk，執行 `sudo /usr/local/bin/honk-core admin reset`（在 root shell 中去掉 `sudo`；OpenWrt 上執行 `/usr/bin/honk-core --data-dir /etc/honk/data admin reset`），再啟動 honk 重新設定。
-- HTTPS 頁面無法存取 HTTP API，請參閱[從其他來源開啟 doona](install.md#other-origin)。
+| 受影響的操作 | 檢查與處理 |
+| --- | --- |
+| 編輯檔案、規則或出站模式 | 依[組態條件](feature-requirements.md#req-config-edit)檢查；來源檔案的標記見[唯讀檔案](#read-only)。 |
+| 新增節點或訂閱 | 依[節點管理條件](feature-requirements.md#req-nodes)檢查。 |
+| 重新整理訂閱或測量延遲 | 檢查[重新整理條件](feature-requirements.md#req-subscription-refresh)或[探測條件](feature-requirements.md#req-probes)。 |
+| 選擇群組內成員或編輯群組 | 兩種操作分別受[選擇條件](feature-requirements.md#req-group-selection)和[編輯條件](feature-requirements.md#req-group-edit)限制。 |
+| 記錄功能或其設定 | 檢查[執行期覆寫條件](feature-requirements.md#req-runtime-options)及對應的[記錄條件](#連線或規則頁保持空白)。 |
+| 目前組建未提供的功能 | 對照[支援的 honk 組建](requirements.md#honk-version)，檢查已安裝的引擎。 |
 
 <a name="read-only"></a>
 
-## 唯讀的組態檔案
+## 檔案唯讀或寫入被拒絕
 
-符合下列任一條件時，doona 會將組態檔案標記為唯讀：
+開啟**組態** → **設定檔**，檢查來源檔案的標記或診斷。完整的權限與檔案系統規則見 [doona 可以修改什麼](what-doona-can-change.md)及[組態條件](feature-requirements.md#req-config-edit)。
 
-- `config_write` 不是 `true`。
-- 既沒有 `password_auth: true`，也沒有 `secret`。
-- 檔案在 `native_api` 或 `clash_api` 中包含 `secret`，或包含與 8 位元組以上監聽密鑰相同的文字。
-- honk 仍在載入組態檔案，或其寫入協調器未執行。
-- 僅在以 `--store db` 執行時出現，本文件不使用此模式：已啟用的修訂未能記錄，導致寫入被阻止。
-
-請將所有密鑰移入 `config.d/api.dae`，並在變更 `native_api` 後重新啟動 honk。
-
-## 組態寫入遭拒
-
-honk 回傳已知的 `details.reason` 時，doona 以介面語言顯示原因。原因未知或缺失時，組態寫入拒絕訊息保留 honk 的原文。
-
-| 原因 | 處理方法 |
+| 回報的原因 | 處理方法 |
 | --- | --- |
-| `writes_disabled` | 啟用 `config_write`，並設定 API 金鑰或 `password_auth: true`，然後重新啟動 honk 並重新登入。 |
-| `configuration_unavailable` | 檢查 honk 的組態與服務狀態，然後重試。 |
-| `listener_secret_source` | 檔案宣告了監聽器金鑰，或此次寫入會新增此類宣告。須在磁碟上編輯。 |
-| `listener_secret_in_content` | 內容或來源路徑包含 API 金鑰值。使用未在其他內容與路徑中出現的隨機金鑰，然後重新啟動 honk 並重新登入。 |
-| `listener_settings_changed` | 介面寫入時須保持 `experimental.native_api`、`clash_api.secret` 與 `global.data_dir` 不變。在磁碟上修改這些設定，然後重新啟動 honk。 |
-| `credential_sources_changed` | 宣告 API 金鑰的組態來源已變更。重新載入 honk，然後重試。 |
-| `import_entry_changed` | 匯入入口與目前資料庫入口不同。使用 `-c` 指定目前入口啟動 honk，然後重試匯入。 |
-| `unsafe_path` | 使用允許的組態目錄中的一般檔案，然後重試。 |
+| `writes_disabled` | 依上述組態條件啟用經過身分驗證的寫入。 |
+| `configuration_unavailable` | 檢查 honk 啟動日誌，待組態載入完成後再編輯。 |
+| `listener_secret_source` | 在磁碟上編輯此含密鑰檔案。將監聽密鑰放在單獨的引入檔案中，讓其他檔案保持可編輯。 |
+| `listener_secret_in_content` | 檢查內容或路徑是否包含監聽密鑰值。在 doona 外更換與其他內容重複的密鑰，完成變更後重新登入。 |
+| `listener_settings_changed` 或要求重新啟動的診斷 | 在 doona 外編輯設定，並依[重新啟動規則](what-doona-can-change.md)處理。 |
+| `credential_sources_changed` | 在外部修改憑證來源檔案後重載 honk，再重新開啟來源檔案進行編輯。 |
+| `unsafe_path` | 使用允許的組態目錄內的普通檔案，並檢查[檔案系統條件](what-doona-can-change.md)。 |
+| 其他編輯操作後出現 `stale_revision` 或 `state_conflict` | 先處理[已變更的檔案](common-tasks.md#changed-on-disk)，再重新套用。 |
+| `import_entry_changed` | 匯入伺服器檔案前，以 `-c` 指向目前作用中的組態入口啟動 honk。 |
 
-失敗提示中的「複製錯誤」複製該請求的錯誤詳情。「設定」中的「關於」提供「複製最近錯誤」，可複製記憶體中保留的最多 20 筆最近錯誤，不含密鑰與請求主體。重新載入頁面會清除記錄。
+結果未知時，先檢查目前來源內容，再決定是否重新寫入。已受理的匯入或復原操作，可在**備份與修訂**中重新開啟該操作。若對話框仍提示結果未知，按其中的**重新整理**查詢原操作。未收到回應不代表寫入失敗。
 
-寫入或已接受操作的結果未知時，不要假定失敗或直接重複操作。請檢查重新載入的組態。已接受的匯入或修訂復原可在重新開啟「備份與修訂」後點選「重新整理」，查詢原操作。需重新啟動的診斷表示沒有寫入；請在磁碟上修改列出的設定，再[重新啟動 honk](service-management.md)。
+<a name="offline-dependency"></a>
 
-## 「日誌」與「事件」中沒有啟動訊息
+## 套用時提示依賴檔案無法使用
 
-「設定」中的「日誌記錄」預設為「依日誌需求」。本次固定的 honk 建置在用戶端連線時開始記錄，並可在 60 秒寬限期內繼續記錄；先前的啟動訊息不會補錄。請改為查看系統日誌：
+honk 寫入前會驗證本地依賴。檢查診斷和組態引用的檔案。
+
+診斷不會列出依賴檔名。訂閱或節點報錯時，檢查訂閱快取內容和各節點的 `ech_config_path`；DNS 報錯時，檢查 `use_host` 指定的檔案。恢復缺少的檔案，或重新整理格式錯誤的訂閱內容，再重新套用。
+
+| 代碼 | 原因與處理 |
+| --- | --- |
+| `missing-offline-dependency` | 恢復缺少的依賴。地理資料安裝見[安裝說明](install.md#directories-and-geodata)或 [OpenWrt 地理資料安裝](install-openwrt.md#install-geodata)。 |
+| `offline-dependency-denied` | 將依賴放入允許的組態目錄或資料目錄，並允許服務使用者讀取。 |
+| `invalid-offline-dependency` | 替換格式錯誤的內容，或重新整理受影響的訂閱。 |
+| `unreadable-offline-dependency` | 查看服務日誌中的檔案或儲存錯誤。 |
+
+**立即更新**用於更新已載入的資料，不能安裝缺少的初始檔案。再次套用前，先檢查[地理資料條件](feature-requirements.md#req-geodata)。
+
+<a name="sign-in"></a>
+
+## 登入失敗
+
+先檢查[登入條件](feature-requirements.md#req-sign-in)，再依下表對照回應。
+
+| 症狀或代碼 | 原因與處理 |
+| --- | --- |
+| `setup_required` | 依[首次登入](first-sign-in.md)完成管理員設定。 |
+| `setup_already_completed` | 管理員已存在，使用該帳號登入。 |
+| `invalid_credentials` | 重新輸入帳號憑證。忘記密碼時，依下方步驟重設。 |
+| `authentication_required` | 使用該後端設定的身分驗證方式重新登入。 |
+| 設定管理員時出現 `permission_denied` | 檢查[設定條件](feature-requirements.md#req-sign-in)允許的用戶端位址。 |
+| 透過主機名稱或其他來源存取時出現網路錯誤或 HTTP 403 | 先檢查是否能連線，再依[主機名稱與來源存取](install.md#other-origin)檢查。 |
+| API 可存取，但受保護操作被拒絕 | 檢查該操作的[功能條件](feature-requirements.md)，包括憑證與寫入權限。 |
+
+### 重設遺忘的管理員密碼
+
+在閘道上[停止 honk](service-management.md)，以服務使用者身分執行已安裝的 `honk-core`。將 `/var/lib/honk` 替換為[組態](configuration.md#config)中的資料目錄：
+
+不確定應傳入哪個目錄時，先依[資料目錄檢查](#state-unsafe)確認。
 
 ```sh
-logread -e honk                  # OpenWrt
-journalctl -u honk-core -b       # systemd
+honk-core --data-dir /var/lib/honk admin reset
 ```
 
-## 「連線」或「規則」頁保持空白
+指令會刪除管理員記錄，並回報是否存在該記錄。重新啟動 honk，再依[首次登入](first-sign-in.md)建立管理員。
 
-「流程記錄」設為「依流程需求」時，honk 只在用戶端請求時記錄。doona 在「連線」「規則」或「分流」頁開啟時請求流程，最後一次需求結束後繼續記錄 60 秒。請檢查「設定」中的「流程記錄」：「常開」持續記錄，「關閉」停止記錄；組態中禁止的記錄功能不能在此啟用。
+<a name="no-native-api"></a>
 
-## 「連線」頁僅顯示區域網路位址，全部直接連線
+## 無法存取原生 API 或介面
 
-檢查 `lan_interface`：在 OpenWrt 上設為 `br-lan`，讓 honk 處理區域網路裝置的流量。使用旁路由器時，也要確認用戶端的閘道器指向旁路由器的區域網路位址。請參閱[最小組態](minimal-configuration.md)。
+從本次服務啟動的日誌確認正在運作的組建與監聽位址，再檢查[相容組建](requirements.md#honk-version)及 [API 組態](configuration.md#config)。
 
-## 升級後 doona 仍顯示舊版本
+| 症狀 | 原因與處理 |
+| --- | --- |
+| 無法連接監聽位址 | 確認 honk 正在運作，且已啟用的 API 監聽於所存取的位址。見[服務檢查](service-management.md)。 |
+| `/api` 回傳 404，或登入頁顯示**此 honk 建置沒有提供原生 API** | 確認位址指向 honk，再安裝提供原生 API 的組建。 |
+| 只有 `/ui/` 回傳 404 | 檢查組態中的介面路徑及該目錄內的檔案，依[介面安裝](install.md#doona)處理。 |
+| 啟動回報 `failed to inspect native UI directory`、`failed to inspect native UI index.html` 或 `native UI index.html must be a regular file` | 修正介面目錄或解壓介面檔案，使其中的 `index.html` 是可讀取的普通檔案。 |
+| 操作回傳 `capability_not_supported` | 在[系統狀態](observe.md#overview)檢查該項功能。僅憑此代碼不能判斷整個 API 不存在。 |
 
-Service worker 在更新完成前會提供快取的版本。請重新載入頁面一至兩次，或關閉所有 doona 分頁後重新開啟。
+<a name="unknown-setting"></a>
 
-使用 `ui: embedded` 時，介面版本由 honk 執行檔決定。doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）內建 doona 0.1.0-beta.19。也可以安裝獨立的 beta.19 檔案，並將 `ui` 指向其目錄。
+## honk 啟動時拒絕原生 API 設定
 
-## 透過 HTTP 登入時出現 crypto.randomUUID is not a function
+`native API setting belongs inside native_api { }` 表示欄位被直接放在 `experimental` 下。對照[原生 API 組態](configuration.md#config)，將欄位移入巢狀區塊。
 
-0.1.0-beta.8 之前的 doona 需要安全環境才能呼叫此函式，而區域網路上的純 HTTP 不屬於安全環境。請將 doona 升級至 0.1.0-beta.8 或更新版本。
+`enabled` 和 `secret` 可用於多個實驗性區塊。將它們直接放在 `experimental` 下，會產生 `unknown experimental setting`，且不會提示唯一的目標區塊。原生 API 的欄位應移入 `native_api { }`。
+
+`unknown experimental setting` 也可能表示正在運作的組建不支援該設定。`native-api feature is required` 表示組建缺少已啟用的原生 API 功能。對照 [honk 要求](requirements.md#honk-version)檢查組建。
+
+身分驗證組合導致啟動被拒絕時，依據具體啟動錯誤，檢查[登入條件](feature-requirements.md#req-sign-in)和[組態參考](configuration.md#config)。
+
+<a name="geodata-update"></a>
+
+## 地理資料更新失敗
+
+開啟**設定** → **地理資料**，閱讀失敗操作的階段。**立即更新**缺少或停用時，先檢查[更新條件](feature-requirements.md#req-geodata-update)。
+
+| 階段 | 檢查或修改什麼 |
+| --- | --- |
+| `checksum_unavailable` | 校驗和請求失敗。檢查鏡像的校驗和 URL，或更換來源。 |
+| `checksum_mismatch` | 下載內容與校驗和不符。從來源取得互相符合的檔案與校驗和。 |
+| `download_timeout` | 檢查下載路由和來源；逾時限制見[下載期限](feature-requirements.md#req-geodata-update)。 |
+| `http_status_rejected` | 檢查伺服器回傳的狀態，使用最終 URL，避免重新導向。 |
+| `http_not_found` | 修正檔案 URL。 |
+| `connection_failed` | 檢查所選路由和節點；依主機名稱直連下載時，檢查[更新條件](feature-requirements.md#req-geodata-update)中的解析器要求。 |
+| `tls_failed` | 檢查閘道時間、伺服器憑證及主機名稱。 |
+| `group_unavailable` | 在**策略**檢查所選群組是否有可用節點。 |
+| `route_blocked` | 修正將此下載送往 `block` 的路由規則。 |
+| `asset_too_large` | 檢查 URL 是否提供預期的地理資料檔案。 |
+| `invalid_source` | 修正來源 URL。 |
+| `replacement_failed` 或 `directory_sync_failed` | 重試前檢查各檔案的結果和目標檔案系統，依[替換條件](feature-requirements.md#req-geodata-update)處理。 |
+
+校驗和請求回傳 404 時的處理、驗證規則及部分寫入行為見[更新條件](feature-requirements.md#req-geodata-update)。
+
+<a name="geodata-sources"></a>
+
+## 無法編輯地理資料來源或更新排程
+
+在**系統狀態** → **資料路徑**檢查持久化警告。降級代碼 `persistence_unavailable` 表示狀態資料庫無法使用；依據其 `reason` 進行[資料庫檢查](#state-db)。
+
+恢復[地理資料設定條件](feature-requirements.md#req-geodata-settings)後，重新開啟地理資料卡片。手動下載有[單獨的條件](feature-requirements.md#req-geodata-update)，能夠下載不代表能夠儲存設定。
+
+<a name="state-db"></a>
+
+## honk 回報狀態資料庫故障
+
+在[服務日誌](service-management.md)中查看最近一次啟動錯誤。密碼驗證需要資料庫，無法開啟時會停止啟動。使用檔案組態的 Token 模式遇到部分故障時，可以繼續運作但不儲存狀態；見[持久化條件](feature-requirements.md#req-persistence)。
+
+| 訊息或原因 | 下一步 |
+| --- | --- |
+| `unavailable` | 檢查服務使用者能否建立和存取組態指定的資料目錄及其中的狀態目錄。 |
+| `unsafe` | 依[不安全路徑檢查](#state-unsafe)處理。 |
+| 被 `honk-core admin reset` 鎖定 | 等待該指令結束後再啟動 honk。 |
+| 另一個 honk-core 已開啟資料庫 | 先停止衝突執行個體，再啟動目前執行個體。 |
+| 外部應用程式 ID 或較新的資料庫結構 | 使用擁有此資料庫的 honk 組建，不要用舊組建覆蓋。 |
+| `corrupt` | 在檔案儲存的 Token 模式下，honk 將損壞的資料庫移至資料目錄內的 `state/honk.db.corrupt`，再建立新資料庫。它不會覆蓋既有的損壞副本，包括 `state/honk.db.corrupt-wal`。若這些副本阻止復原，先將其儲存到其他位置，再重新啟動。 |
+
+修復存取問題後，[重新啟動服務](service-management.md)，檢查持久化警告是否消失。
+
+<a name="state-unsafe"></a>
+
+## 持久化警告的原因是 `unsafe`
+
+服務日誌會顯示拒絕的路徑、規則及建議的修復方法。配合[資料目錄組態](configuration.md#config)檢查該路徑，不要假定所有安裝都使用同一目錄。
+
+檔案模式下，執行期資料目錄由 `global.data_dir` 決定，`--data-dir` 不會覆蓋它。執行 `admin reset` 時，須透過 `--data-dir` 指定同一目錄。OpenWrt 預設安裝的 [`/var` 內容在重新啟動後遺失](https://openwrt.org/docs/techref/filesystems)，因此依[最小組態](minimal-configuration.md)將持久狀態儲存在 `/etc/honk/data`。
+
+狀態目錄與資料庫須歸 honk 服務使用者所有，且不能向群組或其他使用者開放權限。符號連結或錯誤的檔案類型也會被拒絕。只修正日誌所指路徑的所有權、權限或類型，再重新啟動 honk。不要遞迴修改整個組態目錄的權限。
+
+## 停止 OpenWrt 防火牆後流量異常
+
+如果停止防火牆時刪除了 honk 的 nftables 表，先重新啟動防火牆，再在閘道執行 `/etc/init.d/honk-core restart`。honk 運作期間，防火牆管理器不得修改 `inet honk_nfqueue` 及其 `udp_decision` 鏈。
+
+## 固定 BPF map 時出現 Invalid argument
+
+檢查 `/sys/fs/bpf` 是否掛載為 bpffs，具體步驟見[核心與檔案系統要求](requirements.md#requirements)。
+
+## honk 拒絕目前核心或編譯路由失敗
+
+依[執行要求](requirements.md#requirements)檢查最低核心版本及 BPF/BTF 支援。報告 verifier 失敗時，保留完整的 verifier 日誌。
+
+## LAN 流量沒有按預期路由
+
+對照[最小組態](minimal-configuration.md)檢查 `lan_interface`。OpenWrt 的 LAN 用戶端流量通常從 `br-lan` 進入；若網橋名稱不同，修改此值。使用旁路由時，將用戶端閘道設為該路由器的 LAN 位址，讓流量經過 honk。
+
+## 連線或規則頁保持空白
+
+| 空白檢視 | 原因與下一項檢查 |
+| --- | --- |
+| **連線** | 清除篩選，閱讀可見範圍或截斷提示。檢查[連線涵蓋範圍](feature-requirements.md#req-connections)；缺少記錄不能證明流量已停止。 |
+| **分流**或規則命中記錄 | 檢查[流程記錄](feature-requirements.md#req-flows)。 |
+| **解析記錄**或 DNS 統計 | 檢查 [DNS 記錄](feature-requirements.md#req-dns-log)。 |
+| **日誌** | 檢查[日誌記錄](feature-requirements.md#req-logs)。記錄開始前的啟動訊息不會補錄，須從服務日誌查看。 |
+| **事件** | 檢查[事件可用條件](feature-requirements.md#req-events)和目前種類篩選。 |
+
+**日誌記錄**預設為**依日誌需求**。依需求模式下，用戶端請求某類資料時，對應的已獲准記錄器開始記錄；需求結束後仍有 60 秒寬限期。連線、規則和分流頁面開啟時都會請求流程記錄。
+
+各檢視如何使用資料，見[觀測流量](observe.md)。
+
+## 升級後，已開啟的分頁仍顯示舊版本
+
+升級後重新載入頁面。doona 提示新版本已就緒時，按**重新載入**。使用 `ui: embedded` 時，內嵌介面來自已安裝的 honk 二進位檔案；介面設定見[組態參考](configuration.md#config)。
 
 <a name="lite-trouble"></a>
 
-## doona lite
+## doona lite 無法開啟或顯示了另一版本
 
-- honk 因缺少 `index.html` 而無法啟動：檢查 `ui` 是否指向 `/usr/share/doona-lite`，且目錄中包含已解壓縮的 [lite 檔案](lite.md#lite-install)。
-- 修改 `ui` 後，`/ui/` 仍顯示另一個版本：重新啟動 honk，再重新載入頁面。重載組態不能使 `native_api` 修改生效。
-- 跨來源請求傳回 403：檢查[登入與來源設定](#sign-in)。混合內容問題請按[透過主機名稱或其他來源存取](install.md#other-origin)使用同源位址，或為後端啟用 HTTPS。
+對照 [lite 安裝](lite.md#lite-install)檢查目錄與解壓後的檔案。修改介面設定後，依[原生 API 重新啟動規則](what-doona-can-change.md#restart-native)操作，再重新載入瀏覽器頁面。HTTP 403 或來源錯誤見[登入檢查](#sign-in)。
+
+## 收集報告所需的錯誤資訊
+
+按失敗提示中的**複製錯誤**，或在**設定** → **關於**按**複製最近錯誤**。報告中註明嘗試的操作及正在運作的引擎和介面版本。先複製錯誤再重新載入頁面，因為重新載入會清空記憶體中的錯誤歷史。
+
+歷史最多保留 20 筆錯誤。複製內容包括可用的請求方法與路徑、狀態、錯誤代碼及請求 ID。請求本文和組態文字不會保留，識別出的秘密欄位會被遮蔽。複製入口見[關於](config-and-settings.md#settings-page)。

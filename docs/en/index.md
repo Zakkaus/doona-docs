@@ -2,45 +2,39 @@ English / [简体中文](../zh-CN/index.md) / [繁體中文](../zh-TW/index.md)
 
 # doona documentation
 
-For a direct-only first run, follow [Quick start](quick-start.md).
+doona is a web interface for managing honk and inspecting its traffic through the native API. These pages cover v0.1.0-rc.2.
 
-doona is a static web UI for the native API that the daeuniverse engines share: honk today, dae once it implements the same contract. honk is a Rust transparent-proxy engine for Linux gateways; it serves doona itself at `/ui/`, or any web server can. doona shows what the engine is doing and manages nodes, groups, routing rules and configuration files.
+## Start here
+
+| Your starting point | Follow this page |
+| --- | --- |
+| New installation | [Quick start](quick-start.md): install, sign in and verify a direct-only setup |
+| honk is running and you want to use a proxy | [Route your first connection](tutorial.md): add a subscription, group, routing rule and DNS rule |
+| You need installation instructions for your system | [Install](install.md) and [Requirements](requirements.md) |
+| You only need configuration to copy | [Minimal configuration](minimal-configuration.md) |
+| You have signed in and want to find a control | [Interface tour](tour.md) |
 
 <a name="choose-edition"></a>
 
 ## Choose an edition
 
-| Standard edition | doona lite |
-| --- | --- |
-| For managing configuration and observing traffic | For beginners editing configuration |
-| Traffic pages, configuration forms, source editor and Trace | Nodes, subscriptions, groups, routing, DNS and global settings |
-| [Install the standard edition](install.md#doona) | [Install doona lite](lite.md#lite-install) |
-| [Standard demo](https://demo.daeuniverse.org/) | [lite demo](https://demo.daeuniverse.org/lite/) |
+| Edition | Use it for | Next step |
+| --- | --- | --- |
+| Standard | Configuration editing, traffic monitoring and routing diagnostics | [Install](install.md#doona), then [First sign-in](first-sign-in.md) |
+| doona lite | Configuration tasks through a smaller interface; a preview in testing | [Install lite](lite.md#lite-install), then [Connect](lite-connect.md) |
 
-See [Standard edition and doona lite](editions.md) for features and switching.
-
-[Try the demo with sample data](https://demo.daeuniverse.org/).
+See the [edition comparison](editions.md). To explore sample data, open the [standard demo](https://demo.daeuniverse.org/) or [lite demo](https://demo.daeuniverse.org/lite/).
 
 ![The activity page](../screenshots/en/activity-light.webp)
 
-## Native API status
+## Look up a requirement or solve a problem
 
-These pages cover doona v0.1.0-beta.19. doona uses honk's native API from the honk-core builds attached to each release, built from Glassyiris/honk `feat/native-api` debug tags. `HONK-SOURCE.txt` identifies the bundled build; see [honk version](requirements.md#honk-version). Upstream daeuniverse/honk `main` does not provide this API. Keys and defaults may change before upstream honk releases it.
+- A page or action is unavailable: [Feature requirements](feature-requirements.md).
+- You need a configuration key: [Configuration reference](configuration.md).
+- You need to know where a change is stored or whether it needs a restart: [What doona can change](what-doona-can-change.md).
+- A connection, sign-in or write fails: [Troubleshooting](troubleshooting.md).
+- You want to build or contribute: [Development](development.md).
 
-Installation examples use beta.19 asset names and the matching honk tag `debug.2026.10.9.native-api.2`. The assets are published on the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
+Downloads are on [doona releases](https://github.com/Zakkaus/doona/releases). Report interface problems in [doona issues](https://github.com/Zakkaus/doona/issues).
 
-## Pages
-
-For a new gateway, start with Requirements, install honk and an edition, then follow Minimal configuration and Service management. Continue with First sign-in for the standard edition or Connect doona lite.
-
-1. Start: [Standard edition and doona lite](editions.md), [Requirements](requirements.md).
-2. Install and first run: [Install on Debian or Ubuntu](install-debian.md), [Install on Fedora or RHEL](install-fedora.md), [Install on Arch Linux](install-arch.md), [Install on Gentoo](install-gentoo.md), [Install on OpenWrt](install-openwrt.md), [Install on other systems](install-manual.md), [Installation details](install.md), [Minimal configuration](minimal-configuration.md), [Service management](service-management.md).
-3. Standard edition: [First sign-in](first-sign-in.md), [Interface tour](tour.md), [Watching traffic](observe.md), [Routing, nodes and rules](routing.md), [Config and settings](config-and-settings.md), [Common tasks](common-tasks.md), [Features](features.md).
-4. doona lite: [doona lite](lite.md), [Connect doona lite](lite-connect.md), [Common tasks in doona lite](lite-tasks.md).
-5. Reference: [Configuration](configuration.md), [Troubleshooting](troubleshooting.md), [Development](development.md).
-
-## Links
-
-- [doona releases](https://github.com/Zakkaus/doona/releases) for honk-core downloads
-- [honk quick start](https://github.com/Glassyiris/honk/blob/feat/native-api/doc/en/how-to-start.md)
-- [doona issues](https://github.com/Zakkaus/doona/issues); report engine problems to [honk](https://github.com/daeuniverse/honk) or [dae](https://github.com/daeuniverse/dae)
+Report engine problems to [honk issues](https://github.com/daeuniverse/honk/issues).

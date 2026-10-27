@@ -2,23 +2,11 @@
 
 # 在 Debian 或 Ubuntu 上安装
 
-在 Debian、Ubuntu 或其他使用 APT 的系统上，从 `doona-web` `.deb` 软件包安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
+使用系统包管理器安装 doona v0.1.0-rc.2 标准版。doona lite 请按[压缩包安装说明](install-manual.md)操作。
 
-> [!NOTE]
-> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下载 beta.19 附件。
+在网关上打开终端，进入新建的下载目录，并在同一 shell 中完成各步。使用 root shell 时省略 `sudo`。安装后端前先检查 [honk 的前提条件](install.md#install)。
 
-## 开始之前
-
-- Linux 6.12 或更高版本，以及[系统要求](requirements.md#requirements)列出的内核选项。用 `uname -r` 查看内核版本。
-- 可使用 sudo 的用户，或 root shell。需要 root 权限的命令分为“sudo”与“root”两个标签页，请选择与当前 shell 相符的一个。
-- 能够访问 github.com。
-- 所有步骤都在同一个终端中执行：后面的步骤会用到前面设置的 `VERSION`、`BASE` 与 `TARGET` 变量。
-
-安装 lite 时，请先确保 curl 与 CA 证书已安装，再直接前往[4. 安装 doona](#4-安装-doona)，选择 doona lite 标签页。此前的标准版软件包、仓库、下载与校验步骤均可跳过。
-
-## 1. 安装 curl 与 CA 证书
-
-honk 使用系统 CA 证书校验通过 HTTPS 下载的订阅与地理数据。
+## 1. 准备下载工具
 
 ```sh tab="sudo"
 sudo apt update
@@ -30,184 +18,58 @@ apt update
 apt install curl ca-certificates
 ```
 
-## 2. 下载 doona
+## 2. 下载并校验软件包
 
-设置发布版本号，然后把软件包与校验和文件下载到当前目录。
-
-```sh
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-web_${VERSION}-1_all.deb" -O "$BASE/SHA256SUMS"
-```
-
-## 3. 校验下载的文件
+从 [v0.1.0-rc.2 发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.2)下载：
 
 ```sh
-grep " doona-web_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
+FILE=doona-web_0.1.0-rc.2-1_all.deb
+curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
 
-应当显示：
+所有选定文件都显示 `OK` 后才能继续。如果校验失败或找不到校验和条目，先核对文件名并重新下载，再安装。
 
-```text
-doona-web_0.1.0-beta.19-1_all.deb: OK
-```
+下载或执行文件出错时，见[安装故障](install.md#安装故障)。
 
-## 4. 安装 doona
+## 3. 安装网页文件
 
-设置 `ui: embedded` 时，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供内置的 doona 0.1.0-beta.19，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona-web`，提供此处安装的 beta.19 软件包，详见[最小配置](minimal-configuration.md)。
-
-doona lite 使用压缩包，暂不提供发行版软件包。请按[安装 doona lite](lite.md#lite-install)操作，设置 `ui: /usr/share/doona-lite`，然后继续本页的 honk 步骤。选择所需版本与 shell 对应的标签页。
-
-```sh tab="标准版 (sudo)"
-sudo apt install ./doona-web_${VERSION}-1_all.deb
+```sh
+sudo apt install "./$FILE"
 ls -l /usr/share/doona-web/index.html
 ```
 
-```sh tab="标准版 (root)"
-apt install ./doona-web_${VERSION}-1_all.deb
-ls -l /usr/share/doona-web/index.html
-```
+最后一条命令必须列出 `/usr/share/doona-web/index.html`。按[最小配置](minimal-configuration.md)操作时，将 UI 目录设为 `/usr/share/doona-web`；对应的配置项是 [`ui`](configuration.md#config)。
 
-```sh tab="doona lite (sudo)"
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-sudo mkdir -p /usr/share/doona-lite
-sudo tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
-ls -l /usr/share/doona-lite/index.html
-```
+Debian 软件包名为 `doona-web`。不要改用 `apt install doona`，Debian 和 Ubuntu 中的这个名称属于另一个软件包。
 
-```sh tab="doona lite (root)"
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-mkdir -p /usr/share/doona-lite
-tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
-ls -l /usr/share/doona-lite/index.html
-```
+### 恢复被 Debian 同名软件包替换的 UI
 
-安装 lite 后，`ls` 须列出 `/usr/share/doona-lite/index.html`。请继续[5. 选择 honk-core 构建](#5-选择-honk-core-构建)，跳过下方的标准版结果说明与可选软件包。在[最小配置](minimal-configuration.md)中，将 `ui` 设为 `/usr/share/doona-lite`。
+如果 `apt upgrade` 将旧 `doona` 网页软件包替换成无关的网络模糊测试工具，导致 UI 消失：
 
-以下为标准版的结果与可选组件：
+1. 按上文安装已校验的 `doona-web`，需要字体时再按下文安装 `doona-web-fonts`。新软件包声明替换或冲突的旧网页软件包版本范围为低于 1.0。
+2. 将现有 [`ui` 配置项](configuration.md#config)改为 `/usr/share/doona-web`，再[重启 honk](service-management.md)并重新加载浏览器页面。
+3. 如果仍安装了无关的 `doona`，执行 `sudo apt remove doona`。这会保留 `doona-web`。
 
-`ls` 输出一行以 `/usr/share/doona-web/index.html` 结尾的内容。`doona-web` 软件包将 doona 的网页文件安装到 `/usr/share/doona-web`，文档安装到 `/usr/share/doc/doona-web`，不安装任何服务。
+### 可选软件包
 
-可选的 `doona-web-precompressed` 软件包在网页文件旁加入 `.br` 与 `.gz` 副本，让服务器发送预压缩响应。须与 `doona-web` 安装相同版本；不安装时主软件包保持不变。
+是否需要字体或预压缩文件，见[可选资源](install.md#doona)。安装时在下列命令中将 `FILE` 设为表中对应的文件名。示例选择字体包。
 
-可选：`doona-web-fonts` 软件包将中文界面的 Noto Sans TC 与 SC 字体安装到 `/usr/share/doona-web/fonts`，依赖 `doona-web`。
-
-```sh tab="sudo"
-curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
-grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-sudo apt install ./doona-web-fonts_${VERSION}-1_all.deb
-```
-
-```sh tab="root"
-curl -fL -O "$BASE/doona-web-fonts_${VERSION}-1_all.deb"
-grep " doona-web-fonts_${VERSION}-1_all.deb\$" SHA256SUMS | sha256sum -c -
-apt install ./doona-web-fonts_${VERSION}-1_all.deb
-```
-
-## 5. 选择 honk-core 构建
+| 资源 | 文件名 |
+| --- | --- |
+| 字体 | `doona-web-fonts_0.1.0-rc.2-1_all.deb` |
+| 预压缩文件 | `doona-web-precompressed_0.1.0-rc.2-1_all.deb` |
 
 ```sh
-uname -m
+FILE=doona-web-fonts_0.1.0-rc.2-1_all.deb
+curl -fL -O "$BASE/$FILE"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
+  sudo apt install "./$FILE"
 ```
 
-发布版本附带 8 个 honk-core 归档文件，名称为 `honk-core-debug-<target>.tar.gz`。根据机器类型与 C 库确定 target：
+## 4. 安装后端
 
-| `uname -m` 输出 | target 开头              |
-| --------------- | ------------------------ |
-| `x86_64`        | `x86_64-unknown-linux-`  |
-| `aarch64`       | `aarch64-unknown-linux-` |
+按[安装 honk](install.md#install)安装后端后返回本页。已有兼容的 honk 时无需重复安装。
 
-| target 结尾     | 适用情况                                                                                            |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| `musl`          | 无法确定时选择此项。静态链接，不受系统 glibc 版本限制。                                   |
-| `gnu`           | 系统的 glibc 为 2.39 或更高版本。 |
-| `-stock` 后缀   | 使用系统内存分配器，而非 mimalloc。                                                               |
-
-例如 `x86_64-unknown-linux-musl`、`aarch64-unknown-linux-gnu` 或 `x86_64-unknown-linux-musl-stock`。
-
-## 6. 下载并校验 honk-core
-
-把 `TARGET` 设为所选的构建，然后从同一个发布版本下载，并用同一个 `SHA256SUMS` 校验。
-
-```sh
-TARGET=x86_64-unknown-linux-musl
-curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz"
-grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
-```
-
-应当显示：
-
-```text
-honk-core-debug-x86_64-unknown-linux-musl.tar.gz: OK
-```
-
-## 7. 安装 honk-core
-
-归档文件内有一个目录，其中包含 `honk-core` 二进制文件。把它安装为 `/usr/local/bin/honk-core`，即[服务管理](service-management.md)中的服务启动的路径。
-
-```sh tab="sudo"
-tar -xzf honk-core-debug-$TARGET.tar.gz
-sudo install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-/usr/local/bin/honk-core --version
-```
-
-```sh tab="root"
-tar -xzf honk-core-debug-$TARGET.tar.gz
-install -m 0755 honk-core-debug-$TARGET/honk-core /usr/local/bin/honk-core
-/usr/local/bin/honk-core --version
-```
-
-最后一条命令输出 honk 的构建版本，例如：
-
-```text
-honk-core debug.2026.10.9.native-api.2
-```
-
-同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。
-
-首次启动 honk 前，请按[目录与地理数据](install.md#directories-and-geodata)安装 `geosite.dat` 与 `geoip.dat`。
-
-下一步：[最小配置](minimal-configuration.md)。
-
-## 如果 apt 将 doona 替换为无关软件包
-
-如果执行 `apt upgrade` 后，`doona` 的版本变成 `1.0+git20190108-2`，网页界面也无法访问，说明 Debian 或 Ubuntu 安装了同名但版本号更高的网络模糊测试工具，与本项目无关。
-
-按第 2–4 步下载并校验 `doona-web` 与 `doona-web-fonts`，然后在下载目录中安装：
-
-```sh tab="sudo"
-sudo apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
-```
-
-```sh tab="root"
-apt install ./doona-web_${VERSION}-1_all.deb ./doona-web-fonts_${VERSION}-1_all.deb
-```
-
-在 honk 的 `native_api` 配置中设置 `ui: /usr/share/doona-web`。安装新软件包会移除本项目版本低于 `1.0` 的旧 `doona` 与 `doona-fonts` 软件包。
-
-如果系统中仍留有无关的 `doona` 软件包，可以将其移除，`doona-web` 不受影响：
-
-```sh tab="sudo"
-sudo apt remove doona
-```
-
-```sh tab="root"
-apt remove doona
-```
-
-## 遇到问题时
-
-| 看到的内容                                                         | 原因与处理                                                                                                |
-| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `curl: (22) The requested URL returned error: 404`                 | 版本号或文件名有误。请对照[发布页](https://github.com/Zakkaus/doona/releases)检查 `VERSION`。            |
-| `sha256sum: 'standard input': no properly formatted checksum lines found` | `grep` 没有找到该文件对应的行：当前终端未设置 `VERSION` 或 `TARGET`，或其中有拼写错误。            |
-| `FAILED` 与 `WARNING: 1 computed checksum did NOT match`           | 下载的文件损坏或不完整。删除该文件后重新下载。                                                            |
-| `version 'GLIBC_2.38' not found`                                   | `gnu` 构建需要更新的 glibc。请改用 `musl` 构建。                                                          |
-
-安装后遇到的问题请参阅[故障排查](troubleshooting.md#troubleshooting)。
+接着按[快速开始](quick-start.md)配置 honk 并登录。

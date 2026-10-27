@@ -2,256 +2,175 @@
 
 # 在 OpenWrt 上安装
 
-在 OpenWrt 25.12 上，从发布软件包或归档安装 doona，并从同一个发布版本安装 honk-core。之后继续阅读[最小配置](minimal-configuration.md)。
+在 OpenWrt 路由器上安装 doona v0.1.0-rc.2 和 honk。所有命令均在路由器的 root shell 中执行，安装期间保持同一 shell。
 
-> [!NOTE]
-> 从[发布页](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19)下载 beta.19 附件。
+## 1. 检查路由器并准备工具
 
-OpenWrt 25.12 使用 apk-tools 3；24.10 及更早版本使用 opkg 与 `.ipk` 文件。Alpine 的 apk 软件包不能用于 OpenWrt。官方 24.10 使用 Linux 6.6，低于 honk 要求的 6.12。
-
-## 开始之前
-
-- OpenWrt 25.12 或更高版本（内核为 Linux 6.12），以及[系统要求](requirements.md#requirements)列出的内核选项。用 `uname -r` 查看内核版本。
-- 路由器上的 root shell，例如 `ssh root@192.168.1.1`。OpenWrt 没有 sudo，所有命令都以 root 身份执行。
-- `/` 上须有足够空间存放 honk-core、解压后的 doona 文件、地理数据与状态数据库。`/tmp` 须能同时存放下载文件与解压后的 honk-core 归档内容。用 `df -h / /tmp` 检查；大小随构建与地理数据来源变化。
-- 从 `debug.2026.9.28.native-api.4` 起，包括 doona beta.10 及之后附带的 honk 构建，geodata 更新会流式写入磁盘，并使用 inactivity timeout。请保留 [procd 服务](service-management.md)中的 `MIMALLOC_PURGE_DELAY=0`，让 mimalloc 在更新后将已释放的内存归还给系统。
-- 能够访问 github.com。
-- 所有步骤都在同一个 shell 中执行：后面的步骤会用到前面设置的 `VERSION`、`BASE` 与 `TARGET` 变量。
-
-安装 honk 前先安装内核模块。缺少 `kmod-veth` 时 honk 无法启动。缺少 `kmod-nft-queue` 时，honk 会停用 NFQUEUE staging，只在启动日志中留下一条警告。`kmod-sched-core` 提供入站调度器。
+下载前先检查[后端前提条件](install.md#install)，包括内核、BTF、cgroup 和 CPU 要求。有对应的 doona 软件包，不代表路由器可以运行 honk。检查安装文件与下载目录所需的空间：
 
 ```sh
-apk add kmod-veth kmod-nft-queue kmod-sched-core
+uname -r
+uname -m
+df -h / /tmp
 ```
 
-仍使用 `opkg` 的固件（如 iStoreOS）用以下命令安装相同模块：
+OpenWrt 25.12 使用 apk-tools 3；OpenWrt 24.10 及更早版本使用 opkg 和 ipk 软件包。官方 OpenWrt 24.10 使用 [Linux 6.6](https://github.com/openwrt/openwrt/blob/openwrt-24.10/target/linux/x86/Makefile)，低于上文链接中 honk 的最低内核要求。安装格式匹配的 UI 软件包不能解决这一兼容性问题。
 
-```sh
-opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
+按路由器的包管理器选择命令。OpenWrt 提供 [veth 模块](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netsupport.mk)与 [NFQUEUE 模块](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netfilter.mk)软件包：
+
+```sh tab="apk"
+apk update
+apk add curl ca-bundle kmod-veth kmod-nft-queue
 ```
 
-官方 OpenWrt 24.10 及更早版本的内核低于 6.12，请先用 `uname -r` 对照[系统要求](requirements.md#requirements)确认内核版本。
+```sh tab="opkg"
+opkg update
+opkg install curl ca-bundle kmod-veth kmod-nft-queue
+```
 
-安装 lite 时，请先完成上方的内核模块准备，并安装 curl 与 CA 证书，再直接前往[4. 安装 doona](#4-安装-doona)，选择 doona lite 标签页。此前的标准版软件包、下载与校验步骤均可跳过。
+启用了 NFQUEUE，但缺少前提条件时，honk 可能继续运行，同时停用 NFQUEUE staging 并输出启动警告。检查[服务日志](service-management.md)；服务启动成功不代表 NFQUEUE staging 已启用。
 
 <a name="openwrt-packages"></a>
 
-## 软件包安装方式
+## 2. 下载并校验 doona
 
-doona lite 暂无发行版软件包，请使用 [lite 压缩包安装步骤](lite.md#lite-install)。以下软件包命令安装标准版。
+以下软件包安装标准版。lite 请使用[手动安装](install-manual.md)中的压缩包方式，省略 `sudo`，然后返回第 4 步。
 
-在 root shell 中把软件包下载到 `/tmp/doona`，选择适合当前软件包管理器的命令。两种方式都将网页文件安装到 `/usr/share/doona`。
+下载到 `/tmp/doona`，按固件使用的格式选择软件包。OpenWrt apk 软件包与 Alpine 软件包不同。
 
-OpenWrt 25.12 只签名索引，不签名单个软件包。将 `doona-openwrt.adb` 与软件包放在同一目录，安装公钥后通过索引安装：
+`/tmp` 使用内存，重启后会清空。下载 honk 时，必须预留同时存放压缩包与解压目录的空间。
 
 ```sh
-apk update
-apk add curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.19
-APKVER=0.1.0_beta19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
-  -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
-  -O "$BASE/doona-openwrt.adb" -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
-grep -E " (doona(-precompressed)?-${APKVER}-r1.apk|doona-openwrt.adb|doona-openwrt.pem)\$" SHA256SUMS | sha256sum -c -
-cp doona-openwrt.pem /etc/apk/keys/
-apk add -X /tmp/doona/doona-openwrt.adb doona doona-precompressed
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
+```
+
+```sh tab="apk"
+FILE=doona-0.1.0_rc2-r1.apk
+curl -fL -O "$BASE/$FILE" -O "$BASE/doona-openwrt.adb" \
+  -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
+awk '$2 == "doona-openwrt.adb"' SHA256SUMS | sha256sum -c -
+awk '$2 == "doona-openwrt.pem"' SHA256SUMS | sha256sum -c -
+```
+
+```sh tab="opkg"
+FILE=doona_0.1.0-rc.2-1_all.ipk
+curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
+```
+
+所有选定文件都显示 `OK` 后才能继续。如果校验失败或找不到校验和条目，先核对文件名并重新下载，再安装。
+
+下载或执行文件出错时，见[安装故障](install.md#安装故障)。
+
+## 3. 安装软件包
+
+使用 apk 时，安装已校验的公钥，并通过已签名的索引安装。索引与软件包文件应放在同一目录。
+
+```sh tab="apk"
+mkdir -p /etc/apk/keys
+cp /tmp/doona/doona-openwrt.pem /etc/apk/keys/doona-openwrt.pem
+apk add -X /tmp/doona/doona-openwrt.adb doona
+```
+
+```sh tab="opkg"
+opkg install "/tmp/doona/$FILE"
+```
+
+没有发布公钥和索引时，可以直接安装已校验的本地 apk：
+
+```sh
+apk add --allow-untrusted "/tmp/doona/$FILE"
+```
+
+此方式跳过签名信任检查，因此使用前必须校验软件包对应的 SHA-256 条目。
+
+```sh
 ls -l /usr/share/doona/index.html
 ```
 
-OpenWrt 24.10 及更早版本使用 ipk 软件包。honk 仍要求内核至少为 6.12，此方式需要符合要求的固件：
+最后一条命令必须列出 `index.html`。使用[最小配置](minimal-configuration.md)中的 OpenWrt 示例时，将 UI 目录设为 `/usr/share/doona`。
 
-```sh
-opkg update
-opkg install curl ca-bundle
-mkdir -p /tmp/doona
-cd /tmp/doona
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
-  -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
-grep -E " doona(-precompressed)?_${VERSION}-1_all.ipk\$" SHA256SUMS | sha256sum -c -
-opkg install doona_${VERSION}-1_all.ipk doona-precompressed_${VERSION}-1_all.ipk
-ls -l /usr/share/doona/index.html
-```
+### 可选软件包
 
-`ls` 须列出 `/usr/share/doona/index.html`。可选的 `doona-precompressed` 加入 `.br` 与 `.gz` 副本供服务器发送预压缩响应，约占 1.6 MB 存储空间，不需要时可省略。`doona-fonts` 也是可选软件包。每次发布都提供新签名公钥。没有 OpenWrt 公钥与索引时，直接安装 apk 须用 `apk add --allow-untrusted ./doona-${APKVER}-r1.apk`。
+按需选择[可选资源](install.md#doona)。将选定文件下载到 `/tmp/doona`，并像第 2 步那样使用 `SHA256SUMS` 中对应的条目校验。
 
-安装软件包后，从[第 5 步](#5-选择-honk-core-构建)继续安装 honk-core。下方第 1–4 步是归档安装方式。
+| 软件包 | apk 文件名 | opkg 文件名 |
+| --- | --- | --- |
+| `doona-fonts` | `doona-fonts-0.1.0_rc2-r1.apk` | `doona-fonts_0.1.0-rc.2-1_all.ipk` |
+| `doona-precompressed` | `doona-precompressed-0.1.0_rc2-r1.apk` | `doona-precompressed_0.1.0-rc.2-1_all.ipk` |
 
-## 1. 安装 curl 与 CA 证书
+使用 apk 时，将安装命令中的 `doona` 改为所选软件包名后执行。使用 opkg 时，将 `FILE` 设为所选文件名，再执行安装命令。
 
-honk 使用系统 CA 证书校验通过 HTTPS 下载的订阅与地理数据。安装 curl 与 `ca-bundle`：
+## 4. 安装 honk
 
-```sh
-apk update
-apk add curl ca-bundle
-```
+在另一个下载目录中按[安装 honk](install.md#install)操作，避免后端的 `SHA256SUMS` 覆盖 doona 的文件。选择 musl 构建和 OpenWrt 安装标签页，将可执行文件安装到 `/usr/bin/honk-core`，再返回本页。
 
-## 2. 下载 doona
-
-在 `/tmp` 中操作。`/tmp` 位于内存中，重启后清空。设置发布版本号，然后下载归档文件与校验和文件。
-
-```sh
-cd /tmp
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-```
-
-## 3. 校验下载的文件
-
-```sh
-grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-```
-
-应当显示：
-
-```text
-doona-0.1.0-beta.19.tar.gz: OK
-```
-
-## 4. 安装 doona
-
-设置 `ui: embedded` 时，doona beta.19 的 honk `debug.2026.10.9.native-api.2` 附件（提交 `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`）提供内置的 doona 0.1.0-beta.19，无需单独安装界面软件包。也可以设置 `ui: /usr/share/doona`，提供此处安装的 beta.19 文件，详见[最小配置](minimal-configuration.md)。
-
-把归档文件解压到 `/usr/share/doona`，honk 从这个目录提供 doona。
-
-doona lite 使用压缩包，暂不提供发行版软件包。请按[安装 doona lite](lite.md#lite-install)操作，设置 `ui: /usr/share/doona-lite`，然后继续本页的 honk 步骤。选择所需版本与 shell 对应的标签页。
-
-```sh tab="标准版"
-mkdir -p /usr/share/doona
-tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
-ls -l /usr/share/doona/index.html
-```
-
-```sh tab="doona lite"
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-mkdir -p /usr/share/doona-lite
-tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
-ls -l /usr/share/doona-lite/index.html
-```
-
-安装 lite 后，`ls` 须列出 `/usr/share/doona-lite/index.html`。请继续[5. 选择 honk-core 构建](#5-选择-honk-core-构建)，跳过下方的标准版结果说明与可选软件包。在[最小配置](minimal-configuration.md)中，将 `ui` 设为 `/usr/share/doona-lite`。
-
-以下为标准版的结果与可选组件：
-
-`ls` 输出一行以 `/usr/share/doona/index.html` 结尾的内容。可选的字体归档文件 `doona-fonts-${VERSION}.tar.gz` 包含 Noto Sans TC 与 SC 字体，存储空间不足时可以不装。
-
-## 5. 选择 honk-core 构建
-
-```sh
-uname -m
-```
-
-OpenWrt 使用 musl，因此选择 `musl` 构建：
-
-| `uname -m` 输出 | `TARGET`                                                                 |
-| --------------- | ------------------------------------------------------------------------ |
-| `x86_64`        | `x86_64-unknown-linux-musl` 或 `x86_64-unknown-linux-musl-stock`         |
-| `aarch64`       | `aarch64-unknown-linux-musl` 或 `aarch64-unknown-linux-musl-stock`       |
-
-`-stock` 构建使用系统内存分配器，而非 mimalloc。发布版本不提供其他路由器 CPU（例如 MIPS 或 32 位 ARM）的构建。
-
-## 6. 下载并校验 honk-core
-
-把 `TARGET` 设为所选的构建，然后从同一个发布版本下载，并用同一个 `SHA256SUMS` 校验。
-
-```sh
-TARGET=x86_64-unknown-linux-musl
-curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz"
-grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
-```
-
-应当显示：
-
-```text
-honk-core-debug-x86_64-unknown-linux-musl.tar.gz: OK
-```
-
-## 7. 安装 honk-core
-
-把二进制文件安装为 `/usr/bin/honk-core`，即[服务管理](service-management.md)中的 procd 服务启动的路径。OpenWrt 的 BusyBox 没有 `install` 命令，因此复制文件后再设置权限。最后删除 `/tmp` 中下载的文件，释放其占用的内存。
-
-```sh
-tar -xzf honk-core-debug-$TARGET.tar.gz
-cp honk-core-debug-$TARGET/honk-core /usr/bin/honk-core
-chmod 0755 /usr/bin/honk-core
-honk-core --version
-rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz SHA256SUMS
-```
-
-`honk-core --version` 输出 honk 的构建版本，例如：
-
-```text
-honk-core debug.2026.10.9.native-api.2
-```
-
-同一个发布版本中的 `HONK-SOURCE.txt` 记录 honk 构建，并提供 honk 源码与对应 doona 源码的链接。
+确认已安装的可执行文件正常后，使用绝对路径删除其下载压缩包和解压目录。所有选定的可选 UI 软件包安装完成后，再使用绝对路径删除 `/tmp/doona` 中下载的软件包、索引、公钥副本与校验和文件。仍需用于安装的下载文件应先保留。
 
 <a name="install-geodata"></a>
 
-## 8. 安装地理数据
+## 5. 准备数据目录
 
-使用 `geosite:` 或 `geoip:` 的分流方式与规则分别需要 `geosite.dat` 或 `geoip.dat`。首次启动前，创建目录并下载两个文件：
+采用[最小配置](minimal-configuration.md)中 OpenWrt 示例的持久化目录布局。`data_dir` 的含义见[配置参考](configuration.md#config)。
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data
 chmod 0700 /etc/honk /etc/honk/config.d /etc/honk/data
+```
+
+仅在规则需要时下载 geodata，具体条件见 [geodata 要求](feature-requirements.md#req-geodata)。采用上述目录时执行：
+
+```sh
 curl -fL --retry 3 -o /etc/honk/data/geosite.dat \
   https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
 curl -fL --retry 3 -o /etc/honk/data/geoip.dat \
   https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
 ```
 
-[最小配置](minimal-configuration.md)中的 OpenWrt 配置将 `data_dir` 设为 `/etc/honk/data`，重启后仍会保留。请保留此设置：`/var` 位于内存中，默认目录 `/var/lib/honk` 中的文件会在重启后丢失。
+也可以安装发行版提供的 [v2ray geodata 软件包](https://github.com/openwrt/packages/blob/openwrt-25.12/net/v2ray-geodata/Makefile)，替代上面的直接下载方式：
 
-登录后，可在设置 → 地理数据 → 立即更新中更新 honk 已加载的文件，替换文件会写入 `data_dir`。此方式要求文件已安装并加载；若缺少任一文件，请先用 curl 下载，再[重启 honk](service-management.md)。
+```sh tab="apk"
+apk add v2ray-geosite v2ray-geoip
+```
 
-也可用 `apk` 或 `opkg` 安装 `v2ray-geosite` 与 `v2ray-geoip`，并确保 `/usr/share/dae/geosite.dat` 与 `/usr/share/dae/geoip.dat` 分别链接到 `../v2ray/geosite.dat` 与 `../v2ray/geoip.dat`。honk 会搜索 `/usr/share/dae`，不会直接搜索 `/usr/share/v2ray`。
+```sh tab="opkg"
+opkg install v2ray-geosite v2ray-geoip
+```
 
-下一步：[最小配置](minimal-configuration.md)。该页凡是提供“OpenWrt”标签页的地方，都选择它。
+honk 会搜索 `/usr/share/dae`，不会直接搜索 `/usr/share/v2ray`。先检查 `/usr/share/dae` 中已有的文件或链接，仅创建缺少的链接：
 
-## 系统升级时保留 honk
+```sh
+mkdir -p /usr/share/dae
+ln -s ../v2ray/geosite.dat /usr/share/dae/geosite.dat
+ln -s ../v2ray/geoip.dat /usr/share/dae/geoip.dat
+```
 
-按[服务管理](service-management.md)创建服务后，在升级前将配置目录和启动脚本加入 OpenWrt 的备份列表：
+已配置的数据目录中若存在同名文件，honk 会优先使用这些文件。
+
+编写配置与按[服务管理](service-management.md)创建服务时，使用 OpenWrt 版本的步骤。
+
+## 在 sysupgrade 后保留配置
+
+执行保留配置的普通 sysupgrade 前，将尚未列出的以下路径加入 `/etc/sysupgrade.conf`，再检查[备份清单](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/base-files/files/sbin/sysupgrade)：
 
 ```sh
 printf '%s\n' '/etc/honk/' '/etc/init.d/honk-core' >> /etc/sysupgrade.conf
+sysupgrade -l
 ```
 
-系统升级不会保留内核模块、`/usr/share/doona` 或 `/usr/bin/honk-core`。升级后执行 `apk update` 并重新安装模块：
+确认清单包含 honk 配置、数据文件与 init 脚本。这份配置备份不会恢复已安装的内核模块、`/usr/bin/honk-core` 或 `/usr/share/doona`。
 
-```sh
-apk add kmod-veth kmod-nft-queue kmod-sched-core
-```
-
-使用 `opkg` 的系统用以下命令重新安装模块：
-
-```sh
-opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
-```
-
-重做上文第 1 至 7 步，重新安装 doona 与 honk-core，然后恢复服务的开机自启并启动服务：
+升级后重复第 1–4 步，重新安装工具、内核模块、UI 软件包和 honk 可执行文件。若选用发行版的 geodata 软件包，再按第 5 步重装并重新创建链接。保留已恢复的配置与数据，然后重新启用并启动服务：
 
 ```sh
 /etc/init.d/honk-core enable
 /etc/init.d/honk-core start
+/etc/init.d/honk-core status
 ```
 
-## 遇到问题时
+检查[服务日志](service-management.md)，再重复下方快速开始中的 API 检查。
 
-| 看到的内容                                                         | 原因与处理                                                                                                |
-| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `curl: (22) The requested URL returned error: 404`                 | 版本号或文件名有误。请对照[发布页](https://github.com/Zakkaus/doona/releases)检查 `VERSION`。            |
-| `sha256sum: WARNING: 1 of 1 computed checksums did NOT match`      | 下载的文件损坏或不完整。删除该文件后重新下载。                                                            |
-| `sha256sum: -: no checksum lines found`                            | `grep` 没有找到该文件对应的行：当前 shell 未设置 `VERSION` 或 `TARGET`，或其中有拼写错误。                |
-
-若 honk 报告 `persistence_unavailable` 且 reason 为 `unsafe`，请参阅[故障排查](troubleshooting.md#state-unsafe)。
-
-安装后遇到的问题请参阅[故障排查](troubleshooting.md#troubleshooting)。
+接着按[快速开始](quick-start.md)配置 honk 并登录。

@@ -2,256 +2,175 @@ English / [简体中文](../zh-CN/install-openwrt.md) / [繁體中文](../zh-TW/
 
 # Install on OpenWrt
 
-Install doona from a release package or archive and honk-core from the same release on OpenWrt 25.12. Then continue with [Minimal configuration](minimal-configuration.md).
+Install doona v0.1.0-rc.2 and honk on an OpenWrt router. Run every command in a root shell on the router and keep the same shell open throughout the installation.
 
-> [!NOTE]
-> Download the beta.19 assets from the [release page](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-beta.19).
+## 1. Check the router and prepare tools
 
-OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and `.ipk` files. Alpine apk packages do not work on OpenWrt. Stock 24.10 runs Linux 6.6, below honk's 6.12 requirement.
-
-## Before you start
-
-- OpenWrt 25.12 or later, which runs Linux 6.12, and the kernel options listed in [Requirements](requirements.md#requirements). Check the kernel with `uname -r`.
-- A root shell on the router, such as `ssh root@192.168.1.1`. OpenWrt has no sudo; every command runs as root.
-- Free space on `/` for honk-core, the extracted doona files, geodata and the state database. `/tmp` must hold the downloads and the extracted honk-core archive at the same time. Check with `df -h / /tmp`; sizes vary by build and geodata source.
-- From `debug.2026.9.28.native-api.4` onward, including the honk builds attached to doona beta.10 and later, geodata updates stream to disk and use an inactivity timeout. Keep `MIMALLOC_PURGE_DELAY=0` in the [procd service](service-management.md) so mimalloc returns freed memory to the system after an update.
-- Access to github.com.
-- Run every step in the same shell: later steps use the `VERSION`, `BASE` and `TARGET` variables that earlier steps set.
-
-Install the kernel modules before installing honk. honk cannot start without `kmod-veth`. Without `kmod-nft-queue`, honk starts with NFQUEUE staging disabled and only logs a warning at startup. `kmod-sched-core` provides the ingress scheduler.
+Check the [backend prerequisites](install.md#install), including the kernel, BTF, cgroup, and CPU requirements, before downloading. A matching doona package does not establish that the router can run honk. Check storage for installed files and the download directory:
 
 ```sh
-apk add kmod-veth kmod-nft-queue kmod-sched-core
+uname -r
+uname -m
+df -h / /tmp
 ```
 
-Firmware that still uses `opkg`, such as iStoreOS, installs the same modules with:
+OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and ipk packages. Stock OpenWrt 24.10 uses [Linux 6.6](https://github.com/openwrt/openwrt/blob/openwrt-24.10/target/linux/x86/Makefile), below honk’s minimum kernel requirement linked above. Installing a matching UI package does not resolve that incompatibility.
 
-```sh
-opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
+Choose the commands for the router’s package manager. OpenWrt provides the [veth module](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netsupport.mk) and [NFQUEUE modules](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netfilter.mk) as packages:
+
+```sh tab="apk"
+apk update
+apk add curl ca-bundle kmod-veth kmod-nft-queue
 ```
 
-Stock OpenWrt 24.10 and earlier ship kernels older than 6.12, so check `uname -r` against [Requirements](requirements.md#requirements) first.
+```sh tab="opkg"
+opkg update
+opkg install curl ca-bundle kmod-veth kmod-nft-queue
+```
 
-For lite, complete the kernel-module prerequisites above and install curl and CA certificates, then go directly to [4. Install doona](#4-install-doona) and select the doona lite tab. Skip the standard edition’s package, download and verification steps before it.
+If NFQUEUE is enabled but its prerequisites are unavailable, honk can continue running with NFQUEUE staging disabled and a startup warning. Check the [service log](service-management.md); successful service startup does not confirm that NFQUEUE staging is enabled.
 
 <a name="openwrt-packages"></a>
 
-## Package routes
+## 2. Download and verify doona
 
-For doona lite, use the [lite archive installation](lite.md#lite-install); lite has no distribution packages yet. The package commands below install the standard edition.
+These packages install the standard edition. For lite, use the archive route in [manual installation](install-manual.md), omitting `sudo`, then return at step 4.
 
-In a root shell, download the packages into `/tmp/doona`. Choose the commands for your package manager. Both install the web files into `/usr/share/doona`.
+Download into `/tmp/doona` and choose the package format used by the firmware. The OpenWrt apk packages are separate from Alpine’s packages.
 
-OpenWrt 25.12 signs the index, not the individual packages. Keep `doona-openwrt.adb` and the packages together, then install the public key and use that index:
+`/tmp` uses RAM and is cleared at reboot. Allow enough space for both the downloaded honk archive and its extracted directory at the same time.
 
 ```sh
-apk update
-apk add curl ca-bundle
 mkdir -p /tmp/doona
 cd /tmp/doona
-VERSION=0.1.0-beta.19
-APKVER=0.1.0_beta19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-${APKVER}-r1.apk" \
-  -O "$BASE/doona-precompressed-${APKVER}-r1.apk" \
-  -O "$BASE/doona-openwrt.adb" -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
-grep -E " (doona(-precompressed)?-${APKVER}-r1.apk|doona-openwrt.adb|doona-openwrt.pem)\$" SHA256SUMS | sha256sum -c -
-cp doona-openwrt.pem /etc/apk/keys/
-apk add -X /tmp/doona/doona-openwrt.adb doona doona-precompressed
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
+```
+
+```sh tab="apk"
+FILE=doona-0.1.0_rc2-r1.apk
+curl -fL -O "$BASE/$FILE" -O "$BASE/doona-openwrt.adb" \
+  -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
+awk '$2 == "doona-openwrt.adb"' SHA256SUMS | sha256sum -c -
+awk '$2 == "doona-openwrt.pem"' SHA256SUMS | sha256sum -c -
+```
+
+```sh tab="opkg"
+FILE=doona_0.1.0-rc.2-1_all.ipk
+curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
+awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
+```
+
+Continue only when every selected file reports `OK`. If verification fails or finds no checksum line, check the filenames and download again before installing.
+
+For download or binary errors, see [Installation errors](install.md#installation-errors).
+
+## 3. Install the package
+
+For apk, install the verified public key and use the signed index. Keep the index and package files in the same directory.
+
+```sh tab="apk"
+mkdir -p /etc/apk/keys
+cp /tmp/doona/doona-openwrt.pem /etc/apk/keys/doona-openwrt.pem
+apk add -X /tmp/doona/doona-openwrt.adb doona
+```
+
+```sh tab="opkg"
+opkg install "/tmp/doona/$FILE"
+```
+
+Without the release key and index, you can install a verified local apk directly:
+
+```sh
+apk add --allow-untrusted "/tmp/doona/$FILE"
+```
+
+This skips signature trust checking, so verify the package’s SHA-256 entry before using this alternative.
+
+```sh
 ls -l /usr/share/doona/index.html
 ```
 
-OpenWrt 24.10 and earlier use the ipk packages. honk still needs a kernel of at least 6.12, so this route requires suitable firmware:
+The last command must list `index.html`. Use `/usr/share/doona` as the UI directory in the OpenWrt example in [Minimal configuration](minimal-configuration.md).
 
-```sh
-opkg update
-opkg install curl ca-bundle
-mkdir -p /tmp/doona
-cd /tmp/doona
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona_${VERSION}-1_all.ipk" \
-  -O "$BASE/doona-precompressed_${VERSION}-1_all.ipk" -O "$BASE/SHA256SUMS"
-grep -E " doona(-precompressed)?_${VERSION}-1_all.ipk\$" SHA256SUMS | sha256sum -c -
-opkg install doona_${VERSION}-1_all.ipk doona-precompressed_${VERSION}-1_all.ipk
-ls -l /usr/share/doona/index.html
-```
+### Optional packages
 
-`ls` must list `/usr/share/doona/index.html`. The optional `doona-precompressed` package adds `.br` and `.gz` copies for precompressed responses and uses about 1.6 MB of storage; omit it if not needed. `doona-fonts` is also optional. Each release supplies a new signing key. Without the OpenWrt key and index, direct apk installation requires `apk add --allow-untrusted ./doona-${APKVER}-r1.apk`.
+Choose [optional assets](install.md#doona) only if you need them. Download the chosen file into `/tmp/doona` and verify its individual entry in `SHA256SUMS` as in step 2.
 
-After installing a package, continue at [step 5](#5-choose-the-honk-core-build) for honk-core. Steps 1–4 below are the archive alternative.
+| Package | apk filename | opkg filename |
+| --- | --- | --- |
+| `doona-fonts` | `doona-fonts-0.1.0_rc2-r1.apk` | `doona-fonts_0.1.0-rc.2-1_all.ipk` |
+| `doona-precompressed` | `doona-precompressed-0.1.0_rc2-r1.apk` | `doona-precompressed_0.1.0-rc.2-1_all.ipk` |
 
-## 1. Install curl and CA certificates
+For apk, repeat the install command with the chosen package name instead of `doona`. For opkg, set `FILE` to the chosen filename and repeat the install command.
 
-honk uses the system CA certificates to verify HTTPS subscription and geodata downloads. Install curl and `ca-bundle`:
+## 4. Install honk
 
-```sh
-apk update
-apk add curl ca-bundle
-```
+Follow [Install honk](install.md#install) in a separate download directory so its `SHA256SUMS` does not replace doona’s. Choose a musl build and the OpenWrt installation tab, which installs `/usr/bin/honk-core`. Then return here.
 
-## 2. Download doona
-
-Work in `/tmp`, which is in memory and is cleared at reboot. Set the release version, then download the archive and the checksum file.
-
-```sh
-cd /tmp
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-```
-
-## 3. Verify the download
-
-```sh
-grep " doona-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-```
-
-You should see:
-
-```text
-doona-0.1.0-beta.19.tar.gz: OK
-```
-
-## 4. Install doona
-
-With `ui: embedded`, the honk `debug.2026.10.9.native-api.2` assets for doona beta.19 (commit `eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e`) serve bundled doona 0.1.0-beta.19 without a separate UI package. You can also serve the beta.19 files installed here with `ui: /usr/share/doona`; see [Minimal configuration](minimal-configuration.md).
-
-Extract the archive into `/usr/share/doona`, the directory honk serves doona from.
-
-For doona lite, use the archive; there are no lite distribution packages yet. Follow [Install doona lite](lite.md#lite-install), set `ui: /usr/share/doona-lite`, then continue with the honk steps on this page. Choose the tab for your edition and shell.
-
-```sh tab="Standard edition"
-mkdir -p /usr/share/doona
-tar -xzf doona-${VERSION}.tar.gz -C /usr/share/doona
-ls -l /usr/share/doona/index.html
-```
-
-```sh tab="doona lite"
-VERSION=0.1.0-beta.19
-BASE=https://github.com/Zakkaus/doona/releases/download/v$VERSION
-curl -fL -O "$BASE/doona-lite-${VERSION}.tar.gz" -O "$BASE/SHA256SUMS"
-grep " doona-lite-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
-mkdir -p /usr/share/doona-lite
-tar -xzf "doona-lite-${VERSION}.tar.gz" -C /usr/share/doona-lite
-ls -l /usr/share/doona-lite/index.html
-```
-
-For lite, `ls` must list `/usr/share/doona-lite/index.html`. Continue at [5. Choose the honk-core build](#5-choose-the-honk-core-build); skip the standard edition results and optional packages below. In [Minimal configuration](minimal-configuration.md), set `ui` to `/usr/share/doona-lite`.
-
-For the standard edition:
-
-`ls` prints a line ending in `/usr/share/doona/index.html`. The optional font archive, `doona-fonts-${VERSION}.tar.gz`, adds the Noto Sans TC and SC fonts; skip it where storage is short.
-
-## 5. Choose the honk-core build
-
-```sh
-uname -m
-```
-
-OpenWrt uses musl, so take a `musl` build:
-
-| `uname -m` prints | `TARGET`                                                                    |
-| ----------------- | --------------------------------------------------------------------------- |
-| `x86_64`          | `x86_64-unknown-linux-musl`, or `x86_64-unknown-linux-musl-stock`           |
-| `aarch64`         | `aarch64-unknown-linux-musl`, or `aarch64-unknown-linux-musl-stock`         |
-
-The `-stock` build uses the system allocator instead of mimalloc. There are no release builds for other router CPUs, such as MIPS or 32-bit ARM.
-
-## 6. Download and verify honk-core
-
-Set `TARGET` to the build you chose, then download it from the same release and check it against the same `SHA256SUMS`.
-
-```sh
-TARGET=x86_64-unknown-linux-musl
-curl -fL -O "$BASE/honk-core-debug-$TARGET.tar.gz"
-grep " honk-core-debug-$TARGET.tar.gz\$" SHA256SUMS | sha256sum -c -
-```
-
-You should see:
-
-```text
-honk-core-debug-x86_64-unknown-linux-musl.tar.gz: OK
-```
-
-## 7. Install honk-core
-
-Install the binary as `/usr/bin/honk-core`, the path the procd service in [Service management](service-management.md) starts. OpenWrt’s BusyBox has no `install` command, so copy the file and set its mode. Then remove the downloads from `/tmp` to free the memory they hold.
-
-```sh
-tar -xzf honk-core-debug-$TARGET.tar.gz
-cp honk-core-debug-$TARGET/honk-core /usr/bin/honk-core
-chmod 0755 /usr/bin/honk-core
-honk-core --version
-rm -rf honk-core-debug-$TARGET honk-core-debug-$TARGET.tar.gz doona-${VERSION}.tar.gz SHA256SUMS
-```
-
-`honk-core --version` prints the honk build, for example:
-
-```text
-honk-core debug.2026.10.9.native-api.2
-```
-
-`HONK-SOURCE.txt` in the same release records the honk build and links both its source and the matching doona source.
+After verifying the installed binary, remove its downloaded archive and extracted directory using their absolute paths. After all chosen optional UI packages are installed, remove the downloaded doona packages, index, key copy, and checksums from `/tmp/doona` using their absolute paths. Keep any downloads still needed for installation.
 
 <a name="install-geodata"></a>
 
-## 8. Install geodata
+## 5. Prepare the data directory
 
-Routing modes and rules using `geosite:` or `geoip:` need `geosite.dat` or `geoip.dat`, respectively. Create the directories and download both files before the first start:
+Use the persistent layout from the OpenWrt example in [Minimal configuration](minimal-configuration.md). For the meaning of `data_dir`, see [Configuration](configuration.md#config).
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data
 chmod 0700 /etc/honk /etc/honk/config.d /etc/honk/data
+```
+
+Only download geodata when your rules need it; see [geodata requirements](feature-requirements.md#req-geodata). For this layout:
+
+```sh
 curl -fL --retry 3 -o /etc/honk/data/geosite.dat \
   https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
 curl -fL --retry 3 -o /etc/honk/data/geoip.dat \
   https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
 ```
 
-The OpenWrt configuration in [Minimal configuration](minimal-configuration.md) sets `data_dir` to `/etc/honk/data`, which survives reboot. Keep that setting: `/var` is in memory, so files in the default `/var/lib/honk` are lost at reboot.
+Alternatively, install the distribution’s [v2ray geodata packages](https://github.com/openwrt/packages/blob/openwrt-25.12/net/v2ray-geodata/Makefile) instead of downloading the files above:
 
-After signing in, Settings → Geodata → Update now updates the files honk has loaded, writing replacements into `data_dir`. This option requires installed, loaded files; if either file is missing, download it with curl first, then [restart honk](service-management.md).
+```sh tab="apk"
+apk add v2ray-geosite v2ray-geoip
+```
 
-Alternatively, install `v2ray-geosite` and `v2ray-geoip` with `apk` or `opkg` and ensure `/usr/share/dae/geosite.dat` and `/usr/share/dae/geoip.dat` link to `../v2ray/geosite.dat` and `../v2ray/geoip.dat`. honk searches `/usr/share/dae`; it does not search `/usr/share/v2ray` directly.
+```sh tab="opkg"
+opkg install v2ray-geosite v2ray-geoip
+```
 
-Next: [Minimal configuration](minimal-configuration.md). Take the OpenWrt tab there wherever one is offered.
+honk searches `/usr/share/dae`, but not `/usr/share/v2ray` directly. Check for existing files or links under `/usr/share/dae`; create any missing links as follows:
 
-## Keep honk across sysupgrade
+```sh
+mkdir -p /usr/share/dae
+ln -s ../v2ray/geosite.dat /usr/share/dae/geosite.dat
+ln -s ../v2ray/geoip.dat /usr/share/dae/geoip.dat
+```
 
-After creating the service in [Service management](service-management.md), add its configuration and init script to OpenWrt’s backup list before sysupgrade:
+Files already present in the configured data directory take precedence over these packaged files.
+
+Use the OpenWrt variants when writing the configuration and creating the service in [Service management](service-management.md).
+
+## Preserve configuration across sysupgrade
+
+Before a normal sysupgrade that preserves configuration, add these paths to `/etc/sysupgrade.conf` if they are not already listed, then check the [backup list](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/base-files/files/sbin/sysupgrade):
 
 ```sh
 printf '%s\n' '/etc/honk/' '/etc/init.d/honk-core' >> /etc/sysupgrade.conf
+sysupgrade -l
 ```
 
-Sysupgrade does not preserve the kernel modules, `/usr/share/doona` or `/usr/bin/honk-core`. After upgrading, run `apk update` and reinstall the modules:
+Confirm that the list includes your honk configuration, data files, and init script. This configuration backup does not restore installed kernel modules, `/usr/bin/honk-core`, or `/usr/share/doona`.
 
-```sh
-apk add kmod-veth kmod-nft-queue kmod-sched-core
-```
-
-On systems using `opkg`, reinstall the modules with:
-
-```sh
-opkg update && opkg install kmod-veth kmod-nft-queue kmod-sched-core
-```
-
-Repeat steps 1–7 above to reinstall doona and honk-core, then restore the service’s boot link and start it:
+After upgrading, repeat steps 1–4 to reinstall the tools, kernel modules, UI packages, and honk binary. If you chose packaged geodata, reinstall it and recreate its links using step 5. Keep the restored configuration and data. Re-enable and start the service:
 
 ```sh
 /etc/init.d/honk-core enable
 /etc/init.d/honk-core start
+/etc/init.d/honk-core status
 ```
 
-## If it doesn’t work
+Check the [service log](service-management.md) and repeat the API check in Quick start below.
 
-| You see                                                           | Cause and fix                                                                                              |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `curl: (22) The requested URL returned error: 404`                | The version or file name is wrong. Check `VERSION` against the [releases](https://github.com/Zakkaus/doona/releases). |
-| `sha256sum: WARNING: 1 of 1 computed checksums did NOT match`     | The download is damaged or incomplete. Delete the file and download it again.                              |
-| `sha256sum: -: no checksum lines found`                           | `grep` found no line for that file: `VERSION` or `TARGET` was not set in this shell, or it has a typo.     |
-
-If honk reports `persistence_unavailable` with reason `unsafe`, see [Troubleshooting](troubleshooting.md#state-unsafe).
-
-For problems after installation, see [Troubleshooting](troubleshooting.md#troubleshooting).
+Continue with [Quick start](quick-start.md) to configure honk and sign in.

@@ -2,213 +2,186 @@ English / [简体中文](../zh-CN/config-and-settings.md) / [繁體中文](../zh
 
 <a name="config-and-settings"></a>
 
-# Config and settings
+# Change configuration and settings
 
-Configuration reads, validates and applies honk's configuration files. Settings manages backend profiles, temporary runtime overrides, geodata, appearance and latency probes. Activity's [Getting started](observe.md#activity) card links to the setup steps.
-
-This page covers the standard edition; for doona lite, see [doona lite](lite.md).
+Use this page to edit configuration files or change settings through the standard edition of doona. For configuration keys and examples, use the [configuration reference](configuration.md#config); for storage and activation behavior, see [what doona can change](what-doona-can-change.md).
 
 <a name="config-page"></a>
 
-## Open the Configuration page
+## Choose a configuration editor
 
-1. In the Settings hub, open Configuration. The page appears when the backend provides configuration or backup and revision capabilities.
-2. Read the line above the tabs. Config version identifies the configuration in effect and changes when changed content takes effect. Next to it, a status shows No diagnostics or the number of errors or warnings.
-3. If the line also shows Listener secret values are redacted, the backend hid those values in the text it returned.
-4. Choose Modules or Config files. Global settings appears for an engine whose settings doona knows. Backups and revisions appears when the backend offers configuration export, import or revision history.
+Open **Configuration** from the Settings hub. Check the [editing requirements](feature-requirements.md#req-config-edit) if a control is unavailable.
 
-Without a tab specified in the link, the page opens on Modules, even when the main file is empty. It opens on Config files when the link selects a source or the backend did not return the main configuration text. For the file format and the roles of the main file and its includes, see [Configuration](configuration.md#config).
-
-To add a subscription, open Nodes and choose Add subscription; see [nodes and subscriptions](routing.md#nodes). To apply a rule template, open Rules; see [routing rules](routing.md#rules).
-
-### Config files
-
-1. Open Config files and choose a file from Config file. Each entry shows its kind: Main, Include, Subscription or Generated.
-2. Read the facts next to the picker: the number of lines and the size. Hover over them to see when the file was loaded.
-3. If the file cannot be edited, a badge next to the picker names the reason. The table below lists the badges.
-4. Press Download source file to download the displayed text. The export keeps the text as shown and may contain credentials, so review it before sharing.
-
-| Badge | Meaning |
+| Tab | Use it to |
 | --- | --- |
-| Read-only | The backend does not allow configuration writes; the badge's help says how to enable them, and [Configuration](configuration.md#config) describes `config_write`. Without that help, the backend refuses this file and gives no reason; see [read-only sources](troubleshooting.md#read-only). |
-| Contains secrets | The file holds a listener secret, so the backend does not write it back. Move the secret into its own included file to edit the rest. |
-| Redacted | The backend hid part of the file. Writing it back would lose those values. |
-| Subscription | The file is downloaded from a subscription URL and replaced when the subscription updates. |
-| Generated | The engine generates the file and overwrites it when it regenerates. Change the configuration that produces it instead. |
+| **Modules** | Find a configuration section and use **Open page** to reach its editor. |
+| **Global settings** | Change offered global fields through a form. |
+| **Config files** | Read or edit a whole source file and inspect its diagnostics. |
+| **Backups and revisions** | Export configuration, import server files or restore a stored revision. See [availability](feature-requirements.md#req-revisions). |
 
-Typing into a read-only file shows the notice This file is read-only, once per file.
+**Config version** identifies the accepted configuration; the adjacent status reports diagnostics. **Listener secret values are redacted** means the returned text hides those values. **Modules** opens by default; source links and a missing main-source body open **Config files**. **Global settings** appears only for engines whose settings doona supports.
+
+For subscriptions, use [Nodes](routing.md#nodes). For group membership, use [Policies](routing.md#policies). For routing templates and individual rules, use [Rules](routing.md#rules).
 
 <a name="edit-source"></a>
 
-## Edit and apply a source
+## Edit a configuration file
 
-1. On Config files, choose a writable file with complete text and click its text.
-2. Type your change. A Not applied badge appears, and reloading or closing the page loses the change.
-3. If the backend supports validation, doona checks the main file and its includes after a pause in typing. Press Validate to check at once.
-4. Review the [draft diagnostics](#validation-and-diagnostics), then press Apply. honk validates the files, writes the change and reloads the configuration; a notice confirms the write and reload.
+1. Open **Config files** and select a file from **Config file**.
+2. Check its badge before editing. If it is read-only, follow [source permissions and refusal reasons](troubleshooting.md#read-only).
+3. Edit the text. **Not applied** marks a draft; **Cancel** discards it.
+4. Choose **Validate** when offered, then review the diagnostics. Use **Go** to reach a line or **Open** to inspect another file. See [validation requirements](feature-requirements.md#req-validation).
+5. Choose **Apply** and wait for the result. On success, the notice names the written file and confirms the reload. For an unsuccessful or unconfirmed operation, read the notice before sending another change.
 
-Press Cancel to drop the change. If validation finds errors, nothing is written and the errors appear in the list. If the change touches a setting that takes effect only after a restart, nothing is written either. The notice lists those settings and the restart command; edit them on disk and [restart honk](service-management.md).
+Reloading or closing the page loses an unapplied draft. Diagnostics distinguish the accepted configuration from the current draft; typing starts a new draft check when validation is available.
 
-If the file changed on disk while you were editing, an alert says so and Apply stays disabled. Press Keep changes, then Apply, to write your text over the new file; or press Cancel to drop your change and load the new text.
+The file picker identifies **Main**, **Include**, **Subscription** and **Generated** sources. Hover over the line count and size to see the loaded time. Subscription updates replace subscription sources; the engine overwrites generated sources, so edit the configuration that produces them. Typing in a read-only source shows its notice once per file.
 
-To create an included file:
+Accepted diagnostics remain until a draft is validated. Applying a change or receiving a new accepted generation clears previous validation results. An empty level filter returns to **All**. Older validation links open diagnostics on **Config files**.
 
-1. On Config files, press New file. The button appears when the backend allows creating writable files.
-2. If an include pattern of the main file sets the directory and extension, enter only the file name in Name; when there are several patterns, choose one from Include pattern first. Otherwise enter a path relative to the main configuration's directory in Path; it must end in `.dae`.
-3. Press Create. The new file starts empty, the configuration reloads, and the file opens on Config files.
+If the file changes while you edit, saving pauses. Review that change before choosing **Keep changes**, which lets your draft replace the newer file, then **Apply**. Choose **Cancel** to discard your draft and use the newer text.
 
-If no include pattern of the loaded files matches the path, the dialog warns that the backend will refuse the file.
+A restart-required notice means the edit was refused. Follow the [restart-only settings](what-doona-can-change.md#restart-global) procedure instead of repeatedly applying it.
 
-An unconfirmed New file result is an information notice, not an error. The normal read-only hint in Global settings also uses the information level.
+### Create an included file
 
-## Validation and diagnostics
+1. On **Config files**, choose **New file**.
+2. If the dialog supplies the directory and extension, enter only **Name**. Choose **Include pattern** first when several are offered. Otherwise, enter a `.dae` path relative to the main configuration’s directory in **Path**.
+3. Resolve any warning that the path matches no loaded include pattern.
+4. Choose **Create**. The empty file opens in the editor; continue with the editing steps above.
 
-![Current draft diagnostics under the editor toolbar: level filter with counts, Go buttons and line markers](../screenshots/en/config-diagnostics.webp)
+### Use the global settings form
 
-These diagnostics belong to the unapplied draft, not the accepted configuration. When the selected level runs out of items, the filter returns to All; Open jumps to another file.
+1. Open **Global settings** and select the section to edit from **Config file**.
+2. Change the offered fields, following their units and ranges. Use the [configuration reference](configuration.md#config) to check a key's meaning; resolve duplicate entries in **Config files**.
+3. Choose **Write and reload**, or **Discard changes** to drop the draft. Check the result before leaving.
 
-The list shows diagnostics for the accepted configuration until a draft is validated. Validation needs the complete main file and include text. An applied change or a new accepted generation clears the previous validation results. Old links to Validation open the diagnostics on Config files.
+If writing succeeds but the new configuration cannot be read back, the draft stays and **Retry** is offered.
 
-## Modules
+The picker includes global sections in main and include files; a main file without one can receive a new section. **Not set** uses the engine default. Clearing a numeric field leaves it unset; integer fields reject decimal points, and ports display ungrouped numbers such as `8080`.
 
-1. Open Modules. It shows one card for each `global`, `subscription`, `node`, `group`, `dns` and `routing` section, with its line range and one summary line.
-2. Press Open page to open the section's editor: Global settings, Nodes, Policies, or the DNS or routing list on Rules.
+Stored subscription bodies use the `subscription_body` table in the state database described in the [configuration reference](configuration.md#config). Separate `.sub` files are legacy storage; see [honk’s subscription reference](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md#fetch-persistence-and-recovery) for startup migration.
 
-Modules is an overview, not an inline editor. Edit whole files on Config files. A card for a missing section says so.
+### Export or restore configuration
 
-## Global settings
+Open **Backups and revisions**, then choose the task:
 
-1. Open Global settings and choose a section from Config file. The picker includes `global` sections in the main file and includes; a main file without one can receive a new section.
-2. Edit the offered fields for interfaces, dialing and TLS, node checks, logging, storage, bandwidth and preconnection. Each field shows its configuration key and any units or range. Not set uses the engine default; duplicate fields must be resolved on Config files. Transparent proxy and profiling ports use number fields with decrease and increase buttons; a port reads `8080`, not `8,080`, and clearing it leaves it unset. A number typed below a field's minimum stays as typed until you finish, and whole-number fields do not accept a decimal point.
-3. Press Write and reload to validate, write and apply the change. Discard changes drops the draft.
+| Task | Action |
+| --- | --- |
+| Download accepted configuration | Choose **Export configuration**. Review credentials before sharing the download. |
+| Replace database configuration with server files | Choose **Import server files**, review the confirmation and confirm. This reads honk's startup file tree; it is not a local file upload. |
+| Restore a recorded revision | Open the revision, review its metadata and sources, then choose **Restore revision** and confirm. |
+| Check an unconfirmed import or restore | Use **Refresh** to check the accepted operation before starting another write. |
 
-Only writable files with complete text can be changed. A file changed on disk blocks the save. A restart-required change is refused without writing and lists the settings to edit on disk. If the write succeeds but the new configuration cannot be read, the draft stays and Retry is offered.
+Review the revision’s source SHA-256 values before restoring it. If the database head changes during import or restore, review and confirm the replacement again.
 
-With honk, Store subscriptions (`global.store_subscribe`) stores successfully fetched and accepted subscription bodies in the `subscription_body` table of `<data_dir>/state/honk.db`, normally `/var/lib/honk/state/honk.db`. Changing this setting requires restarting honk; a subscription with `cache: false` skips storage and recovery. Separate `.sub` files belong to legacy storage; see the [pinned honk reference](https://github.com/Glassyiris/honk/blob/eac5e0c5fba5078a7ff4517a3e3851e7fa0f4f8e/doc/en/reference/subscription.md#fetch-persistence-and-recovery) for startup migration.
-
-## Backups and revisions
-
-![Export, Import and revision Restore use different configuration sources](../images/config-recovery.svg)
-
-Export downloads accepted source files; Import reads honk's server-side startup tree selected by `-c`, not a local upload, and Restore uses a revision's snapshot. Import and Restore validate and apply after confirmation; open a revision row to review its metadata and source SHA-256 values before replacing the current configuration.
-
-Unlike Export configuration, Download source file downloads only the displayed file. Exports omit listener secrets but may retain other credentials; review them before sharing.
-
-If an accepted import or restore has an unknown result, reopen this tab and use Refresh to check its operation without sending another write. A changed database head requires review and confirmation again.
+To download only the selected source text, use **Download source file** on **Config files**. Review that file before sharing it too. See [backup and revision requirements](feature-requirements.md#req-revisions) for the available operations and export limits.
 
 <a name="settings-page"></a>
 
-## Settings page
+## Open Settings
 
-In the Settings hub, open Settings. The page opens without a connected backend, so you can correct the backend address there. It has two tabs, General and Appearance. General opens by default, with these cards in order:
+**Settings** has **General** and **Appearance** tabs. General contains backend profiles, temporary runtime overrides, geodata, latency probes and About. The page also opens without a connected backend.
 
-1. Backend
-2. Temporary runtime overrides
-3. Geodata, when the backend provides geodata
-4. Latency probes
-5. About
+### Connect or switch backends
 
-The Appearance tab holds the Appearance card, described below. `#/settings?tab=appearance` opens it directly; links and search results for an appearance setting also open this tab.
+1. In **General** → **Backend**, select a **Profile**, or choose **Add profile** to create one.
+2. Enter **Backend URL** as the backend root or reverse-proxy prefix, without `/api/v1`. Enter `mock` for demo data; an empty address cannot be saved.
+3. Enter **Token** for token authentication. For password authentication, follow the [sign-in guide](first-sign-in.md).
+4. Choose **Test connection** and read the result.
+5. Choose **Save** to store the profile and reload the page with it.
 
-![General settings with the General and Appearance tabs](../screenshots/en/settings-general.webp)
+Switching profiles or confirming a profile dialog discards unsaved address and token edits. **Rename profile** and **Delete profile** manage saved entries. **Sign out** ends password sign-in or removes the saved token from this browser; removing a token does not revoke it on the backend.
 
-![Appearance settings with all four Glass palettes](../screenshots/en/settings-appearance.webp)
+Selecting another profile saves the choice and reloads immediately. Confirming **Add profile**, **Rename profile** or **Delete profile** also reloads; a new profile starts with demo data.
 
-### Backend
-
-1. Choose a profile from Profile to switch to it. doona saves the choice and reloads the page with that backend.
-2. Use Add profile, Rename profile or Delete profile to manage profiles. Each opens a dialog; confirming reloads the page. A new profile starts with the built-in demo data.
-3. Enter the Backend URL: the backend root or reverse-proxy prefix, not `/api/v1`. Leave it empty or enter `mock` for the built-in demo data.
-4. Enter the Token. A backend with password sign-in shows a note instead, and Sign out appears while you are signed in.
-5. Press Test connection. The result reads Connected, API v*N*, or names the failure.
-6. Press Save. doona stores the profile in this browser and reloads the page to apply it.
-
-Switching, adding, renaming or deleting a profile discards unsaved Backend URL and Token edits; the dialogs warn about this first. A pairing link fills in Backend URL and Token, which take effect once saved. Save changes doona's profile, not honk's configuration. If the test or sign-in fails, see [sign-in failures](troubleshooting.md#sign-in).
-
-Sign out also appears when the active profile uses a saved token. It removes the token from this browser, keeps the backend address and returns to sign-in; it does not revoke the backend secret. Password sign-out closes the session and also removes any saved token.
+A pairing link fills **Backend URL** and **Token**; they take effect after **Save**. Save changes this browser’s profile, not honk’s configuration. For test or sign-in failures, see [sign-in troubleshooting](troubleshooting.md#sign-in).
 
 <a name="runtime-options"></a>
 
-### Temporary runtime overrides
+### Change temporary runtime options
 
-1. Read the badge next to the title: From configuration or Runtime override.
-2. Change the fields the backend offers: Log level, Log records kept, DNS log records kept, Flows kept and Flow retention (seconds). Each numeric field shows its allowed range.
-3. For Flow recording, choose On flow demand, Always or Off. For Log recording, choose On log demand, Always or Off. For DNS log, choose On DNS log demand, Always or Off. A status next to each reads Recording, Idle or Disabled in configuration.
-4. Press Apply. The changes take effect immediately. Discard changes appears while you have unapplied edits.
+Check the [runtime override requirements](feature-requirements.md#req-runtime-options) first.
 
-These options are not written to the configuration file. A restart or an accepted explicit configuration activation, including a no-op reload, restores the configured values. Rejected activation and provider or network refresh preserve the overrides. A recorder disabled in the configuration cannot be enabled here. If the options change on the backend while you edit, doona keeps your draft and says so.
+1. Open **Temporary runtime overrides** and check whether the values are **From configuration** or **Runtime override**.
+2. Change the offered log level, record limits, flow retention or recording modes. Each recorder has its own demand-based, always-on and off choices.
+3. Choose **Apply**, or **Discard changes** to abandon the draft. Read the recording status beside each recorder.
 
-Edit persistent settings in Configuration opens Global settings for values written to honk's configuration.
+If runtime options change on the backend while you edit, doona keeps your draft and reports the change.
+
+The offered fields include **Log level**, **Log records kept**, **DNS log records kept**, **Flows kept** and **Flow retention (seconds)**. **Flow recording** offers **On flow demand**; **Log recording** offers **On log demand**; **DNS log** offers **On DNS log demand**. Each also offers **Always** and **Off**. Recorder status reads **Recording**, **Idle** or **Disabled in configuration**.
+
+For how long overrides last, see [runtime changes](what-doona-can-change.md#change-runtime). For persistent values, use **Edit persistent settings in Configuration** and the [configuration reference](configuration.md#config).
 
 <a name="geodata"></a>
 
-### Geodata
+### Update geodata or change its sources
 
-Check [geodata requirements](feature-requirements.md#req-geodata) before changing settings or updating files.
+Check [file availability](feature-requirements.md#req-geodata), [update requirements](feature-requirements.md#req-geodata-update) and [settings requirements](feature-requirements.md#req-geodata-settings) for the controls you need.
 
-![Geodata card with Update now, Reset to defaults and Details open, showing check times and file downloads above the file table](../screenshots/en/settings-geodata.webp)
+1. Open **Geodata** and inspect the files. Expand **Details** for check times and download information.
+2. To download the configured sources now, choose **Update now** and wait for the result.
+3. To change sources, choose a preset in **Source**, or choose **Custom** and enter the URLs. Review any missing-category warning. In the custom dialog, confirm with **Apply and update** or **Apply**, whichever is offered.
+4. Adjust **Download route**, **Verify checksum** or **Automatic updates** when offered. For **Specific group**, select the group to save the route. These controls save on change; check each result.
+5. To remove overrides, choose **Reset to defaults** and review the confirmation before proceeding.
 
-Reset to defaults asks first, then removes every override and every value taken from the configuration file. The file table shows even when sources cannot be configured.
+**Source** offers **Loyalsoldier**, **MetaCubeX full**, **MetaCubeX lite** and **Custom**. With honk, each custom URL list accepts up to four URLs, tried in order. **Edit** reopens the custom dialog.
 
-Details lists Last checked and Next check, then each file's size, download host and route. The file table below shows each file's update time.
+**Details** shows **Last checked** and **Next check**, followed by each file’s size, download host and route. The file table shows each file’s update time.
 
-1. Choose a Source: Loyalsoldier, MetaCubeX full, MetaCubeX lite or Custom. If the preset lacks categories your rules use, a dialog lists them before switching, because the backend refuses such a file on update.
-2. For Custom, enter the `geosite` and `geoip` URLs in the Custom URLs dialog and press Apply and update, or Apply. Each list takes up to four URLs, tried in order. Use URLs that serve the file directly; GitHub release download links redirect and do not work. Edit reopens the dialog later.
-3. Choose a Download route: By routing rules, Direct or Specific group. For Specific group, choose the group; the route is saved then.
-4. Leave Verify checksum on unless a trusted mirror's checksum URL returns an error page or an error other than HTTP 404. A mirror without a `.sha256sum` file already loads files unverified.
-5. Turn on Automatic updates and choose an Interval (hours) for scheduled downloads.
+See [geodata storage and activation](what-doona-can-change.md#change-geodata) for persistence, and [geodata troubleshooting](troubleshooting.md#geodata-update) for download or activation failures.
 
-Each control saves when you change it. If the backend updates on request, a new source downloads at once; otherwise it downloads at the next automatic update. Download route and Verify checksum appear only when the backend reports them. If the card says the URLs come from the configuration file, honk writes those URLs back when it restarts. For failures, see [geodata update failures](troubleshooting.md#geodata-update) and [geodata sources](troubleshooting.md#geodata-sources).
+### Set manual probe preferences
 
-### Appearance
+1. Open **Latency probes**.
+2. Choose **Probe method**, **IP family**, **Measurement** and **Group probes**.
+3. Return to a node or group and use its test button. **Probe with options…** lets you adjust the options for that test.
 
-Choose Language, Palette, Color scheme, Wordmark and Notification position. Turn on Mirrored layout to flip the layout left to right. doona stores these choices in this browser; they do not change honk's configuration.
+**Warm (reuse connection)** reuses a connection; **Cold (new connection)** opens a new connection. **Group probes** chooses **Direct members** or **Every leaf node**, including nested groups.
 
-Date format defaults to Automatic (browser region); Day/Month/Year, Month/Day/Year and Year-Month-Day override the date order. Time format defaults to 24-hour; 12-hour uses the interface language's AM/PM words, and Automatic (browser region) follows the regional clock. Both apply throughout the pages, including chart axes and the log heatmap, and are saved in this browser.
+See [probe requirements](feature-requirements.md#req-probes) and [result meanings](routing.md#policies). For background checks, use **Edit health checks in Configuration**; their keys are in the [configuration reference](configuration.md#config).
 
-Palette shows each palette as a box with a small window drawn in its light and dark colors. The Glass section offers Liquid Glass, Glass, Frosted and Tinted. Liquid Glass refracts through the lens only in Chromium browsers; Firefox and Safari draw it as Glass, with blur and fill. Frosted applies one even blur to every surface. Tinted has nearly opaque surfaces and no blur. Liquid Glass Events and Logs tables retain blur, transparency and colour but omit refraction and the bright rim.
+### Change appearance
 
-Reduce Transparency, Increase Contrast and forced colors make these palettes solid with clear edges.
+1. Open **Appearance**.
+2. Choose **Language**, **Palette** and **Color scheme**. Adjust **Date format**, **Time format** or **Open at startup** as needed.
+3. With a Glass palette, use **Choose image** under **Wallpaper** to select an image, or **Use default** to restore the built-in wallpaper. Adjust the offered veil and blur controls for readability.
 
-A Glass material chosen with the earlier Settings switch carries over to its palette.
+#### Date and time
 
-With a Glass palette selected, Wallpaper > Choose image replaces the wallpaper behind the pages and the sign-in page; Use default restores the built-in one. The image is scaled to at most 2560 pixels on its long edge and stored only in this browser's IndexedDB. If the browser cannot store it, it is kept for this session only.
+**Date format** defaults to **Automatic (browser region)**, independently of the interface language. **Day/Month/Year**, **Month/Day/Year** and **Year-Month-Day** override it. **Time format** defaults to **24-hour**; **12-hour** uses the interface language’s AM/PM words, while **Automatic (browser region)** follows the browser region. These choices apply throughout the interface, including charts and the log heatmap.
 
-Once you choose an image, Readability veil lays white over it in light mode or black in dark mode. It is on by default, and Dim sets its strength up to 60%, which is also the default. Turned off, the image shows as it is.
+#### Layout and startup
 
-Blur scales the blur of every Liquid Glass, Glass and Frosted surface from 0% to 150%, with or without a custom image. Below 100% the surfaces' fill thickens so text stays readable. Tinted has no blur and shows no Blur control.
+**Wordmark**, **Notification position** and **Mirrored layout** are also available. Mirrored layout flips the interface left to right. **Show country flags** controls flags before node names without changing routing. **Show trends on activity cards** controls traffic, CPU and latency sparklines.
 
-Show country flags controls flags before node names and does not affect routing. Show trends on activity cards controls recent-value sparklines on Activity's traffic, CPU and latency cards.
+**Open at startup** defaults to **Activity** and saves immediately. It applies only when the address has no page route. Explicit page links keep their destination; without a configured backend, an address without a page route opens **Settings**.
 
-Open at startup chooses the page to open when the address has no page route. It defaults to Activity and saves immediately in this browser. A link to a specific page keeps its destination. Without a configured backend, an address without a page route still opens Settings.
+#### Glass and wallpaper
 
-![Appearance with Time format set to 12-hour, beside Logs showing 9:30:00 AM](../screenshots/en/settings-formats.webp)
+Glass palettes are **Liquid Glass**, **Glass**, **Frosted** and **Tinted**. Firefox and Safari render Liquid Glass as Glass. Frosted uses uniform blur; Tinted has nearly opaque surfaces and no blur. Liquid Glass tables on **Events** and **Logs** omit refraction and the bright rim. Reduce Transparency, Increase Contrast and forced colors use solid surfaces. See [browser requirements](feature-requirements.md#req-browser-settings) for Liquid Glass support.
+
+Custom wallpapers also appear behind sign-in and are scaled to at most 2560 pixels on the long edge. **Readability veil** is on by default; **Dim** defaults to its maximum of 60%, using white in light mode and black in dark mode. **Blur** ranges from 0% to 150% for Liquid Glass, Glass and Frosted. Below 100%, surface fill increases. Tinted has no Blur control.
+
+For browser support and storage requirements, see [browser settings](feature-requirements.md#req-browser-settings). The [storage overview](what-doona-can-change.md) explains which choices belong to this browser.
+
+### Get help and error details
+
+In **About**, use **Guide** for documentation and **Keyboard shortcuts** for the shortcut list. **Copy recent errors** copies the recent API failures for a bug report; a failure notice's **Copy error** copies that request's details.
+
+**About doona** shows engine, API and contract versions, the license and privacy statement. **Install as an app** appears when supported; When not already running as an app, Safari on iOS/iPadOS and Safari 26 or later on macOS show manual installation steps. An API major version other than 1 produces a warning.
+
+An empty JSON read response or a read with no response is retried once before showing an error. Error details identify the request and key response headers.
 
 <a name="backend-actions"></a>
 
-### Backend controls
+## Find backend actions
 
-Backend operations are on the pages that own them:
+| Action | Page and instructions | Requirements |
+| --- | --- | --- |
+| Reload, suspend or resume honk | [System status](observe.md#overview) | [Lifecycle actions](feature-requirements.md#req-reload-suspend) |
+| Delete DNS cache entries | [DNS](observe.md#dns) | [Cache actions](feature-requirements.md#req-dns-cache) |
+| Refresh subscriptions | [Nodes](routing.md#nodes) | [Subscription refresh](feature-requirements.md#req-subscription-refresh) |
+| Close connections | [Connections](observe.md#connections) | [Connection actions](feature-requirements.md#req-connections) |
 
-1. System status has an action toolbar beside its status strip. Reload rereads honk's configuration; Suspend or Resume appears only when the backend provides it.
-2. DNS has cache deletion and Clear all cache. Cache rows have delete icons; cache and Resolution log rows have their own add-rule icons. These create a DNS request rule under Rules -> DNS rules -> Request rules, or a routing rule when DNS rules are unavailable.
-3. Nodes has Update N subscriptions.
-4. Connections has Close all, which closes backend-owned connections and skips kernel-direct connections.
-
-The top bar's Reload honk confirms before reloading and does not write held rules; see the [interface tour](tour.md#top-bar) and [held rules](routing.md#held-rules).
-
-### Latency probes
-
-Choose Probe method, IP family, Measurement and Group probes. Measurement chooses Warm (reuse connection) or Cold (new connection); Group probes chooses Direct members or Every leaf node, including nested groups. Choices are saved in this browser. Probe buttons use them, and the options dialog starts from them. A node that cannot carry the chosen method uses a supported method and reports the fallback.
-
-Trojan, AnyTLS and VLESS keep DNS UDP choices whose support depends on node configuration; backend admission failures remain visible instead of silently falling back to HTTP. A probe with no completed measurement can report result unknown, with the timeout, cancellation, unavailable address or local refusal explained. This does not establish that the node is unavailable.
-
-Edit health checks in Configuration opens the persistent background check settings, including check URLs and interval. Those are separate from these manual probe preferences.
-
-### About
-
-About doona opens a dialog with the engine, API and contract versions, the license and the privacy statement. Keyboard shortcuts opens the shortcut list. Guide opens this documentation in the interface language. Install as an app appears when the browser offers installation; Safari on iOS and macOS shows the steps instead. If the backend uses an API major version other than 1, a warning appears in this card.
-
-Copy recent errors copies the last 20 API errors kept in memory for a bug report. Secrets and request bodies are omitted; reloading the page clears this history. Failure notices also offer Copy error for the individual request.
-
-An empty read response or a read with no response is retried once before showing an error. Error details name the failed request and key response headers.
+For writing rules held in the browser, use [held rules](routing.md#held-rules).
