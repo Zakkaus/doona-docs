@@ -1,4 +1,4 @@
-[English](../en/index.md) / 简体中文 / [繁體中文](../zh-TW/index.md)
+[繁體中文](../zh-TW/index.md) / 简体中文 / [English](../en/index.md)
 
 # doona 文档
 

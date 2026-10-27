@@ -1,4 +1,4 @@
-[English](../en/lite-tasks.md) / [简体中文](../zh-CN/lite-tasks.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/lite-tasks.md) / [English](../en/lite-tasks.md)
 
 <a name="lite-tasks"></a>
 

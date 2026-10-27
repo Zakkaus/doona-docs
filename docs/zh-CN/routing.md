@@ -1,4 +1,4 @@
-[English](../en/routing.md) / 简体中文 / [繁體中文](../zh-TW/routing.md)
+[繁體中文](../zh-TW/routing.md) / 简体中文 / [English](../en/routing.md)
 
 <a name="routing"></a>
 

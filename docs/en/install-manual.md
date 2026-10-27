@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/install-manual.md) / [繁體中文](../zh-TW/install-manual.md)
+[繁體中文](../zh-TW/install-manual.md) / [简体中文](../zh-CN/install-manual.md) / English
 
 # Install from archives or on Alpine
 

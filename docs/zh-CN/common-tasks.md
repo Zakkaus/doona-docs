@@ -1,4 +1,4 @@
-[English](../en/common-tasks.md) / 简体中文 / [繁體中文](../zh-TW/common-tasks.md)
+[繁體中文](../zh-TW/common-tasks.md) / 简体中文 / [English](../en/common-tasks.md)
 
 <a name="common-tasks"></a>
 

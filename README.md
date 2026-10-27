@@ -2,51 +2,49 @@
 
 <img src="https://raw.githubusercontent.com/Zakkaus/doona/main/public/logo.svg" width="104" alt="doona">
 
-# doona docs
+# doona 文件
 
-**The documentation for [doona](https://github.com/Zakkaus/doona), the web UI for the daeuniverse engines, and the site built from it.**
+**[doona](https://github.com/Zakkaus/doona)（daeuniverse 引擎的 Web 介面）的文件，以及由此建置的文件網站。**
 
-English / [简体中文](README.zh-CN.md) / [繁體中文](README.zh-TW.md)
+繁體中文 / [简体中文](README.zh-CN.md) / [English](README.en.md)
 
-[Read the docs](https://doona.daeuniverse.org/) / [Build](#build) / [Layout](#layout) / [Contributing](.github/CONTRIBUTING.md)
+[閱讀文件](https://doona.daeuniverse.org/zh-TW/) / [建置](#建置) / [目錄結構](#目錄結構) / [貢獻指南](.github/CONTRIBUTING.md)
 
 </div>
 
-The pages are Markdown in `docs/<locale>/`, in English, Simplified Chinese and Traditional Chinese, and read on GitHub as well as on the site. `main` is published to https://doona.daeuniverse.org/.
+頁面是 `docs/<locale>/` 下的 Markdown，有英文、簡體中文與繁體中文三種語言，在 GitHub 與網站上都可閱讀。`main` 發布於 https://doona.daeuniverse.org/。
 
-## Build
+## 建置
 
-The build reads doona's palette, sizes, icons, logo and screenshots from a doona checkout, so the site always matches the app. Icon extraction accepts literal `<svg>` components and components using doona's shared `IconSvg` shell; unsupported sources fail with the icon's name. `DOONA_DIR` names the checkout; the default is `../doona`. Use Node `^22.18.0 || ^24.0.0 || >=26.0.0` and pnpm 11.
+建置時從 doona 的 checkout 讀取配色、尺寸、圖示、標誌與截圖，因此網站與應用程式保持一致。`DOONA_DIR` 指定該 checkout，預設為 `../doona`。需要 Node `^22.18.0 || ^24.0.0 || >=26.0.0` 與 pnpm 11。
 
 ```sh
 git clone https://github.com/Zakkaus/doona ../doona
 pnpm install --frozen-lockfile
-DOONA_DIR=../doona pnpm docs:build   # the site in dist-docs/, under DOCS_BASE (default /doona-docs/)
-pnpm docs:check                      # links, anchors and ids in docs/ and in the built site
-pnpm test                            # the site script and the heading ids
+DOONA_DIR=../doona pnpm docs:build   # 網站輸出到 dist-docs/，路徑前綴為 DOCS_BASE（預設 /doona-docs/）
+pnpm docs:check                      # 檢查 docs/ 與建置結果中的連結、錨點與 id
+pnpm test                            # 網站腳本與標題 id 的測試
 ```
 
-`DOCS_BASE=/ pnpm docs:build` builds for a domain of its own. CI builds against doona's `main`; the `DOONA_REF` repository variable pins a tag instead.
+`DOCS_BASE=/ pnpm docs:build` 為獨立網域建置。CI 以 doona 的 `main` 建置；設定儲存庫變數 `DOONA_REF` 可改為固定的 tag。
 
-`DOCS_OUT=/absolute/path pnpm docs:build` writes the site outside the repository instead of `dist-docs/`. The build replaces the output directory.
+doona 不在 git 中保存截圖。推送至 `main` 或手動執行工作流程時，CI 在建置前以 doona 的 `tools/screenshots.mjs` 將截圖產生至該 checkout 的 `docs/screenshots/`，建置再將全部截圖發布至 <https://doona.daeuniverse.org/screenshots/>，doona 的 README 從此處引用。沒有該目錄時，檢查會略過指向截圖的連結。
 
-doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://doona.daeuniverse.org/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
+## 目錄結構
 
-## Layout
+| 路徑                | 用途                                                     |
+| ------------------- | -------------------------------------------------------- |
+| `docs/<locale>/`    | 頁面，各語言頁面集合相同                                 |
+| `docs/anchors.json` | 各固定錨點及其所在頁面；doona 應用程式內的連結須與之相符 |
+| `site/`             | 網站的建置腳本、樣式表與前端腳本                         |
+| `tools/`            | 文件檢查與測試                                           |
 
-| Path                | Purpose                                                             |
-| ------------------- | ------------------------------------------------------------------- |
-| `docs/<locale>/`    | The pages, the same set in every locale                             |
-| `docs/anchors.json` | Each stable anchor and its page; doona's in-app links must match it |
-| `site/`             | The site build, its stylesheet and script                           |
-| `tools/`            | The docs check and the tests                                        |
+頁面沿用在 doona 時的路徑：指向 `../screenshots/` 或 `../../src/` 的連結代表 doona 的檔案，網站會複製該檔案或連到 GitHub 上的檔案。
 
-A link to `../screenshots/` names doona's screenshot, which the site copies. Other doona files are linked by their GitHub URL, such as `https://github.com/Zakkaus/doona/blob/main/src/api/types.ts`, since a relative path into doona is broken on GitHub.
+## 致謝
 
-## Acknowledgements
+網站設計參照 Adobe 的 React Spectrum 與 Spectrum 2 文件。Spectrum 圖示版權歸 Adobe 所有，採用 Apache License 2.0。Source Sans 3 與 Source Code Pro 字型版權歸 Adobe 所有，採用 SIL Open Font License 1.1。完整聲明見 [NOTICE](NOTICE)。
 
-The site's design follows the documentation of Adobe's React Spectrum and Spectrum 2. The Spectrum icons are copyright Adobe and licensed under the Apache License 2.0. Source Sans 3 and Source Code Pro are copyright Adobe and licensed under the SIL Open Font License 1.1. [NOTICE](NOTICE) carries the full notices.
+## 授權
 
-## License
-
-The pages in `docs/` are licensed under [CC BY 4.0](LICENSES/CC-BY-4.0.txt); the site build and the checker under GPL-3.0-only, as doona. The published site also carries doona's `NOTICE` for its icons, and this repository's for the Spectrum icons and distribution logos in `site/icons/`; see [NOTICE](NOTICE).
+`docs/` 中的頁面採用 [CC BY 4.0](LICENSES/CC-BY-4.0.txt)；網站建置與檢查工具與 doona 相同，採用 GPL-3.0-only。發布的網站另附 doona 的 `NOTICE`，涵蓋其圖示；見 [NOTICE](NOTICE)。

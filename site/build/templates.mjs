@@ -119,7 +119,8 @@ ${searchDialog(base, locale, parsed, current, languages)}
 
 // Where a visitor whose path names no language belongs: the language last chosen from a language menu, which site.js
 // stores, else the first of the browser's languages the docs have. Traditional Chinese for Taiwan, Hong Kong, Macau and
-// the Hant script, Simplified for other Chinese, else English.
+// the Hant script, Simplified for other Chinese, else Traditional Chinese, the default. A browser that lists English
+// first gets the default; English is reached from the language menu.
 const chooseLocale = `function () {
   try {
     var chosen = localStorage.getItem('doona-docs-locale');
@@ -131,7 +132,7 @@ const chooseLocale = `function () {
     if (/^zh(-|$)/.test(tag)) return /^zh-(hant|tw|hk|mo)(-|$)/.test(tag) ? 'zh-TW' : 'zh-CN';
     if (/^en(-|$)/.test(tag)) break;
   }
-  return 'en';
+  return 'zh-TW';
 }`;
 
 // The root page. Without script it lists the languages.
@@ -139,7 +140,7 @@ export function rootPage(base) {
   const home = locales.map(
     locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`
   );
-  return `${head(base, 'en', 'doona')}
+  return `${head(base, 'zh-TW', 'doona')}
 <script>
 location.replace(${JSON.stringify(base)} + (${chooseLocale})() + '/');
 </script>
@@ -167,7 +168,7 @@ export function notFoundPage(base) {
   const others = locales
     .slice(1)
     .map(locale => `<li><a href="${pageUrl(base, locale, 'index')}" lang="${locale}" hreflang="${locale}">${strings[locale].language}</a></li>`);
-  return `${head(base, 'en', strings.en.notFound)}
+  return `${head(base, 'zh-TW', strings['zh-TW'].notFound)}
 <script>
 (function () {
   var base = ${JSON.stringify(base)};

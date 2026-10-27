@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/tutorial.md) / [繁體中文](../zh-TW/tutorial.md)
+[繁體中文](../zh-TW/tutorial.md) / [简体中文](../zh-CN/tutorial.md) / English
 
 # Route your first connection
 

@@ -1,4 +1,4 @@
-[English](../en/quick-start.md) / [简体中文](../zh-CN/quick-start.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/quick-start.md) / [English](../en/quick-start.md)
 
 # 快速入門
 

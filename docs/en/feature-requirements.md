@@ -1,4 +1,4 @@
-English / [简体中文](../zh-CN/feature-requirements.md) / [繁體中文](../zh-TW/feature-requirements.md)
+[繁體中文](../zh-TW/feature-requirements.md) / [简体中文](../zh-CN/feature-requirements.md) / English
 
 # Feature requirements
 

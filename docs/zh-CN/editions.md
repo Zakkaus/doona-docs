@@ -1,4 +1,4 @@
-[English](../en/editions.md) / 简体中文 / [繁體中文](../zh-TW/editions.md)
+[繁體中文](../zh-TW/editions.md) / 简体中文 / [English](../en/editions.md)
 
 <a name="editions"></a>
 

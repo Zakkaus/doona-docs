@@ -1,4 +1,4 @@
-[English](../en/tour.md) / [简体中文](../zh-CN/tour.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/tour.md) / [English](../en/tour.md)
 
 <a name="tour"></a>
 

@@ -1,4 +1,4 @@
-[English](../en/install-debian.md) / [简体中文](../zh-CN/install-debian.md) / 繁體中文
+繁體中文 / [简体中文](../zh-CN/install-debian.md) / [English](../en/install-debian.md)
 
 # 在 Debian 或 Ubuntu 上安裝
 
