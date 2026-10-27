@@ -235,7 +235,8 @@ describe('navigation', () => {
 
   it('keeps the pages in section order', () => {
     expect(Object.keys(groups)).toEqual(['start', 'install', 'standard', 'lite', 'reference']);
-    expect(groups.start).toEqual(['index', 'editions', 'requirements']);
+    expect(groups.start).toEqual(['index', 'quick-start', 'editions', 'requirements']);
+    expect(groups.reference).toEqual(['configuration', 'what-doona-can-change', 'feature-requirements', 'troubleshooting', 'development']);
     expect(groups.install.slice(-2)).toEqual(['minimal-configuration', 'service-management']);
     expect(groups.lite).toEqual(['lite', 'lite-connect', 'lite-tasks']);
     expect(pages).toEqual(Object.values(groups).flat());

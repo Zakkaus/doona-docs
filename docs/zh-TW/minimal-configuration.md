@@ -181,7 +181,7 @@ cat /etc/honk/config.d/api.dae
 | `enabled: true`             | 啟動 API 監聽。doona 需要它。                                                                                              |
 | `listen: '…:9527'`          | 開啟 doona 所用的位址與埠。預設值 `127.0.0.1:9527` 只能從閘道器本機存取。                                                  |
 | `password_auth: true`       | 使用管理員使用者名稱與密碼登入。管理員在[首次登入](first-sign-in.md)時建立。啟用 API 卻沒有設定任何登入方式時，honk 拒絕啟動。 |
-| `config_write: true`        | 允許 doona 編輯組態、節點、訂閱、群組與規則。刪除此行則 doona 只能讀取。                                                   |
+| `config_write: true`        | 允許 doona 編輯組態、節點、訂閱、群組與規則。關閉此項會阻止組態寫入；執行期控制、群組選擇以及經過認證的地理資料設定仍可寫入。見 [doona 可以修改什麼](what-doona-can-change.md)。                                                   |
 | `ui: '/usr/share/doona'`    | 在 `/ui/` 提供 doona 的檔案。該目錄中沒有 `index.html` 時，honk 拒絕啟動。                                                 |
 
 每個 `native_api` 欄位都要重新啟動後才生效。其餘欄位見[欄位表](configuration.md#config)。

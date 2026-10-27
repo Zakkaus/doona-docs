@@ -2,6 +2,8 @@ English / [简体中文](../zh-CN/index.md) / [繁體中文](../zh-TW/index.md)
 
 # doona documentation
 
+For a direct-only first run, follow [Quick start](quick-start.md).
+
 doona is a static web UI for the native API that the daeuniverse engines share: honk today, dae once it implements the same contract. honk is a Rust transparent-proxy engine for Linux gateways; it serves doona itself at `/ui/`, or any web server can. doona shows what the engine is doing and manages nodes, groups, routing rules and configuration files.
 
 <a name="choose-edition"></a>

@@ -4,6 +4,8 @@
 
 # 功能
 
+各項功能的前提條件與操作被停用的原因，見[功能啟用條件](feature-requirements.md)。
+
 請先確認閘道器能轉送流量。將範例訂閱與節點換成可用的訂閱與節點，再從實際的區域網路用戶端分別測試直連與代理的 TCP、UDP 及 DNS。`honk-core is running`、`dae0` 連結或可存取的 API 都無法證明流量正常。
 
 本頁介紹標準版；doona lite 請參閱 [doona lite](lite.md)。

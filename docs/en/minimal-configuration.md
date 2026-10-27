@@ -181,7 +181,7 @@ For a hostname such as `openwrt.lan`, configure both `allowed_hosts` for the hos
 | `enabled: true`             | Starts the API listener. doona needs it.                                                                                                        |
 | `listen: '…:9527'`          | The address and port doona is opened at. The default, `127.0.0.1:9527`, is reachable only from the gateway itself.                              |
 | `password_auth: true`       | Sign-in with an administrator username and password. You create the administrator in [First sign-in](first-sign-in.md). honk refuses to start with the API enabled and no sign-in method. |
-| `config_write: true`        | Lets doona edit the configuration, nodes, subscriptions, groups and rules. Remove it to keep doona read-only.                                   |
+| `config_write: true`        | Lets doona edit the configuration, nodes, subscriptions, groups and rules. Disabling it blocks configuration writes; runtime controls, group selection, and authenticated geodata settings remain writable. See [What doona can change](what-doona-can-change.md).                                   |
 | `ui: '/usr/share/doona'`    | Serves doona’s files at `/ui/`. honk refuses to start if the directory has no `index.html`.                                                     |
 
 Every `native_api` field takes effect only after a restart. The [field table](configuration.md#config) lists the rest.
