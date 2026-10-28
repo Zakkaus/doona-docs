@@ -292,7 +292,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Needs**
 
 - Creation: a complete, writable main source. Editing: loaded configuration and exactly one declaration in a complete, writable source.
-- Missing, duplicate, or incomplete declarations disable Edit even if configuration writes are enabled.
+- Missing, duplicate, or incomplete declarations disable Edit even with configuration-write permission.
 - Group check settings: `groups.config_patch` and the requested field in `mutable_config`. See the field list in [What doona can change](what-doona-can-change.md).
 
 **Check in doona**
@@ -302,7 +302,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **To enable**
 
 1. Resolve duplicate declarations outside the group editor or restore complete source readback.
-2. If writes are disabled, enable `config_write: true` and credentials in `experimental.native_api` outside doona, then restart honk.
+2. If configuration writes are off, enable `config_write: true` and credentials in `experimental.native_api` outside doona, then restart honk.
 3. Apply your change and verify the group's configuration after activation.
 
 **Errors**
@@ -319,7 +319,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 
 **Needs**
 
-- `probes.available` and a compatible intersection of advertised target types, probe kinds, transports, and IP families.
+- `probes.available` and a compatible combination of advertised target types, probe kinds, transports, and IP families.
 - Your group must support every requested transport. Each selected node's protocol must support the probe kind and transport, including in a mixed selection.
 
 **Check in doona**
@@ -339,7 +339,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Details**
 
 - If your saved choice no longer fits the target, doona selects HTTP if available, otherwise the first compatible choice.
-- doona cannot offer a probe when the intersection is empty.
+- doona cannot offer a probe if no combination is compatible.
 
 <a name="req-connections"></a>
 
@@ -411,7 +411,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 
 **To enable**
 
-1. Resolve the owning source. If writes are disabled, enable `config_write: true` and credentials in `experimental.native_api` outside doona, then restart honk.
+1. Resolve the owning source. If configuration writes are off, enable `config_write: true` and credentials in `experimental.native_api` outside doona, then restart honk.
 2. Use a single routing source before applying a template.
 3. After activation, check the rule list and trace a matching destination.
 
@@ -427,7 +427,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Needs**
 
 - `routing_trace.available`, a supported resolution mode, and valid query inputs.
-- Live resolution must be advertised in `resolve_modes`. Your trace must fit backend request and time limits.
+- The backend must advertise live resolution in `resolve_modes`. Your trace must fit backend request and time limits.
 
 **Check in doona**
 
@@ -468,7 +468,6 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Details**
 
 - The backend advertises event kinds, retention, and client limits. The stream only provides retained events.
-- Reconnecting cannot recover events already evicted from the buffer.
 
 <a name="req-logs"></a>
 
@@ -477,7 +476,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Needs**
 
 - `logs.available`, `record_logs: true` in `experimental.native_api`, an active recording mode, and a level that includes your messages.
-- Filters must be advertised by the backend.
+- The backend must advertise the filters.
 
 **Check in doona**
 
@@ -496,7 +495,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Details**
 
 - Buffer capacity and retention limit replay.
-- Use the service log for messages emitted before the API recorder was installed.
+- Use the service log for messages from before the API recorder's installation.
 
 <a name="req-dns-query"></a>
 
@@ -581,7 +580,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Needs**
 
 - `runtime_settings.available` and the requested field in `fields`. You do not need `config_write`.
-- Recorder permissions and value bounds must allow your value, even when the recorder-mode field is advertised.
+- Recorder permissions and value bounds must allow your value, even when the backend advertises the recorder-mode field.
 
 **Check in doona**
 
@@ -633,7 +632,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Needs**
 
 - `geodata.can_update`, configuration-write authority, credentials, and at least one loaded asset.
-- Every loaded asset needs a disk path and a usable URL. Use a final HTTP or HTTPS URL; redirects are rejected.
+- Every loaded asset needs a disk path and a usable URL. Use a final HTTP or HTTPS URL; honk rejects redirects.
 - The service user must be able to stage, replace, and sync files in the destination.
 
 **Check in doona**
@@ -651,7 +650,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Errors**
 
 - [Download stages](troubleshooting.md#geodata-update): [`download_timeout`](troubleshooting.md#geodata-update), [`checksum_unavailable`](troubleshooting.md#geodata-update), [`checksum_mismatch`](troubleshooting.md#geodata-update), [`http_status_rejected`](troubleshooting.md#geodata-update), [`http_not_found`](troubleshooting.md#geodata-update), [`connection_failed`](troubleshooting.md#geodata-update), [`tls_failed`](troubleshooting.md#geodata-update), [`group_unavailable`](troubleshooting.md#geodata-update), [`route_blocked`](troubleshooting.md#geodata-update), [`asset_too_large`](troubleshooting.md#geodata-update), [`invalid_source`](troubleshooting.md#geodata-update).
-- [Replacement stages](troubleshooting.md#geodata-update): [`replacement_failed`](troubleshooting.md#geodata-update) means replacement failed; [`directory_sync_failed`](troubleshooting.md#geodata-update) means durability was not confirmed and a file may already have been replaced.
+- [Replacement stages](troubleshooting.md#geodata-update): [`replacement_failed`](troubleshooting.md#geodata-update) means replacement failed; [`directory_sync_failed`](troubleshooting.md#geodata-update) means honk could not confirm durability and may already have replaced a file.
 - Before retrying, check the operation's per-asset `written` and `durability_confirmed` values and the destination filesystem.
 
 **Details**
@@ -659,10 +658,10 @@ Error codes identify API failures. The sections distinguish them from read-only 
 - Manual updates do not need the state database if configuration supplies every loaded asset's URL. Without the database, honk cannot use its stored or built-in URL lists.
 - Each URL attempt uses the selected route. A failed group or routing decision does not fall back to direct.
 - Asset lookup checks `DAE_LOCATION_ASSET`, then `global.data_dir`, then legacy locations, the working directory, and share directories.
-- Packaged assets receive a replacement in the data directory, which takes precedence over the packaged copy. Assets already in the data directory or explicit asset directory are replaced there.
+- Packaged assets receive a replacement in the data directory, which takes precedence over the packaged copy. honk replaces assets already in the data directory or explicit asset directory in place.
 - Each file download attempt allows 30 seconds without progress and 10 minutes in total. The checksum request has a separate 10-second deadline and appends `.sha256sum` to the URL path.
 - A checksum 404 leaves the asset unverified. Other checksum fetch failures reject that attempt.
-- A failed operation does not imply that every file is unchanged.
+- An operation can fail after changing some files.
 
 <a name="req-geodata-settings"></a>
 
@@ -790,7 +789,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **To enable**
 
 1. Use a supported browser for Liquid Glass and allow browser storage for persistence.
-2. Choose a wallpaper and reopen the page to verify it was saved.
+2. Choose a wallpaper and reopen the page to verify that it persists.
 3. To change an embedded flag, change the node's actual name. The browser override cannot replace it.
 
 **Errors**

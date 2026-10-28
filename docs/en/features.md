@@ -4,7 +4,7 @@
 
 # Find the right page
 
-Use this overview to find a task in the standard edition of doona. For a first setup, follow [Quick start](quick-start.md) and [Route your first connection](tutorial.md); for the smaller interface, see [doona lite](lite.md).
+Find a task in the standard edition of doona. For a first setup, follow [Quick start](quick-start.md) and [Route your first connection](tutorial.md); for the smaller interface, see [doona lite](lite.md).
 
 Validate routing from a real LAN client using working nodes: test direct and proxied TCP, UDP and DNS. `honk-core is running`, the `dae0` link and a reachable API do not prove that traffic flows.
 
@@ -43,7 +43,7 @@ Activity and the floating panel share a widget gallery. Choose cards for the val
 
 ### Read quota and memory
 
-**Subscription quota** is not in the default layout. Add it to see expiry and an allowance meter, or usage when no allowance is reported.
+**Subscription quota** is not in the default layout. Add it to see expiry and an allowance meter, or usage when the backend reports no allowance.
 
 **Memory** defaults to a chart; **Sparkline** provides a value tile. In the floating panel, medium size shows resident memory and cgroup usage against its limit; the chart starts at large size. The meter uses cgroup usage and omits a zero or missing limit. The display distinguishes an unreported limit from an unset one, and **Key-value list** identifies reported OOM kills.
 
@@ -63,8 +63,8 @@ Compare the [palette gallery](../screenshots/palettes.webp), then change [appear
 
 For language, appearance, date and time formats, startup page and probe preferences, use [Settings](config-and-settings.md#settings-page). To distinguish browser preferences from saved configuration and temporary backend changes, see [where changes are stored](what-doona-can-change.md).
 
-This origin’s `localStorage` keeps profiles, tokens, preferences and layouts. Clearing browser data removes those saved browser values, not honk’s configuration. `sessionStorage` keeps per-tab state such as each section’s last page. Token requests use `Authorization`; a pairing token in the URL fragment is removed on load.
+This origin’s `localStorage` keeps profiles, tokens, preferences and layouts. Clearing browser data removes those saved browser values, not honk’s configuration. `sessionStorage` keeps per-tab state such as each section’s last page. Token requests use `Authorization`; doona removes a pairing token from the URL fragment on load.
 
-Over HTTPS or on localhost, a service worker caches the application shell, fonts and icons. The interface can then open offline and be installed as an app. API responses are never cached. Saved theme and language apply before the first paint. Other pages are not downloaded before authentication. Installing an update reuses files already available to the page.
+Over HTTPS or on localhost, a service worker caches the application shell, fonts and icons, never API responses. The interface can then open offline, and you can install it as an app. Saved theme and language apply before the first paint. doona does not download other pages before authentication. Installing an update reuses files already available to the page.
 
 See [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md) to report a vulnerability.

@@ -4,7 +4,7 @@
 
 # Troubleshooting
 
-Find the symptom you see, then follow its checks and fix. This page covers connection, editing, recording and geodata failures in doona with honk.
+Find your symptom, then follow its checks and fix. This page covers connection, editing, recording and geodata failures in doona with honk.
 
 | Symptom | Start here |
 | --- | --- |
@@ -80,7 +80,7 @@ Check [sign-in requirements](feature-requirements.md#req-sign-in), then match th
 | `authentication_required` | Sign in again using the authentication method configured for this backend. |
 | `permission_denied` during setup | Check the allowed client addresses in [setup requirements](feature-requirements.md#req-sign-in). |
 | A network error or HTTP 403 through a hostname or another origin | Check reachability, then follow [hostname and origin access](install.md#other-origin). |
-| The API is reachable but a protected action is denied | Check that action's [feature requirements](feature-requirements.md), including credentials and write authority. |
+| The API is reachable but denies a protected action | Check that action's [feature requirements](feature-requirements.md), including credentials and write authority. |
 
 ### Reset a forgotten administrator password
 
@@ -112,7 +112,7 @@ Use the startup log from the current service run to identify the running build a
 
 ## honk rejects a native API setting at startup
 
-`native API setting belongs inside native_api { }` means the field was placed directly under `experimental`. Compare your file with the [native API configuration](configuration.md#config) and move the field into the nested block.
+`native API setting belongs inside native_api { }` means the field sits directly under `experimental`. Compare your file with the [native API configuration](configuration.md#config) and move the field into the nested block.
 
 `enabled` and `secret` belong to several experimental blocks. Placing either directly under `experimental` produces `unknown experimental setting` without naming a single destination block. Move native API fields into `native_api { }`.
 
@@ -141,7 +141,7 @@ Open **Settings** → **Geodata** and read the failed operation's stage. If **Up
 | `invalid_source` | Correct the source URL. |
 | `replacement_failed` or `directory_sync_failed` | Inspect the per-asset result and destination filesystem before retrying; follow [replacement requirements](feature-requirements.md#req-geodata-update). |
 
-Checksum 404 handling, verification and partial-write behavior are described in [update requirements](feature-requirements.md#req-geodata-update).
+See [update requirements](feature-requirements.md#req-geodata-update) for checksum 404 handling, verification and partial-write behavior.
 
 <a name="geodata-sources"></a>
 
@@ -149,13 +149,13 @@ Checksum 404 handling, verification and partial-write behavior are described in 
 
 Check **System status** → **Datapath** for a persistence warning. A `persistence_unavailable` degradation means the state database is unavailable; use its `reason` with [the database checks](#state-db).
 
-Restore [geodata settings requirements](feature-requirements.md#req-geodata-settings), then reopen the Geodata card. Manual downloads have [separate requirements](feature-requirements.md#req-geodata-update); their availability does not prove the settings can be saved.
+Restore [geodata settings requirements](feature-requirements.md#req-geodata-settings), then reopen the Geodata card. Manual downloads have [separate requirements](feature-requirements.md#req-geodata-update); their availability does not prove that honk can save settings.
 
 <a name="state-db"></a>
 
 ## honk reports a state database failure
 
-Read the latest startup error in the [service log](service-management.md). Password authentication requires the database and startup stops if it cannot be opened. In file-based token mode, some failures leave honk running without persistence; see [persistence requirements](feature-requirements.md#req-persistence).
+Read the latest startup error in the [service log](service-management.md). Password authentication requires the database. If honk cannot open it, startup stops. In file-based token mode, some failures leave honk running without persistence; see [persistence requirements](feature-requirements.md#req-persistence).
 
 | Message or reason | Next action |
 | --- | --- |
@@ -176,7 +176,7 @@ The service log names the refused path, rule and suggested fix. Check that exact
 
 In file mode, `global.data_dir` selects the runtime data directory; `--data-dir` does not override it. Pass that same directory to `--data-dir` for `admin reset`. On OpenWrt, [`/var` is volatile](https://openwrt.org/docs/techref/filesystems); use the [manual installation’s persistent directory](install-openwrt.md#install-geodata).
 
-The state directory and database must belong to honk's service user and exclude group and other permissions. A symlink or the wrong file type is also refused. Correct only the named path's ownership, permissions or type, then restart honk. Do not apply recursive permission changes to the configuration directory.
+The state directory and database must belong to honk's service user and exclude group and other permissions. honk also refuses a symlink or the wrong file type. Correct only the named path's ownership, permissions or type, then restart honk. Do not apply recursive permission changes to the configuration directory.
 
 ## Traffic fails after stopping OpenWrt's firewall
 
@@ -184,7 +184,7 @@ If stopping the firewall removes honk's nftables table, start the firewall again
 
 ## Pinning a map fails with Invalid argument
 
-Check that `/sys/fs/bpf` is mounted as bpffs; follow [kernel and filesystem requirements](requirements.md#requirements).
+Check the bpffs mount at `/sys/fs/bpf`; follow [kernel and filesystem requirements](requirements.md#requirements).
 
 ## honk rejects the kernel or compiled routing
 
@@ -201,7 +201,7 @@ Check `lan_interface` in the [configuration reference](configuration.md#config).
 | **Connections** | Clear filters and read any visibility or truncation notice. Check [connection coverage](feature-requirements.md#req-connections); a missing row does not establish that traffic stopped. |
 | **Routing log** or recorded rule hits | Check [flow recording](feature-requirements.md#req-flows). |
 | **Resolution log** or DNS statistics | Check [DNS recording](feature-requirements.md#req-dns-log). |
-| **Logs** | Check [log recording](feature-requirements.md#req-logs). Earlier startup messages are not recorded retroactively; read the service log. |
+| **Logs** | Check [log recording](feature-requirements.md#req-logs). The recorder cannot recover earlier startup messages; read the service log. |
 | **Events** | Check [event availability](feature-requirements.md#req-events) and the selected kind filter. |
 
 **Log recording** defaults to **On log demand**. In demand mode, each permitted recorder starts when a client requests its data, with a 60-second grace period after demand ends. Connections, Rules and Routing log request flow recording while open.
@@ -222,4 +222,4 @@ Check the directory and extracted files against [lite installation](lite.md#lite
 
 Select **Copy error** in the failure notice, or **Copy recent errors** under **Settings** → **About**. Include the action you attempted and the running engine and UI versions. Copy the error before reloading the page, which clears the in-memory error history.
 
-The history retains at most 20 errors. Copied details include request method and path, status, error code and request ID when available. Request bodies and configuration text are omitted, and recognized secret fields are redacted. See [About](config-and-settings.md#settings-page) for the copy actions.
+The history retains at most 20 errors. Copied details include request method and path, status, error code and request ID when available. The copy omits request bodies and configuration text, and redacts recognized secret fields. See [About](config-and-settings.md#settings-page) for the copy actions.

@@ -2,7 +2,7 @@
 
 # Development
 
-Build and check doona locally with the commands below. The app lives in [Zakkaus/doona](https://github.com/Zakkaus/doona); these pages and their site live in [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs).
+Build and check doona locally. The app lives in [Zakkaus/doona](https://github.com/Zakkaus/doona); these pages and their site live in [Zakkaus/doona-docs](https://github.com/Zakkaus/doona-docs).
 
 Read the app's [CONTRIBUTING.md](https://github.com/Zakkaus/doona/blob/main/CONTRIBUTING.md) before submitting changes. For tool versions, see [Requirements](requirements.md).
 
@@ -52,14 +52,14 @@ The first command installs the browsers and system dependencies. The second rebu
 
 For a live backend, set `DOONA_API` to its server root, supply `DOONA_TOKEN` through your shell environment if required, and run `pnpm e2e:live`. This runs the accessibility, mobile and keyboard specifications. Keep credentials out of command history and reports.
 
-Live tests reject backend overrides in fixture storage and block control requests, including DNS queries. Ordinary `pnpm e2e` rejects `DOONA_API` unless `DOONA_LIVE_OBSERVE=1` is set; use `pnpm e2e:live` for the supported live-backend pass.
+Live tests reject backend overrides in fixture storage and block control requests, including DNS queries. Ordinary `pnpm e2e` rejects `DOONA_API` unless you set `DOONA_LIVE_OBSERVE=1`; use `pnpm e2e:live` for the supported live-backend pass.
 
 ## Capture screenshots and check the API
 
 Run these tools from the app repository root after installing its dependencies.
 
 - Screenshots: install Playwright's Chromium, `cwebp` and `img2webp`, then start a mock-backed preview. Run `node tools/screenshots.mjs <url> docs/screenshots`, replacing `<url>` with the preview address. The tool writes localized pages, a palette sheet, an English theme gallery, phone strips, page-tour stills and a routing animation as WebP.
-- API contract: run `node tools/conformance.mjs http://router:9527`, replacing the address with the backend's server root. It checks discovery, capabilities and read-only responses against the vendored contract, skipping mutating operations. When authentication is required, pass the token from your shell environment with `--token "$DOONA_TOKEN"`.
+- API contract: run `node tools/conformance.mjs http://router:9527`, replacing the address with the backend's server root. It checks discovery, capabilities and read-only responses against the vendored contract, skipping mutating operations. If the backend requires authentication, pass the token from your shell environment with `--token "$DOONA_TOKEN"`.
 
 ## Package both editions
 
@@ -82,11 +82,11 @@ pnpm gen:api
 pnpm check
 ```
 
-Generated types are written to `src/api/types.ts`.
+The generator writes types to `src/api/types.ts`.
 
 ## Check this documentation site
 
-Install the documentation repository's dependencies. From its root, set `DOONA_DIR` to your app checkout so the checker can validate the app's documentation links:
+From the documentation repository's root, install its dependencies and set `DOONA_DIR` to your app checkout so the checker can validate the app's documentation links:
 
 ```sh
 pnpm install --frozen-lockfile

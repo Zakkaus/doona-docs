@@ -8,9 +8,9 @@ Continue from [Quick start](quick-start.md), with honk running and your administ
 
 Open **Nodes** and select **Add subscription**. Enter `harbor` in **Name** and your provider's URL in **Subscription URL**, then select **Add**. doona writes the declaration and requests a refresh.
 
-Check that the success notice reports nodes and that selecting `harbor` lists its nodes. If the declaration was saved but the fetch failed, use **Update harbor** on its card after resolving the reported error. Continue only when the subscription has proxy nodes.
+Check that the success notice reports nodes and that selecting `harbor` lists its nodes. If doona saved the declaration but the fetch failed, resolve the reported error, then use **Update harbor** on its card. Continue only when the subscription has proxy nodes.
 
-If a control is disabled, check [node and subscription requirements](feature-requirements.md#req-nodes) or [refresh requirements](feature-requirements.md#req-subscription-refresh).
+For disabled controls, check [node and subscription requirements](feature-requirements.md#req-nodes) or [refresh requirements](feature-requirements.md#req-subscription-refresh).
 
 ## 2. Create the group
 
@@ -36,7 +36,7 @@ Select **Add rule** in the dialog. This writes and reloads immediately. Check th
 domain(full: example.com) -> proxy
 ```
 
-Keep `fallback: direct`. If adding is disabled, see [routing rule requirements](feature-requirements.md#req-rules).
+Keep `fallback: direct`. If you cannot add a rule, see [routing rule requirements](feature-requirements.md#req-rules).
 
 ## 4. Define a DNS upstream
 
@@ -58,7 +58,7 @@ dns {
 }
 ```
 
-Select **Apply**. Wait for the notice that the file was written and the configuration reloaded. Reopen the file and check that `remote_dns` is present. If the editor or **Apply** is disabled, see [configuration write requirements](feature-requirements.md#req-config-edit).
+Select **Apply**. Wait for the notice confirming the file write and configuration reload. Reopen the file and check that `remote_dns` is present. For a disabled editor or **Apply** button, see [configuration write requirements](feature-requirements.md#req-config-edit).
 
 ## 5. Add the DNS rule and apply it
 
@@ -70,7 +70,7 @@ Select **Add rule** to write and reload. Check **New rule is in effect** and the
 qname(full: example.com) -> remote_dns
 ```
 
-You have now applied both rules. The routing rule chooses the traffic's group; the DNS rule chooses the resolver whose requests use that group. Each save above applies separately. If adding is disabled, see [DNS rule requirements](feature-requirements.md#req-rules).
+The routing rule chooses the traffic's group; the DNS rule chooses the resolver whose requests use that group. Each save above applies separately. If you cannot add a rule, see [DNS rule requirements](feature-requirements.md#req-rules).
 
 ## 6. Verify the rule with Trace simulation
 
@@ -88,4 +88,4 @@ curl --http1.1 --limit-rate 32 https://example.com/ -o /dev/null
 
 While it transfers, look for `example.com` on **Connections** and open its row. Check that the chain uses `proxy` and one of `harbor`'s nodes. Short connections can finish before you inspect them; repeat the request if necessary. A successful transfer confirms that the route carries real traffic. For an unavailable page, see [connection requirements](feature-requirements.md#req-connections).
 
-Proxied traffic is handled in userspace and appears in Connections. Direct traffic is forwarded by the kernel and does not appear there. Use [Trace](routing.md#trace) to inspect the direct fallback, and the [configuration reference](configuration.md#config) for the complete file example.
+honk handles proxied traffic in userspace, so it appears in Connections. The kernel forwards direct traffic, which does not appear there. Use [Trace](routing.md#trace) to inspect the direct fallback, and the [configuration reference](configuration.md#config) for the complete file example.

@@ -4,7 +4,7 @@
 
 # Change configuration and settings
 
-Use this page to edit configuration files or change settings through the standard edition of doona. For configuration keys and examples, use the [configuration reference](configuration.md#config); for storage and activation behavior, see [what doona can change](what-doona-can-change.md).
+Edit configuration files or change settings through the standard edition of doona. For configuration keys and examples, use the [configuration reference](configuration.md#config); for storage and activation behavior, see [what doona can change](what-doona-can-change.md).
 
 <a name="config-page"></a>
 
@@ -21,7 +21,7 @@ Open **Configuration** from the Settings hub. Check the [editing requirements](f
 
 **Config version** identifies the accepted configuration; the adjacent status reports diagnostics. **Listener secret values are redacted** means the returned text hides those values. **Modules** opens by default; source links and a missing main-source body open **Config files**. **Global settings** appears only for engines whose settings doona supports.
 
-**Incomplete** means the source text is incomplete or its SHA-256 differs from the value reported by the backend. It does not by itself mean that secrets were redacted. This source cannot be edited in doona; edit the file on the host.
+**Incomplete** means the source text is incomplete or its SHA-256 differs from the backend's reported value. It does not by itself indicate secret redaction. You cannot edit this source in doona; edit the file on the host.
 
 For subscriptions, use [Nodes](routing.md#nodes). For group membership, use [Policies](routing.md#policies). For routing templates and individual rules, use [Rules](routing.md#rules).
 
@@ -39,16 +39,16 @@ Reloading or closing the page loses an unapplied draft. Diagnostics distinguish 
 
 The file picker identifies **Main**, **Include**, **Subscription** and **Generated** sources. Hover over the line count and size to see the loaded time. Subscription updates replace subscription sources; the engine overwrites generated sources, so edit the configuration that produces them. Typing in a read-only source shows its notice once per file.
 
-Accepted diagnostics remain until a draft is validated. Applying a change or receiving a new accepted generation clears previous validation results. An empty level filter returns to **All**. Older validation links open diagnostics on **Config files**.
+Diagnostics for the accepted configuration remain until draft validation completes. Applying a change or receiving a new accepted generation clears previous validation results. An empty level filter returns to **All**. Older validation links open diagnostics on **Config files**.
 
 If the file changes while you edit, saving pauses. Review that change before choosing **Keep changes**, which lets your draft replace the newer file, then **Apply**. Choose **Cancel** to discard your draft and use the newer text.
 
-A restart-required notice means the edit was refused. Follow the [restart-only settings](what-doona-can-change.md#restart-global) procedure instead of repeatedly applying it.
+A restart-required notice means honk refused the edit. Follow the [restart-only settings](what-doona-can-change.md#restart-global) procedure instead of repeatedly applying it.
 
 ### Create an included file
 
 1. On **Config files**, choose **New file**.
-2. If the dialog supplies the directory and extension, enter only **Name**. Choose **Include pattern** first when several are offered. Otherwise, enter a `.dae` path relative to the main configuration’s directory in **Path**.
+2. If the dialog supplies the directory and extension, enter only **Name**. Choose **Include pattern** first if the dialog offers several patterns. Otherwise, enter a `.dae` path relative to the main configuration’s directory in **Path**.
 3. Resolve any warning that the path matches no loaded include pattern.
 4. Choose **Create**. The empty file opens in the editor; continue with the editing steps above.
 
@@ -58,7 +58,7 @@ A restart-required notice means the edit was refused. Follow the [restart-only s
 2. Change the offered fields, following their units and ranges. Use the [configuration reference](configuration.md#config) to check a key's meaning; resolve duplicate entries in **Config files**.
 3. Choose **Write and reload**, or **Discard changes** to drop the draft. Check the result before leaving.
 
-If writing succeeds but the new configuration cannot be read back, the draft stays and **Retry** is offered.
+If writing succeeds but doona cannot read back the new configuration, it keeps the draft and offers **Retry**.
 
 The picker includes global sections in main and include files; a main file without one can receive a new section. **Not set** uses the engine default. Clearing a numeric field leaves it unset; integer fields reject decimal points, and ports display ungrouped numbers such as `8080`.
 
@@ -88,7 +88,7 @@ To download only the selected source text, use **Download source file** on **Con
 ### Connect or switch backends
 
 1. In **General** → **Backend**, select a **Profile**, or choose **Add profile** to create one.
-2. Enter **Backend URL** as the backend root or reverse-proxy prefix, without `/api/v1`. Enter `mock` for demo data; an empty address cannot be saved.
+2. Enter **Backend URL** as the backend root or reverse-proxy prefix, without `/api/v1`. Enter `mock` for demo data. You cannot save an empty address.
 3. Enter **Token** for token authentication. For password authentication, follow the [sign-in guide](first-sign-in.md).
 4. Choose **Test connection** and read the result.
 5. Choose **Save** to store the profile and reload the page with it.
@@ -123,7 +123,7 @@ Check [file availability](feature-requirements.md#req-geodata), [update requirem
 
 1. Open **Geodata** and inspect the files. Expand **Details** for check times and download information.
 2. To download the configured sources now, choose **Update now** and wait for the result.
-3. To change sources, choose a preset in **Source**, or choose **Custom** and enter the URLs. Review any missing-category warning. In the custom dialog, confirm with **Apply and update** or **Apply**, whichever is offered.
+3. To change sources, choose a preset in **Source**, or choose **Custom** and enter the URLs. Review any missing-category warning. In the custom dialog, confirm with the available action: **Apply and update** or **Apply**.
 4. Adjust **Download route**, **Verify checksum** or **Automatic updates** when offered. For **Specific group**, select the group to save the route. These controls save on change; check each result.
 5. To remove overrides, choose **Reset to defaults** and review the confirmation before proceeding.
 
@@ -165,7 +165,7 @@ See [probe requirements](feature-requirements.md#req-probes) and [result meaning
 
 Glass palettes are **Liquid Glass**, **Glass**, **Frosted** and **Tinted**. Firefox and Safari render Liquid Glass as Glass. Frosted uses uniform blur; Tinted has nearly opaque surfaces and no blur. Liquid Glass tables on **Events** and **Logs** omit refraction and the bright rim. Reduce Transparency, Increase Contrast and forced colors use solid surfaces. See [browser requirements](feature-requirements.md#req-browser-settings) for Liquid Glass support.
 
-Custom wallpapers also appear behind sign-in and are scaled to at most 2560 pixels on the long edge. **Readability veil** is on by default; **Dim** defaults to its maximum of 60%, using white in light mode and black in dark mode. **Blur** ranges from 0% to 150% for Liquid Glass, Glass and Frosted. Below 100%, surface fill increases. Tinted has no Blur control.
+Custom wallpapers also appear behind sign-in. doona scales them to at most 2560 pixels on the long edge. **Readability veil** is on by default; **Dim** defaults to its maximum of 60%, using white in light mode and black in dark mode. **Blur** ranges from 0% to 150% for Liquid Glass, Glass and Frosted. Below 100%, surface fill increases. Tinted has no Blur control.
 
 For browser support and storage requirements, see [browser settings](feature-requirements.md#req-browser-settings). The [storage overview](what-doona-can-change.md) explains which choices belong to this browser.
 
@@ -173,9 +173,9 @@ For browser support and storage requirements, see [browser settings](feature-req
 
 In **About**, use **Guide** for documentation and **Keyboard shortcuts** for the shortcut list. **Copy recent errors** copies the recent API failures for a bug report; a failure notice's **Copy error** copies that request's details.
 
-**About doona** shows engine, API and contract versions, the license and privacy statement. **Install as an app** appears when supported; When not already running as an app, Safari on iOS/iPadOS and Safari 26 or later on macOS show manual installation steps. An API major version other than 1 produces a warning.
+**About doona** shows engine, API and contract versions, the license and privacy statement. **Install as an app** appears when supported. When not already running as an app, Safari on iOS/iPadOS and Safari 26 or later on macOS show manual installation steps. An API major version other than 1 produces a warning.
 
-An empty JSON read response or a read with no response is retried once before showing an error. Error details identify the request and key response headers.
+If a read returns empty JSON or no response, doona retries it once before showing an error. Error details identify the request and key response headers.
 
 <a name="backend-actions"></a>
 

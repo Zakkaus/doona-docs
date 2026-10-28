@@ -26,7 +26,7 @@ experimental {
 }
 ```
 
-For every other option, see [Configuration](configuration.md). [Start or restart honk](service-management.md) to apply the change.
+For other options, see [Configuration](configuration.md). [Start or restart honk](service-management.md) to apply the change.
 
 ## 3. Open doona
 

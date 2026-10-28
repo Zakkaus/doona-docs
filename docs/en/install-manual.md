@@ -60,7 +60,7 @@ awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo tar -xzf "$FILE" -C /usr/share/doona
 ```
 
-After the archive installation, skip the Alpine section and continue with the backend below.
+After installing the archive, skip to the backend section below.
 
 <a name="install-alpine"></a>
 
@@ -99,7 +99,7 @@ For optional packages, use the same signed-key or direct installation method you
 
 ## Install the backend
 
-Install the backend using [Install honk](install.md#install), then return here. If a compatible honk is already installed, keep it.
+If you already have a compatible honk, keep it. Otherwise, follow [Install honk](install.md#install), then return here.
 
 For OpenRC systems, [Service management](service-management.md) gives a foreground command for the first connection; it does not configure an OpenRC service.
 

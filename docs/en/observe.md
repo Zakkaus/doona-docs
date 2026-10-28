@@ -4,7 +4,7 @@
 
 # Watching traffic
 
-Use this page to choose a monitoring view and understand what its data covers in the standard edition. For step-by-step checks, see [common tasks](common-tasks.md); for the smaller edition, see [doona lite](lite.md).
+Choose a monitoring view and check what its data covers in the standard edition. For step-by-step checks, see [common tasks](common-tasks.md); for the smaller edition, see [doona lite](lite.md).
 
 | What you need | Where to look |
 | --- | --- |
@@ -54,9 +54,9 @@ Change the startup page under [Appearance](config-and-settings.md#settings-page)
 
 Use **Edit dashboard** to add, move, resize or remove cards. **Done** saves the layout. To discard edits, select **Cancel** and confirm. Layout storage has [browser requirements](feature-requirements.md#req-browser-settings).
 
-Each widget can be placed at most three times. Available sizes depend on the widget, and resizing one card does not resize its neighbours. Removing a card offers **Undo** while the editor remains open.
+You can place each widget at most three times. Available sizes depend on the widget, and resizing one card does not resize its neighbors. Removing a card offers **Undo** while the editor remains open.
 
-The gallery includes **Subscription quota**, **Outbound failures**, **Node availability** and **DNS latency**. Memory can use a chart or a **Sparkline** value tile. Wide charts show peak and average statistics beside the chart. See [Widgets](features.md#widgets) for the shared dashboard and floating-panel gallery.
+The gallery includes **Outbound failures**. See [Widgets](features.md#widgets) for other widget types, sizes and statistics in the shared dashboard and floating-panel gallery.
 
 ![Dashboard editor](../screenshots/en/dashboard-settings.webp)
 
@@ -64,7 +64,7 @@ The gallery includes **Subscription quota**, **Outbound failures**, **Node avail
 
 ## System status
 
-**System status** is the place to check the backend before diagnosing an unavailable feature.
+Check the backend on **System status** before diagnosing an unavailable feature.
 
 The header shows engine state, **Config version**, **Uptime**, **CPU usage** and **Last reload**. Config version identifies the active configuration revision, not its `generation` number.
 
@@ -95,11 +95,11 @@ Select a chart point or list row to inspect the connection. Its details show the
 
 ![Connection list](../screenshots/en/connections-list.webp)
 
-Filters also search the outbound, chain and rule. **Export CSV** exports the filtered list. Read truncation and visibility notices before interpreting an empty list; the [connection requirements](feature-requirements.md#req-connections) explain coverage and which connections can be closed.
+Filters also search the outbound, chain and rule. **Export CSV** exports the filtered list. Read truncation and visibility notices before interpreting an empty list; the [connection requirements](feature-requirements.md#req-connections) explain coverage and which connections you can close.
 
 A row's add-rule icon is unavailable when the connection has no usable address or domain. **More actions** also offers **Edit matched rule's outbound settings**, **View flow**, **Only this device** and **Close connection** when supported.
 
-**Close all** with only device and network filters targets every matching live connection, including connections opened after confirmation. An outbound, rule or text filter, a truncated list, or an exceeded bulk limit restricts closing to the listed IDs. Kernel-direct connections are skipped.
+**Close all** with only device and network filters targets every matching live connection, including connections opened after confirmation. An outbound, rule or text filter, a truncated list, or an exceeded bulk limit restricts closing to the listed IDs. The action skips kernel-direct connections.
 
 <a name="flows"></a>
 
@@ -113,7 +113,7 @@ Select a path in **Map**, then use its flow-count button to open the matching re
 
 Select **Clear path filter** to remove the pinned path. To create a rule from a recorded flow, use the add-rule icon on its record row; the detail panel does not contain that icon.
 
-**Recording settings** opens the recording controls. Their scope and lifetime are described under [runtime changes](what-doona-can-change.md#change-runtime).
+**Recording settings** opens the recording controls. See [runtime changes](what-doona-can-change.md#change-runtime) for their scope and lifetime.
 
 <a name="dns"></a>
 
@@ -136,7 +136,7 @@ Cache filters support full names, suffixes, keywords and regular expressions, co
 
 Filtering also works without deletion support. **Clear filters** resets the criteria and removes the domain filter from the page URL.
 
-When the cache reports memory-only storage, its entries are cleared on restart. When deleting matches, the confirmation shows the matching count, or the domain name and record type for name-based deletion; **Clear all cache** cannot be undone. **No cache entries** means the cache is empty, while **No matching cache entries** means the current filters matched nothing.
+When the cache reports memory-only storage, restarting clears its entries. The deletion confirmation shows the matching count, or the domain name and record type for name-based deletion. You cannot undo **Clear all cache**. **No cache entries** means the cache is empty; **No matching cache entries** means the current filters matched nothing.
 
 ![DNS cache with expired entries](../screenshots/en/dns-cache-expired.webp)
 
@@ -150,9 +150,9 @@ When the cache reports memory-only storage, its entries are cleared on restart. 
 
 Use **Level** and **Module** to narrow the stream. **Pause** pauses display updates while the buffer retains only the newest records up to the page limit. **Clear** clears this page's records; **Export** downloads the received records, and **Copy record** copies one row in the same format used by **Export**.
 
-Levels below the engine's recording level are marked as not recorded. Change the engine level through **Recording settings**; selecting a lower display filter cannot recover unrecorded messages.
+The page marks levels below the engine's recording level as not recorded. Change the engine level through **Recording settings**; selecting a lower display filter cannot recover unrecorded messages.
 
-A gap marker means some records could not be replayed after reconnecting. For messages from before recording began, use the [service log](service-management.md).
+A gap marker means replay could not recover some records after reconnecting. For messages from before recording began, use the [service log](service-management.md).
 
 <a name="events"></a>
 
@@ -164,4 +164,4 @@ A gap marker means some records could not be replayed after reconnecting. For me
 
 The list shows **Time**, **Kind** and **Summary**. Its toolbar reports connection state, retention limit and, when available, **Resumes from the last position**. **Configuration activated** offers **View configuration** when configuration is available; **Flow records lost** can offer **View flow record** and **Recording settings**.
 
-After reconnecting, retained events can be replayed. A gap marker means the earlier events are no longer available for replay.
+After reconnecting, replay can recover retained events. A gap marker means the earlier events are no longer available for replay.
