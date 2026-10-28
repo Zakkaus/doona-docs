@@ -75,7 +75,7 @@ pnpm package
 
 ## 更新 API 类型
 
-[契约来源记录](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)记录了仓库内 API 契约的版本。更新契约后，在应用仓库根目录执行：
+[契约来源记录](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)列出仓库内 API 契约的版本。更新契约后，在应用仓库根目录执行：
 
 ```sh
 pnpm gen:api
@@ -86,7 +86,7 @@ pnpm check
 
 ## 检查文档站点
 
-安装文档仓库的依赖。在其根目录中，将 `DOONA_DIR` 设为应用仓库路径，让检查器核对应用的文档链接：
+在文档仓库根目录安装依赖。将 `DOONA_DIR` 设为应用仓库路径，供检查器核对应用的文档链接：
 
 ```sh
 pnpm install --frozen-lockfile

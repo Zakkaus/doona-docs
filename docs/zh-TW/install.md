@@ -29,7 +29,7 @@ experimental {
 | OpenWrt | [在路由器上手動安裝](install-openwrt.md) |
 | Alpine 或其他 Linux 發行版 | [安裝壓縮檔或 Alpine 套件](install-manual.md) |
 
-這些套件安裝的是靜態網頁檔案。後端安裝、設定與服務啟動需要另行完成。版本選擇見[標準版與 lite](editions.md)。
+這些套件只安裝靜態網頁檔案。請另行安裝、設定並啟動後端。版本選擇見[標準版與 lite](editions.md)。
 
 <a name="install"></a>
 
@@ -59,7 +59,7 @@ printf 'honk archive URL: '
 read -r HONK_URL
 ```
 
-然後在同一 shell 中下載壓縮檔與該次發行的校驗和檔案：
+在同一 shell 中下載壓縮檔與該次發行的檢查碼檔案：
 
 ```sh
 HONK_ARCHIVE=${HONK_URL##*/}
@@ -72,7 +72,7 @@ curl -fL -O "$HONK_URL" -O "${HONK_URL%/*}/SHA256SUMS"
 awk -v file="$HONK_ARCHIVE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
 
-所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到校驗和項目，先核對檔名並重新下載，再安裝。
+所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到檢查碼項目，先核對檔名並重新下載，再安裝。
 
 ```sh
 tar -xzf "$HONK_ARCHIVE"
@@ -101,7 +101,7 @@ chmod 0755 /usr/bin/honk-core
 /usr/bin/honk-core --version
 ```
 
-版本命令必須成功執行。保留所下載的發行版本名稱，方便日後核對。
+確認版本命令成功執行。保留下載的發行版本名稱，供日後核對。
 
 更新時保留現有組態，並[重新啟動服務](service-management.md)。確認啟動日誌顯示已安裝的引擎版本。
 
@@ -162,9 +162,9 @@ sudo curl -fL --retry 3 -o /var/lib/honk/geoip.dat \
 | `doona-fonts` | 標準版使用的 Noto Sans TC 和 SC 字型。 |
 | `doona-precompressed` | 在標準版檔案旁新增 `.br` 和 `.gz` 副本，供支援預先壓縮資源的伺服器使用。版本應與主套件一致。 |
 
-Debian 將它們命名為 `doona-web-fonts` 和 `doona-web-precompressed`。套件檔名見各發行版頁面；壓縮檔安裝步驟見[手動安裝](install-manual.md)。
+Debian 的套件名稱為 `doona-web-fonts` 和 `doona-web-precompressed`。套件檔名見各發行版頁面；壓縮檔安裝步驟見[手動安裝](install-manual.md)。
 
-預先壓縮資源會額外占用磁碟空間，儲存空間有限的路由器可以不安裝。未安裝選用字型壓縮檔時，doona 使用後備字型，不載入選用字型檔案，但仍會請求 `fonts/README` 來偵測是否已安裝字型壓縮檔。
+預先壓縮資源會額外占用磁碟空間，儲存空間有限的路由器可不安裝。未安裝選用字型壓縮檔時，doona 使用後備字型，不載入選用字型檔案。但仍會請求 `fonts/README`，偵測是否已安裝字型壓縮檔。
 
 ### 本機建置與打包檔案
 
@@ -202,7 +202,9 @@ allow_origins: 'http://owrt.lan:9527'
 
 靜態伺服器可以在網站根目錄或 `/ui/` 等路徑前綴下提供解壓縮後的 UI 檔案。doona 使用 `/ui/#/activity` 這樣的 hash 路由，無需設定 SPA 重寫規則。
 
-反向代理必須同時將精確路徑 `/api` 的 discovery 請求和 `/api/` 下的請求轉送到 honk 監聽位址。只轉送 `/api/` 會遺漏 discovery，導致無法連線。如果連線位址帶有 `/gateway` 等代理前綴，將 `/gateway/api` 轉送到 honk 的 `/api`，將 `/gateway/api/…` 轉送到 `/api/…`。兩個路由必須採用相同的前綴對應方式。
+反向代理必須將精確路徑 `/api` 的 discovery 請求和 `/api/` 下的請求都轉送到 honk 監聽位址。只轉送 `/api/` 會遺漏 discovery，導致無法連線。
+
+如果連線位址帶有 `/gateway` 等代理前綴，將 `/gateway/api` 轉送到 honk 的 `/api`，將 `/gateway/api/…` 轉送到 `/api/…`。兩個路由必須採用相同的前綴對應方式。
 
 <a name="operation"></a>
 

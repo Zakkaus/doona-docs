@@ -2,7 +2,7 @@
 
 # 為第一條連線設定路由
 
-從[快速啟動](quick-start.md)繼續，保持 honk 運作並以管理員身分登入。你需要一個可用的 HTTP 或 HTTPS 訂閱 URL，以及閘道器的 shell 存取權限。本教學將 `example.com` 送入名為 `proxy` 的新群組，其他流量保持直連。訂閱名稱使用 `harbor`。
+完成[快速入門](quick-start.md)後，保持 honk 運作並以管理員身分登入。準備可用的 HTTP 或 HTTPS 訂閱 URL，以及閘道器的 shell 存取權限。本教學將 `example.com` 送入名為 `proxy` 的新群組，其他流量保持直連。訂閱名稱使用 `harbor`。
 
 ## 1. 新增訂閱
 
@@ -40,7 +40,7 @@ domain(full: example.com) -> proxy
 
 ## 4. 定義 DNS 上游
 
-快速啟動沒有 DNS 區塊。開啟**組態** → **設定檔**，在**設定檔**中選擇 `/etc/honk/config.dae`，將以下區塊附加到現有區塊之後。保留剛才建立的訂閱、群組和路由規則。
+快速入門組態沒有 DNS 區塊。開啟**組態** → **設定檔**，在**設定檔**中選擇 `/etc/honk/config.dae`，將以下區塊附加到現有區塊之後。保留剛才建立的訂閱、群組和路由規則。
 
 ```dae
 # 透過代理群組傳送指定的 DNS 請求。
@@ -70,7 +70,7 @@ dns {
 qname(full: example.com) -> remote_dns
 ```
 
-兩條規則現已套用。路由規則選擇流量使用的群組；DNS 規則選擇解析器，該解析器的請求也經過此群組。以上每次儲存都會單獨生效。新增功能無法使用時，見 [DNS 規則條件](feature-requirements.md#req-rules)。
+路由規則選擇流量使用的群組；DNS 規則選擇解析器，該解析器的請求也經過此群組。以上每次儲存都會單獨生效。新增功能無法使用時，見 [DNS 規則條件](feature-requirements.md#req-rules)。
 
 ## 6. 用追蹤模擬驗證規則
 

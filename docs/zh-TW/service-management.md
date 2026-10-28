@@ -114,19 +114,19 @@ journal 包含歷次服務運作的日誌。排查本次啟動時，從最新的
 | 停止 | `sudo systemctl stop honk-core` | `/etc/init.d/honk-core stop` |
 | 停用開機啟動 | `sudo systemctl disable honk-core` | `/etc/init.d/honk-core disable` |
 
-停用開機啟動不會停止正在執行的服務。如需讓 honk 在重新開機後仍保持停止狀態，執行停止和停用兩項操作。
+停用開機啟動不會停止正在運作的服務。若要讓 honk 在重新開機後保持停止狀態，須執行停止和停用兩項操作。
 
 ## 服務與重新載入故障
 
 | 現象或日誌訊息 | 含義與處理方式 |
 | --- | --- |
-| systemd 找不到 `honk-core.service` | 依照第 1 步建立 unit 並執行 `sudo systemctl daemon-reload`，再依照第 2 步啟動。 |
+| systemd 找不到 `honk-core.service` | 依照第 1 步建立服務單元並執行 `sudo systemctl daemon-reload`，再依照第 2 步啟動。 |
 | 重新載入時報錯 `no running honk-core instance` | 沒有實際執行個體持有行程鎖。使用 `--mock-ebpf` 的前景行程不會持有該鎖；依照第 2 步啟動要使用的實際服務。 |
 | `SIGHUP reload applied` | 新設定已套用。 |
 | `SIGHUP reload rejected` | 結合 `stage` 和同時出現的錯誤，判斷新設定是否已套用；若被拒絕是因為需要重新啟動，在主機上編輯列出的設定後[重新啟動 honk](what-doona-can-change.md)。 |
 | `SIGHUP reload committed with degraded datapath` | 設定已提交，但資料路徑已降級。先檢查同時出現的錯誤，再判斷服務是否正常。 |
 
-重新載入命令成功結束，不代表新設定已經套用；必須查看服務日誌中的結果。
+重新載入命令成功結束，不代表新設定已套用；須查看服務日誌中的結果。
 
 ## OpenRC 或前景測試
 
@@ -136,4 +136,4 @@ journal 包含歷次服務運作的日誌。排查本次啟動時，從最新的
 sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
 ```
 
-保持終端機開啟，並依照[快速開始](quick-start.md)中的瀏覽器步驟操作。日誌顯示在終端機中，Ctrl+C 停止 honk。此命令不會啟用開機啟動。
+保持終端機開啟，依照[快速入門](quick-start.md)中的瀏覽器步驟操作。日誌顯示在終端機中，按 Ctrl+C 停止 honk。此命令不會啟用開機啟動。

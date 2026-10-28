@@ -32,7 +32,7 @@ opkg update
 opkg install curl ca-bundle kmod-veth kmod-nft-queue
 ```
 
-启用了 NFQUEUE，但缺少前提条件时，honk 可能继续运行，同时停用 NFQUEUE staging 并输出启动警告。检查[服务日志](service-management.md)；服务启动成功不代表 NFQUEUE staging 已启用。
+启用 NFQUEUE 但缺少必要条件时，honk 可能继续运行，同时停用 NFQUEUE staging 并输出启动警告。检查[服务日志](service-management.md)；服务启动成功不代表 NFQUEUE staging 已启用。
 
 <a name="openwrt-packages"></a>
 
@@ -95,7 +95,7 @@ apk add --allow-untrusted "/tmp/doona/$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。请在[独立界面配置](install.md)中使用此目录。
+确认最后一条命令列出 `index.html`。在[独立界面配置](install.md)中使用此目录。
 
 ### 可选软件包
 
@@ -112,13 +112,13 @@ ls -l /usr/share/doona/index.html
 
 在另一个下载目录中按[安装 honk](install.md#install)操作，避免后端的 `SHA256SUMS` 覆盖 doona 的文件。选择 musl 构建和 OpenWrt 安装标签页，将可执行文件安装到 `/usr/bin/honk-core`，再返回本页。
 
-确认已安装的可执行文件正常后，使用绝对路径删除其下载压缩包和解压目录。所有选定的可选 UI 软件包安装完成后，再使用绝对路径删除 `/tmp/doona` 中下载的软件包、索引、公钥副本与校验和文件。仍需用于安装的下载文件应先保留。
+确认已安装的可执行文件正常后，使用绝对路径删除其下载压缩包和解压目录。选定的可选 UI 软件包全部安装完成后，再使用绝对路径删除 `/tmp/doona` 中下载的软件包、索引、公钥副本与校验和文件。保留仍需用于安装的下载文件。
 
 <a name="install-geodata"></a>
 
 ## 5. 准备数据目录
 
-此手动安装方式须在 [honk 配置](configuration.md#config)中将 `global.data_dir` 设为 `/etc/honk/data`，再创建持久化目录：
+手动安装时，须在 [honk 配置](configuration.md#config)中将 `global.data_dir` 设为 `/etc/honk/data`，再创建持久化目录：
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data

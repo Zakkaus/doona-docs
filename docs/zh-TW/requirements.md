@@ -14,9 +14,9 @@
 
 ## honk 版本
 
-使用實作 doona 原生 API 契約、且啟用了 `native-api` 建置功能的 honk。僅憑版本號無法判斷相容性；缺少該建置功能的程式，即使新增 API 組態也無法提供 API。
+使用實作 doona 原生 API 契約且啟用 `native-api` 建置功能的 honk。僅憑版本號無法判斷相容性。缺少該建置功能的程式，即使新增 API 組態也無法提供 API。
 
-按[安裝指南](install.md)選擇相容的 honk-core 封存檔。應用程式的[契約版本記錄](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)列出了預期的 API。
+按[安裝指南](install.md)選擇相容的 honk-core 壓縮檔。應用程式的[契約版本記錄](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)列出預期的 API。
 
 在閘道器上執行：
 

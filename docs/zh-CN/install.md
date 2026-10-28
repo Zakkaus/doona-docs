@@ -29,7 +29,7 @@ experimental {
 | OpenWrt | [在路由器上手动安装](install-openwrt.md) |
 | Alpine 或其他 Linux 发行版 | [安装压缩包或 Alpine 软件包](install-manual.md) |
 
-这些软件包安装的是静态网页文件。后端安装、配置与服务启动需要另行完成。版本选择见[标准版与 lite](editions.md)。
+这些软件包只安装静态网页文件。请另行安装、配置并启动后端。版本选择见[标准版与 lite](editions.md)。
 
 <a name="install"></a>
 
@@ -59,7 +59,7 @@ printf 'honk archive URL: '
 read -r HONK_URL
 ```
 
-然后在同一 shell 中下载压缩包与该次发布的校验和文件：
+在同一 shell 中下载压缩包与该次发布的校验和文件：
 
 ```sh
 HONK_ARCHIVE=${HONK_URL##*/}
@@ -101,7 +101,7 @@ chmod 0755 /usr/bin/honk-core
 /usr/bin/honk-core --version
 ```
 
-版本命令必须成功执行。保留所下载的发布版本名称，便于以后核对。
+确认版本命令成功执行。保留下载的发布版本名称，供日后核对。
 
 更新时保留现有配置，并[重启服务](service-management.md)。确认启动日志显示已安装的引擎版本。
 
@@ -162,9 +162,9 @@ sudo curl -fL --retry 3 -o /var/lib/honk/geoip.dat \
 | `doona-fonts` | 标准版使用的 Noto Sans TC 和 SC 字体。 |
 | `doona-precompressed` | 在标准版文件旁添加 `.br` 和 `.gz` 副本，供支持预压缩资源的服务器使用。版本应与主包一致。 |
 
-Debian 将它们命名为 `doona-web-fonts` 和 `doona-web-precompressed`。软件包文件名见各发行版页面；压缩包安装步骤见[手动安装](install-manual.md)。
+Debian 的软件包名称为 `doona-web-fonts` 和 `doona-web-precompressed`。软件包文件名见各发行版页面；压缩包安装步骤见[手动安装](install-manual.md)。
 
-预压缩资源会额外占用磁盘空间，存储有限的路由器可以不安装。未安装可选字体压缩包时，doona 使用后备字体，不加载可选字体文件，但仍会请求 `fonts/README` 来检测是否已安装字体压缩包。
+预压缩资源会额外占用磁盘空间，存储空间有限的路由器可不安装。未安装可选字体压缩包时，doona 使用后备字体，不加载可选字体文件。但仍会请求 `fonts/README`，检测是否已安装字体压缩包。
 
 ### 本地构建与打包文件
 
@@ -202,7 +202,9 @@ allow_origins: 'http://owrt.lan:9527'
 
 静态服务器可以在网站根目录或 `/ui/` 等路径前缀下提供解压后的 UI 文件。doona 使用 `/ui/#/activity` 这样的 hash 路由，无需配置 SPA 重写规则。
 
-反向代理必须同时将精确路径 `/api` 的 discovery 请求和 `/api/` 下的请求转发到 honk 监听地址。只转发 `/api/` 会遗漏 discovery，导致无法连接。如果连接地址带有 `/gateway` 等代理前缀，将 `/gateway/api` 转发到 honk 的 `/api`，将 `/gateway/api/…` 转发到 `/api/…`。两个路由必须采用相同的前缀映射。
+反向代理必须将精确路径 `/api` 的 discovery 请求和 `/api/` 下的请求都转发到 honk 监听地址。只转发 `/api/` 会遗漏 discovery，导致无法连接。
+
+如果连接地址带有 `/gateway` 等代理前缀，将 `/gateway/api` 转发到 honk 的 `/api`，将 `/gateway/api/…` 转发到 `/api/…`。两个路由必须采用相同的前缀映射。
 
 <a name="operation"></a>
 

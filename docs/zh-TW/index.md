@@ -2,7 +2,7 @@
 
 # doona 文件
 
-doona 透過原生 API 管理 honk 並查看流量。本文件適用於 v0.1.0-rc.3。
+doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc.3。
 
 ## 從這裡開始
 
@@ -22,7 +22,7 @@ doona 透過原生 API 管理 honk 並查看流量。本文件適用於 v0.1.0-r
 | 標準版 | 編輯組態、觀測流量、診斷路由 | [安裝](install.md#doona)，然後[首次登入](first-sign-in.md) |
 | doona lite | 用較精簡的介面完成組態任務，目前為測試中的預覽版 | [安裝 lite](lite.md#lite-install)，然後[連線至後端](lite-connect.md) |
 
-差異見[版本比較](editions.md)。如需用範例資料體驗介面，可開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
+版本差異見[版本比較](editions.md)。若要用範例資料體驗介面，開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
 
 ![活動頁面](../screenshots/zh-TW/activity-light.webp)
 

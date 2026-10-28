@@ -4,7 +4,7 @@
 
 # 故障排除
 
-按遇到的症状查找检查步骤和处理方法。本页涵盖 doona 连接 honk 时的连接、编辑、记录和地理数据故障。
+按症状查找 doona 连接 honk 时的连接、编辑、记录或地理数据故障，按对应步骤检查。
 
 | 症状 | 从哪里开始 |
 | --- | --- |
@@ -39,7 +39,7 @@
 | --- | --- |
 | `writes_disabled` | 按上述配置条件启用经过身份验证的写入。 |
 | `configuration_unavailable` | 检查 honk 启动日志，待配置加载完成后再编辑。 |
-| `listener_secret_source` | 在磁盘上编辑此含密钥文件。将监听密钥放在单独的引入文件中，让其他文件保持可编辑。 |
+| `listener_secret_source` | 在磁盘上编辑含密钥的文件。将监听密钥放在单独的引入文件中，让其他文件保持可编辑。 |
 | `listener_secret_in_content` | 检查内容或路径是否包含监听密钥值。在 doona 外更换与其他内容重复的密钥，完成变更后重新登录。 |
 | `listener_settings_changed` 或要求重启的诊断 | 在 doona 外编辑设置，并按[重启规则](what-doona-can-change.md)处理。 |
 | `credential_sources_changed` | 在外部修改凭据文件后重载 honk，再重新打开来源文件进行编辑。 |
@@ -55,12 +55,12 @@
 
 honk 写入前会校验本地依赖。检查诊断和配置引用的文件。
 
-诊断不会列出依赖文件名。订阅或节点报错时，检查订阅缓存内容和各节点的 `ech_config_path`；DNS 报错时，检查 `use_host` 指定的文件。恢复缺失文件，或刷新格式错误的订阅内容，再重新应用。
+诊断不会列出依赖文件的名称。订阅或节点报错时，检查订阅缓存内容和各节点的 `ech_config_path`；DNS 报错时，检查 `use_host` 指定的文件。恢复缺失文件，或刷新格式错误的订阅内容，再重新应用。
 
 | 代码 | 原因与处理 |
 | --- | --- |
-| `missing-offline-dependency` | 恢复缺失的依赖。地理数据安装见[安装说明](install.md#directories-and-geodata)或 [OpenWrt 地理数据安装](install-openwrt.md#install-geodata)。 |
-| `offline-dependency-denied` | 将依赖放入允许的配置目录或数据目录，并允许服务用户读取。 |
+| `missing-offline-dependency` | 恢复缺失的依赖文件。地理数据安装见[安装说明](install.md#directories-and-geodata)或 [OpenWrt 地理数据安装](install-openwrt.md#install-geodata)。 |
+| `offline-dependency-denied` | 将依赖文件放入允许的配置目录或数据目录，并允许服务用户读取。 |
 | `invalid-offline-dependency` | 替换格式错误的内容，或刷新受影响的订阅。 |
 | `unreadable-offline-dependency` | 查看服务日志中的文件或存储错误。 |
 
@@ -129,7 +129,7 @@ honk-core --data-dir /var/lib/honk admin reset
 | 阶段 | 检查或修改什么 |
 | --- | --- |
 | `checksum_unavailable` | 校验和请求失败。检查镜像的校验和 URL，或更换来源。 |
-| `checksum_mismatch` | 下载内容与校验和不符。从来源获取互相匹配的文件与校验和。 |
+| `checksum_mismatch` | 下载内容与校验和不符。从来源获取匹配的文件与校验和。 |
 | `download_timeout` | 检查下载路由和来源；超时限制见[下载期限](feature-requirements.md#req-geodata-update)。 |
 | `http_status_rejected` | 检查服务器返回的状态，使用最终 URL，避免重定向。 |
 | `http_not_found` | 修正文件 URL。 |
@@ -147,15 +147,15 @@ honk-core --data-dir /var/lib/honk admin reset
 
 ## 无法编辑地理数据来源或更新计划
 
-在**系统状态** → **数据路径**检查持久化警告。降级代码 `persistence_unavailable` 表示状态数据库不可用；依据其 `reason` 进行[数据库检查](#state-db)。
+在**系统状态** → **数据路径**检查持久化警告。降级代码 `persistence_unavailable` 表示状态数据库不可用；按其 `reason` 执行[数据库检查](#state-db)。
 
-恢复[地理数据设置条件](feature-requirements.md#req-geodata-settings)后，重新打开地理数据卡片。手动下载有[单独的条件](feature-requirements.md#req-geodata-update)，能够下载不代表能够保存设置。
+恢复[地理数据设置条件](feature-requirements.md#req-geodata-settings)后，重新打开地理数据卡片。手动下载有[单独的条件](feature-requirements.md#req-geodata-update)，能下载不代表能保存设置。
 
 <a name="state-db"></a>
 
 ## honk 报告状态数据库故障
 
-在[服务日志](service-management.md)中查看最近一次启动错误。密码验证需要数据库，无法打开时会停止启动。使用文件配置的 Token 模式遇到部分故障时，可以继续运行但不保存状态；见[持久化条件](feature-requirements.md#req-persistence)。
+在[服务日志](service-management.md)中查看最近一次启动错误。密码验证需要数据库，无法打开时会停止启动。使用文件配置的 Token 模式遇到部分故障时，可继续运行但不保存状态；见[持久化条件](feature-requirements.md#req-persistence)。
 
 | 消息或原因 | 下一步 |
 | --- | --- |
@@ -174,7 +174,7 @@ honk-core --data-dir /var/lib/honk admin reset
 
 服务日志会显示拒绝的路径、规则及建议的修复方法。结合[数据目录配置](configuration.md#config)检查该路径，不要假定所有安装都使用同一目录。
 
-文件模式下，运行时数据目录由 `global.data_dir` 决定，`--data-dir` 不会覆盖它。执行 `admin reset` 时，须通过 `--data-dir` 指定同一目录。OpenWrt 的 [`/var` 内容在重启后丢失](https://openwrt.org/docs/techref/filesystems)，请使用[手动安装的持久化目录](install-openwrt.md#install-geodata)。
+文件模式下，运行时数据目录由 `global.data_dir` 决定，`--data-dir` 不会覆盖该目录。执行 `admin reset` 时，须通过 `--data-dir` 指定同一目录。OpenWrt 的 [`/var` 内容在重启后丢失](https://openwrt.org/docs/techref/filesystems)，请使用[手动安装的持久化目录](install-openwrt.md#install-geodata)。
 
 状态目录与数据库须归 honk 服务用户所有，且不能向组或其他用户开放权限。符号链接或错误的文件类型也会被拒绝。只修正日志所指路径的所有权、权限或类型，再重启 honk。不要递归修改整个配置目录的权限。
 
@@ -220,6 +220,6 @@ honk-core --data-dir /var/lib/honk admin reset
 
 ## 收集报告所需的错误信息
 
-点击失败提示中的**复制错误**，或在**设置** → **关于**点击**复制最近错误**。报告中注明尝试的操作及正在运行的引擎和界面版本。先复制错误再重新加载页面，因为重新加载会清空内存中的错误历史。
+点击失败提示中的**复制错误**，或在**设置** → **关于**点击**复制最近错误**。报告中注明尝试的操作及正在运行的引擎和界面版本。重新加载页面会清空内存中的错误历史，请先复制错误。
 
 历史最多保留 20 条错误。复制内容包括可用的请求方法与路径、状态、错误代码及请求 ID。请求正文和配置文本不会保留，识别出的秘密字段会被遮蔽。复制入口见[关于](config-and-settings.md#settings-page)。

@@ -6,7 +6,7 @@
 
 标准版用于管理配置与观测流量。需要流量仪表板、连接控制、日志、进阶路由追踪或多配置源编辑时，应选择标准版。
 
-doona lite 专注于配置节点、订阅、策略组、路由、DNS 与全局设置。需要任务专用表单、手动节点分享与配置草稿确认流程，且无需流量页面时，可选择 lite。
+doona lite 用于配置节点、订阅、策略组、路由、DNS 与全局设置。需要任务专用表单、手动节点分享与配置草稿确认流程，且无需流量页面时，可选择 lite。
 
 <a name="editions-compare"></a>
 
@@ -39,7 +39,7 @@ doona lite 专注于配置节点、订阅、策略组、路由、DNS 与全局�
 
 ## 后端要求
 
-请使用[运行要求](requirements.md#honk-version)指定的原生 API honk 构建。两个版本均通过 `GET /api` 获取认证方式，并读取 `GET /api/v1/capabilities`；密码模式使用 `POST /api/v1/auth/setup` 或 `POST /api/v1/auth/login`。其余端点按功能需要调用，并非每次连接均需支持。下表路径均以 `/api/v1` 开头。
+请使用[运行要求](requirements.md#honk-version)指定的原生 API honk 构建。两个版本均通过 `GET /api` 获取认证方式，并读取 `GET /api/v1/capabilities`。密码模式使用 `POST /api/v1/auth/setup` 或 `POST /api/v1/auth/login`。其余端点按功能需要调用，并非每次连接都需要支持。下表路径均以 `/api/v1` 开头。
 
 | 功能 | honk 资源与端点 | 版本 |
 | --- | --- | --- |

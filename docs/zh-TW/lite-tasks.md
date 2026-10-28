@@ -4,11 +4,11 @@
 
 # doona lite 常用任務
 
-[連線至 lite](lite-connect.md) 後，即可匯入節點與編輯 honk 組態。無法編輯時，檢查[組態寫入需求](feature-requirements.md#req-config-edit)、[完整驗證需求](feature-requirements.md#req-validation)和 [lite 後端需求](editions.md#backend-requirements)。
+[連線至 lite](lite-connect.md) 後，可匯入節點與編輯 honk 組態。無法編輯時，檢查[組態寫入需求](feature-requirements.md#req-config-edit)、[完整驗證需求](feature-requirements.md#req-validation)和 [lite 後端需求](editions.md#backend-requirements)。
 
 ## 套用草稿
 
-修改訂閱、策略群組、路由、DNS 或全域設定後，統一按以下步驟套用：
+修改訂閱、策略群組、路由、DNS 或全域設定後，按以下步驟套用：
 
 1. 選取**檢視並套用**。
 2. 核對待套用的修改，再選取**套用**。
@@ -23,7 +23,7 @@
 1. 開啟**節點**，選取**新增節點**。
 2. 選取**貼上連結**，在**分享連結**中每行貼上一個連結。
 3. 核對辨識出的節點，修正無效行。
-4. 一個節點選取**新增**，多個節點選取**新增 N 個節點**。此操作會立即寫入並套用，隨後檢查節點是否出現在清單中。
+4. 匯入一個節點時，選取**新增**；多個節點則選取**新增 N 個節點**。此操作會立即寫入並套用。隨後檢查節點是否出現在清單中。
 
 無法匯入時，查看[節點需求](feature-requirements.md#req-nodes)與[語法驗證](feature-requirements.md#req-validation)。
 

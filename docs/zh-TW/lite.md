@@ -4,7 +4,7 @@
 
 # doona lite
 
-doona lite 透過表單完成常見的 honk 組態任務，目前是測試中的預覽版。為閘道器選擇介面前，請先閱讀[版本比較](editions.md)。
+doona lite 透過表單編輯 honk 組態，目前是測試中的預覽版。為閘道器選擇介面前，請先閱讀[版本比較](editions.md)。
 
 使用**節點**、**訂閱**、**策略群組**、**路由**和 **DNS** 管理資源，透過**設定**修改全域設定。先[連線至 doona lite](lite-connect.md)，再按[常用任務](lite-tasks.md)操作。
 

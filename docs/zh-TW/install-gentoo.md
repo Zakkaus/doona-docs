@@ -6,7 +6,7 @@
 
 在閘道器上開啟終端機，進入新建的下載目錄，並在同一 shell 中完成各步。使用 root shell 時省略 `sudo`。安裝後端前先檢查 [honk 的前提條件](install.md#install)。
 
-缺少 `net-misc/curl` 或 `app-misc/ca-certificates` 時，先安裝它們。下列命令使用 sudo 寫入系統目錄。
+缺少 `net-misc/curl` 或 `app-misc/ca-certificates` 時，先安裝。下列命令使用 sudo 寫入系統目錄。
 
 ```sh
 sudo emerge --ask net-misc/curl app-misc/ca-certificates
@@ -30,7 +30,7 @@ location = %s
 portageq get_repos /
 ```
 
-最後一條命令的輸出必須包含該儲存庫名稱。
+確認最後一條命令的輸出包含該儲存庫名稱。
 
 ## 2. 新增 ebuild
 
@@ -54,7 +54,7 @@ awk -v file="doona-${VERSION}.tar.gz" '$2 == file' SHA256SUMS | sha256sum -c -
 awk -v file="doona-fonts-${VERSION}.tar.gz" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
 
-所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到校驗和項目，先核對檔名並重新下載，再安裝。
+所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到檢查碼項目，先核對檔名並重新下載，再安裝。
 
 下載或執行檔出錯時，見[安裝故障](install.md#安裝故障)。
 
@@ -78,13 +78,13 @@ sudo emerge --ask =net-proxy/doona-0.1.0_rc3
 ls -l /usr/share/doona/index.html
 ```
 
-最後一條命令必須列出 `index.html`。請在[獨立介面組態](install.md)中使用該目錄。
+確認最後一條命令列出 `index.html`。在[獨立介面組態](install.md)中使用該目錄。
 
 ### Portage 故障
 
 | 錯誤 | 檢查方式 |
 | --- | --- |
-| Portage 找不到 `net-proxy/doona` | 執行 `portageq get_repos /`，確認輸出列出了本機儲存庫。確認 ebuild 位於該儲存庫的 `net-proxy/doona/` 目錄；儲存庫未註冊時依照第 1 步修正。 |
+| Portage 找不到 `net-proxy/doona` | 執行 `portageq get_repos /`，確認輸出列出本機儲存庫。確認 ebuild 位於該儲存庫的 `net-proxy/doona/` 目錄；儲存庫未註冊時依照第 1 步修正。 |
 | 套件被 testing keyword 遮罩 | 檢查第 4 步的 `package.accept_keywords` 項目是否使用目前架構的關鍵字，例如 `~amd64` 或 `~arm64`。 |
 
 ## 5. 安裝後端

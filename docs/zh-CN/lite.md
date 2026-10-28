@@ -4,7 +4,7 @@
 
 # doona lite
 
-doona lite 通过表单完成常见的 honk 配置任务，目前是测试中的预览版。为网关选择界面前，请先阅读[版本比较](editions.md)。
+doona lite 通过表单编辑 honk 配置，目前是测试中的预览版。为网关选择界面前，请先阅读[版本比较](editions.md)。
 
 使用**节点**、**订阅**、**策略组**、**路由**和 **DNS** 管理资源，通过**设置**修改全局设置。先[连接 doona lite](lite-connect.md)，再按[常用任务](lite-tasks.md)操作。
 

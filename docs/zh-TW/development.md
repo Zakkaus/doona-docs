@@ -8,7 +8,7 @@
 
 ## 建置標準版
 
-在 doona 應用程式倉庫根目錄執行：
+在 doona 應用程式儲存庫根目錄執行：
 
 ```sh
 pnpm install --frozen-lockfile
@@ -29,7 +29,7 @@ pnpm check:size
 
 ## 建置 doona lite
 
-安裝根目錄相依套件後，在同一應用程式倉庫根目錄執行：
+安裝根目錄相依套件後，在同一應用程式儲存庫根目錄執行：
 
 ```sh
 pnpm --dir apps/lite install --frozen-lockfile
@@ -41,7 +41,7 @@ pnpm --dir apps/lite check
 
 ## 執行瀏覽器測試
 
-在應用程式倉庫根目錄執行：
+在應用程式儲存庫根目錄執行：
 
 ```sh
 pnpm e2e:install --with-deps
@@ -56,14 +56,14 @@ pnpm e2e
 
 ## 擷取畫面與 API 檢查
 
-安裝應用程式相依套件後，在應用程式倉庫根目錄執行以下工具。
+安裝應用程式相依套件後，在應用程式儲存庫根目錄執行以下工具。
 
 - 擷取畫面：先安裝 Playwright 的 Chromium、`cwebp` 和 `img2webp`，再啟動使用模擬後端的預覽。執行 `node tools/screenshots.mjs <url> docs/screenshots`，將 `<url>` 替換為預覽位址。工具會產生本地化頁面、配色總覽、英文主題圖庫、手機長圖、頁面導覽靜態圖與路由動畫，格式均為 WebP。
-- API 契約：執行 `node tools/conformance.mjs http://router:9527`，將位址替換為後端伺服器根位址。工具按倉庫內的契約檢查服務探索、能力與唯讀回應，並跳過修改操作。需要身分驗證時，透過 `--token "$DOONA_TOKEN"` 從 shell 環境傳入 Token。
+- API 契約：執行 `node tools/conformance.mjs http://router:9527`，將位址替換為後端伺服器根位址。工具按儲存庫內的契約檢查服務探索、能力與唯讀回應，並跳過修改操作。需要身分驗證時，透過 `--token "$DOONA_TOKEN"` 從 shell 環境傳入 Token。
 
 ## 封裝兩個版本
 
-先建置兩個版本。安裝 GNU tar、gzip、Brotli 和 sha256sum，然後在應用程式倉庫根目錄執行：
+先建置兩個版本。安裝 GNU tar、gzip、Brotli 和 sha256sum，然後在應用程式儲存庫根目錄執行：
 
 ```sh
 pnpm package
@@ -75,7 +75,7 @@ pnpm package
 
 ## 更新 API 型別
 
-[契約來源記錄](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)記錄了倉庫內 API 契約的版本。更新契約後，在應用程式倉庫根目錄執行：
+[契約來源記錄](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md)列出儲存庫內 API 契約的版本。更新契約後，在應用程式儲存庫根目錄執行：
 
 ```sh
 pnpm gen:api
@@ -86,7 +86,7 @@ pnpm check
 
 ## 檢查文件網站
 
-安裝文件倉庫的相依套件。在其根目錄中，將 `DOONA_DIR` 設為應用程式倉庫路徑，讓檢查器核對應用程式的文件連結：
+在文件儲存庫根目錄安裝相依套件。將 `DOONA_DIR` 設為應用程式儲存庫路徑，供檢查器核對應用程式的文件連結：
 
 ```sh
 pnpm install --frozen-lockfile
@@ -99,7 +99,7 @@ pnpm docs:build
 
 ## 查找原始碼檔案
 
-以下路徑均相對於應用程式倉庫根目錄。
+以下路徑均相對於應用程式儲存庫根目錄。
 
 | 路徑 | 用途 |
 | --- | --- |
@@ -110,7 +110,7 @@ pnpm docs:build
 | `mock/` | 示範、預覽與測試後端 |
 | `src/store/` | 資源監視、快取讀取與操作 hooks |
 | `src/i18n/` | 翻譯與地區設定輔助函式 |
-| `contract/` | 倉庫內的 OpenAPI 契約及其固定版本 |
+| `contract/` | 儲存庫內的 OpenAPI 契約及其固定版本 |
 | `public/` | 靜態圖示、manifest 與 service worker |
 | `e2e/` | 瀏覽器測試 |
 | `tools/` | 建置、封裝、契約檢查與畫面擷取工具 |

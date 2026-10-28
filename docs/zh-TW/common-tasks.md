@@ -4,7 +4,7 @@
 
 # 常見操作
 
-本頁介紹標準版中調整路由、管理訂閱及排查流量的操作步驟。首次設定請從[路由第一條連線](tutorial.md)開始；精簡版請參閱 [doona lite](lite.md)。
+在標準版中調整路由、管理訂閱或排查流量。首次設定請從[路由第一條連線](tutorial.md)開始；精簡版請參閱 [doona lite](lite.md)。
 
 修改規則前，先檢查[規則編輯條件](feature-requirements.md#req-rules)。儲存後的生效方式見[組態寫入](what-doona-can-change.md#change-sources)。
 
@@ -94,7 +94,7 @@
 
 1. 開啟**連線** → **清單**，選擇目標連線。
 2. 在詳細資料中查看**出站**、**鏈**和**規則**。
-3. 在**更多操作**中按可用的**檢視命中的規則**，開啟命中的規則。
+3. 在**更多操作**中按可用的**檢視命中的規則**。
 4. 如需測試目前組態，按**追蹤此連線**，再按**開始追蹤**。
 
 追蹤用於評估路由，不會重播連線。可用條件與結果解讀見[追蹤條件](feature-requirements.md#req-routing-trace)及[連線詳細資料](observe.md#connections)。
@@ -117,7 +117,7 @@
 
 ## 更新地理資料
 
-開始前，先檢查[手動更新條件](feature-requirements.md#req-geodata-update)。
+先檢查[手動更新條件](feature-requirements.md#req-geodata-update)。
 
 1. 開啟**設定**，找到**地理資料**。
 2. 按**立即更新**。

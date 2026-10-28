@@ -4,7 +4,7 @@
 
 # 按任務尋找頁面
 
-本頁協助你在 doona 標準版中找到所需功能。首次設定請從[快速開始](quick-start.md)和[首次連線教學](tutorial.md)著手；精簡介面請參閱 [doona lite](lite.md)。
+在下表查找 doona 標準版功能及使用條件。首次設定請從[快速入門](quick-start.md)和[首次連線教學](tutorial.md)開始；精簡介面請參閱 [doona lite](lite.md)。
 
 請在真實 LAN 用戶端上使用可用節點驗證路由，測試直連和代理的 TCP、UDP 及 DNS。`honk-core is running`、`dae0` 鏈路存在或 API 可存取，都不能證明流量實際通過。
 
@@ -39,7 +39,7 @@
 
 ## 儀表板與浮動面板
 
-活動頁與浮動面板共用元件庫。可以按需選擇流量、記憶體、節點可用性、DNS 延遲或訂閱配額等卡片。儀表板的操作見[活動頁指南](observe.md#activity)，浮動面板的排列方式見[面板指南](tour.md#panels)。
+活動頁與浮動面板共用元件庫，可選擇流量、記憶體、節點可用性、DNS 延遲或訂閱配額等卡片。儀表板操作見[活動頁指南](observe.md#activity)，浮動面板排列方式見[面板指南](tour.md#panels)。
 
 ### 檢視配額和記憶體
 
@@ -67,6 +67,6 @@
 
 本站的 `localStorage` 儲存連線設定檔、權杖、偏好和版面配置。清除瀏覽器資料會刪除這些瀏覽器內的值，不會刪除 honk 設定。`sessionStorage` 儲存每個分頁的狀態，例如各分區最後開啟的頁面。權杖透過 `Authorization` 請求標頭傳送；配對連結 URL 片段中的權杖會在載入時移除。
 
-透過 HTTPS 或 localhost 存取時，service worker 會快取應用程式介面、字型和圖示，使介面可離線開啟並安裝為應用程式。API 回應不會快取。已儲存的主題和語言在首次繪製前生效，驗證前不會下載其他頁面，安裝更新會重用頁面已有的檔案。
+透過 HTTPS 或 localhost 存取時，service worker 會快取應用程式介面、字型和圖示，供離線開啟介面及安裝為應用程式。API 回應不會快取。已儲存的主題和語言在首次繪製前生效。驗證前不會下載其他頁面，安裝更新會重用頁面已有的檔案。
 
 安全漏洞回報方式見 [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md)。

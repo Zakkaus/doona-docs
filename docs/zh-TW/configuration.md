@@ -4,7 +4,7 @@
 
 # 組態參考
 
-本頁列出 doona 涉及的 honk DAE 設定、預設值及生效方式。組態語法請查閱 honk 的[節點](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md)、[訂閱](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md)、[群組](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md)、[路由](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md)和 [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) 參考。初次使用請從[快速啟動](quick-start.md)開始，或跟隨[為第一條連線設定路由](tutorial.md)操作。
+doona 使用下列 honk DAE 設定。各表列出預設值及生效方式。組態語法請查閱 honk 的[節點](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md)、[訂閱](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md)、[群組](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md)、[路由](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md)和 [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) 參考。初次使用請從[快速入門](quick-start.md)開始，或依[為第一條連線設定路由](tutorial.md)操作。
 
 表中預設值對應 honk `1b95e2e`，範例會覆寫其中部分值。生效方式欄連結至 [doona 可以修改什麼](what-doona-can-change.md)中對應的寫入權限或重新啟動項目。
 
@@ -40,7 +40,7 @@
 | `assets.route` | 空；遵循路由規則 | 預設下載路由：`routing`、`direct` 或群組名稱。地理資料、介面和訂閱繼承此值。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
 | `assets.geodata.geosite` | `''`；有狀態資料庫時使用內建 URL | 已載入網域分類的 HTTP(S) 來源。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
 | `assets.geodata.geoip` | `''`；有狀態資料庫時使用內建 URL | 已載入 IP 分類的 HTTP(S) 來源。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
-| `assets.geodata.route` | 繼承 `assets.route` | 資料與校驗和的下載路由。未設定時保留已儲存的覆寫值。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
+| `assets.geodata.route` | 繼承 `assets.route` | 資料與檢查碼的下載路由。未設定時保留已儲存的覆寫值。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
 | `assets.ui.url` | [zashboard dist.zip](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) | Clash 儀表板下載位址，與 doona 目錄無關。`HONK_UI_DOWNLOAD_URL` 優先。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
 | `assets.ui.route` | 繼承 `assets.route` | Clash 儀表板下載路由；也接受節點標籤。 | [重新啟動](what-doona-can-change.md#restart-assets) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
 | `assets.subscription.ua` | `honk/<version>` | 預設訂閱 User-Agent；訂閱項目可覆寫。 | [重載](what-doona-can-change.md#change-sources) | [assets](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/assets.md) |
@@ -139,7 +139,7 @@
 | `flows.max_flows` | `1024` | 流記錄容量；`64`–`1024`。 | [即時](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `flows.retention_seconds` | `300` | 已結束流的保留時間；`1`–`300` 秒。 | [即時](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-你可以在設定頁修改這些欄位。請勿寫入 DAE 檔案。成功啟用組態或重新啟動會重置它們。見[執行時覆寫條件](feature-requirements.md#req-runtime-options)。
+在設定頁修改這些欄位，不要寫入 DAE 檔案。成功啟用組態或重新啟動會重置這些值。見[執行期覆寫條件](feature-requirements.md#req-runtime-options)。
 
 ## 持久儲存的地理資料設定，不是 DAE 鍵
 
@@ -147,11 +147,11 @@
 | --- | --- | --- | --- | --- |
 | `geodata.geosite.urls`, `geodata.geoip.urls` | [GitHub](https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat) + [jsDelivr](https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat)；GeoIP 使用 `geoip.dat` | 已儲存的 URL 清單；啟動組態中的 URL 優先。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `geodata.download` | 路由規則 | 下載路由及可選的 `group_id`；啟動組態中的路由優先。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
-| `geodata.verify_checksum` | `true` | 下載校驗和驗證。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
+| `geodata.verify_checksum` | `true` | 下載檢查碼驗證。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `geodata.auto_update.enabled` | `true` | 啟用定時更新檢查。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `geodata.auto_update.interval_hours` | `24` | 定時檢查間隔，單位為小時。 | [即時，持久儲存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-你可以在設定頁修改這些欄位，需要憑證和可用的狀態資料庫。儲存設定本身不會啟用新的資源檔案。見[地理資料設定條件](feature-requirements.md#req-geodata-settings)。
+在設定頁修改這些欄位需要憑證和可用的狀態資料庫。儲存設定不會啟用新的資源檔案。見[地理資料設定條件](feature-requirements.md#req-geodata-settings)。
 
 ## 別名與遷移鍵
 

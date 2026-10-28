@@ -2,7 +2,7 @@
 
 # 通过压缩包或在 Alpine 上安装
 
-系统没有对应的软件包时，可以通过压缩包安装 doona v0.1.0-rc.3。Alpine 用户也可以选择[已签名的软件包](#install-alpine)。
+系统没有对应软件包时，可通过压缩包安装 doona v0.1.0-rc.3。Alpine 用户也可选择[已签名的软件包](#install-alpine)。
 
 在网关上打开终端，进入新建的下载目录，并在同一 shell 中完成各步。使用 root shell 时省略 `sudo`。安装后端前先检查 [honk 的前提条件](install.md#install)。
 
@@ -46,7 +46,7 @@ ls -l "$UI_DIR/index.html"
 
 ### 标准版可选资源
 
-标准版可以选择下列[可选资源](install.md#doona)。将 `FILE` 设为所选文件名，每个所需压缩包执行一次命令。lite 使用独立目录。
+标准版的[可选资源](install.md#doona)如下。将 `FILE` 设为所选文件名，为每个所需压缩包各执行一次下列命令。lite 使用独立目录。
 
 | 资源 | 文件名 |
 | --- | --- |
@@ -85,7 +85,7 @@ apk add "./$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。可选软件包为 `doona-fonts-0.1.0-rc.3-r0.alpine.apk` 和 `doona-precompressed-0.1.0-rc.3-r0.alpine.apk`。安装时修改 `FILE`，按前述方式下载并校验，再以 root 执行 `apk add "./$FILE"`。
+确认最后一条命令列出 `index.html`。可选软件包为 `doona-fonts-0.1.0-rc.3-r0.alpine.apk` 和 `doona-precompressed-0.1.0-rc.3-r0.alpine.apk`。安装时修改 `FILE`，按前述方式下载并校验，再以 root 执行 `apk add "./$FILE"`。
 
 不添加发布公钥而直接安装时，先按上文校验下载的软件包，再以 root 执行：
 
