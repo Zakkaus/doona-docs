@@ -4,6 +4,17 @@
 
 doona is a web interface for managing honk and inspecting its traffic through the native API. These pages cover v0.1.0-rc.3.
 
+<a name="choose-edition"></a>
+
+## Choose an edition
+
+| Edition | Use it for | Next step |
+| --- | --- | --- |
+| Standard | Configuration editing, traffic monitoring and routing diagnostics | [Quick start](quick-start.md), then [First sign-in](first-sign-in.md) |
+| doona lite | Configuration tasks through a smaller interface; a preview in testing | [Install lite](lite.md#lite-install), then [Connect](lite-connect.md) |
+
+See the [edition comparison](editions.md). To explore sample data, open the [standard demo](https://demo.daeuniverse.org/) or [lite demo](https://demo.daeuniverse.org/lite/).
+
 ## Start here
 
 | Your starting point | Follow this page |
@@ -12,17 +23,6 @@ doona is a web interface for managing honk and inspecting its traffic through th
 | honk is running and you want to use a proxy | [Route your first connection](tutorial.md): add a subscription, group, routing rule and DNS rule |
 | You need separate UI files | [Install doona separately](install.md) |
 | You have signed in and want to find a control | [Interface tour](tour.md) |
-
-<a name="choose-edition"></a>
-
-## Choose an edition
-
-| Edition | Use it for | Next step |
-| --- | --- | --- |
-| Standard | Configuration editing, traffic monitoring and routing diagnostics | [Install](install.md#doona), then [First sign-in](first-sign-in.md) |
-| doona lite | Configuration tasks through a smaller interface; a preview in testing | [Install lite](lite.md#lite-install), then [Connect](lite-connect.md) |
-
-See the [edition comparison](editions.md). To explore sample data, open the [standard demo](https://demo.daeuniverse.org/) or [lite demo](https://demo.daeuniverse.org/lite/).
 
 ![The activity page](../screenshots/en/activity-light.webp)
 

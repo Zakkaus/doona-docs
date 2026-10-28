@@ -14,9 +14,23 @@ doona lite 透過表單編輯 honk 組態，目前是測試中的預覽版。為
 
 ## 安裝 doona lite
 
-自 honk v0.1.0-beta.4 起，honk 內嵌 doona lite。按[快速入門](quick-start.md)操作，沿用相同的 `native_api` 區塊，只將 `ui` 改為 `'embedded-lite'`。
+自 honk v0.1.0-beta.4 起，honk 內嵌 doona lite。按[快速入門](quick-start.md)安裝 honk，再將以下區塊加入 honk 組態，取代原有的 `native_api` 區塊：
 
-若要單獨安裝，請使用[手動安裝](install-manual.md)中的 lite 壓縮檔。按 [UI 重新啟動規則](what-doona-can-change.md#restart-native)套用變更，再[連線至 doona lite](lite-connect.md)。
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: 'embedded-lite'
+    }
+}
+```
+
+若要單獨安裝，請使用[手動安裝](install-manual.md)中的 lite 壓縮檔；lite 尚無發行版套件。
+
+選擇任一方式後，按 [UI 重新啟動規則](what-doona-can-change.md#restart-native)套用變更，開啟[快速入門](quick-start.md)中的位址，再[連線至 doona lite](lite-connect.md)。
 
 <a name="lite-switch"></a>
 

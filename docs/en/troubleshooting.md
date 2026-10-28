@@ -103,6 +103,9 @@ Use the startup log from the current service run to identify the running build a
 | Symptom | Cause and fix |
 | --- | --- |
 | Connection to the listener fails | Check that honk is running and the enabled API listens at the address you opened. Use [service checks](service-management.md). |
+| `native API listener bind failed` | Confirm that `listen` names an address on this gateway and that another process is not using the port. |
+| `Subscription HTTP client creation failed`, followed by `subscription network startup failed` | Read the underlying TLS error and check the system CA certificate store. Install your distribution's certificate package, such as `ca-certificates` or OpenWrt's `ca-bundle`. |
+| `command not found` or a missing executable | Compare the honk-core path with your platform's [installation instructions](install.md). |
 | `/api` returns 404 or sign-in shows **This honk build has no native API** | Confirm the address points to honk, then install a build that provides the native API. |
 | Only `/ui/` returns 404 | Check the configured UI path and the files installed there. Follow [UI installation](install.md#doona). |
 | Startup reports `failed to inspect native UI directory`, `failed to inspect native UI index.html` or `native UI index.html must be a regular file` | Correct the UI directory or extract the UI files so its `index.html` is a readable regular file. |
@@ -192,7 +195,7 @@ Check the minimum kernel version and BPF/BTF support in [Requirements](requireme
 
 ## LAN traffic is not routed as expected
 
-Check `lan_interface` in the [configuration reference](configuration.md#config). On OpenWrt, LAN clients normally enter through `br-lan`; change it if your bridge differs. When using a side router, set clients’ gateway to that router’s LAN address so their traffic reaches honk.
+Check the [LAN interface instructions](configuration.md#interfaces-and-kernel), including the bridge name and the client gateway and DNS settings for a side router.
 
 ## Connections or Rules stay empty
 

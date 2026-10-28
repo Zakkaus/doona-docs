@@ -468,6 +468,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Details**
 
 - The backend advertises event kinds, retention, and client limits. The stream only provides retained events.
+- Reconnecting cannot recover events already evicted from the buffer.
 
 <a name="req-logs"></a>
 

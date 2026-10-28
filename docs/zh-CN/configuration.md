@@ -88,6 +88,13 @@ doona 使用下列 honk DAE 设置。各表列出默认值及生效方式。配�
 | `global.so_mark_from_dae` | `0` | 为零时实际标记为 `0x100`；否则使用配置的套接字绕过标记。 | [重启](what-doona-can-change.md#restart-global) | [global](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/global.md) |
 | `global.nfqueue_enable` | `true` | 请求对路由尚未确定的 LAN 转发 UDP 使用 NFQUEUE 暂存。需要真实 eBPF 后端。 | [重启](what-doona-can-change.md#restart-global) | [global](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/global.md) |
 
+要处理 LAN 客户端流量，将 `global.lan_interface` 设为连接这些客户端的接口：
+
+- 主路由使用 LAN 网桥，通常为 `br-lan`；客户端已将此路由器设为网关。
+- 使用旁路由时，还须将客户端的网关与 DNS 设为旁路由的 LAN 地址，可逐台设置，也可通过主路由的 DHCP 设置下发。
+
+不要假定 `lan_interface: auto` 会选择 LAN。它选择度量值最低的 IPv4 默认路由所在接口，在主路由上通常是 WAN 接口。
+
 ## 连接与预热
 
 | 键 | 默认值 | doona 如何使用 | 生效方式 | honk 参考 |

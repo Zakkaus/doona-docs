@@ -4,6 +4,8 @@
 
 完成[快速入门](quick-start.md)后，保持 honk 运行并以管理员身份登录。准备可用的 HTTP 或 HTTPS 订阅 URL，以及网关的 shell 访问权限。本教程将 `example.com` 送入名为 `proxy` 的新组，其他流量保持直连。订阅名称使用 `harbor`。
 
+从直连配置开始：使用 `fallback: direct`，没有 DNS 块，也没有已有的 `harbor` 订阅或 `proxy` 组。将 API 凭据放在独立的引入文件，让主文件保持可编辑；见[配置示例](configuration.md)。添加代理规则前，按第 6 步追踪 `example.com`，结果应为 `direct`。
+
 ## 1. 添加订阅
 
 打开**节点**页，选择**添加订阅**。在**名称**中填写 `harbor`，在**订阅网址**中填写供应商的 URL，然后选择**添加**。doona 会写入声明并请求刷新。
@@ -40,7 +42,7 @@ domain(full: example.com) -> proxy
 
 ## 4. 定义 DNS 上游
 
-快速入门配置没有 DNS 块。打开**配置** → **配置文件**，在**配置文件**中选择 `/etc/honk/config.dae`，将以下块追加到现有块之后。保留刚才创建的订阅、组和路由规则。
+打开**配置** → **配置文件**，在**配置文件**中选择 `/etc/honk/config.dae`，将以下块追加到现有块之后。保留刚才创建的订阅、组和路由规则。
 
 ```dae
 # 通过代理组发送指定的 DNS 请求。

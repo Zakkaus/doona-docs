@@ -88,6 +88,10 @@ sudo systemctl status honk-core
 
 systemd 狀態應顯示 `active (running)`；OpenWrt 狀態應顯示 `running`。按[快速入門](quick-start.md)開啟 doona，確認監聽位址可以存取。
 
+在本次啟動日誌中確認 `native API listener ready` 和 `honk-core is running`。存取 API 監聽位址的 `/api` 路徑時，JSON 回應包含 `setup_required: true`，表示 API 可存取且尚未建立管理員。僅能存取 API，不代表實際 eBPF 後端能夠路由流量。
+
+即使 honk 啟動成功，也須閱讀啟動診斷：解析器會對 `global` 中未知的純量鍵發出警告並忽略它們。
+
 ## 查看日誌
 
 ```sh tab="systemd"
@@ -130,10 +134,12 @@ journal 包含歷次服務運作的日誌。排查本次啟動時，從最新的
 
 ## OpenRC 或前景測試
 
-本頁不提供 OpenRC 服務指令稿。設定 honk 後，可在終端機中啟動它，完成首次登入：
+本頁不提供 OpenRC 服務指令稿。設定 honk 後，先停止既有執行個體，再從終端機啟動它以完成首次登入：
 
 ```sh
 sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
 ```
 
 保持終端機開啟，依照[快速入門](quick-start.md)中的瀏覽器步驟操作。日誌顯示在終端機中，按 Ctrl+C 停止 honk。此命令不會啟用開機啟動。
+
+啟動服務前，先停止前景程序。使用 `--mock-ebpf` 檢查啟動時，不會測試實際 eBPF 附加或路由。若原因是 `the mock eBPF backend was selected`，出現 `NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled` 警告屬於預期行為。

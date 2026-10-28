@@ -2,21 +2,7 @@
 
 # 单独安装 doona
 
-若要使用独立的界面文件，而非 honk 内嵌的 doona，请将以下块写入 honk 配置：
-
-```dae
-experimental {
-    native_api {
-        enabled: true
-        listen: '127.0.0.1:9527'
-        password_auth: true
-        config_write: true
-        ui: '/usr/share/doona'
-    }
-}
-```
-
-请使用软件包中包含 `index.html` 的目录；Debian 与 Ubuntu 使用 `/usr/share/doona-web`。手动解压时，请改用解压目录。详见[界面文件](#doona)、[其他 API 选项](configuration.md#config)及[其他来源与反向代理](#other-origin)。使用内嵌界面请见[快速入门](quick-start.md)。
+不使用 honk 内嵌的 doona 时，可单独安装界面文件。内嵌界面的操作见[快速入门](quick-start.md)。
 
 ## 选择系统
 
@@ -30,6 +16,22 @@ experimental {
 | Alpine 或其他 Linux 发行版 | [安装压缩包或 Alpine 软件包](install-manual.md) |
 
 这些软件包只安装静态网页文件。请另行安装、配置并启动后端。版本选择见[标准版与 lite](editions.md)。
+
+安装界面文件与兼容的 honk 后，将以下块加入 honk 配置，替换原有的 `native_api` 块：
+
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: '/usr/share/doona'
+    }
+}
+```
+
+请使用软件包中包含 `index.html` 的目录；Debian 与 Ubuntu 使用 `/usr/share/doona-web`。手动解压时，请改用解压目录。详见[界面文件](#doona)、[其他 API 选项](configuration.md#config)及[其他来源与反向代理](#other-origin)。
 
 <a name="install"></a>
 

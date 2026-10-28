@@ -103,6 +103,9 @@ honk-core --data-dir /var/lib/honk admin reset
 | 症狀 | 原因與處理 |
 | --- | --- |
 | 無法連接監聽位址 | 確認 honk 正在運作，且已啟用的 API 監聽於所存取的位址。見[服務檢查](service-management.md)。 |
+| `native API listener bind failed` | 確認 `listen` 指定的位址屬於此閘道器，且連接埠未被其他程序占用。 |
+| `Subscription HTTP client creation failed`，隨後出現 `subscription network startup failed` | 閱讀底層 TLS 錯誤並檢查系統 CA 憑證庫。安裝發行版的憑證套件，如 `ca-certificates` 或 OpenWrt 的 `ca-bundle`。 |
+| `command not found` 或找不到執行檔 | 按對應平台的[安裝說明](install.md)核對 honk-core 路徑。 |
 | `/api` 回傳 404，或登入頁顯示**此 honk 建置沒有提供原生 API** | 確認位址指向 honk，再安裝提供原生 API 的組建。 |
 | 只有 `/ui/` 回傳 404 | 檢查組態中的介面路徑及該目錄內的檔案，依[介面安裝](install.md#doona)處理。 |
 | 啟動回報 `failed to inspect native UI directory`、`failed to inspect native UI index.html` 或 `native UI index.html must be a regular file` | 修正介面目錄或解壓介面檔案，使其中的 `index.html` 是可讀取的普通檔案。 |
@@ -192,7 +195,7 @@ honk-core --data-dir /var/lib/honk admin reset
 
 ## LAN 流量沒有按預期路由
 
-對照[組態參考](configuration.md#config)檢查 `lan_interface`。OpenWrt 的 LAN 用戶端流量通常從 `br-lan` 進入；若橋接器名稱不同，修改此值。使用旁路由時，將用戶端閘道器設為該路由器的 LAN 位址，讓流量經過 honk。
+依[LAN 介面說明](configuration.md#介面與核心)檢查橋接器名稱，以及旁路由用戶端的閘道器與 DNS 設定。
 
 ## 連線或規則頁保持空白
 

@@ -4,6 +4,8 @@
 
 Continue from [Quick start](quick-start.md), with honk running and your administrator signed in. You need a working HTTP or HTTPS subscription URL and shell access to the gateway. This exercise sends `example.com` through a new group named `proxy` and leaves other traffic direct. Use `harbor` for the subscription name.
 
+Start with a direct-only configuration: `fallback: direct`, no DNS block, and no existing `harbor` subscription or `proxy` group. Keep API credentials in a separate include so the main file remains editable; see the [configuration example](configuration.md). Before adding proxy rules, the trace in step 6 should end at `direct` for `example.com`.
+
 ## 1. Add the subscription
 
 Open **Nodes** and select **Add subscription**. Enter `harbor` in **Name** and your provider's URL in **Subscription URL**, then select **Add**. doona writes the declaration and requests a refresh.
@@ -40,7 +42,7 @@ Keep `fallback: direct`. If you cannot add a rule, see [routing rule requirement
 
 ## 4. Define a DNS upstream
 
-Quick start has no DNS block. Open **Configuration** → **Config files**, select `/etc/honk/config.dae` in **Config file**, and append the following block after the existing sections. Keep the subscription, group and routing rule you just created.
+Open **Configuration** → **Config files**, select `/etc/honk/config.dae` in **Config file**, and append the following block after the existing sections. Keep the subscription, group and routing rule you just created.
 
 ```dae
 # Send selected DNS requests through the proxy group.

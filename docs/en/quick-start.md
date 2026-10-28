@@ -4,11 +4,13 @@
 
 Use the doona interface embedded in honk without downloading separate UI files.
 
+Check the [gateway requirements](requirements.md) first. Keep your existing honk configuration; for a new backend, prepare honk's [minimal configuration](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#minimal-configuration) before adding the API block below.
+
 ## 1. Get honk
 
 On 64-bit OpenWrt or ImmortalWrt 25.12, install honk from the [daeuniverse feed](https://openwrt.daeuniverse.org/en/).
 
-On other Linux systems, choose an archive whose name contains `full` from [honk releases](https://github.com/daeuniverse/honk/releases), then follow [Service management](service-management.md) after writing the configuration.
+On other Linux systems, follow [Install honk](install.md#install) and choose an archive whose name contains `full` from [honk releases](https://github.com/daeuniverse/honk/releases).
 
 ## 2. Configure honk
 
@@ -26,6 +28,8 @@ experimental {
 }
 ```
 
+To run doona lite instead, set `ui: 'embedded-lite'` (available from honk v0.1.0-beta.4); see [doona lite](lite.md).
+
 For other options, see [Configuration](configuration.md). [Start or restart honk](service-management.md) to apply the change.
 
 ## 3. Open doona
@@ -37,5 +41,3 @@ ssh -L 9527:127.0.0.1:9527 root@<router>
 ```
 
 Open the same URL on your computer. The first visit creates the administrator; see [First sign-in](first-sign-in.md).
-
-To run doona lite instead, set `ui: 'embedded-lite'` (available from honk v0.1.0-beta.4); see [doona lite](lite.md).
