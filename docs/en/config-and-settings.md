@@ -21,6 +21,8 @@ Open **Configuration** from the Settings hub. Check the [editing requirements](f
 
 **Config version** identifies the accepted configuration; the adjacent status reports diagnostics. **Listener secret values are redacted** means the returned text hides those values. **Modules** opens by default; source links and a missing main-source body open **Config files**. **Global settings** appears only for engines whose settings doona supports.
 
+**Incomplete** means the source text is incomplete or its SHA-256 differs from the value reported by the backend. It does not by itself mean that secrets were redacted. This source cannot be edited in doona; edit the file on the host.
+
 For subscriptions, use [Nodes](routing.md#nodes). For group membership, use [Policies](routing.md#policies). For routing templates and individual rules, use [Rules](routing.md#rules).
 
 <a name="edit-source"></a>
