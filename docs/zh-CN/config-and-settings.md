@@ -143,6 +143,10 @@
 
 查看[探测要求](feature-requirements.md#req-probes)和[结果含义](routing.md#policies)。背景检查使用 **在配置中编辑健康检查**，字段含义见[配置参考](configuration.md#config)。
 
+<a id="外观"></a>
+
+<a name="appearance"></a>
+
 ### 修改外观
 
 1. 打开**外观**。

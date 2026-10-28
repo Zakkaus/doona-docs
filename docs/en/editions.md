@@ -57,11 +57,7 @@ lite reuses the standard edition’s `src/api/client.ts` and models backed by th
 
 ## Install and switch editions
 
-Both editions ship in the [same release](https://github.com/Zakkaus/doona/releases). Install `doona-<version>.tar.gz` into `/usr/share/doona` for the [standard edition](install.md#doona), or `doona-lite-<version>.tar.gz` into `/usr/share/doona-lite` for [doona lite](lite.md#lite-install). Their archive names and directories do not overlap, so installing one does not overwrite the other. lite has no distribution packages yet.
-
-honk serves one edition at `/ui/` at a time. Set `experimental` → `native_api` → `ui` to the edition’s directory, then [restart honk](service-management.md). Every `native_api` field requires a restart; a reload is insufficient. `ui: embedded` serves only the standard edition embedded in honk-core release builds. See [Minimal configuration](minimal-configuration.md).
-
-To use both at once, let honk serve one at `/ui/` and serve the other directory with any static server. Allow the second origin as described in [Access through a hostname or another origin](install.md#other-origin).
+Use [Quick start](quick-start.md) for the embedded standard edition, [doona lite](lite.md#lite-install) to switch to lite, or [install UI files separately](install.md) to serve a directory.
 
 ## Browser settings
 

@@ -143,6 +143,8 @@ See [geodata storage and activation](what-doona-can-change.md#change-geodata) fo
 
 See [probe requirements](feature-requirements.md#req-probes) and [result meanings](routing.md#policies). For background checks, use **Edit health checks in Configuration**; their keys are in the [configuration reference](configuration.md#config).
 
+<a name="appearance"></a>
+
 ### Change appearance
 
 1. Open **Appearance**.

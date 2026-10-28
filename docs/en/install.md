@@ -1,8 +1,22 @@
 [繁體中文](../zh-TW/install.md) / [简体中文](../zh-CN/install.md) / English
 
-# Installation
+# Install doona separately
 
-Choose an installation method for doona, then install a compatible honk backend. This page also contains the shared backend and geodata steps used by the distribution guides.
+To use UI files instead of honk’s embedded doona, put this block in the honk configuration:
+
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: '/usr/share/doona'
+    }
+}
+```
+
+Use the package’s directory containing `index.html`; Debian and Ubuntu use `/usr/share/doona-web`. For a manual extraction, use its directory. See [UI files](#doona), [other API options](configuration.md#config), and [other origins or reverse proxies](#other-origin). For the embedded interface, use [Quick start](quick-start.md).
 
 ## Choose your system
 
@@ -12,7 +26,7 @@ Choose an installation method for doona, then install a compatible honk backend.
 | Fedora or RHEL | [Install the RPM](install-fedora.md) |
 | Arch Linux | [Install with pacman](install-arch.md) |
 | Gentoo | [Install with Portage](install-gentoo.md) |
-| OpenWrt | [Install on the router](install-openwrt.md) |
+| OpenWrt | [Install on the router manually](install-openwrt.md) |
 | Alpine or another Linux distribution | [Install an archive or Alpine package](install-manual.md) |
 
 These packages install static web files. Backend installation, configuration, and service startup are separate steps. For the edition choice, see [Standard and lite](editions.md).
@@ -89,7 +103,7 @@ chmod 0755 /usr/bin/honk-core
 
 The version command must run successfully. Keep the downloaded release name with your installation records.
 
-For an update, keep the existing configuration and start the service again using [Service management](service-management.md). Check its log from the latest startup, repeat the API check in [Quick start](quick-start.md), and confirm that the startup log reports the installed engine version.
+For an update, keep the existing configuration and [restart the service](service-management.md). Check that its startup log reports the installed engine version.
 
 If you arrived from a distribution guide, return there to finish.
 
@@ -115,7 +129,7 @@ cargo build --release -p honk-core --features ebpf,native-api
 
 ## Install geodata when your rules need it
 
-Check [geodata requirements](feature-requirements.md#req-geodata) before adding Geo rules. The direct-only [Quick start](quick-start.md) does not require these downloads.
+Check [geodata requirements](feature-requirements.md#req-geodata) before adding Geo rules.
 
 Use the data directory selected in your [configuration](configuration.md#config). For the `/var/lib/honk` layout used by the systemd guide, run:
 
@@ -206,4 +220,4 @@ For an external UI directory, install the new package or archive using the same 
 
 With `ui: embedded`, a standalone UI package does not replace the embedded interface. Either update honk to a build containing the newer UI using [Install honk](#install), or install the UI files separately and change [`ui`](configuration.md#config) to their directory. Restart honk after either change, then reload the browser page.
 
-Continue with [Quick start](quick-start.md) to configure honk and sign in.
+After installing the UI files, apply the configuration at the start of this page, [restart honk](service-management.md), and follow [First sign-in](first-sign-in.md).

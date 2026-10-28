@@ -8,70 +8,7 @@
 
 ## 閘道器
 
-| 元件 | 需求 |
-| --- | --- |
-| 作業系統 | Linux；honk 的實際透明代理後端須以 root 身分運作。 |
-| 核心 | Linux 6.12 或更新版本，實際 eBPF 後端會拒絕更早的核心。 |
-| cgroup | 支援 BPF 的 cgroup v2，必要的 socket 掛鉤必須成功附加。 |
-| 核心型別資訊 | 與目前核心相符的原始 BTF，存放位置見下文。 |
-| BPF 檔案系統 | 預設固定目錄要求在 `/sys/fs/bpf` 掛載 bpffs。 |
-| HTTPS 下載 | 系統 CA 憑證庫，安裝方式見對應發行版的安裝指南。 |
-
-首次啟動實際後端時，保留主控台或其他連接閘道器的方式，因為 honk 會修改閘道器的網路組態。
-
-### 檢查核心
-
-在閘道器上執行：
-
-```sh
-uname -r
-zcat /proc/config.gz 2>/dev/null || cat /boot/config-$(uname -r)
-```
-
-實際後端需要以下核心選項：
-
-```text
-CONFIG_BPF=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_BPF_JIT=y
-CONFIG_CGROUP_BPF=y
-CONFIG_NET_SCHED=y
-CONFIG_NET_CLS_ACT=y
-CONFIG_NET_XGRESS=y
-CONFIG_NET_NS=y
-```
-
-`CONFIG_NET_CLS_ACT` 會選取 `CONFIG_NET_XGRESS`。TCX 後端不要求舊的 `CONFIG_NET_CLS_BPF` 或 `CONFIG_NET_SCH_INGRESS` 選項。
-
-預設的 UDP 首包暫存處理還需要：
-
-```text
-CONFIG_NF_TABLES=y|m
-CONFIG_NF_TABLES_INET=y|m
-CONFIG_NFT_CT=y|m
-CONFIG_NFT_QUEUE=y|m
-CONFIG_NETFILTER_NETLINK_QUEUE=y|m
-```
-
-設定了 `HONK_VMLINUX_BTF` 時，honk 從該路徑讀取原始 BTF。否則依序嘗試 `/sys/kernel/btf/vmlinux` 和 `/usr/lib/debug/boot/vmlinux`。OpenWrt 的 `vmlinux-btf` 套件提供後者；ELF 除錯映像不是原始 BTF 檔案。
-
-### 檢查 bpffs
-
-在閘道器上執行；root shell 中省略 sudo：
-
-```sh
-sudo install -d -m 0755 /sys/fs/bpf
-mountpoint -q /sys/fs/bpf || sudo mount -t bpf bpf /sys/fs/bpf
-mountpoint /sys/fs/bpf
-```
-
-最後一條命令應顯示 `/sys/fs/bpf` 是掛載點。
-
-如果系統不會自動掛載 bpffs，在 `/etc/fstab` 中新增以下項目：
-
-```text
-bpf /sys/fs/bpf bpf defaults 0 0
-```
+啟動後端前，請按 honk 的 [Linux 核心要求](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#linux-内核要求)與 [bpffs 設定](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#bpffs)檢查閘道器。
 
 <a name="honk-version"></a>
 

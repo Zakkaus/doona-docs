@@ -143,6 +143,10 @@
 
 查看[探測需求](feature-requirements.md#req-probes)和[結果含義](routing.md#policies)。背景檢查使用 **在組態中編輯健康檢查**，欄位含義見[設定參考](configuration.md#config)。
 
+<a id="外觀"></a>
+
+<a name="appearance"></a>
+
 ### 修改外觀
 
 1. 開啟**外觀**。

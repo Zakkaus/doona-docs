@@ -168,7 +168,7 @@ Use the current names in new files. Asset aliases emit `legacy-assets-key`; a no
 
 ## Complete annotated example
 
-Use these two files together. They extend the [minimal configuration](minimal-configuration.md) with the tutorial subscription, group, domain rule, DNS rule and download defaults. Replace the subscription URL and listener IP before starting honk. The UI path matches Debian and Ubuntu in [Quick start](quick-start.md); use your installed path on other systems, commonly `/usr/share/doona`. For the direct-only baseline, keep the files from Quick start instead.
+This main file adds the tutorial subscription, group, domain rule, DNS rule and download defaults. Replace the subscription URL before starting honk.
 
 Keep API credentials separate from the main file that Nodes modifies. See [source write requirements](feature-requirements.md#req-config-edit).
 
@@ -277,33 +277,6 @@ assets {
 
 ### API file
 
-```dae
-# /etc/honk/config.d/api.dae
-# Listener settings must be edited outside doona and require a restart.
-experimental {
-    # Password sign-in and the installed standard-edition UI.
-    native_api {
-        enabled: true
-        listen: '192.168.1.1:9527'
-        password_auth: true
-        # For token sign-in, remove password_auth and set a real secret.
-        # secret: 'replace-with-a-long-random-token'
-        config_write: true
-        ui: '/usr/share/doona-web'
-        # Add these only for the actual origin and host you use.
-        # allow_origins: 'https://panel.example'
-        # allowed_hosts: 'panel.example'
-        record_traffic: true
-        record_memory: true
-        record_flows: true
-        record_logs: true
-        record_dns_log: true
-    }
-    # Unset enabled retains Selector choices and delay samples.
-    cache_file {
-        store_dns: false
-    }
-}
-```
+Write the API block from [Quick start](quick-start.md) to `/etc/honk/config.d/api.dae`, or use the [separate UI configuration](install.md) for installed UI files.
 
-After placing the files at the shown paths, use the checks in [Minimal configuration](minimal-configuration.md) and the restart procedure in [Service management](service-management.md). To build this setup in the UI from the direct-only baseline, follow [Route your first connection](tutorial.md).
+Then [restart honk](service-management.md). For the corresponding UI steps, follow [Route your first connection](tutorial.md).

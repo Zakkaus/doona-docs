@@ -25,6 +25,8 @@ pnpm check:size
 
 建置產物位於 `dist/`。`check` 執行型別、lint、翻譯、格式、單元測試和產生的 API 檢查；`check:size` 測量建置產物。
 
+<a name="doona-lite"></a>
+
 ## 建置 doona lite
 
 安裝根目錄相依套件後，在同一應用程式倉庫根目錄執行：

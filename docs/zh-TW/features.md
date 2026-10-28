@@ -55,7 +55,13 @@
 
 長名稱會換行，通知高度隨內容增長，DNS 和網路分布顯示全部類別。窄面積圖隱藏重疊的時間標籤。迷你圖在第二個樣本到達前顯示基線。
 
+<a id="主題與配色"></a>
+
+<a name="theme-gallery"></a>
+
 ## 瀏覽器中儲存的設定
+
+查看[配色圖集](../screenshots/palettes.webp)，再調整[外觀設定](config-and-settings.md#appearance)。
 
 語言、外觀、日期與時間格式、啟動頁面和探測偏好都在[設定](config-and-settings.md#settings-page)中調整。瀏覽器偏好、已儲存組態和後端暫時變更的區別見[變更的儲存位置](what-doona-can-change.md)。
 

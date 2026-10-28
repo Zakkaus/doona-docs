@@ -8,10 +8,9 @@ doona is a web interface for managing honk and inspecting its traffic through th
 
 | Your starting point | Follow this page |
 | --- | --- |
-| New installation | [Quick start](quick-start.md): install, sign in and verify a direct-only setup |
+| New installation | [Quick start](quick-start.md): use honk’s embedded doona and sign in |
 | honk is running and you want to use a proxy | [Route your first connection](tutorial.md): add a subscription, group, routing rule and DNS rule |
-| You need installation instructions for your system | [Install](install.md) and [Requirements](requirements.md) |
-| You only need configuration to copy | [Minimal configuration](minimal-configuration.md) |
+| You need separate UI files | [Install doona separately](install.md) |
 | You have signed in and want to find a control | [Interface tour](tour.md) |
 
 <a name="choose-edition"></a>

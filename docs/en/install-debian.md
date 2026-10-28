@@ -40,7 +40,7 @@ sudo apt install "./$FILE"
 ls -l /usr/share/doona-web/index.html
 ```
 
-The last command must list `/usr/share/doona-web/index.html`. Use `/usr/share/doona-web` as the UI directory when following [Minimal configuration](minimal-configuration.md); the [`ui` setting](configuration.md#config) selects it.
+The last command must list `index.html`. Use that directory in the [separate UI configuration](install.md).
 
 The Debian package is named `doona-web`. Do not substitute `apt install doona`: that name belongs to a different package in Debian and Ubuntu.
 
@@ -72,4 +72,4 @@ awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
 
 Install the backend using [Install honk](install.md#install), then return here. If a compatible honk is already installed, keep it.
 
-Continue with [Quick start](quick-start.md) to configure honk and sign in.
+Apply the [separate UI configuration](install.md), [start honk](service-management.md), then follow [First sign-in](first-sign-in.md).

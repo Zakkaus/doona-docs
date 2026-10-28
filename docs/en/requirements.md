@@ -8,70 +8,7 @@ Check the gateway and browser before installing doona and honk. For an individua
 
 ## Gateway
 
-| Component | Requirement |
-| --- | --- |
-| Operating system | Linux; run honk's real transparent-proxy backend as root. |
-| Kernel | Linux 6.12 or later. The real eBPF backend rejects older kernels. |
-| cgroup | cgroup v2 with BPF support. Required socket hooks must attach successfully. |
-| Kernel type information | Raw BTF matching the running kernel, available at one of the locations below. |
-| BPF filesystem | bpffs mounted at `/sys/fs/bpf` for the default pin directory. |
-| HTTPS downloads | A system CA certificate store. Install the certificate package from your distribution's installation guide. |
-
-Keep console access or another way into the gateway for the first real start: honk changes its networking.
-
-### Check the kernel
-
-Run on the gateway:
-
-```sh
-uname -r
-zcat /proc/config.gz 2>/dev/null || cat /boot/config-$(uname -r)
-```
-
-The real backend needs these kernel options:
-
-```text
-CONFIG_BPF=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_BPF_JIT=y
-CONFIG_CGROUP_BPF=y
-CONFIG_NET_SCHED=y
-CONFIG_NET_CLS_ACT=y
-CONFIG_NET_XGRESS=y
-CONFIG_NET_NS=y
-```
-
-`CONFIG_NET_XGRESS` is selected by `CONFIG_NET_CLS_ACT`. The TCX backend does not require the legacy `CONFIG_NET_CLS_BPF` or `CONFIG_NET_SCH_INGRESS` options.
-
-The default held-first-packet UDP path also needs:
-
-```text
-CONFIG_NF_TABLES=y|m
-CONFIG_NF_TABLES_INET=y|m
-CONFIG_NFT_CT=y|m
-CONFIG_NFT_QUEUE=y|m
-CONFIG_NETFILTER_NETLINK_QUEUE=y|m
-```
-
-honk reads raw BTF from `HONK_VMLINUX_BTF` if set. Otherwise it tries `/sys/kernel/btf/vmlinux`, then `/usr/lib/debug/boot/vmlinux`. OpenWrt's `vmlinux-btf` package supplies the latter; an ELF debug image is not a raw BTF file.
-
-### Check bpffs
-
-Run on the gateway, omitting sudo in a root shell:
-
-```sh
-sudo install -d -m 0755 /sys/fs/bpf
-mountpoint -q /sys/fs/bpf || sudo mount -t bpf bpf /sys/fs/bpf
-mountpoint /sys/fs/bpf
-```
-
-The last command must report that `/sys/fs/bpf` is a mountpoint.
-
-If the system does not mount bpffs automatically, add this entry to `/etc/fstab`:
-
-```text
-bpf /sys/fs/bpf bpf defaults 0 0
-```
+Follow honk’s [Linux kernel requirements](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#linux-kernel-requirements) and [bpffs setup](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#bpffs) before starting the backend.
 
 <a name="honk-version"></a>
 

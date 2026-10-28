@@ -78,7 +78,7 @@ sudo emerge --ask =net-proxy/doona-0.1.0_rc2
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。按[最小配置](minimal-configuration.md)操作时，将 UI 目录设为 `/usr/share/doona`；配置项说明见 [`ui` 参考](configuration.md#config)。
+最后一条命令必须列出 `index.html`。请在[独立界面配置](install.md)中使用该目录。
 
 ### Portage 故障
 
@@ -93,4 +93,4 @@ ls -l /usr/share/doona/index.html
 
 systemd 主机使用[服务管理](service-management.md)中的 systemd 步骤。OpenRC 主机可使用该页的前台命令完成首次连接。
 
-接着按[快速开始](quick-start.md)配置 honk 并登录。
+应用[独立界面配置](install.md)，[启动 honk](service-management.md)，再按[首次登录](first-sign-in.md)操作。

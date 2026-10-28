@@ -1,8 +1,22 @@
 [繁體中文](../zh-TW/install.md) / 简体中文 / [English](../en/install.md)
 
-# 安装
+# 单独安装 doona
 
-先选择 doona 的安装方式，再安装兼容的 honk 后端。本页也提供各发行版安装指南共用的后端与 geodata 安装步骤。
+若要使用独立的界面文件，而非 honk 内嵌的 doona，请将以下块写入 honk 配置：
+
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: '/usr/share/doona'
+    }
+}
+```
+
+请使用软件包中包含 `index.html` 的目录；Debian 与 Ubuntu 使用 `/usr/share/doona-web`。手动解压时，请改用解压目录。详见[界面文件](#doona)、[其他 API 选项](configuration.md#config)及[其他来源与反向代理](#other-origin)。使用内嵌界面请见[快速入门](quick-start.md)。
 
 ## 选择系统
 
@@ -12,7 +26,7 @@
 | Fedora 或 RHEL | [安装 RPM](install-fedora.md) |
 | Arch Linux | [通过 pacman 安装](install-arch.md) |
 | Gentoo | [通过 Portage 安装](install-gentoo.md) |
-| OpenWrt | [在路由器上安装](install-openwrt.md) |
+| OpenWrt | [在路由器上手动安装](install-openwrt.md) |
 | Alpine 或其他 Linux 发行版 | [安装压缩包或 Alpine 软件包](install-manual.md) |
 
 这些软件包安装的是静态网页文件。后端安装、配置与服务启动需要另行完成。版本选择见[标准版与 lite](editions.md)。
@@ -21,7 +35,7 @@
 
 ## 安装 honk
 
-先检查 [honk 指南中的内核与主机要求](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#linux-kernel-requirements)。首次启动时保留控制台访问方式。下载前准备好 `curl`、CA 证书、`tar` 和 `sha256sum`。
+先检查 [honk 指南中的内核与主机要求](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#linux-内核要求)。首次启动时保留控制台访问方式。下载前准备好 `curl`、CA 证书、`tar` 和 `sha256sum`。
 
 ### 1. 选择并下载后端构建
 
@@ -89,13 +103,13 @@ chmod 0755 /usr/bin/honk-core
 
 版本命令必须成功执行。保留所下载的发布版本名称，便于以后核对。
 
-更新时保留现有配置，再按[服务管理](service-management.md)启动服务。从最新一次启动开始检查日志，重复[快速开始](quick-start.md)中的 API 检查，并确认启动日志显示的是刚安装的引擎版本。
+更新时保留现有配置，并[重启服务](service-management.md)。确认启动日志显示已安装的引擎版本。
 
 从发行版指南进入本节的读者，请返回原页继续。
 
 ### 改用源码构建
 
-先按 [honk 源码构建指南](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#build-from-source)准备工具链、构建 eBPF 并检查 BTF。在 honk 仓库根目录，将最后的 honk-core 构建命令替换为：
+先按 [honk 源码构建指南](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#从源码构建)准备工具链、构建 eBPF 并检查 BTF。在 honk 仓库根目录，将最后的 honk-core 构建命令替换为：
 
 ```sh
 cargo build --release -p honk-core --features ebpf,native-api
@@ -115,7 +129,7 @@ cargo build --release -p honk-core --features ebpf,native-api
 
 ## 按规则需要安装 geodata
 
-添加 Geo 规则前，先检查 [geodata 要求](feature-requirements.md#req-geodata)。仅使用直连的[快速开始](quick-start.md)示例不需要这些下载。
+添加 Geo 规则前，先检查 [geodata 要求](feature-requirements.md#req-geodata)。
 
 使用[配置](configuration.md#config)中指定的数据目录。采用 systemd 指南中的 `/var/lib/honk` 布局时，执行：
 
@@ -206,4 +220,4 @@ allow_origins: 'http://owrt.lan:9527'
 
 使用 `ui: embedded` 时，安装独立 UI 软件包不会替换嵌入式界面。可以按[安装 honk](#install)更新到包含新版 UI 的 honk 构建，也可以单独安装 UI 文件，再将 [`ui`](configuration.md#config) 改为对应目录。两种方式都需要重启 honk，然后重新加载浏览器页面。
 
-接着按[快速开始](quick-start.md)配置 honk 并登录。
+安装界面文件后，应用本页开头的配置，[重启 honk](service-management.md)，再按[首次登录](first-sign-in.md)操作。

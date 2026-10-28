@@ -168,7 +168,7 @@
 
 ## 完整註解範例
 
-這兩個檔案須一起使用。它們在[最小組態](minimal-configuration.md)上補充教學範例的訂閱、群組、網域規則、DNS 規則和下載預設值。啟動 honk 前，替換訂閱 URL 和監聽 IP。介面路徑與[快速啟動](quick-start.md)中的 Debian 和 Ubuntu 一致；其他系統請使用實際安裝路徑，通常為 `/usr/share/doona`。如果只需直連起點，請使用快速啟動的檔案。
+此主檔案包含教學所用的訂閱、群組、網域規則、DNS 規則和下載預設值。啟動 honk 前，請替換訂閱 URL。
 
 將 API 憑證與節點頁修改的主檔案分開。見[組態來源寫入條件](feature-requirements.md#req-config-edit)。
 
@@ -277,33 +277,6 @@ assets {
 
 ### API 檔案
 
-```dae
-# /etc/honk/config.d/api.dae
-# 監聽設定須在 doona 之外編輯，並重新啟動生效。
-experimental {
-    # 密碼登入及已安裝的標準版介面。
-    native_api {
-        enabled: true
-        listen: '192.168.1.1:9527'
-        password_auth: true
-        # 如需 Token 登入，移除 password_auth 並設定真實 secret。
-        # secret: 'replace-with-a-long-random-token'
-        config_write: true
-        ui: '/usr/share/doona-web'
-        # 僅為實際使用的來源和主機新增以下設定。
-        # allow_origins: 'https://panel.example'
-        # allowed_hosts: 'panel.example'
-        record_traffic: true
-        record_memory: true
-        record_flows: true
-        record_logs: true
-        record_dns_log: true
-    }
-    # 未設定 enabled 時保留 Selector 選擇和延遲樣本。
-    cache_file {
-        store_dns: false
-    }
-}
-```
+將[快速入門](quick-start.md)中的 API 區塊寫入 `/etc/honk/config.d/api.dae`；使用獨立介面檔案時，改用[獨立介面組態](install.md)。
 
-將檔案放到標明的路徑後，依[最小組態](minimal-configuration.md)檢查，再依[服務管理](service-management.md)重新啟動。如需從直連起點透過介面建立此組態，請跟隨[為第一條連線設定路由](tutorial.md)操作。
+然後[重新啟動 honk](service-management.md)。對應的介面操作見[為第一條連線設定路由](tutorial.md)。
