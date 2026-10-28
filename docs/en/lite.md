@@ -14,9 +14,23 @@ Use **Nodes**, **Subscriptions**, **Groups**, **Routing** and **DNS** to manage 
 
 ## Install doona lite
 
-honk embeds doona lite starting with v0.1.0-beta.4. Follow [Quick start](quick-start.md) with the same `native_api` block, changing only `ui` to `'embedded-lite'`.
+honk embeds doona lite starting with v0.1.0-beta.4. Install honk as described in [Quick start](quick-start.md), then add this block to its configuration, replacing any existing `native_api` block:
 
-For a separate installation, use the lite archive in [Manual installation](install-manual.md). Apply the [UI restart rule](what-doona-can-change.md#restart-native), then [connect doona lite](lite-connect.md).
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: 'embedded-lite'
+    }
+}
+```
+
+For a separate installation, use the lite archive in [Manual installation](install-manual.md); lite has no distribution packages.
+
+After either choice, apply the [UI restart rule](what-doona-can-change.md#restart-native), open the address from [Quick start](quick-start.md), then [connect doona lite](lite-connect.md).
 
 <a name="lite-switch"></a>
 

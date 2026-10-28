@@ -88,6 +88,13 @@ These file keys grant recorder permission. Flows, logs and DNS logs start in on-
 | `global.so_mark_from_dae` | `0` | Effective mark is `0x100` at zero; otherwise the configured socket bypass mark. | [Restart](what-doona-can-change.md#restart-global) | [global](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/global.md) |
 | `global.nfqueue_enable` | `true` | Requests NFQUEUE staging for ambiguous forwarded LAN UDP. Requires the real eBPF backend. | [Restart](what-doona-can-change.md#restart-global) | [global](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/global.md) |
 
+To handle LAN clients, set `global.lan_interface` to the interface facing them:
+
+- On a main router, use its LAN bridge, commonly `br-lan`; clients already use this router as their gateway.
+- On a side router, also set clients' gateway and DNS to the side router's LAN address, either on each client or through the main router's DHCP settings.
+
+Do not assume `lan_interface: auto` selects the LAN. It selects the interface with the lowest-metric IPv4 default route, usually the WAN interface on a main router.
+
 ## Dialing and warm-up
 
 | Key | Default | What doona does with it | Applies | honk reference |

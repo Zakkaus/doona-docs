@@ -2,21 +2,7 @@
 
 # Install doona separately
 
-To use UI files instead of honk’s embedded doona, put this block in the honk configuration:
-
-```dae
-experimental {
-    native_api {
-        enabled: true
-        listen: '127.0.0.1:9527'
-        password_auth: true
-        config_write: true
-        ui: '/usr/share/doona'
-    }
-}
-```
-
-Use the package’s directory containing `index.html`; Debian and Ubuntu use `/usr/share/doona-web`. For a manual extraction, use its directory. See [UI files](#doona), [other API options](configuration.md#config), and [other origins or reverse proxies](#other-origin). For the embedded interface, use [Quick start](quick-start.md).
+Install separate UI files when you do not want honk's embedded doona. For the embedded interface, use [Quick start](quick-start.md).
 
 ## Choose your system
 
@@ -30,6 +16,22 @@ Use the package’s directory containing `index.html`; Debian and Ubuntu use `/u
 | Alpine or another Linux distribution | [Install an archive or Alpine package](install-manual.md) |
 
 These packages install static web files. Backend installation, configuration, and service startup are separate steps. For the edition choice, see [Standard and lite](editions.md).
+
+After installing the UI files and a compatible honk, add this block to its configuration, replacing any existing `native_api` block:
+
+```dae
+experimental {
+    native_api {
+        enabled: true
+        listen: '127.0.0.1:9527'
+        password_auth: true
+        config_write: true
+        ui: '/usr/share/doona'
+    }
+}
+```
+
+Use the package's directory containing `index.html`; Debian and Ubuntu use `/usr/share/doona-web`. For a manual extraction, use its directory. See [UI files](#doona), [other API options](configuration.md#config), and [other origins or reverse proxies](#other-origin).
 
 <a name="install"></a>
 

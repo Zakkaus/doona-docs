@@ -127,6 +127,10 @@ Open **Rules** → **Routing rules**. When the view switch appears, use **Simple
 
 You can inspect templates from readable configuration even without the rules API. **Simple** is the default unless a link selects a rule, prefills a new rule or reviews held rules. Custom routing and routing spread over several files have no selected template.
 
+- **Routing mode** offers **Bypass mainland China**, **GFW list only** and **Global proxy**.
+- **More templates** offers **Single proxy group**, **Groups by service**, **Groups by service and region**, and **Back to mainland China**.
+- **Back to mainland China** sends mainland Chinese domains and IPs through group `cn`. That group's name matching excludes Hong Kong, Macau and Taiwan. Other traffic goes direct.
+
 1. Choose a **Routing mode**, or open **More templates** for additional choices. Review the template description and options.
 2. Choose **Apply** to open the confirmation.
 3. Review the target file, groups to create or reuse, and the file diff. A template replaces the target file's top-level routing rules. Routing includes removed by that replacement stop contributing rules through those statements; the included files remain on disk.
@@ -144,8 +148,6 @@ Existing groups retain their settings. Review warnings about reused groups or na
 **Also add DNS routing** appears only when no loaded file has a `dns` block. The checkbox defaults to on. It sends `geosite:cn` queries to `alidns` at `223.5.5.5:53` over UDP, and other queries to `cloudflare` at `1.1.1.1:853` over DNS over TLS.
 
 Warnings identify reused groups that select one exact node or use a `fixed` policy. If a new group has the same name as a node, rules naming it reach the group instead of the node.
-
-**Routing mode** offers **Bypass mainland China**, **GFW list only** and **Global proxy**. **More templates** offers **Single proxy group**, **Groups by service**, **Groups by service and region**, and **Back to mainland China**. The last sends mainland Chinese domains and IPs through group `cn`. That group’s name matching excludes Hong Kong, Macau and Taiwan. Other traffic goes direct.
 
 The target is the file containing top-level `routing`, or the main file when none exists. doona adds missing groups there. Existing DNS routing, other content and other files stay unchanged. New group labels follow the interface language; region labels include country flags.
 

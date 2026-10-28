@@ -88,6 +88,10 @@ sudo systemctl status honk-core
 
 For systemd, look for `active (running)`. On OpenWrt, the status should report `running`. Open doona as described in [Quick start](quick-start.md) to confirm that the listener is reachable.
 
+Check the current startup log for `native API listener ready` and `honk-core is running`. At the API listener's `/api` address, a JSON response containing `setup_required: true` means the API is reachable and no administrator exists yet. API access alone does not prove that the real eBPF backend can route traffic.
+
+Read startup diagnostics even when honk starts successfully: the parser warns about and ignores unknown scalar keys in `global`.
+
 ## Read the logs
 
 ```sh tab="systemd"
@@ -130,10 +134,12 @@ A successful reload command alone does not prove that honk applied the configura
 
 ## OpenRC or a foreground test
 
-This page does not provide an OpenRC service script. After configuring honk, you can run it in a terminal to complete the first sign-in:
+This page does not provide an OpenRC service script. After configuring honk, stop any existing instance before running it in a terminal to complete the first sign-in:
 
 ```sh
 sudo /usr/local/bin/honk-core --config /etc/honk/config.dae
 ```
 
 Keep the terminal open and use the browser steps in [Quick start](quick-start.md). Logs appear in the terminal; Ctrl+C stops honk. This command does not enable startup at boot.
+
+Stop the foreground process before starting the service. If you use `--mock-ebpf` for a startup check, it does not test real eBPF attachment or routing. Expect the warning `NFQUEUE is unavailable at startup; continuing with NFQUEUE staging disabled` when its reason is `the mock eBPF backend was selected`.

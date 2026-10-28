@@ -153,7 +153,10 @@ See [probe requirements](feature-requirements.md#req-probes) and [result meaning
 
 #### Date and time
 
-**Date format** defaults to **Automatic (browser region)**, independently of the interface language. **Day/Month/Year**, **Month/Day/Year** and **Year-Month-Day** override it. **Time format** defaults to **24-hour**; **12-hour** uses the interface language’s AM/PM words, while **Automatic (browser region)** follows the browser region. These choices apply throughout the interface, including charts and the log heatmap.
+- **Date format** defaults to **Automatic (browser region)**, independently of the interface language. **Day/Month/Year**, **Month/Day/Year** and **Year-Month-Day** override it.
+- **Time format** defaults to **24-hour**. **12-hour** uses the interface language's AM/PM words; **Automatic (browser region)** follows the browser region.
+
+These choices apply throughout the interface, including charts and the log heatmap.
 
 #### Layout and startup
 
@@ -163,9 +166,20 @@ See [probe requirements](feature-requirements.md#req-probes) and [result meaning
 
 #### Glass and wallpaper
 
-Glass palettes are **Liquid Glass**, **Glass**, **Frosted** and **Tinted**. Firefox and Safari render Liquid Glass as Glass. Frosted uses uniform blur; Tinted has nearly opaque surfaces and no blur. Liquid Glass tables on **Events** and **Logs** omit refraction and the bright rim. Reduce Transparency, Increase Contrast and forced colors use solid surfaces. See [browser requirements](feature-requirements.md#req-browser-settings) for Liquid Glass support.
+Glass palettes are **Liquid Glass**, **Glass**, **Frosted** and **Tinted**:
 
-Custom wallpapers also appear behind sign-in. doona scales them to at most 2560 pixels on the long edge. **Readability veil** is on by default; **Dim** defaults to its maximum of 60%, using white in light mode and black in dark mode. **Blur** ranges from 0% to 150% for Liquid Glass, Glass and Frosted. Below 100%, surface fill increases. Tinted has no Blur control.
+- Firefox and Safari render Liquid Glass as Glass. See [browser requirements](feature-requirements.md#req-browser-settings) for Liquid Glass support.
+- Frosted uses uniform blur. Tinted has nearly opaque surfaces and no blur.
+- Liquid Glass tables on **Events** and **Logs** omit refraction and the bright rim.
+- Reduce Transparency, Increase Contrast and forced colors use solid surfaces.
+
+Custom wallpapers also appear behind sign-in. doona scales them to at most 2560 pixels on the long edge.
+
+| Control | Default or limit |
+| --- | --- |
+| **Readability veil** | On by default. |
+| **Dim** | Defaults to its maximum of 60%; white in light mode and black in dark mode. |
+| **Blur** | 0% to 150% for Liquid Glass, Glass and Frosted. Below 100%, surface fill increases. Tinted has no Blur control. |
 
 For browser support and storage requirements, see [browser settings](feature-requirements.md#req-browser-settings). The [storage overview](what-doona-can-change.md) explains which choices belong to this browser.
 

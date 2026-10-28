@@ -4,6 +4,17 @@
 
 doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc.3。
 
+<a name="choose-edition"></a>
+
+## 選擇版本
+
+| 版本 | 用途 | 下一步 |
+| --- | --- | --- |
+| 標準版 | 編輯組態、觀測流量、診斷路由 | [快速入門](quick-start.md)，然後[首次登入](first-sign-in.md) |
+| doona lite | 用較精簡的介面完成組態任務，目前為測試中的預覽版 | [安裝 lite](lite.md#lite-install)，然後[連線至後端](lite-connect.md) |
+
+版本差異見[版本比較](editions.md)。若要用範例資料體驗介面，開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
+
 ## 從這裡開始
 
 | 你目前的情況 | 閱讀頁面 |
@@ -12,17 +23,6 @@ doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc
 | honk 已啟動，準備使用代理 | [路由你的第一條連線](tutorial.md)：新增訂閱、策略群組、路由規則和 DNS 規則 |
 | 需要獨立介面檔案 | [單獨安裝 doona](install.md) |
 | 已登入，想找到某項操作 | [介面導覽](tour.md) |
-
-<a name="choose-edition"></a>
-
-## 選擇版本
-
-| 版本 | 用途 | 下一步 |
-| --- | --- | --- |
-| 標準版 | 編輯組態、觀測流量、診斷路由 | [安裝](install.md#doona)，然後[首次登入](first-sign-in.md) |
-| doona lite | 用較精簡的介面完成組態任務，目前為測試中的預覽版 | [安裝 lite](lite.md#lite-install)，然後[連線至後端](lite-connect.md) |
-
-版本差異見[版本比較](editions.md)。若要用範例資料體驗介面，開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
 
 ![活動頁面](../screenshots/zh-TW/activity-light.webp)
 
