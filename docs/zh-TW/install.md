@@ -133,7 +133,7 @@ cargo build --release -p honk-core --features ebpf,native-api
 
 新增 Geo 規則前，先檢查 [geodata 要求](feature-requirements.md#req-geodata)。
 
-使用[設定](configuration.md#config)中指定的資料目錄。採用 systemd 指南中的 `/var/lib/honk` 配置方式時，執行：
+使用[設定](configuration.md#config)中指定的資料目錄。採用 systemd 指南中的 `/var/lib/honk` 目錄時，執行：
 
 ```sh
 sudo install -d -m 0700 /var/lib/honk
