@@ -2,7 +2,7 @@
 
 # 功能啟用條件
 
-在表中找到你要使用的標準版功能，再按對應章節檢查前提並啟用。修改組態前，先將列出的能力與**系統狀態 → 後端能力**對照。
+在表中找到要使用的標準版功能，按對應章節檢查條件並啟用。修改組態前，先將列出的能力與**系統狀態 → 後端能力**對照。
 
 | 功能 | 主要條件 | 章節連結 |
 | --- | --- | --- |
@@ -19,7 +19,7 @@
 | 延遲探測 | 相容的探測選項 | [啟用條件](#req-probes) |
 | 連線與關閉流量 | 關閉需使用者空間傳輸 | [啟用條件](#req-connections) |
 | 流程與已記錄的規則命中 | 正在記錄的流程記錄器 | [啟用條件](#req-flows) |
-| 路由規則、DNS 規則與模板 | 可寫的規則源 | [啟用條件](#req-rules) |
+| 路由規則、DNS 規則與範本 | 可寫的規則來源 | [啟用條件](#req-rules) |
 | 路由追蹤 | 路由追蹤能力 | [啟用條件](#req-routing-trace) |
 | 事件 | 事件能力 | [啟用條件](#req-events) |
 | 日誌 | 正在記錄的日誌記錄器 | [啟用條件](#req-logs) |
@@ -37,7 +37,7 @@
 
 能力名稱指原生 API 的 `resources` 物件。缺少資源就表示該資源不可用，僅安裝新版介面無法補充。**設定 → 暫時執行期覆寫**只能修改後端宣告支援的欄位。儲存與啟用規則見 [doona 可以修改什麼](what-doona-can-change.md)。
 
-錯誤碼用於識別 API 失敗。各節會將其與唯讀原因、執行期降級碼和地理資料操作階段區分。停用的按鈕可能直接說明本地缺少的前提，不會發送請求或產生 API 錯誤。
+錯誤碼用於識別 API 失敗，與唯讀原因、執行期降級碼和地理資料操作階段不同。停用的按鈕可能直接說明本機缺少的條件，不會傳送請求或產生 API 錯誤。
 
 <a name="req-sign-in"></a>
 
@@ -47,7 +47,7 @@
 
 - [相容的 honk 建置](requirements.md#honk-version)、已啟用的原生 API，以及已設定的登入方式。
 - 在 `experimental.native_api` 中，密碼模式需要 `password_auth: true` 和可用的狀態資料庫；Token 模式使用 `secret`。
-- 管理員初始化僅接受來自迴環、私有或鏈路本地位址的連線。
+- 管理員初始化僅接受來自迴環、私有或連結本機位址的連線。
 
 **在 doona 中檢查**
 
@@ -91,7 +91,7 @@
 
 - [寫入失敗](troubleshooting.md#read-only)：[`stale_revision`](troubleshooting.md#read-only)、[`state_conflict`](troubleshooting.md#read-only)、[`permission_denied`](troubleshooting.md#sign-in)。
 - [拒絕原因](troubleshooting.md#read-only)：[`writes_disabled`](troubleshooting.md#read-only)、[`configuration_unavailable`](troubleshooting.md#read-only)、[`listener_secret_source`](troubleshooting.md#read-only)、[`listener_secret_in_content`](troubleshooting.md#read-only)、[`listener_settings_changed`](troubleshooting.md#read-only)、[`unsafe_path`](troubleshooting.md#read-only)。
-- 缺少本地依賴時，見[離線依賴](troubleshooting.md#offline-dependency)。
+- 缺少本機相依項目時，見[離線相依項目](troubleshooting.md#offline-dependency)。
 
 **詳細說明**
 
@@ -105,7 +105,7 @@
 **所需條件**
 
 - `config_validate.available`、後端宣告支援的 `full` 模式，以及獲准的控制請求。
-- 完整的有效組態來源集合必須符合驗證限制，包括在本地解析的引入檔案。主組態來源和引入組態來源均可驗證。
+- 完整的有效組態來源集合必須符合驗證限制，包括在本機解析的引入檔案。主組態來源和引入組態來源均可驗證。
 
 **在 doona 中檢查**
 
@@ -148,7 +148,7 @@
 
 **詳細說明**
 
-- 修訂記錄失敗而阻止普通寫入時，只要具備組態寫入權限，你仍可恢復已記錄的最新修訂。
+- 修訂記錄失敗而阻止一般寫入時，只要具備組態寫入權限，仍可復原已記錄的最新修訂。
 
 <a name="req-runtime-status"></a>
 
@@ -311,7 +311,7 @@
 
 **詳細說明**
 
-- 組態來源編輯與受限的群組 PATCH 控制項具有不同的前提。
+- 組態來源編輯與受限的群組 PATCH 控制項所需條件不同。
 
 <a name="req-probes"></a>
 
@@ -366,7 +366,7 @@
 
 **詳細說明**
 
-- 列表顯示由 honk 在使用者空間處理的連線。核心直接轉發的流量不會出現，例如 `direct` 流量。
+- 清單顯示 honk 在使用者空間處理的連線。核心直接轉送的流量不會出現，例如 `direct` 流量。
 
 <a name="req-flows"></a>
 
@@ -385,7 +385,7 @@
 
 1. 如果組態禁止記錄，在 doona 之外為 `experimental.native_api` 啟用 `record_flows: true`，再重新啟動 honk。
 2. 選擇介面提供的執行期模式。
-3. 產生新流量，確認出現流程記錄。已有流量不能證明記錄器捕獲了它。
+3. 產生新流量，確認出現流程記錄。已有流量不代表記錄器已擷取到該流量。
 
 **錯誤**
 
@@ -403,7 +403,7 @@
 **所需條件**
 
 - 列表：`rules.available` 或 `dns_rules.available`。新增、編輯或暫存規則：組態來源權限，以及可定位的規則或插入位置。
-- 路由模板：honk 語法、完整可寫的目標、路由僅位於一個組態來源中、有效的引用群組和本地地理資料依賴。
+- 路由範本：honk 語法、完整可寫的目標、路由僅位於一個組態來源中、有效的參照群組和本機地理資料相依項目。
 
 **在 doona 中檢查**
 
@@ -412,7 +412,7 @@
 **啟用步驟**
 
 1. 解決所屬組態來源的問題。如果寫入已停用，在 doona 之外為 `experimental.native_api` 啟用 `config_write: true` 並設定憑證，再重新啟動 honk。
-2. 套用模板前，將路由集中到單一組態來源。
+2. 套用範本前，將路由集中到單一組態來源。
 3. 啟用後檢查規則列表，並對相符的目標執行追蹤。
 
 **錯誤**
@@ -476,7 +476,7 @@
 
 **所需條件**
 
-- `logs.available`、`experimental.native_api` 中的 `record_logs: true`、正在記錄的模式，以及包含所需訊息的日誌級別。
+- `logs.available`、`experimental.native_api` 中的 `record_logs: true`、正在記錄的模式，以及包含所需訊息的日誌等級。
 - 篩選條件必須由後端宣告支援。
 
 **在 doona 中檢查**
@@ -486,8 +486,8 @@
 **啟用步驟**
 
 1. 必要時，在 doona 之外為 `experimental.native_api` 啟用 `record_logs: true`，再重新啟動 honk。
-2. 選擇介面提供的記錄模式和級別。
-3. 產生該級別的新事件，確認出現對應日誌。
+2. 選擇介面提供的記錄模式和等級。
+3. 產生該等級的新事件，確認出現對應日誌。
 
 **錯誤**
 
@@ -563,7 +563,7 @@
 
 **啟用步驟**
 
-1. 組態禁止 DNS 記錄時，在 doona 之外在 `experimental.native_api` 中啟用 `record_dns_log: true`，再重新啟動 honk。
+1. 組態禁止 DNS 記錄時，在 doona 之外為 `experimental.native_api` 啟用 `record_dns_log: true`，再重新啟動 honk。
 2. 選擇介面提供的模式，產生 DNS 流量，確認新增日誌和統計。
 
 **錯誤**
@@ -634,7 +634,7 @@
 
 - `geodata.can_update`、組態寫入權限、憑證，以及至少一個已載入資源。
 - 每個已載入資源都需要磁碟路徑和可用 URL。使用最終的 HTTP 或 HTTPS URL；重新導向會被拒絕。
-- 服務使用者必須能夠在目標位置暫存、替換並同步檔案。
+- 服務使用者必須能在目標位置暫存、替換並同步檔案。
 
 **在 doona 中檢查**
 
@@ -651,7 +651,7 @@
 **錯誤**
 
 - [下載階段](troubleshooting.md#geodata-update)：[`download_timeout`](troubleshooting.md#geodata-update)、[`checksum_unavailable`](troubleshooting.md#geodata-update)、[`checksum_mismatch`](troubleshooting.md#geodata-update)、[`http_status_rejected`](troubleshooting.md#geodata-update)、[`http_not_found`](troubleshooting.md#geodata-update)、[`connection_failed`](troubleshooting.md#geodata-update)、[`tls_failed`](troubleshooting.md#geodata-update)、[`group_unavailable`](troubleshooting.md#geodata-update)、[`route_blocked`](troubleshooting.md#geodata-update)、[`asset_too_large`](troubleshooting.md#geodata-update)、[`invalid_source`](troubleshooting.md#geodata-update)。
-- [替換階段](troubleshooting.md#geodata-update)：[`replacement_failed`](troubleshooting.md#geodata-update) 表示替換失敗；[`directory_sync_failed`](troubleshooting.md#geodata-update) 表示尚未確認持久寫入，此時檔案可能已經被替換。
+- [替換階段](troubleshooting.md#geodata-update)：[`replacement_failed`](troubleshooting.md#geodata-update) 表示替換失敗；[`directory_sync_failed`](troubleshooting.md#geodata-update) 表示尚未確認持久寫入，此時檔案可能已替換。
 - 重試前，檢查操作中每個資源的 `written` 和 `durability_confirmed` 值，以及目標檔案系統。
 
 **詳細說明**
@@ -660,8 +660,8 @@
 - 每次 URL 嘗試都使用選定路由。群組或路由決策失敗時，不會回退到直連。
 - 資源查詢順序是 `DAE_LOCATION_ASSET`、`global.data_dir`、舊版位置、工作目錄和共享目錄。
 - 套件中的資源會在資料目錄中產生替代檔案，並優先於套件副本使用。已位於資料目錄或明確指定資源目錄中的檔案，則在原位置替換。
-- 每次檔案下載允許最多 30 秒無進度，總時限為 10 分鐘。校驗和請求有獨立的 10 秒時限，並在 URL 路徑後追加 `.sha256sum`。
-- 校驗和請求回傳 404 時，資源保持未驗證狀態。其他校驗和取得失敗會拒絕本次嘗試。
+- 每次檔案下載最多允許 30 秒無進度，總時限為 10 分鐘。檢查碼請求有獨立的 10 秒時限，並在 URL 路徑後附加 `.sha256sum`。
+- 檢查碼請求回傳 404 時，資源保持未驗證狀態。因其他原因無法取得檢查碼時，會拒絕本次嘗試。
 - 操作失敗不代表所有檔案都未改變。
 
 <a name="req-geodata-settings"></a>
@@ -670,9 +670,9 @@
 
 **所需條件**
 
-- 每次設定寫入都需要憑證和可用的狀態資料庫，包括來源 URL 列表、下載路由、校驗和驗證、自動更新排程及重置。不需要 `config_write`。
+- 每次設定寫入都需要憑證和可用的狀態資料庫，包括來源 URL 清單、下載路由、檢查碼驗證、自動更新排程及重置。不需要 `config_write`。
 - `geodata.configurable_sources`，且 `runtime_settings.fields` 中包含 `geodata`。
-- 路由和校驗和控制項還需要回傳對應設定。選擇群組路由需要群組資源和目前存在的群組。
+- 路由和檢查碼控制項還需要後端回傳對應設定。選擇群組路由需要群組資源和目前存在的群組。
 - 自動下載仍需滿足[更新前提](#req-geodata-update)。
 
 **在 doona 中檢查**
@@ -701,9 +701,9 @@
 
 **所需條件**
 
-- 跟蹤已接受的操作：`operations.available`。重載：還需要 `reload.available`。
+- 追蹤已接受的操作：`operations.available`。重新載入：還需要 `reload.available`。
 - 暫停：`suspend.available` 且後端運作中。恢復：`resume.available` 且後端已暫停。
-- 已檢查的 honk 修訂宣告暫停和恢復不可用，沒有組態開關能夠啟用它們。
+- 已檢查的 honk 修訂宣告暫停和恢復不可用，無法透過組態開關啟用。
 
 **在 doona 中檢查**
 
@@ -729,7 +729,7 @@
 
 **所需條件**
 
-- 程序名稱路由：cgroup v2 套接字身份捕獲。完整名稱：由核心擷取程序參數。
+- 程序名稱路由：cgroup v2 通訊端身分擷取。完整名稱：由核心擷取程序參數。
 - UDP 追蹤詳細資料另需核心追蹤支援。
 
 **在 doona 中檢查**
@@ -789,13 +789,13 @@
 
 **啟用步驟**
 
-1. 使用支援液態玻璃的瀏覽器，並允許瀏覽器儲存，以便持久儲存。
+1. 使用支援液態玻璃的瀏覽器，並允許瀏覽器持久儲存資料。
 2. 選擇背景圖片，重新開啟頁面，確認圖片已儲存。
 3. 要更改內嵌旗幟，需修改節點的實際名稱。瀏覽器覆寫無法替換它。
 
 **錯誤**
 
-- 瀏覽器儲存失敗顯示本地說明，不使用 honk API 錯誤碼。
+- 瀏覽器儲存失敗顯示本機說明，不使用 honk API 錯誤碼。
 - 升級後仍顯示舊介面資源時，見[重新整理瀏覽器](troubleshooting.md#troubleshooting)。
 
 **詳細說明**

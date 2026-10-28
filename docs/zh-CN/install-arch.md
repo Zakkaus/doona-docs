@@ -38,11 +38,11 @@ sudo pacman -U "./$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。请在[独立界面配置](install.md)中使用该目录。
+确认最后一条命令列出 `index.html`。在[独立界面配置](install.md)中使用该目录。
 
 ### 可选软件包
 
-是否需要字体或预压缩文件，见[可选资源](install.md#doona)。安装时在下列命令中将 `FILE` 设为表中对应的文件名。示例选择字体包。
+字体与预压缩文件的用途见[可选资源](install.md#doona)。在下列命令中将 `FILE` 设为表中对应的文件名；示例使用字体包。
 
 | 资源 | 文件名 |
 | --- | --- |

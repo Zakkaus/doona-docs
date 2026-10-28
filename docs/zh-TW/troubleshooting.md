@@ -4,7 +4,7 @@
 
 # 疑難排解
 
-依遇到的症狀查找檢查步驟與處理方法。本頁涵蓋 doona 連接 honk 時的連線、編輯、記錄和地理資料故障。
+依症狀查找 doona 連接 honk 時的連線、編輯、記錄或地理資料故障，按對應步驟檢查。
 
 | 症狀 | 從哪裡開始 |
 | --- | --- |
@@ -39,7 +39,7 @@
 | --- | --- |
 | `writes_disabled` | 依上述組態條件啟用經過身分驗證的寫入。 |
 | `configuration_unavailable` | 檢查 honk 啟動日誌，待組態載入完成後再編輯。 |
-| `listener_secret_source` | 在磁碟上編輯此含密鑰檔案。將監聽密鑰放在單獨的引入檔案中，讓其他檔案保持可編輯。 |
+| `listener_secret_source` | 在磁碟上編輯含密鑰的檔案。將監聽密鑰放在單獨的引入檔案中，讓其他檔案保持可編輯。 |
 | `listener_secret_in_content` | 檢查內容或路徑是否包含監聽密鑰值。在 doona 外更換與其他內容重複的密鑰，完成變更後重新登入。 |
 | `listener_settings_changed` 或要求重新啟動的診斷 | 在 doona 外編輯設定，並依[重新啟動規則](what-doona-can-change.md)處理。 |
 | `credential_sources_changed` | 在外部修改憑證來源檔案後重載 honk，再重新開啟來源檔案進行編輯。 |
@@ -53,14 +53,14 @@
 
 ## 套用時提示依賴檔案無法使用
 
-honk 寫入前會驗證本地依賴。檢查診斷和組態引用的檔案。
+honk 寫入前會驗證本機相依項目。檢查診斷和組態參照的檔案。
 
-診斷不會列出依賴檔名。訂閱或節點報錯時，檢查訂閱快取內容和各節點的 `ech_config_path`；DNS 報錯時，檢查 `use_host` 指定的檔案。恢復缺少的檔案，或重新整理格式錯誤的訂閱內容，再重新套用。
+診斷不會列出相依檔案的名稱。訂閱或節點報錯時，檢查訂閱快取內容和各節點的 `ech_config_path`；DNS 報錯時，檢查 `use_host` 指定的檔案。復原缺少的檔案，或重新整理格式錯誤的訂閱內容，再重新套用。
 
 | 代碼 | 原因與處理 |
 | --- | --- |
-| `missing-offline-dependency` | 恢復缺少的依賴。地理資料安裝見[安裝說明](install.md#directories-and-geodata)或 [OpenWrt 地理資料安裝](install-openwrt.md#install-geodata)。 |
-| `offline-dependency-denied` | 將依賴放入允許的組態目錄或資料目錄，並允許服務使用者讀取。 |
+| `missing-offline-dependency` | 復原缺少的相依檔案。地理資料安裝見[安裝說明](install.md#directories-and-geodata)或 [OpenWrt 地理資料安裝](install-openwrt.md#install-geodata)。 |
+| `offline-dependency-denied` | 將相依檔案放入允許的組態目錄或資料目錄，並允許服務使用者讀取。 |
 | `invalid-offline-dependency` | 替換格式錯誤的內容，或重新整理受影響的訂閱。 |
 | `unreadable-offline-dependency` | 查看服務日誌中的檔案或儲存錯誤。 |
 
@@ -128,8 +128,8 @@ honk-core --data-dir /var/lib/honk admin reset
 
 | 階段 | 檢查或修改什麼 |
 | --- | --- |
-| `checksum_unavailable` | 校驗和請求失敗。檢查鏡像的校驗和 URL，或更換來源。 |
-| `checksum_mismatch` | 下載內容與校驗和不符。從來源取得互相符合的檔案與校驗和。 |
+| `checksum_unavailable` | 檢查碼請求失敗。檢查鏡像的檢查碼 URL，或更換來源。 |
+| `checksum_mismatch` | 下載內容與檢查碼不符。從來源取得相符的檔案與檢查碼。 |
 | `download_timeout` | 檢查下載路由和來源；逾時限制見[下載期限](feature-requirements.md#req-geodata-update)。 |
 | `http_status_rejected` | 檢查伺服器回傳的狀態，使用最終 URL，避免重新導向。 |
 | `http_not_found` | 修正檔案 URL。 |
@@ -141,21 +141,21 @@ honk-core --data-dir /var/lib/honk admin reset
 | `invalid_source` | 修正來源 URL。 |
 | `replacement_failed` 或 `directory_sync_failed` | 重試前檢查各檔案的結果和目標檔案系統，依[替換條件](feature-requirements.md#req-geodata-update)處理。 |
 
-校驗和請求回傳 404 時的處理、驗證規則及部分寫入行為見[更新條件](feature-requirements.md#req-geodata-update)。
+檢查碼請求回傳 404 時的處理、驗證規則及部分寫入行為見[更新條件](feature-requirements.md#req-geodata-update)。
 
 <a name="geodata-sources"></a>
 
 ## 無法編輯地理資料來源或更新排程
 
-在**系統狀態** → **資料路徑**檢查持久化警告。降級代碼 `persistence_unavailable` 表示狀態資料庫無法使用；依據其 `reason` 進行[資料庫檢查](#state-db)。
+在**系統狀態** → **資料路徑**檢查持久儲存警告。降級代碼 `persistence_unavailable` 表示狀態資料庫無法使用；依其 `reason` 執行[資料庫檢查](#state-db)。
 
-恢復[地理資料設定條件](feature-requirements.md#req-geodata-settings)後，重新開啟地理資料卡片。手動下載有[單獨的條件](feature-requirements.md#req-geodata-update)，能夠下載不代表能夠儲存設定。
+恢復[地理資料設定條件](feature-requirements.md#req-geodata-settings)後，重新開啟地理資料卡片。手動下載有[單獨的條件](feature-requirements.md#req-geodata-update)，能下載不代表能儲存設定。
 
 <a name="state-db"></a>
 
 ## honk 回報狀態資料庫故障
 
-在[服務日誌](service-management.md)中查看最近一次啟動錯誤。密碼驗證需要資料庫，無法開啟時會停止啟動。使用檔案組態的 Token 模式遇到部分故障時，可以繼續運作但不儲存狀態；見[持久化條件](feature-requirements.md#req-persistence)。
+在[服務日誌](service-management.md)中查看最近一次啟動錯誤。密碼驗證需要資料庫，無法開啟時會停止啟動。使用檔案組態的 Token 模式遇到部分故障時，可繼續運作但不儲存狀態；見[持久儲存條件](feature-requirements.md#req-persistence)。
 
 | 訊息或原因 | 下一步 |
 | --- | --- |
@@ -166,7 +166,7 @@ honk-core --data-dir /var/lib/honk admin reset
 | 外部應用程式 ID 或較新的資料庫結構 | 使用擁有此資料庫的 honk 組建，不要用舊組建覆蓋。 |
 | `corrupt` | 在檔案儲存的 Token 模式下，honk 將損壞的資料庫移至資料目錄內的 `state/honk.db.corrupt`，再建立新資料庫。它不會覆蓋既有的損壞副本，包括 `state/honk.db.corrupt-wal`。若這些副本阻止復原，先將其儲存到其他位置，再重新啟動。 |
 
-修復存取問題後，[重新啟動服務](service-management.md)，檢查持久化警告是否消失。
+修復存取問題後，[重新啟動服務](service-management.md)，檢查持久儲存警告是否消失。
 
 <a name="state-unsafe"></a>
 
@@ -174,7 +174,7 @@ honk-core --data-dir /var/lib/honk admin reset
 
 服務日誌會顯示拒絕的路徑、規則及建議的修復方法。配合[資料目錄組態](configuration.md#config)檢查該路徑，不要假定所有安裝都使用同一目錄。
 
-檔案模式下，執行期資料目錄由 `global.data_dir` 決定，`--data-dir` 不會覆蓋它。執行 `admin reset` 時，須透過 `--data-dir` 指定同一目錄。OpenWrt 的 [`/var` 內容在重新啟動後遺失](https://openwrt.org/docs/techref/filesystems)，請使用[手動安裝的持久化目錄](install-openwrt.md#install-geodata)。
+檔案模式下，執行期資料目錄由 `global.data_dir` 決定，`--data-dir` 不會覆寫該目錄。執行 `admin reset` 時，須透過 `--data-dir` 指定同一目錄。OpenWrt 的 [`/var` 內容在重新啟動後遺失](https://openwrt.org/docs/techref/filesystems)，請使用[手動安裝的持久儲存目錄](install-openwrt.md#install-geodata)。
 
 狀態目錄與資料庫須歸 honk 服務使用者所有，且不能向群組或其他使用者開放權限。符號連結或錯誤的檔案類型也會被拒絕。只修正日誌所指路徑的所有權、權限或類型，再重新啟動 honk。不要遞迴修改整個組態目錄的權限。
 
@@ -220,6 +220,6 @@ honk-core --data-dir /var/lib/honk admin reset
 
 ## 收集報告所需的錯誤資訊
 
-按失敗提示中的**複製錯誤**，或在**設定** → **關於**按**複製最近錯誤**。報告中註明嘗試的操作及正在運作的引擎和介面版本。先複製錯誤再重新載入頁面，因為重新載入會清空記憶體中的錯誤歷史。
+按失敗提示中的**複製錯誤**，或在**設定** → **關於**按**複製最近錯誤**。報告中註明嘗試的操作及正在運作的引擎和介面版本。重新載入頁面會清空記憶體中的錯誤歷史，請先複製錯誤。
 
 歷史最多保留 20 筆錯誤。複製內容包括可用的請求方法與路徑、狀態、錯誤代碼及請求 ID。請求本文和組態文字不會保留，識別出的秘密欄位會被遮蔽。複製入口見[關於](config-and-settings.md#settings-page)。

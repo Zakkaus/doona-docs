@@ -27,7 +27,7 @@ curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
 
-所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到校驗和項目，先核對檔名並重新下載，再安裝。
+所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到檢查碼項目，先核對檔名並重新下載，再安裝。
 
 下載或執行檔出錯時，見[安裝故障](install.md#安裝故障)。
 
@@ -38,11 +38,11 @@ sudo pacman -U "./$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最後一條命令必須列出 `index.html`。請在[獨立介面組態](install.md)中使用該目錄。
+確認最後一條命令列出 `index.html`。在[獨立介面組態](install.md)中使用該目錄。
 
 ### 選用套件
 
-是否需要字型或預先壓縮的檔案，見[選用資源](install.md#doona)。安裝時在下列命令中將 `FILE` 設為表中對應的檔名。範例選擇字型套件。
+字型與預先壓縮檔案的用途見[選用資源](install.md#doona)。在下列命令中將 `FILE` 設為表中對應的檔名；範例使用字型套件。
 
 | 資源 | 檔名 |
 | --- | --- |

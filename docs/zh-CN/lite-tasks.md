@@ -4,11 +4,11 @@
 
 # doona lite 常用任务
 
-[连接 lite](lite-connect.md) 后，即可导入节点和编辑 honk 配置。无法编辑时，检查[配置写入要求](feature-requirements.md#req-config-edit)、[完整校验要求](feature-requirements.md#req-validation)和 [lite 后端要求](editions.md#backend-requirements)。
+[连接 lite](lite-connect.md) 后，可导入节点和编辑 honk 配置。无法编辑时，检查[配置写入要求](feature-requirements.md#req-config-edit)、[完整校验要求](feature-requirements.md#req-validation)和 [lite 后端要求](editions.md#backend-requirements)。
 
 ## 应用草稿
 
-修改订阅、策略组、路由、DNS 或全局设置后，统一按以下步骤应用：
+修改订阅、策略组、路由、DNS 或全局设置后，按以下步骤应用：
 
 1. 选择**查看并应用**。
 2. 核对待应用的修改，再选择**应用**。
@@ -23,7 +23,7 @@
 1. 打开**节点**，选择**添加节点**。
 2. 选择**粘贴链接**，在**分享链接**中每行粘贴一个链接。
 3. 核对识别出的节点，修正无效行。
-4. 一个节点选择**添加**，多个节点选择**添加 N 个节点**。此操作会立即写入并应用，随后检查节点是否出现在列表中。
+4. 导入一个节点时，选择**添加**；多个节点则选择**添加 N 个节点**。此操作会立即写入并应用。随后检查节点是否出现在列表中。
 
 无法导入时，查看[节点要求](feature-requirements.md#req-nodes)与[语法校验](feature-requirements.md#req-validation)。
 

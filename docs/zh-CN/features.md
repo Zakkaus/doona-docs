@@ -4,7 +4,7 @@
 
 # 按任务查找页面
 
-本页帮助你在 doona 标准版中找到所需功能。首次设置请从[快速开始](quick-start.md)和[首次连接教程](tutorial.md)入手；精简界面请参阅 [doona lite](lite.md)。
+在下表查找 doona 标准版功能及使用条件。首次设置请从[快速入门](quick-start.md)和[首次连接教程](tutorial.md)开始；精简界面请参阅 [doona lite](lite.md)。
 
 请在真实 LAN 客户端上使用可用节点验证路由，测试直连和代理的 TCP、UDP 及 DNS。`honk-core is running`、`dae0` 链路存在或 API 可访问，都不能证明流量实际通过。
 
@@ -39,7 +39,7 @@
 
 ## 仪表盘与浮动面板
 
-活动页与浮动面板共用组件库。可以按需选择流量、内存、节点可用性、DNS 延迟或订阅配额等卡片。仪表盘的操作见[活动页指南](observe.md#activity)，浮动面板的排列方式见[面板指南](tour.md#panels)。
+活动页与浮动面板共用组件库，可选择流量、内存、节点可用性、DNS 延迟或订阅配额等卡片。仪表盘操作见[活动页指南](observe.md#activity)，浮动面板排列方式见[面板指南](tour.md#panels)。
 
 ### 查看配额和内存
 
@@ -67,6 +67,6 @@
 
 本站点的 `localStorage` 保存连接配置、令牌、偏好和布局。清除浏览器数据会删除这些浏览器内的值，不会删除 honk 配置。`sessionStorage` 保存每个标签页的状态，例如各分区最后打开的页面。令牌通过 `Authorization` 请求头发送；配对链接 URL 片段中的令牌会在加载时移除。
 
-通过 HTTPS 或 localhost 访问时，service worker 会缓存应用界面、字体和图标，使界面可离线打开并安装为应用。API 响应不会缓存。已保存的主题和语言在首次绘制前生效，认证前不会下载其他页面，安装更新会复用页面已有的文件。
+通过 HTTPS 或 localhost 访问时，service worker 会缓存应用界面、字体和图标，供离线打开界面及安装为应用。API 响应不会缓存。已保存的主题和语言在首次绘制前生效。认证前不会下载其他页面，安装更新会复用页面已有的文件。
 
 安全漏洞报告方式见 [SECURITY.md](https://github.com/Zakkaus/doona/blob/main/.github/SECURITY.md)。

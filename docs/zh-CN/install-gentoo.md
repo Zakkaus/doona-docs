@@ -6,7 +6,7 @@
 
 在网关上打开终端，进入新建的下载目录，并在同一 shell 中完成各步。使用 root shell 时省略 `sudo`。安装后端前先检查 [honk 的前提条件](install.md#install)。
 
-缺少 `net-misc/curl` 或 `app-misc/ca-certificates` 时，先安装它们。下列命令使用 sudo 写入系统目录。
+缺少 `net-misc/curl` 或 `app-misc/ca-certificates` 时，先安装。下列命令使用 sudo 写入系统目录。
 
 ```sh
 sudo emerge --ask net-misc/curl app-misc/ca-certificates
@@ -30,7 +30,7 @@ location = %s
 portageq get_repos /
 ```
 
-最后一条命令的输出必须包含该仓库名称。
+确认最后一条命令的输出包含该仓库名称。
 
 ## 2. 添加 ebuild
 
@@ -78,13 +78,13 @@ sudo emerge --ask =net-proxy/doona-0.1.0_rc3
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。请在[独立界面配置](install.md)中使用该目录。
+确认最后一条命令列出 `index.html`。在[独立界面配置](install.md)中使用该目录。
 
 ### Portage 故障
 
 | 错误 | 检查方法 |
 | --- | --- |
-| Portage 找不到 `net-proxy/doona` | 执行 `portageq get_repos /`，确认输出列出了本地仓库。确认 ebuild 位于该仓库的 `net-proxy/doona/` 目录；仓库未注册时按第 1 步修正。 |
+| Portage 找不到 `net-proxy/doona` | 执行 `portageq get_repos /`，确认输出列出本地仓库。确认 ebuild 位于该仓库的 `net-proxy/doona/` 目录；仓库未注册时按第 1 步修正。 |
 | 软件包被 testing keyword 屏蔽 | 检查第 4 步的 `package.accept_keywords` 条目是否使用当前架构的关键字，例如 `~amd64` 或 `~arm64`。 |
 
 ## 5. 安装后端

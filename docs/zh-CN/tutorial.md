@@ -2,7 +2,7 @@
 
 # 为第一条连接设置路由
 
-从[快速启动](quick-start.md)继续，保持 honk 运行并以管理员身份登录。你需要一个可用的 HTTP 或 HTTPS 订阅 URL，以及网关的 shell 访问权限。本教程将 `example.com` 送入名为 `proxy` 的新组，其他流量保持直连。订阅名称使用 `harbor`。
+完成[快速入门](quick-start.md)后，保持 honk 运行并以管理员身份登录。准备可用的 HTTP 或 HTTPS 订阅 URL，以及网关的 shell 访问权限。本教程将 `example.com` 送入名为 `proxy` 的新组，其他流量保持直连。订阅名称使用 `harbor`。
 
 ## 1. 添加订阅
 
@@ -40,7 +40,7 @@ domain(full: example.com) -> proxy
 
 ## 4. 定义 DNS 上游
 
-快速启动没有 DNS 区块。打开**配置** → **配置文件**，在**配置文件**中选择 `/etc/honk/config.dae`，将以下区块追加到现有区块之后。保留刚才创建的订阅、组和路由规则。
+快速入门配置没有 DNS 块。打开**配置** → **配置文件**，在**配置文件**中选择 `/etc/honk/config.dae`，将以下块追加到现有块之后。保留刚才创建的订阅、组和路由规则。
 
 ```dae
 # 通过代理组发送指定的 DNS 请求。
@@ -70,7 +70,7 @@ dns {
 qname(full: example.com) -> remote_dns
 ```
 
-两条规则现已应用。路由规则选择流量使用的组；DNS 规则选择解析器，该解析器的请求也经过此组。以上每次保存都会单独生效。添加功能不可用时，见 [DNS 规则条件](feature-requirements.md#req-rules)。
+路由规则选择流量使用的组；DNS 规则选择解析器，该解析器的请求也经过此组。以上每次保存都会单独生效。添加功能不可用时，见 [DNS 规则条件](feature-requirements.md#req-rules)。
 
 ## 6. 用追踪模拟验证规则
 

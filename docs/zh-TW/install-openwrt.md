@@ -32,7 +32,7 @@ opkg update
 opkg install curl ca-bundle kmod-veth kmod-nft-queue
 ```
 
-啟用了 NFQUEUE，但缺少前提條件時，honk 可能繼續運作，同時停用 NFQUEUE staging 並輸出啟動警告。檢查[服務日誌](service-management.md)；服務啟動成功不代表 NFQUEUE staging 已啟用。
+啟用 NFQUEUE 但缺少必要條件時，honk 可能繼續運作，同時停用 NFQUEUE staging 並輸出啟動警告。檢查[服務日誌](service-management.md)；服務啟動成功不代表 NFQUEUE staging 已啟用。
 
 <a name="openwrt-packages"></a>
 
@@ -65,7 +65,7 @@ curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
 
-所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到校驗和項目，先核對檔名並重新下載，再安裝。
+所有選定檔案都顯示 `OK` 後才能繼續。如果驗證失敗或找不到檢查碼項目，先核對檔名並重新下載，再安裝。
 
 下載或執行檔出錯時，見[安裝故障](install.md#安裝故障)。
 
@@ -95,7 +95,7 @@ apk add --allow-untrusted "/tmp/doona/$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最後一條命令必須列出 `index.html`。請在[獨立介面組態](install.md)中使用此目錄。
+確認最後一條命令列出 `index.html`。在[獨立介面組態](install.md)中使用此目錄。
 
 ### 選用套件
 
@@ -112,13 +112,13 @@ ls -l /usr/share/doona/index.html
 
 在另一個下載目錄中依照[安裝 honk](install.md#install)操作，避免後端的 `SHA256SUMS` 覆蓋 doona 的檔案。選擇 musl 建置版本和 OpenWrt 安裝分頁，將執行檔安裝至 `/usr/bin/honk-core`，再返回本頁。
 
-確認已安裝的執行檔正常後，使用絕對路徑刪除其下載壓縮檔和解壓縮目錄。所有選定的選用 UI 套件安裝完成後，再使用絕對路徑刪除 `/tmp/doona` 中下載的套件、索引、公鑰副本與校驗和檔案。仍需用於安裝的下載檔案應先保留。
+確認已安裝的執行檔正常後，使用絕對路徑刪除其下載壓縮檔和解壓縮目錄。選定的選用 UI 套件全部安裝完成後，再使用絕對路徑刪除 `/tmp/doona` 中下載的套件、索引、公鑰副本與檢查碼檔案。保留仍需用於安裝的下載檔案。
 
 <a name="install-geodata"></a>
 
 ## 5. 準備資料目錄
 
-此手動安裝方式須在 [honk 組態](configuration.md#config)中將 `global.data_dir` 設為 `/etc/honk/data`，再建立持久化目錄：
+手動安裝時，須在 [honk 組態](configuration.md#config)中將 `global.data_dir` 設為 `/etc/honk/data`，再建立持久儲存目錄：
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data

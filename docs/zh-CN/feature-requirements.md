@@ -2,7 +2,7 @@
 
 # 功能启用条件
 
-在表中找到你要使用的标准版功能，再按对应章节检查前提并启用。修改配置前，先将列出的能力与**系统状态 → 后端能力**对照。
+在表中找到要使用的标准版功能，按对应章节检查条件并启用。修改配置前，先将列出的能力与**系统状态 → 后端能力**对照。
 
 | 功能 | 主要条件 | 章节链接 |
 | --- | --- | --- |
@@ -18,14 +18,14 @@
 | 组创建、编辑与检查设置 | 完整可写的声明 | [启用条件](#req-group-edit) |
 | 延迟探测 | 兼容的探测选项 | [启用条件](#req-probes) |
 | 连接与关闭流量 | 关闭要求用户空间传输 | [启用条件](#req-connections) |
-| 流程与已记录的规则命中 | 活动的流程记录器 | [启用条件](#req-flows) |
+| 流程与已记录的规则命中 | 正在记录的流程记录器 | [启用条件](#req-flows) |
 | 路由规则、DNS 规则与模板 | 可写的规则源 | [启用条件](#req-rules) |
 | 路由追踪 | 路由追踪能力 | [启用条件](#req-routing-trace) |
 | 事件 | 事件能力 | [启用条件](#req-events) |
-| 日志 | 活动的日志记录器 | [启用条件](#req-logs) |
+| 日志 | 正在记录的日志记录器 | [启用条件](#req-logs) |
 | DNS 查询与上游选择 | DNS 查询能力 | [启用条件](#req-dns-query) |
 | DNS 缓存操作 | 对应的缓存操作能力 | [启用条件](#req-dns-cache) |
-| DNS 日志与统计 | 活动的 DNS 记录器 | [启用条件](#req-dns-log) |
+| DNS 日志与统计 | 正在记录的 DNS 记录器 | [启用条件](#req-dns-log) |
 | 运行时覆盖 | 后端提供对应字段 | [启用条件](#req-runtime-options) |
 | 地理数据可用性 | 已加载的资源一致 | [启用条件](#req-geodata) |
 | 手动更新地理数据 | 已加载资源有可用 URL | [启用条件](#req-geodata-update) |
@@ -37,7 +37,7 @@
 
 能力名称指原生 API 的 `resources` 对象。缺少资源就表示该资源不可用，仅安装新版界面无法补充。**设置 → 临时运行时覆盖**只能修改后端声明支持的字段。保存与激活规则见 [doona 可以修改什么](what-doona-can-change.md)。
 
-错误码用于识别 API 失败。各节会将其与只读原因、运行时降级码和地理数据操作阶段区分。禁用的按钮可能直接说明本地缺少的前提，不会发送请求或产生 API 错误。
+错误码用于识别 API 失败，与只读原因、运行时降级码和地理数据操作阶段不同。禁用的按钮可能直接说明本地缺少的条件，不会发送请求或产生 API 错误。
 
 <a name="req-sign-in"></a>
 
@@ -148,7 +148,7 @@
 
 **详细说明**
 
-- 修订记录失败而阻止普通写入时，只要具备配置写入权限，你仍可恢复已记录的最新修订。
+- 修订记录失败而阻止普通写入时，只要具备配置写入权限，仍可恢复已记录的最新修订。
 
 <a name="req-runtime-status"></a>
 
@@ -311,7 +311,7 @@
 
 **详细说明**
 
-- 配置源编辑与受限的组 PATCH 控制项具有不同的前提。
+- 配置源编辑与受限的组 PATCH 控件所需条件不同。
 
 <a name="req-probes"></a>
 
@@ -366,7 +366,7 @@
 
 **详细说明**
 
-- 列表显示由 honk 在用户空间处理的连接。内核直接转发的流量不会出现，例如 `direct` 流量。
+- 列表显示 honk 在用户空间处理的连接。内核直接转发的流量不会出现，例如 `direct` 流量。
 
 <a name="req-flows"></a>
 
@@ -374,7 +374,7 @@
 
 **所需条件**
 
-- `flows.available`、`experimental.native_api` 中的 `record_flows: true`，以及活动的记录策略。
+- `flows.available`、`experimental.native_api` 中的 `record_flows: true`，以及正在记录的策略。
 - 检查运行时设置中的 `recording.flows.active`。能力可用不代表正在采集。
 
 **在 doona 中检查**
@@ -385,7 +385,7 @@
 
 1. 如果配置禁止记录，在 doona 之外为 `experimental.native_api` 启用 `record_flows: true`，再重启 honk。
 2. 选择界面提供的运行时模式。
-3. 产生新流量，确认出现流程记录。已有流量不能证明记录器捕获了它。
+3. 产生新流量，确认出现流程记录。已有流量不代表记录器已捕获到该流量。
 
 **错误**
 
@@ -476,7 +476,7 @@
 
 **所需条件**
 
-- `logs.available`、`experimental.native_api` 中的 `record_logs: true`、活动的记录模式，以及包含所需消息的日志级别。
+- `logs.available`、`experimental.native_api` 中的 `record_logs: true`、正在记录的模式，以及包含所需消息的日志级别。
 - 筛选条件必须由后端声明支持。
 
 **在 doona 中检查**
@@ -554,7 +554,7 @@
 
 **所需条件**
 
-- `dns_log.available`、`experimental.native_api` 中的 `record_dns_log: true`，以及活动的记录器模式。
+- `dns_log.available`、`experimental.native_api` 中的 `record_dns_log: true`，以及正在记录的模式。
 - 查询与缓存能力相互独立。
 
 **在 doona 中检查**
@@ -563,7 +563,7 @@
 
 **启用步骤**
 
-1. 配置禁止 DNS 记录时，在 doona 之外在 `experimental.native_api` 中启用 `record_dns_log: true`，再重启 honk。
+1. 配置禁止 DNS 记录时，在 doona 之外为 `experimental.native_api` 启用 `record_dns_log: true`，再重启 honk。
 2. 选择界面提供的模式，产生 DNS 流量，确认新增日志和统计。
 
 **错误**
@@ -572,7 +572,7 @@
 
 **详细说明**
 
-- 允许记录但未活动的记录器不会产生新样本。
+- 允许记录但未开始记录的记录器不会产生新样本。
 
 <a name="req-runtime-options"></a>
 
@@ -634,7 +634,7 @@
 
 - `geodata.can_update`、配置写入权限、凭据，以及至少一个已加载资源。
 - 每个已加载资源都需要磁盘路径和可用 URL。使用最终的 HTTP 或 HTTPS URL；重定向会被拒绝。
-- 服务用户必须能够在目标位置暂存、替换并同步文件。
+- 服务用户必须能在目标位置暂存、替换并同步文件。
 
 **在 doona 中检查**
 
@@ -651,7 +651,7 @@
 **错误**
 
 - [下载阶段](troubleshooting.md#geodata-update)：[`download_timeout`](troubleshooting.md#geodata-update)、[`checksum_unavailable`](troubleshooting.md#geodata-update)、[`checksum_mismatch`](troubleshooting.md#geodata-update)、[`http_status_rejected`](troubleshooting.md#geodata-update)、[`http_not_found`](troubleshooting.md#geodata-update)、[`connection_failed`](troubleshooting.md#geodata-update)、[`tls_failed`](troubleshooting.md#geodata-update)、[`group_unavailable`](troubleshooting.md#geodata-update)、[`route_blocked`](troubleshooting.md#geodata-update)、[`asset_too_large`](troubleshooting.md#geodata-update)、[`invalid_source`](troubleshooting.md#geodata-update)。
-- [替换阶段](troubleshooting.md#geodata-update)：[`replacement_failed`](troubleshooting.md#geodata-update) 表示替换失败；[`directory_sync_failed`](troubleshooting.md#geodata-update) 表示尚未确认持久写入，此时文件可能已经被替换。
+- [替换阶段](troubleshooting.md#geodata-update)：[`replacement_failed`](troubleshooting.md#geodata-update) 表示替换失败；[`directory_sync_failed`](troubleshooting.md#geodata-update) 表示尚未确认持久写入，此时文件可能已替换。
 - 重试前，检查操作中每个资源的 `written` 和 `durability_confirmed` 值，以及目标文件系统。
 
 **详细说明**
@@ -660,8 +660,8 @@
 - 每次 URL 尝试都使用选定路由。组或路由决策失败时，不会回退到直连。
 - 资源查找顺序是 `DAE_LOCATION_ASSET`、`global.data_dir`、旧版位置、工作目录和共享目录。
 - 软件包中的资源会在数据目录中生成替代文件，并优先于软件包副本使用。已位于数据目录或明确指定资源目录中的文件，则在原位置替换。
-- 每次文件下载允许最多 30 秒无进度，总时限为 10 分钟。校验和请求有独立的 10 秒时限，并在 URL 路径后追加 `.sha256sum`。
-- 校验和请求返回 404 时，资源保持未验证状态。其他校验和获取失败会拒绝本次尝试。
+- 每次文件下载最多允许 30 秒无进度，总时限为 10 分钟。校验和请求有独立的 10 秒时限，并在 URL 路径后追加 `.sha256sum`。
+- 校验和请求返回 404 时，资源保持未验证状态。因其他原因无法获取校验和时，会拒绝本次尝试。
 - 操作失败不代表所有文件都未改变。
 
 <a name="req-geodata-settings"></a>
@@ -672,7 +672,7 @@
 
 - 每次设置写入都需要凭据和可用的状态数据库，包括来源 URL 列表、下载路由、校验和验证、自动更新计划及重置。不需要 `config_write`。
 - `geodata.configurable_sources`，且 `runtime_settings.fields` 中包含 `geodata`。
-- 路由和校验和控制项还需要返回对应设置。选择组路由需要组资源和当前存在的组。
+- 路由和校验和控件还需要后端返回对应设置。选择组路由需要组资源和当前存在的组。
 - 自动下载仍需满足[更新前提](#req-geodata-update)。
 
 **在 doona 中检查**
@@ -703,7 +703,7 @@
 
 - 跟踪已接受的操作：`operations.available`。重载：还需要 `reload.available`。
 - 暂停：`suspend.available` 且后端运行中。恢复：`resume.available` 且后端已暂停。
-- 已检查的 honk 修订声明暂停和恢复不可用，没有配置开关能够启用它们。
+- 已检查的 honk 修订声明暂停和恢复不可用，无法通过配置开关启用。
 
 **在 doona 中检查**
 
@@ -789,7 +789,7 @@
 
 **启用步骤**
 
-1. 使用支持液态玻璃的浏览器，并允许浏览器存储，以便持久保存。
+1. 使用支持液态玻璃的浏览器，并允许浏览器持久保存数据。
 2. 选择背景图片，重新打开页面，确认图片已保存。
 3. 要更改内嵌旗帜，需修改节点的实际名称。浏览器覆盖无法替换它。
 

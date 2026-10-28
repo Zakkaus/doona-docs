@@ -4,7 +4,7 @@
 
 # 配置参考
 
-本页列出 doona 涉及的 honk DAE 设置、默认值及生效方式。配置语法请查阅 honk 的[节点](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md)、[订阅](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md)、[组](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md)、[路由](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md)和 [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) 参考。初次使用请从[快速启动](quick-start.md)开始，或跟随[为第一条连接设置路由](tutorial.md)操作。
+doona 使用下列 honk DAE 设置。各表列出默认值及生效方式。配置语法请查阅 honk 的[节点](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md)、[订阅](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md)、[组](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md)、[路由](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md)和 [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) 参考。初次使用请从[快速入门](quick-start.md)开始，或按[为第一条连接设置路由](tutorial.md)操作。
 
 表中默认值对应 honk `1b95e2e`，示例会覆写其中部分值。生效方式列链接到 [doona 可以修改什么](what-doona-can-change.md)中对应的写入权限或重启条目。
 
@@ -139,7 +139,7 @@
 | `flows.max_flows` | `1024` | 流记录容量；`64`–`1024`。 | [即时](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `flows.retention_seconds` | `300` | 已结束流的保留时间；`1`–`300` 秒。 | [即时](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-你可以在设置页修改这些字段。请勿写入 DAE 文件。成功启用配置或重启会重置它们。见[运行时覆盖条件](feature-requirements.md#req-runtime-options)。
+在设置页修改这些字段，不要写入 DAE 文件。成功启用配置或重启会重置这些值。见[运行时覆盖条件](feature-requirements.md#req-runtime-options)。
 
 ## 持久保存的地理数据设置，不是 DAE 键
 
@@ -151,7 +151,7 @@
 | `geodata.auto_update.enabled` | `true` | 启用定时更新检查。 | [即时，持久保存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `geodata.auto_update.interval_hours` | `24` | 定时检查间隔，单位为小时。 | [即时，持久保存](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-你可以在设置页修改这些字段，需要凭证和可用的状态数据库。保存设置本身不会启用新的资源文件。见[地理数据设置条件](feature-requirements.md#req-geodata-settings)。
+在设置页修改这些字段需要凭据和可用的状态数据库。保存设置不会启用新的资源文件。见[地理数据设置条件](feature-requirements.md#req-geodata-settings)。
 
 ## 别名与迁移键
 
