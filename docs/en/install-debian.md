@@ -2,7 +2,7 @@
 
 # Install on Debian or Ubuntu
 
-Install the standard edition of doona v0.1.0-rc.2 with your system package manager. For doona lite, use the [archive instructions](install-manual.md).
+Install the standard edition of doona v0.1.0-rc.3 with your system package manager. For doona lite, use the [archive instructions](install-manual.md).
 
 Use a terminal on the gateway and a new download directory. Run the steps in the same shell; in a root shell, omit `sudo`. Check the [honk prerequisites](install.md#install) before installing the backend.
 
@@ -20,11 +20,11 @@ apt install curl ca-certificates
 
 ## 2. Download and verify the package
 
-Download from the [v0.1.0-rc.2 release](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.2):
+Download from the [v0.1.0-rc.3 release](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.3):
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
-FILE=doona-web_0.1.0-rc.2-1_all.deb
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
+FILE=doona-web_0.1.0-rc.3-1_all.deb
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -58,11 +58,11 @@ See [optional assets](install.md#doona) to decide whether you need fonts or prec
 
 | Asset | Filename |
 | --- | --- |
-| Fonts | `doona-web-fonts_0.1.0-rc.2-1_all.deb` |
-| Precompressed files | `doona-web-precompressed_0.1.0-rc.2-1_all.deb` |
+| Fonts | `doona-web-fonts_0.1.0-rc.3-1_all.deb` |
+| Precompressed files | `doona-web-precompressed_0.1.0-rc.3-1_all.deb` |
 
 ```sh
-FILE=doona-web-fonts_0.1.0-rc.2-1_all.deb
+FILE=doona-web-fonts_0.1.0-rc.3-1_all.deb
 curl -fL -O "$BASE/$FILE"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo apt install "./$FILE"

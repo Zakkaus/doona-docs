@@ -2,7 +2,7 @@
 
 # Install on OpenWrt
 
-Install doona v0.1.0-rc.2 and honk on an OpenWrt router. Run every command in a root shell on the router and keep the same shell open throughout the installation.
+Install doona v0.1.0-rc.3 and honk on an OpenWrt router. Run every command in a root shell on the router and keep the same shell open throughout the installation.
 
 ## Quick install from the daeuniverse feed
 
@@ -47,11 +47,11 @@ Download into `/tmp/doona` and choose the package format used by the firmware. T
 ```sh
 mkdir -p /tmp/doona
 cd /tmp/doona
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
 ```
 
 ```sh tab="apk"
-FILE=doona-0.1.0_rc2-r1.apk
+FILE=doona-0.1.0_rc3-r1.apk
 curl -fL -O "$BASE/$FILE" -O "$BASE/doona-openwrt.adb" \
   -O "$BASE/doona-openwrt.pem" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
@@ -60,7 +60,7 @@ awk '$2 == "doona-openwrt.pem"' SHA256SUMS | sha256sum -c -
 ```
 
 ```sh tab="opkg"
-FILE=doona_0.1.0-rc.2-1_all.ipk
+FILE=doona_0.1.0-rc.3-1_all.ipk
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -103,8 +103,8 @@ Choose [optional assets](install.md#doona) only if you need them. Download the c
 
 | Package | apk filename | opkg filename |
 | --- | --- | --- |
-| `doona-fonts` | `doona-fonts-0.1.0_rc2-r1.apk` | `doona-fonts_0.1.0-rc.2-1_all.ipk` |
-| `doona-precompressed` | `doona-precompressed-0.1.0_rc2-r1.apk` | `doona-precompressed_0.1.0-rc.2-1_all.ipk` |
+| `doona-fonts` | `doona-fonts-0.1.0_rc3-r1.apk` | `doona-fonts_0.1.0-rc.3-1_all.ipk` |
+| `doona-precompressed` | `doona-precompressed-0.1.0_rc3-r1.apk` | `doona-precompressed_0.1.0-rc.3-1_all.ipk` |
 
 For apk, repeat the install command with the chosen package name instead of `doona`. For opkg, set `FILE` to the chosen filename and repeat the install command.
 
