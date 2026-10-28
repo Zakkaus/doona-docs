@@ -12,12 +12,12 @@ In this table, **source permission** means `experimental.native_api.config_write
 
 | Change | Condition | Storage and application |
 | --- | --- | --- |
-| <a name="change-sources"></a><span id="change-sources"></span>Source text: `node`, `subscription`, `group`, `routing`, `dns` except `bind`, reloadable `global` fields, and `assets.subscription` | Source permission; current revision; required local dependencies available | File replacement in file mode; a stored revision with `--store db`. Write plus reload. |
+| <a name="change-sources"></a><span id="change-sources"></span>Source text: `node`, `subscription`, `group`, `routing`, `dns` except `bind`, reloadable `global` fields, and `assets.subscription` | Source permission. Current revision. Required local dependencies available. | File replacement in file mode; a stored revision with `--store db`. Write plus reload. |
 | Add or delete managed nodes and providers | Writable main source and the corresponding `can_manage` capability | Write plus reload. Managed deletion excludes built-in nodes, provider-derived nodes, and declarations in includes. |
 | Edit a subscription declaration | Writable, complete source containing the declaration | Source write plus reload. |
-| <a name="change-groups"></a><span id="change-groups"></span>Group fields: `policy`, `default`, `final`, `tolerance`, `idle_timeout`, `interrupt_connections`, `check_url` | Writable owning source, `groups.config_patch`, and the field in the group's `mutable_config` | Write plus reload. Writable includes are supported. The API names `default` and `final` as `default_member_id` and `final_outbound`. |
+| <a name="change-groups"></a><span id="change-groups"></span>Group fields: `policy`, `default`, `final`, `tolerance`, `idle_timeout`, `interrupt_connections`, `check_url` | Writable owning source, `groups.config_patch`, and the field in the group's `mutable_config` | Write plus reload. Supports writable includes. The API names `default` and `final` as `default_member_id` and `final_outbound`. |
 | <a name="change-runtime"></a><span id="change-runtime"></span>Runtime `record_flows`, `record_logs`, `record_dns_log`, `log.level`, `log.buffered_records`, `dns_log.max_records`, `flows.max_flows`, `flows.retention_seconds` | Admitted API request; advertised field; configured recorder permission and value bounds | Live. No `config_write` requirement. Restart or an accepted configuration activation resets these overrides. |
-| <a name="change-geodata"></a><span id="change-geodata"></span>Geodata URL lists, download route, checksum verification, automatic-update schedule, and reset | Credentials and an available state database; corresponding settings advertised | Live, stored in the state database. The settings request does not download or activate files and does not require `config_write`. doona starts a separate update after saving source URLs when updates are available. |
+| <a name="change-geodata"></a><span id="change-geodata"></span>Geodata URL lists, download route, checksum verification, automatic-update schedule, and reset | Credentials. Available state database. Corresponding settings advertised. | Live, stored in the state database. The settings request does not download or activate files and does not require `config_write`. doona starts a separate update after saving source URLs when updates are available. |
 | Update geodata files | Configuration-write authority, credentials, loaded assets with paths and URLs | Download, file replacement, then activation. See [geodata update requirements](feature-requirements.md#req-geodata-update). |
 | Select a group member, pin an automatic policy, or clear a pin | Running backend; group selection capability and the group's `can_select` or `can_override` | Live runtime action. No source write or `config_write` requirement. Selector persistence depends on the state cache and `experimental.cache_file.enabled` not being `false`. |
 | Appearance, language, layout, flag overrides, and probe preferences | Browser support and storage | Live in this browser. They do not modify honk configuration. Wallpaper persistence uses IndexedDB. |
@@ -39,16 +39,16 @@ The API refuses these effective changes before writing. Use an external editor, 
 
 The health-check comparison uses the effective first HTTP URL and method, and the selected UDP DNS target. `tls_implementation` requires a restart when switching into or out of UTLS mode. The log-file comparison uses the effective path, including any command-line override.
 
-The reload policy also compares internal `global.tproxy_mark`. It is not an accepted DAE configuration key; do not add it to your file. `global.data_dir` is rejected as `listener_settings_changed` in database mode and as a restart-required diagnostic in file mode.
+The reload policy also compares internal `global.tproxy_mark`. honk does not accept it as a DAE configuration key; do not add it to your file. honk rejects `global.data_dir` as `listener_settings_changed` in database mode and as a restart-required diagnostic in file mode.
 
 ## Why a source is read-only
 
 Check the source badge on **Configuration**. A source can be read-only because:
 
-- `config_write` is disabled, or neither `secret` nor `password_auth` provides credentials.
+- `config_write` is off, or neither `secret` nor `password_auth` provides credentials.
 - It declares a native API or Clash API listener secret.
 - Its text contains a listener-secret value subject to masking. honk masks matching values of at least eight bytes.
-- In database mode, recording the active revision failed and the store is blocked.
+- In database mode, failure to record the active revision blocks the store.
 
 Configuration actions also remain unavailable while the source set or write coordinator is unavailable. doona refuses incomplete source content. A write cannot introduce a listener secret, change the set of credential-bearing sources, or change listener settings.
 
@@ -56,7 +56,7 @@ Keep listener secrets in a separate include and edit that include outside doona.
 
 ## Filesystem requirements
 
-A writable badge does not prove that the filesystem permits replacement. In file mode, honk must read the original, create and sync a temporary file beside it, rename that file over the original, and sync the directory. Its service user needs access to the containing directories and permission to create and replace entries there.
+A writable badge does not prove that the filesystem permits replacement. In file mode, honk must read the original and create and sync a temporary file beside it. It then renames that file over the original and syncs the directory. Its service user needs access to the containing directories and permission to create and replace entries there.
 
 Configuration writes reject symbolic links in the source path and nonregular files. A missing write bit on the source file alone is not the permission test: replacement changes the directory entry. Concurrent file changes can also reject the write. After applying, check that the operation succeeded and the source readback contains your change.
 

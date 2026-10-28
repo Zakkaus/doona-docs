@@ -115,7 +115,7 @@ Follow [honk’s source-build instructions](https://github.com/daeuniverse/honk/
 cargo build --release -p honk-core --features ebpf,native-api
 ```
 
-`ebpf` supplies the real datapath; `native-api` supplies doona’s API. Install `target/release/honk-core` at the binary path above. Release binaries embed the eBPF object, so no separate object file needs to be installed.
+`ebpf` supplies the real datapath; `native-api` supplies doona’s API. Install `target/release/honk-core` at the binary path above. Release binaries embed the eBPF object, so you need not install a separate object file.
 
 ## Installation errors
 
@@ -164,20 +164,20 @@ Follow the distribution guide above or [manual installation](install-manual.md).
 
 Debian names these `doona-web-fonts` and `doona-web-precompressed`. Package filenames are on each distribution page; archive steps are under [manual installation](install-manual.md).
 
-Precompressed assets use additional disk space; omit them on routers with limited storage. Without the optional font archive, doona uses fallback fonts and does not load the optional font faces. It still requests `fonts/README` to detect whether the archive is installed.
+Precompressed assets use additional disk space; omit them on routers with limited storage. Without the optional font archive, doona uses fallback fonts and does not load the optional font faces. It still requests `fonts/README` to detect the archive’s presence.
 
 ### Local builds and packaging recipes
 
-The repository supplies [OpenWrt, Alpine, Gentoo and Nix recipes](https://github.com/Zakkaus/doona/blob/main/install/README.md), which have not yet been submitted to their distribution repositories. The AUR `doona-bin` recipe is maintained in a separate repository.
+The repository supplies [OpenWrt, Alpine, Gentoo and Nix recipes](https://github.com/Zakkaus/doona/blob/main/install/README.md), not yet submitted to their distribution repositories. The AUR `doona-bin` recipe has a separate repository.
 
-For a staged installation, first complete a [local build](development.md). From the doona repository root, run the following commands, replacing `/absolute/staging/path` with your staging directory. Both targets accept `DESTDIR` and `PREFIX`; omit the second command if you do not need fonts.
+For a staged installation, first complete a [local build](development.md). From the doona repository root, run these commands, replacing `/absolute/staging/path` with your staging directory. Both targets accept `DESTDIR` and `PREFIX`; omit the second command if you do not need fonts.
 
 ```sh
 make install DESTDIR=/absolute/staging/path PREFIX=/usr
 make install-fonts DESTDIR=/absolute/staging/path PREFIX=/usr
 ```
 
-The UI files are installed under the staging directory’s `usr/share/doona`.
+The commands install the UI files under the staging directory’s `usr/share/doona`.
 
 <a name="other-origin"></a>
 
@@ -200,7 +200,7 @@ If HTML loads but JavaScript or CSS returns 403, inspect the failing requests in
 
 ### Static servers and reverse proxies
 
-A static server can serve the extracted UI files at its web root or under a prefix such as `/ui/`. doona uses hash routes such as `/ui/#/activity`, so no SPA rewrite rules are needed.
+A static server can serve the extracted UI files at its web root or under a prefix such as `/ui/`. doona uses hash routes such as `/ui/#/activity`, so it needs no SPA rewrite rules.
 
 Forward both the exact `/api` discovery endpoint and the `/api/` subtree to honk’s listener. Forwarding `/api/` alone misses discovery and prevents connection. If the connection address has a proxy prefix such as `/gateway`, route `/gateway/api` to honk’s `/api` and `/gateway/api/…` to `/api/…`. Apply the same prefix mapping to both routes.
 

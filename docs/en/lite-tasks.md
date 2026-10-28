@@ -8,7 +8,7 @@ Import nodes and edit honk configuration after [connecting lite](lite-connect.md
 
 ## Apply a draft
 
-For subscription, group, routing, DNS and global-setting edits, use this sequence after the task's steps:
+After editing a subscription, group, routing, DNS or global setting:
 
 1. Select **Review and apply**.
 2. Check the proposed changes, then select **Apply**.
@@ -47,7 +47,7 @@ Editing and deleting subscriptions use the same review flow. For a failed fetch,
 3. In **Edit group**, find a node under **Available nodes and subscriptions** and select its **Add** button. Confirm that it appears under **In this group**.
 4. Follow **Apply a draft** above, then check the group's members.
 
-For group-related controls, see [group editing requirements](feature-requirements.md#req-group-edit).
+For group controls, see [group editing requirements](feature-requirements.md#req-group-edit).
 
 <a name="lite-task-rule"></a>
 

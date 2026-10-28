@@ -71,7 +71,7 @@ EOF
 chmod 0755 /etc/init.d/honk-core
 ```
 
-`MIMALLOC_PURGE_DELAY=0` requests immediate purging from mimalloc. The setting is described in [honk’s CLI reference](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/cli.md).
+`MIMALLOC_PURGE_DELAY=0` requests immediate purging from mimalloc. See [honk’s CLI reference](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/cli.md) for this setting.
 
 ## 2. Enable and start honk
 
@@ -122,11 +122,11 @@ Disabling startup at boot does not stop a running service. To keep honk stopped 
 | --- | --- |
 | systemd cannot find `honk-core.service` | Create the unit using step 1, run `sudo systemctl daemon-reload`, then start it using step 2. |
 | Reload reports `no running honk-core instance` | No real instance holds the process lock. A foreground process using `--mock-ebpf` does not hold that lock. Start the intended real service using step 2. |
-| `SIGHUP reload applied` | The new configuration was applied. |
-| `SIGHUP reload rejected` | Read the accompanying `stage` and errors to determine whether the new configuration was applied; for a restart-required rejection, edit the listed settings on the host and [restart honk](what-doona-can-change.md). |
-| `SIGHUP reload committed with degraded datapath` | The configuration was committed, but the datapath is degraded. Read the accompanying errors before treating the service as healthy. |
+| `SIGHUP reload applied` | honk applied the new configuration. |
+| `SIGHUP reload rejected` | Read the accompanying `stage` and errors to determine whether honk applied the new configuration. For a restart-required rejection, edit the listed settings on the host and [restart honk](what-doona-can-change.md). |
+| `SIGHUP reload committed with degraded datapath` | honk committed the configuration, but the datapath remains degraded. Read the accompanying errors before treating the service as healthy. |
 
-A successful reload command alone does not prove that the configuration was applied; check the service log for the outcome.
+A successful reload command alone does not prove that honk applied the configuration; check the service log for the outcome.
 
 ## OpenRC or a foreground test
 

@@ -10,7 +10,7 @@ Connect an installed or separately hosted lite page to honk's native API. For in
 
 Open the lite page. If honk serves it, use its `/ui/` address. With no saved connection, lite detects honk at the page origin. If honk allows anonymous access, lite connects directly; otherwise it opens the matching sign-in form. Select **Use another backend** to enter a different address.
 
-If honk is not detected or you choose another backend:
+If lite does not detect honk or you choose another backend:
 
 1. Enter the server root in **honk native API root**, for example `http://192.168.1.1:9527`, including any reverse-proxy prefix. Do not include `/ui/` or `/api/v1`, and do not enter a proxy node URL.
 2. Select **Continue** to discover the sign-in method.
@@ -29,4 +29,4 @@ After connecting, continue with [Common tasks in doona lite](lite-tasks.md). For
 
 ## Explore without a backend
 
-Open the [doona lite demo](https://demo.daeuniverse.org/lite/) to go straight into sample data without a backend. Changes to the sample data reset when the page reloads. Installed and separately hosted lite builds connect only to honk and do not offer a demo button.
+Open the [doona lite demo](https://demo.daeuniverse.org/lite/) to explore sample data without a backend. Changes to the sample data reset when the page reloads. Installed and separately hosted lite builds connect only to honk and do not offer a demo button.

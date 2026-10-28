@@ -4,9 +4,9 @@
 
 # Configuration
 
-Use this reference for honk's DAE settings exposed by doona, their defaults, and their application paths. For configuration syntax, use honk's [nodes](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md), [subscriptions](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md), [groups](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md), [routing](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md), and [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) references. Start with [Quick start](quick-start.md) or follow [Route your first connection](tutorial.md).
+Look up honk's DAE settings exposed by doona, their defaults, and how they take effect. For configuration syntax, use honk's [nodes](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md), [subscriptions](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md), [groups](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/groups.md), [routing](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/routing.md), and [DNS](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/dns.md) references. Start with [Quick start](quick-start.md) or follow [Route your first connection](tutorial.md).
 
-The tables show defaults for honk `1b95e2e`. The example deliberately overrides some defaults. The Applies column links to the corresponding write-permission or restart row in [What doona can change](what-doona-can-change.md).
+The tables show defaults for honk `1b95e2e`. The example overrides some defaults. The Applies column links to the corresponding write-permission or restart row in [What doona can change](what-doona-can-change.md).
 
 ## Native API and authentication
 
@@ -139,7 +139,7 @@ These file keys grant recorder permission. Flows, logs and DNS logs start in on-
 | `flows.max_flows` | `1024` | Flow record capacity; `64`–`1024`. | [Live](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `flows.retention_seconds` | `300` | Terminal flow retention; `1`–`300` seconds. | [Live](what-doona-can-change.md#change-runtime) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-You change these through Settings. Do not put them in a DAE file. An accepted activation or restart resets them. See [runtime override requirements](feature-requirements.md#req-runtime-options).
+Change these through Settings, not a DAE file. An accepted activation or restart resets them. See [runtime override requirements](feature-requirements.md#req-runtime-options).
 
 ## Stored geodata settings, not DAE keys
 
@@ -151,7 +151,7 @@ You change these through Settings. Do not put them in a DAE file. An accepted ac
 | `geodata.auto_update.enabled` | `true` | Enables scheduled update checks. | [Live, stored](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 | `geodata.auto_update.interval_hours` | `24` | Interval between scheduled checks, in hours. | [Live, stored](what-doona-can-change.md#change-geodata) | [api](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/api.md) |
 
-You change these through Settings with credentials and an available state database. Saving settings does not itself activate new asset files. See [geodata settings requirements](feature-requirements.md#req-geodata-settings).
+Change these through Settings with credentials and an available state database. Saving settings does not itself activate new asset files. See [geodata settings requirements](feature-requirements.md#req-geodata-settings).
 
 ## Aliases and migration keys
 

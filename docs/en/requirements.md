@@ -14,7 +14,7 @@ Follow honk’s [Linux kernel requirements](https://github.com/daeuniverse/honk/
 
 ## honk version
 
-Use a honk build that implements doona's native API contract and includes the `native-api` build feature. A version number alone does not establish compatibility; a build without that feature cannot serve the API even if you add its configuration block.
+Use a honk build that implements doona's native API contract and includes the `native-api` build feature. A version number alone does not establish compatibility. Without that feature, a build cannot serve the API even with its configuration block.
 
 Choose a compatible honk-core archive using the [installation guide](install.md). The app's [contract pin](https://github.com/Zakkaus/doona/blob/main/contract/api-standardize/SOURCE.md) identifies the API it expects.
 

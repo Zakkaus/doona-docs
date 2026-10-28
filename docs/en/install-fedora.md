@@ -31,7 +31,7 @@ Continue only when every selected file reports `OK`. If verification fails or fi
 
 For download or binary errors, see [Installation errors](install.md#installation-errors).
 
-The release RPM is unsigned. Complete the SHA-256 verification above before installation; checksum verification is separate from RPM signature verification.
+The release RPM has no signature. Complete the SHA-256 verification above before installation; checksum verification is separate from RPM signature verification.
 
 ## 3. Install the web files
 
@@ -44,7 +44,7 @@ The last command must list `index.html`. Use that directory in the [separate UI 
 
 ### Optional packages
 
-See [optional assets](install.md#doona) to decide whether you need fonts or precompressed files. To install one, use its filename from the table as `FILE` in the commands below. The example selects fonts.
+See [optional assets](install.md#doona) to choose fonts or precompressed files. Use the chosen filename from the table as `FILE` below. The example selects fonts.
 
 | Asset | Filename |
 | --- | --- |
@@ -60,6 +60,6 @@ awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
 
 ## 4. Install the backend
 
-Install the backend using [Install honk](install.md#install), then return here. If a compatible honk is already installed, keep it.
+If you already have a compatible honk, keep it. Otherwise, follow [Install honk](install.md#install), then return here.
 
 Apply the [separate UI configuration](install.md), [start honk](service-management.md), then follow [First sign-in](first-sign-in.md).

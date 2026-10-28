@@ -6,7 +6,7 @@ Install doona v0.1.0-rc.3 with the repository’s ebuild in a local Portage repo
 
 Use a terminal on the gateway and a new download directory. Run the steps in the same shell; in a root shell, omit `sudo`. Check the [honk prerequisites](install.md#install) before installing the backend.
 
-Install `net-misc/curl` and `app-misc/ca-certificates` if they are missing. The commands below use sudo for system writes.
+Install `net-misc/curl` and `app-misc/ca-certificates` if they are missing.
 
 ```sh
 sudo emerge --ask net-misc/curl app-misc/ca-certificates
@@ -85,11 +85,11 @@ The last command must list `index.html`. Use that directory in the [separate UI 
 | Error | What to check |
 | --- | --- |
 | Portage cannot find `net-proxy/doona` | Run `portageq get_repos /` and check that it lists your local repository. Confirm that the ebuild is under that repository’s `net-proxy/doona/` directory; fix registration using step 1. |
-| Package is masked by a testing keyword | Check that the `package.accept_keywords` entry in step 4 uses your architecture’s keyword, such as `~amd64` or `~arm64`. |
+| A testing keyword masks the package | Check that the `package.accept_keywords` entry in step 4 uses your architecture’s keyword, such as `~amd64` or `~arm64`. |
 
 ## 5. Install the backend
 
-Install the backend using [Install honk](install.md#install), then return here. If a compatible honk is already installed, keep it.
+If you already have a compatible honk, keep it. Otherwise, follow [Install honk](install.md#install), then return here.
 
 Use the systemd procedure in [Service management](service-management.md) on a systemd host. On OpenRC, that page provides a foreground command for the first connection.
 

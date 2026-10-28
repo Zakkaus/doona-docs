@@ -37,7 +37,7 @@ Press `g`, then a page letter within 800 ms, to open that page. For example, `g`
 | Held-rule count | Apply the rules you have held; see [held rules](routing.md#held-rules). |
 | **Theme**, **Language**, **Palette** | Change the interface's appearance or language. |
 
-The held-rule apply button reports the rule count; its label includes the file count when more than one file will be written. Applying held rules and reloading honk disable each other while either action is running.
+The held-rule apply button reports the rule count; its label includes the file count for writes to more than one file. Applying held rules and reloading honk disable each other while either action is running.
 
 When the theme follows the system, the theme button selects the opposite color scheme; pressing it again returns to **System**. The **Palette** menu ends with **Appearance settings**, which opens the Appearance tab containing **Wordmark**.
 
@@ -68,7 +68,7 @@ Tabs under a page title switch views within that page. For traffic fields and fi
 | Change pages | An unpinned floating panel collapses. Both traffic rates remain visible, even in a narrow panel. |
 | **Hide at edge** | Hides a floating, unpinned panel at the window edge; both traffic rates remain visible on its handle. |
 | **Undock** | Returns a docked panel to floating mode. The docked header has no title, and this button replaces the pin button. |
-| Resize | A floating panel with no saved size is 280 px wide and can be narrowed to 200 px. Horizontal resizing lets its height grow with the content within the window. Resizing the top or bottom edge preserves the chosen height. |
+| Resize | A floating panel with no saved size is 280 px wide; you can narrow it to 200 px. Horizontal resizing lets its height grow with the content within the window. Resizing the top or bottom edge preserves the chosen height. |
 
 For widget types and dashboard layouts, see [Widgets](features.md#widgets).
 
@@ -76,7 +76,7 @@ For widget types and dashboard layouts, see [Widgets](features.md#widgets).
 
 ## Understand a write before confirming it
 
-The meaning of a button depends on the control beside it. Rule **Hold** and **Apply** are described in [held rules](routing.md#held-rules); source writes, runtime changes and browser preferences are compared in [What doona can change](what-doona-can-change.md).
+A button's meaning depends on the control beside it. See [held rules](routing.md#held-rules) for rule **Hold** and **Apply**. Compare source writes, runtime changes and browser preferences in [What doona can change](what-doona-can-change.md).
 
 <a name="confirm"></a>
 
@@ -86,7 +86,7 @@ The meaning of a button depends on the control beside it. Rule **Hold** and **Ap
 2. Reopen the edited resource and check its value.
 3. For a routing change, follow the [tutorial's trace and connection checks](tutorial.md).
 
-If a source write is refused, use [read-only sources and write failures](troubleshooting.md#read-only). Check [when changes take effect](what-doona-can-change.md) before retrying or restarting.
+If honk refuses a source write, use [read-only sources and write failures](troubleshooting.md#read-only). Check [when changes take effect](what-doona-can-change.md) before retrying or restarting.
 
 Press Enter in a single-line field to submit the sign-in form, runtime settings or the node, subscription, check, profile-name, custom-geodata-URL, rule and routing-template dialogs. While a modal dialog is open, notifications appear at the top center regardless of the saved notification position, with the dialog below them.
 

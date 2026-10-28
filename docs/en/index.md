@@ -30,7 +30,7 @@ See the [edition comparison](editions.md). To explore sample data, open the [sta
 
 - A page or action is unavailable: [Feature requirements](feature-requirements.md).
 - You need a configuration key: [Configuration reference](configuration.md).
-- You need to know where a change is stored or whether it needs a restart: [What doona can change](what-doona-can-change.md).
+- You need a change's storage location or restart requirements: [What doona can change](what-doona-can-change.md).
 - A connection, sign-in or write fails: [Troubleshooting](troubleshooting.md).
 - You want to build or contribute: [Development](development.md).
 

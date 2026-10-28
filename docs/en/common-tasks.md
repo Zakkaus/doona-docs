@@ -4,7 +4,7 @@
 
 # Common tasks
 
-Use these steps to change routing, manage subscriptions, and diagnose traffic in the standard edition. For a first configuration, follow [Route your first connection](tutorial.md); for the smaller edition, see [doona lite](lite.md).
+Change routing, manage subscriptions, and diagnose traffic in the standard edition. For a first configuration, follow [Route your first connection](tutorial.md); for the smaller edition, see [doona lite](lite.md).
 
 Before changing a rule, check [rule editing requirements](feature-requirements.md#req-rules). For when a saved change takes effect, see [configuration writes](what-doona-can-change.md#change-sources).
 
@@ -55,7 +55,7 @@ Check [selection and pinning requirements](feature-requirements.md#req-group-sel
 
 1. Open **Policies** and expand the group's card.
 2. Select a node in its node grid.
-3. Read the notice to confirm the selection and whether the automatic policy is paused.
+3. Read the notice to confirm the selection and whether the automatic policy has paused.
 4. To clear a manual pin, open the card's **More actions** menu and select **Back to automatic**. Check the member reported by the resulting notice.
 
 For group policies, see [policy groups](routing.md#policies).
@@ -68,8 +68,8 @@ Check [subscription creation requirements](feature-requirements.md#req-nodes) an
 
 1. Open **Nodes** and select **Add subscription**.
 2. Enter **Name** and **Subscription URL**, then select **Add**.
-3. Select the new subscription card and check its nodes. When refresh is supported, doona requests it after adding the subscription; the notice reports the result.
-4. To refresh later, use the update button on that card. If the declaration was saved but the refresh failed, resolve the reported error and use that button again.
+3. Select the new subscription card and check its nodes. If the backend supports refresh, doona requests it after adding the subscription. The notice reports the result.
+4. To refresh later, use the update button on that card. If doona saved the declaration but the refresh failed, resolve the reported error and use that button again.
 
 Continue with [creating a group](tutorial.md) when the subscription has nodes.
 
@@ -86,7 +86,7 @@ Check [outbound-mode requirements](feature-requirements.md#req-config-edit).
 
 To return to rule-based routing, choose **Rule** and select **Apply**.
 
-Choosing a global outbound also selects Global mode. In Global mode, **Apply** is disabled until a target is selected. Changing the selection alone does not apply it. Select **Read-only** to inspect a write restriction; **Not provided by this backend** means the backend offers no configuration this control can edit.
+Choosing a global outbound also selects Global mode. In Global mode, choose a target to enable **Apply**. Changing the selection alone does not apply it. Select **Read-only** to inspect a write restriction; **Not provided by this backend** means the backend offers no configuration this control can edit.
 
 <a name="why-outbound"></a>
 
@@ -107,7 +107,7 @@ Check [DNS query requirements](feature-requirements.md#req-dns-query).
 
 1. Open **DNS** → **Query**.
 2. Enter **Domain** and choose **Type**.
-3. If **Upstream** is offered, leave **Automatic** to follow the configured DNS routing, or select a named upstream.
+3. If **Upstream** appears, leave **Automatic** to follow the configured DNS routing, or select a named upstream.
 4. **Bypass cache** is off by default. Enable it when the diagnostic lookup must bypass cached answers.
 5. Select **Query**. Read the answers, status, upstream and routing information in the result.
 
