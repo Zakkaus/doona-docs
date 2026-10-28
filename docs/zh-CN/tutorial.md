@@ -4,7 +4,7 @@
 
 完成[快速入门](quick-start.md)后，保持 honk 运行并以管理员身份登录。准备可用的 HTTP 或 HTTPS 订阅 URL，以及网关的 shell 访问权限。本教程将 `example.com` 送入名为 `proxy` 的新组，其他流量保持直连。订阅名称使用 `harbor`。
 
-从直连配置开始：使用 `fallback: direct`，没有 DNS 块，也没有已有的 `harbor` 订阅或 `proxy` 组。将 API 凭据放在独立的引入文件，让主文件保持可编辑；见[配置示例](configuration.md)。添加代理规则前，按第 6 步追踪 `example.com`，结果应为 `direct`。
+从直连配置开始：使用 `fallback: direct`，没有 DNS 块，也没有已有的 `harbor` 订阅或 `proxy` 组。将 API 凭据放在独立的引入文件，让主文件保持可编辑；见[配置示例](configuration.md)。此时 `example.com` 使用 `direct` 回退。第 3 步添加代理规则后，在第 6 步确认其出站为 `proxy`。
 
 ## 1. 添加订阅
 

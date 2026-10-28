@@ -88,7 +88,7 @@ sudo systemctl status honk-core
 
 systemd 状态应显示 `active (running)`；OpenWrt 状态应显示 `running`。按[快速入门](quick-start.md)打开 doona，确认监听地址可以访问。
 
-在本次启动日志中确认 `native API listener ready` 和 `honk-core is running`。访问 API 监听地址的 `/api` 路径时，JSON 响应包含 `setup_required: true`，表示 API 可访问且尚未创建管理员。仅能访问 API，不代表实际 eBPF 后端能够路由流量。
+在本次启动日志中确认 `native API listener ready` 和 `honk-core is running`。访问 API 监听地址的 `/api` 路径时，若 JSON 响应的 `auth` 对象中 `setup_required` 为 `true`，表示 API 可访问且尚未创建管理员。仅能访问 API，不代表实际 eBPF 后端能够路由流量。
 
 即使 honk 启动成功，也须阅读启动诊断：解析器会对 `global` 中未知的标量键发出警告并忽略它们。
 

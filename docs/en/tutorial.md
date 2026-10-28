@@ -4,7 +4,7 @@
 
 Continue from [Quick start](quick-start.md), with honk running and your administrator signed in. You need a working HTTP or HTTPS subscription URL and shell access to the gateway. This exercise sends `example.com` through a new group named `proxy` and leaves other traffic direct. Use `harbor` for the subscription name.
 
-Start with a direct-only configuration: `fallback: direct`, no DNS block, and no existing `harbor` subscription or `proxy` group. Keep API credentials in a separate include so the main file remains editable; see the [configuration example](configuration.md). Before adding proxy rules, the trace in step 6 should end at `direct` for `example.com`.
+Start with a direct-only configuration: `fallback: direct`, no DNS block, and no existing `harbor` subscription or `proxy` group. Keep API credentials in a separate include so the main file remains editable; see the [configuration example](configuration.md). At this point, `example.com` uses the `direct` fallback. After adding the proxy rule in step 3, verify in step 6 that its outbound is `proxy`.
 
 ## 1. Add the subscription
 

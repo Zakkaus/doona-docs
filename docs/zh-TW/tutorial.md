@@ -4,7 +4,7 @@
 
 完成[快速入門](quick-start.md)後，保持 honk 運作並以管理員身分登入。準備可用的 HTTP 或 HTTPS 訂閱 URL，以及閘道器的 shell 存取權限。本教學將 `example.com` 送入名為 `proxy` 的新群組，其他流量保持直連。訂閱名稱使用 `harbor`。
 
-從直連組態開始：使用 `fallback: direct`，沒有 DNS 區塊，也沒有既有的 `harbor` 訂閱或 `proxy` 群組。將 API 憑證放在獨立的引入檔案，讓主檔案保持可編輯；見[組態範例](configuration.md)。新增代理規則前，依第 6 步追蹤 `example.com`，結果應為 `direct`。
+從直連組態開始：使用 `fallback: direct`，沒有 DNS 區塊，也沒有既有的 `harbor` 訂閱或 `proxy` 群組。將 API 憑證放在獨立的引入檔案，讓主檔案保持可編輯；見[組態範例](configuration.md)。此時 `example.com` 使用 `direct` 回退。第 3 步新增代理規則後，在第 6 步確認其出站為 `proxy`。
 
 ## 1. 新增訂閱
 

@@ -56,7 +56,7 @@ Use **Edit dashboard** to add, move, resize or remove cards. **Done** saves the 
 
 You can place each widget at most three times. Available sizes depend on the widget, and resizing one card does not resize its neighbors. Removing a card offers **Undo** while the editor remains open.
 
-The gallery includes **Outbound failures**. See [Widgets](features.md#widgets) for other widget types, sizes and statistics in the shared dashboard and floating-panel gallery.
+The gallery includes **Subscription quota**, **Outbound failures**, **Node availability** and **DNS latency**. Memory can use a chart or a **Sparkline** value tile. Wide charts show peak and average statistics beside the chart. See [Widgets](features.md#widgets) for the shared dashboard and floating-panel gallery.
 
 ![Dashboard editor](../screenshots/en/dashboard-settings.webp)
 
