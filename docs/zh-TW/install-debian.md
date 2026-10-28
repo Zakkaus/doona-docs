@@ -2,7 +2,7 @@
 
 # 在 Debian 或 Ubuntu 上安裝
 
-使用系統套件管理員安裝 doona v0.1.0-rc.2 標準版。doona lite 請依照[壓縮檔安裝說明](install-manual.md)操作。
+使用系統套件管理員安裝 doona v0.1.0-rc.3 標準版。doona lite 請依照[壓縮檔安裝說明](install-manual.md)操作。
 
 在閘道器上開啟終端機，進入新建的下載目錄，並在同一 shell 中完成各步。使用 root shell 時省略 `sudo`。安裝後端前先檢查 [honk 的前提條件](install.md#install)。
 
@@ -20,11 +20,11 @@ apt install curl ca-certificates
 
 ## 2. 下載並驗證套件
 
-從 [v0.1.0-rc.2 發行頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.2)下載：
+從 [v0.1.0-rc.3 發行頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.3)下載：
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
-FILE=doona-web_0.1.0-rc.2-1_all.deb
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
+FILE=doona-web_0.1.0-rc.3-1_all.deb
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -58,11 +58,11 @@ Debian 套件名為 `doona-web`。不要改用 `apt install doona`，Debian 和 
 
 | 資源 | 檔名 |
 | --- | --- |
-| 字型 | `doona-web-fonts_0.1.0-rc.2-1_all.deb` |
-| 預先壓縮的檔案 | `doona-web-precompressed_0.1.0-rc.2-1_all.deb` |
+| 字型 | `doona-web-fonts_0.1.0-rc.3-1_all.deb` |
+| 預先壓縮的檔案 | `doona-web-precompressed_0.1.0-rc.3-1_all.deb` |
 
 ```sh
-FILE=doona-web-fonts_0.1.0-rc.2-1_all.deb
+FILE=doona-web-fonts_0.1.0-rc.3-1_all.deb
 curl -fL -O "$BASE/$FILE"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo apt install "./$FILE"

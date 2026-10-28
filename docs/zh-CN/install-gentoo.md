@@ -2,7 +2,7 @@
 
 # 在 Gentoo 上安装
 
-将仓库中的 ebuild 加入本地 Portage 仓库，安装 doona v0.1.0-rc.2。doona lite 请使用[手动安装](install-manual.md)。
+将仓库中的 ebuild 加入本地 Portage 仓库，安装 doona v0.1.0-rc.3。doona lite 请使用[手动安装](install-manual.md)。
 
 在网关上打开终端，进入新建的下载目录，并在同一 shell 中完成各步。使用 root shell 时省略 `sudo`。安装后端前先检查 [honk 的前提条件](install.md#install)。
 
@@ -35,8 +35,8 @@ portageq get_repos /
 ## 2. 添加 ebuild
 
 ```sh
-VERSION=0.1.0-rc.2
-PV=0.1.0_rc2
+VERSION=0.1.0-rc.3
+PV=0.1.0_rc3
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 sudo curl -fL -o "$REPO/net-proxy/doona/doona-$PV.ebuild" "$RAW/doona-$PV.ebuild"
@@ -69,12 +69,12 @@ sudo ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 4. 接受测试关键字并安装
 
-将 `=net-proxy/doona-0.1.0_rc2 ~amd64` 添加到 `package.accept_keywords` 配置中，将 `~amd64` 替换为当前架构的测试关键字，例如 `~arm64`。如果该配置是目录，则写入其中的文件。
+将 `=net-proxy/doona-0.1.0_rc3 ~amd64` 添加到 `package.accept_keywords` 配置中，将 `~amd64` 替换为当前架构的测试关键字，例如 `~arm64`。如果该配置是目录，则写入其中的文件。
 
 不需要字体时，在安装前将 `net-proxy/doona -fonts` 添加到 `package.use`。
 
 ```sh
-sudo emerge --ask =net-proxy/doona-0.1.0_rc2
+sudo emerge --ask =net-proxy/doona-0.1.0_rc3
 ls -l /usr/share/doona/index.html
 ```
 

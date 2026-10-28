@@ -2,7 +2,7 @@
 
 # 透過壓縮檔或在 Alpine 上安裝
 
-系統沒有對應的套件時，可以透過壓縮檔安裝 doona v0.1.0-rc.2。Alpine 使用者也可以選擇[已簽署的套件](#install-alpine)。
+系統沒有對應的套件時，可以透過壓縮檔安裝 doona v0.1.0-rc.3。Alpine 使用者也可以選擇[已簽署的套件](#install-alpine)。
 
 在閘道器上開啟終端機，進入新建的下載目錄，並在同一 shell 中完成各步。使用 root shell 時省略 `sudo`。安裝後端前先檢查 [honk 的前提條件](install.md#install)。
 
@@ -13,19 +13,19 @@
 選擇一個分頁。版本差異見[版本比較](editions.md)。
 
 ```sh tab="標準版"
-FILE=doona-0.1.0-rc.2.tar.gz
+FILE=doona-0.1.0-rc.3.tar.gz
 UI_DIR=/usr/share/doona
 ```
 
 ```sh tab="Lite"
-FILE=doona-lite-0.1.0-rc.2.tar.gz
+FILE=doona-lite-0.1.0-rc.3.tar.gz
 UI_DIR=/usr/share/doona-lite
 ```
 
 ## 2. 下載並驗證
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -50,11 +50,11 @@ ls -l "$UI_DIR/index.html"
 
 | 資源 | 檔名 |
 | --- | --- |
-| 字型 | `doona-fonts-0.1.0-rc.2.tar.gz` |
-| 預先壓縮的檔案 | `doona-precompressed-0.1.0-rc.2.tar.gz` |
+| 字型 | `doona-fonts-0.1.0-rc.3.tar.gz` |
+| 預先壓縮的檔案 | `doona-precompressed-0.1.0-rc.3.tar.gz` |
 
 ```sh
-FILE=doona-fonts-0.1.0-rc.2.tar.gz
+FILE=doona-fonts-0.1.0-rc.3.tar.gz
 curl -fL -O "$BASE/$FILE"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo tar -xzf "$FILE" -C /usr/share/doona
@@ -69,8 +69,8 @@ awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
 此方式安裝標準版。準備好前述工具後，在新的下載目錄中操作。選擇名稱以 `.alpine.apk` 結尾的 Alpine 資源；OpenWrt 的 apk 檔案格式不同。
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.2
-FILE=doona-0.1.0-rc.2-r0.alpine.apk
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
+FILE=doona-0.1.0-rc.3-r0.alpine.apk
 curl -fL -O "$BASE/$FILE" -O "$BASE/doona-alpine.rsa.pub" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 awk '$2 == "doona-alpine.rsa.pub"' SHA256SUMS | sha256sum -c -
@@ -85,7 +85,7 @@ apk add "./$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最後一條命令必須列出 `index.html`。選用套件為 `doona-fonts-0.1.0-rc.2-r0.alpine.apk` 和 `doona-precompressed-0.1.0-rc.2-r0.alpine.apk`。安裝時修改 `FILE`，依照前述方式下載並驗證，再以 root 執行 `apk add "./$FILE"`。
+最後一條命令必須列出 `index.html`。選用套件為 `doona-fonts-0.1.0-rc.3-r0.alpine.apk` 和 `doona-precompressed-0.1.0-rc.3-r0.alpine.apk`。安裝時修改 `FILE`，依照前述方式下載並驗證，再以 root 執行 `apk add "./$FILE"`。
 
 不新增發行公鑰而直接安裝時，先依照上文驗證下載的套件，再以 root 執行：
 
