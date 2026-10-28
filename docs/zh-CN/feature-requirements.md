@@ -14,8 +14,8 @@
 | 流量与内存历史 | 启用启动记录器 | [启用条件](#req-traffic-history) |
 | 节点与订阅声明 | 所属配置源可写 | [启用条件](#req-nodes) |
 | 订阅更新 | 可更新的订阅 | [启用条件](#req-subscription-refresh) |
-| 群组列表、选择与固定 | 群组选择能力 | [启用条件](#req-group-selection) |
-| 群组创建、编辑与检查设置 | 完整可写的声明 | [启用条件](#req-group-edit) |
+| 组列表、选择与固定 | 组选择能力 | [启用条件](#req-group-selection) |
+| 组创建、编辑与检查设置 | 完整可写的声明 | [启用条件](#req-group-edit) |
 | 延迟探测 | 兼容的探测选项 | [启用条件](#req-probes) |
 | 连接与关闭流量 | 关闭要求用户空间传输 | [启用条件](#req-connections) |
 | 流程与已记录的规则命中 | 活动的流程记录器 | [启用条件](#req-flows) |
@@ -231,7 +231,7 @@
 **详细说明**
 
 - 受管删除不适用于内置节点、订阅源生成的节点和引入文件中的声明。
-- 群组最终出站所引用的节点，也不能通过受管删除移除。
+- 组最终出站所引用的节点，也不能通过受管删除移除。
 
 <a name="req-subscription-refresh"></a>
 
@@ -263,21 +263,21 @@
 
 <a name="req-group-selection"></a>
 
-## 群组列表、选择与固定
+## 组列表、选择与固定
 
 **所需条件**
 
-- 策略页：`groups.available`。选择成员：群组选择能力和 `can_select`。
+- 策略页：`groups.available`。选择成员：组选择能力和 `can_select`。
 - 固定或清除自动策略的覆盖选择：`can_override`。
 - 后端运行中。这些操作不需要 `config_write`，也不编辑配置源。
 
 **在 doona 中检查**
 
-- 查看策略页中的群组控制项。
+- 查看策略页中的组控制项。
 
 **启用步骤**
 
-1. 选择允许手动选择的群组，或允许覆盖的策略。
+1. 选择允许手动选择的组，或允许覆盖的策略。
 2. 选择或清除成员，并检查所选成员或覆盖标记。
 
 **错误**
@@ -287,13 +287,13 @@
 
 <a name="req-group-edit"></a>
 
-## 群组创建、编辑与检查设置
+## 组创建、编辑与检查设置
 
 **所需条件**
 
 - 创建：完整且可写的主配置源。编辑：配置已加载，且完整、可写的配置源中只有一处对应声明。
 - 声明缺失、重复或不完整时，即使已启用配置写入，编辑仍会禁用。
-- 群组检查设置：`groups.config_patch`，且 `mutable_config` 中包含所需字段。字段列表见 [doona 可以修改什么](what-doona-can-change.md)。
+- 组检查设置：`groups.config_patch`，且 `mutable_config` 中包含所需字段。字段列表见 [doona 可以修改什么](what-doona-can-change.md)。
 
 **在 doona 中检查**
 
@@ -301,9 +301,9 @@
 
 **启用步骤**
 
-1. 在群组编辑器之外解决重复声明，或恢复完整的配置源读取内容。
+1. 在组编辑器之外解决重复声明，或恢复完整的配置源读取内容。
 2. 如果写入已禁用，在 doona 之外为 `experimental.native_api` 启用 `config_write: true` 并设置凭据，再重启 honk。
-3. 应用更改，激活后核对群组配置。
+3. 应用更改，激活后核对组配置。
 
 **错误**
 
@@ -311,7 +311,7 @@
 
 **详细说明**
 
-- 配置源编辑与受限的群组 PATCH 控制项具有不同的前提。
+- 配置源编辑与受限的组 PATCH 控制项具有不同的前提。
 
 <a name="req-probes"></a>
 
@@ -320,7 +320,7 @@
 **所需条件**
 
 - `probes.available`，且后端提供的目标类型、探测种类、传输协议和 IP 地址族存在兼容的交集。
-- 群组必须支持所有请求的传输协议。每个所选节点的协议都必须支持探测种类和传输协议，混合选择也不例外。
+- 组必须支持所有请求的传输协议。每个所选节点的协议都必须支持探测种类和传输协议，混合选择也不例外。
 
 **在 doona 中检查**
 
@@ -403,7 +403,7 @@
 **所需条件**
 
 - 列表：`rules.available` 或 `dns_rules.available`。添加、编辑或暂存规则：配置源权限，以及可定位的规则或插入位置。
-- 路由模板：honk 语法、完整可写的目标、路由仅位于一个配置源中、有效的引用群组和本地地理数据依赖。
+- 路由模板：honk 语法、完整可写的目标、路由仅位于一个配置源中、有效的引用组和本地地理数据依赖。
 
 **在 doona 中检查**
 
@@ -657,7 +657,7 @@
 **详细说明**
 
 - 配置为每个已加载资源提供 URL 时，手动更新不需要状态数据库。没有数据库时，honk 无法使用已存储或内置的 URL 列表。
-- 每次 URL 尝试都使用选定路由。群组或路由决策失败时，不会回退到直连。
+- 每次 URL 尝试都使用选定路由。组或路由决策失败时，不会回退到直连。
 - 资源查找顺序是 `DAE_LOCATION_ASSET`、`global.data_dir`、旧版位置、工作目录和共享目录。
 - 软件包中的资源会在数据目录中生成替代文件，并优先于软件包副本使用。已位于数据目录或明确指定资源目录中的文件，则在原位置替换。
 - 每次文件下载允许最多 30 秒无进度，总时限为 10 分钟。校验和请求有独立的 10 秒时限，并在 URL 路径后追加 `.sha256sum`。
@@ -672,7 +672,7 @@
 
 - 每次设置写入都需要凭据和可用的状态数据库，包括来源 URL 列表、下载路由、校验和验证、自动更新计划及重置。不需要 `config_write`。
 - `geodata.configurable_sources`，且 `runtime_settings.fields` 中包含 `geodata`。
-- 路由和校验和控制项还需要返回对应设置。选择群组路由需要群组资源和当前存在的群组。
+- 路由和校验和控制项还需要返回对应设置。选择组路由需要组资源和当前存在的组。
 - 自动下载仍需满足[更新前提](#req-geodata-update)。
 
 **在 doona 中检查**
@@ -687,7 +687,7 @@
 
 **错误**
 
-- 设置失败：[`permission_denied`](troubleshooting.md#sign-in)、[`capability_not_supported`](troubleshooting.md#no-native-api)；群组已失效时为 [`state_conflict`](troubleshooting.md#read-only)；存储失败时为 `temporarily_unavailable`。
+- 设置失败：[`permission_denied`](troubleshooting.md#sign-in)、[`capability_not_supported`](troubleshooting.md#no-native-api)；组已失效时为 [`state_conflict`](troubleshooting.md#read-only)；存储失败时为 `temporarily_unavailable`。
 - 见[地理数据控制项不可用](troubleshooting.md#geodata-sources)和[不安全的数据库路径](troubleshooting.md#state-unsafe)。
 
 **详细说明**
