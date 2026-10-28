@@ -2,7 +2,7 @@
 
 # 服務管理
 
-建立 systemd 或 OpenWrt procd 的 honk 服務，再依本頁管理服務和查看日誌。先完成[快速開始](quick-start.md)或[最小設定](minimal-configuration.md)中的設定檢查，並停止前景測試程序。
+按[快速入門](quick-start.md)或[獨立介面設定](install.md)設定 honk，再依本頁管理手動安裝的服務及查看日誌。若從軟體源安裝，請改用[軟體源的服務說明](https://openwrt.daeuniverse.org/zh-tw/)，不要建立第二個服務。
 
 ## 1. 建立服務
 
@@ -39,7 +39,7 @@ EOF
 sudo systemctl daemon-reload
 ```
 
-此單元依據 [honk 的 systemd 範例](https://github.com/daeuniverse/honk/blob/main/doc/en/how-to-start.md#run-with-systemd)。為服務新增權限限制前，先檢查該指南。
+此單元依據 [honk 的 systemd 範例](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#使用-systemd-运行)。為服務新增權限限制前，先檢查該指南。
 
 ### OpenWrt procd
 
@@ -86,7 +86,7 @@ sudo systemctl status honk-core
 /etc/init.d/honk-core status
 ```
 
-systemd 狀態應顯示 `active (running)`；OpenWrt 狀態應顯示 `running`。重複[快速開始](quick-start.md)中的 API 檢查，確認監聽位址可以存取。
+systemd 狀態應顯示 `active (running)`；OpenWrt 狀態應顯示 `running`。按[快速入門](quick-start.md)開啟 doona，確認監聽位址可以存取。
 
 ## 查看日誌
 

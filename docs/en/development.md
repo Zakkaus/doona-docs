@@ -25,6 +25,8 @@ pnpm check:size
 
 The build writes `dist/`. `check` runs type checks, lint, translation and formatting checks, unit tests, and generated API checks. `check:size` measures the built output.
 
+<a name="doona-lite"></a>
+
 ## Build doona lite
 
 From the same app repository root, after installing the root dependencies:

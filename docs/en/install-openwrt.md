@@ -4,6 +4,10 @@
 
 Install doona v0.1.0-rc.2 and honk on an OpenWrt router. Run every command in a root shell on the router and keep the same shell open throughout the installation.
 
+## Quick install from the daeuniverse feed
+
+On supported 64-bit OpenWrt or ImmortalWrt 25.12 routers, install honk from the [daeuniverse feed](https://openwrt.daeuniverse.org/en/), then follow [Quick start](quick-start.md) to configure its embedded doona. The feed package and the manual route below use different service names and data directories; choose one route.
+
 ## 1. Check the router and prepare tools
 
 Check the [backend prerequisites](install.md#install), including the kernel, BTF, cgroup, and CPU requirements, before downloading. A matching doona package does not establish that the router can run honk. Check storage for installed files and the download directory:
@@ -91,7 +95,7 @@ This skips signature trust checking, so verify the package’s SHA-256 entry bef
 ls -l /usr/share/doona/index.html
 ```
 
-The last command must list `index.html`. Use `/usr/share/doona` as the UI directory in the OpenWrt example in [Minimal configuration](minimal-configuration.md).
+The last command must list `index.html`. Use the [separate UI configuration](install.md) with this directory.
 
 ### Optional packages
 
@@ -114,7 +118,7 @@ After verifying the installed binary, remove its downloaded archive and extracte
 
 ## 5. Prepare the data directory
 
-Use the persistent layout from the OpenWrt example in [Minimal configuration](minimal-configuration.md). For the meaning of `data_dir`, see [Configuration](configuration.md#config).
+For this manual route, set `global.data_dir` to `/etc/honk/data` in the [honk configuration](configuration.md#config), then prepare the persistent directory:
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data
@@ -150,7 +154,7 @@ ln -s ../v2ray/geoip.dat /usr/share/dae/geoip.dat
 
 Files already present in the configured data directory take precedence over these packaged files.
 
-Use the OpenWrt variants when writing the configuration and creating the service in [Service management](service-management.md).
+Use the OpenWrt service in [Service management](service-management.md), not the feed service.
 
 ## Preserve configuration across sysupgrade
 
@@ -163,14 +167,6 @@ sysupgrade -l
 
 Confirm that the list includes your honk configuration, data files, and init script. This configuration backup does not restore installed kernel modules, `/usr/bin/honk-core`, or `/usr/share/doona`.
 
-After upgrading, repeat steps 1–4 to reinstall the tools, kernel modules, UI packages, and honk binary. If you chose packaged geodata, reinstall it and recreate its links using step 5. Keep the restored configuration and data. Re-enable and start the service:
+After upgrading, repeat steps 1–4 to reinstall the tools, kernel modules, UI packages, and honk binary. If you chose packaged geodata, reinstall it and recreate its links using step 5. Keep the restored configuration and data, then [enable and start the service](service-management.md).
 
-```sh
-/etc/init.d/honk-core enable
-/etc/init.d/honk-core start
-/etc/init.d/honk-core status
-```
-
-Check the [service log](service-management.md) and repeat the API check in Quick start below.
-
-Continue with [Quick start](quick-start.md) to configure honk and sign in.
+Check the [service log](service-management.md), then follow [First sign-in](first-sign-in.md).

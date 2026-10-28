@@ -78,7 +78,7 @@ sudo emerge --ask =net-proxy/doona-0.1.0_rc2
 ls -l /usr/share/doona/index.html
 ```
 
-The last command must list `index.html`. Use `/usr/share/doona` as the UI directory in [Minimal configuration](minimal-configuration.md); the [`ui` reference](configuration.md#config) describes the setting.
+The last command must list `index.html`. Use that directory in the [separate UI configuration](install.md).
 
 ### Portage errors
 
@@ -93,4 +93,4 @@ Install the backend using [Install honk](install.md#install), then return here. 
 
 Use the systemd procedure in [Service management](service-management.md) on a systemd host. On OpenRC, that page provides a foreground command for the first connection.
 
-Continue with [Quick start](quick-start.md) to configure honk and sign in.
+Apply the [separate UI configuration](install.md), [start honk](service-management.md), then follow [First sign-in](first-sign-in.md).

@@ -8,10 +8,9 @@ doona 透過原生 API 管理 honk 並查看流量。本文件適用於 v0.1.0-r
 
 | 你目前的情況 | 閱讀頁面 |
 | --- | --- |
-| 首次安裝 | [快速開始](quick-start.md)：安裝、登入並驗證直連組態 |
+| 首次安裝 | [快速入門](quick-start.md)：使用 honk 內嵌的 doona 並登入 |
 | honk 已啟動，準備使用代理 | [路由你的第一條連線](tutorial.md)：新增訂閱、策略群組、路由規則和 DNS 規則 |
-| 需要適用於目前系統的安裝步驟 | [安裝](install.md)和[執行需求](requirements.md) |
-| 只需要可複製的組態 | [最小組態](minimal-configuration.md) |
+| 需要獨立介面檔案 | [單獨安裝 doona](install.md) |
 | 已登入，想找到某項操作 | [介面導覽](tour.md) |
 
 <a name="choose-edition"></a>

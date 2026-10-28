@@ -42,7 +42,7 @@ sudo tar -xzf "$FILE" -C "$UI_DIR"
 ls -l "$UI_DIR/index.html"
 ```
 
-The last command must list `index.html`. Use the selected `UI_DIR` as the UI directory in [Minimal configuration](minimal-configuration.md); see the [`ui` reference](configuration.md#config).
+The last command must list `index.html`. Use that directory in the [separate UI configuration](install.md).
 
 ### Optional standard-edition assets
 
@@ -103,4 +103,4 @@ Install the backend using [Install honk](install.md#install), then return here. 
 
 For OpenRC systems, [Service management](service-management.md) gives a foreground command for the first connection; it does not configure an OpenRC service.
 
-Continue with [Quick start](quick-start.md) to configure honk and sign in.
+Apply the [separate UI configuration](install.md), [start honk](service-management.md), then follow [First sign-in](first-sign-in.md).

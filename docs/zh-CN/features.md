@@ -55,7 +55,13 @@
 
 长名称会换行，通知高度随内容增长，DNS 和网络分布显示全部类别。窄面积图隐藏重叠的时间标签。迷你图在第二个样本到达前显示基线。
 
+<a id="主题与配色"></a>
+
+<a name="theme-gallery"></a>
+
 ## 浏览器中保存的设置
+
+查看[配色图集](../screenshots/palettes.webp)，再调整[外观设置](config-and-settings.md#appearance)。
 
 语言、外观、日期与时间格式、启动页面和探测偏好都在[设置](config-and-settings.md#settings-page)中调整。浏览器偏好、已保存配置和后端临时更改的区别见[更改的存储位置](what-doona-can-change.md)。
 

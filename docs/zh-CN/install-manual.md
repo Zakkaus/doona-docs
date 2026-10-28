@@ -42,7 +42,7 @@ sudo tar -xzf "$FILE" -C "$UI_DIR"
 ls -l "$UI_DIR/index.html"
 ```
 
-最后一条命令必须列出 `index.html`。按[最小配置](minimal-configuration.md)操作时，使用选定的 `UI_DIR` 作为 UI 目录；配置项说明见 [`ui` 参考](configuration.md#config)。
+确认目录中存在 `index.html`，再在[独立界面配置](install.md)中使用该目录。
 
 ### 标准版可选资源
 
@@ -103,4 +103,4 @@ apk add --allow-untrusted "./$FILE"
 
 OpenRC 系统可使用[服务管理](service-management.md)中的前台命令完成首次连接；该页不配置 OpenRC 服务。
 
-接着按[快速开始](quick-start.md)配置 honk 并登录。
+应用[独立界面配置](install.md)，[启动 honk](service-management.md)，再按[首次登录](first-sign-in.md)操作。

@@ -2,7 +2,7 @@
 
 # Service management
 
-Create a honk service for systemd or OpenWrt procd, then use this page to control it and read its logs. Finish the configuration check in [Quick start](quick-start.md) or [Minimal configuration](minimal-configuration.md) first, and stop any foreground test process.
+Configure honk with [Quick start](quick-start.md) or the [separate UI setup](install.md), then use this page to manage a manually installed service and read its logs. For a feed installation, use the [feed’s service instructions](https://openwrt.daeuniverse.org/en/) instead; do not create a second service.
 
 ## 1. Create the service
 
@@ -86,7 +86,7 @@ sudo systemctl status honk-core
 /etc/init.d/honk-core status
 ```
 
-For systemd, look for `active (running)`. On OpenWrt, the status should report `running`. Repeat the API check from [Quick start](quick-start.md) to confirm that the listener is reachable.
+For systemd, look for `active (running)`. On OpenWrt, the status should report `running`. Open doona as described in [Quick start](quick-start.md) to confirm that the listener is reachable.
 
 ## Read the logs
 

@@ -174,7 +174,7 @@ honk-core --data-dir /var/lib/honk admin reset
 
 服务日志会显示拒绝的路径、规则及建议的修复方法。结合[数据目录配置](configuration.md#config)检查该路径，不要假定所有安装都使用同一目录。
 
-文件模式下，运行时数据目录由 `global.data_dir` 决定，`--data-dir` 不会覆盖它。执行 `admin reset` 时，须通过 `--data-dir` 指定同一目录。OpenWrt 默认安装的 [`/var` 内容在重启后丢失](https://openwrt.org/docs/techref/filesystems)，因此按[最小配置](minimal-configuration.md)将持久状态保存在 `/etc/honk/data`。
+文件模式下，运行时数据目录由 `global.data_dir` 决定，`--data-dir` 不会覆盖它。执行 `admin reset` 时，须通过 `--data-dir` 指定同一目录。OpenWrt 的 [`/var` 内容在重启后丢失](https://openwrt.org/docs/techref/filesystems)，请使用[手动安装的持久化目录](install-openwrt.md#install-geodata)。
 
 状态目录与数据库须归 honk 服务用户所有，且不能向组或其他用户开放权限。符号链接或错误的文件类型也会被拒绝。只修正日志所指路径的所有权、权限或类型，再重启 honk。不要递归修改整个配置目录的权限。
 
@@ -192,7 +192,7 @@ honk-core --data-dir /var/lib/honk admin reset
 
 ## LAN 流量没有按预期路由
 
-对照[最小配置](minimal-configuration.md)检查 `lan_interface`。OpenWrt 的 LAN 客户端流量通常从 `br-lan` 进入；若网桥名称不同，修改此值。使用旁路由时，将客户端网关设为该路由器的 LAN 地址，让流量经过 honk。
+对照[配置参考](configuration.md#config)检查 `lan_interface`。OpenWrt 的 LAN 客户端流量通常从 `br-lan` 进入；若网桥名称不同，修改此值。使用旁路由时，将客户端网关设为该路由器的 LAN 地址，让流量经过 honk。
 
 ## 连接或规则页一直为空
 

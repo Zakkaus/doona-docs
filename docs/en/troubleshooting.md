@@ -174,7 +174,7 @@ After repairing access, [restart the service](service-management.md) and check w
 
 The service log names the refused path, rule and suggested fix. Check that exact path with the [data-directory configuration](configuration.md#config); do not assume every installation uses the same directory.
 
-In file mode, `global.data_dir` selects the runtime data directory; `--data-dir` does not override it. Pass that same directory to `--data-dir` for `admin reset`. On a default OpenWrt installation, [`/var` is volatile](https://openwrt.org/docs/techref/filesystems), so keep persistent state under `/etc/honk/data` as shown in [Minimal configuration](minimal-configuration.md).
+In file mode, `global.data_dir` selects the runtime data directory; `--data-dir` does not override it. Pass that same directory to `--data-dir` for `admin reset`. On OpenWrt, [`/var` is volatile](https://openwrt.org/docs/techref/filesystems); use the [manual installation’s persistent directory](install-openwrt.md#install-geodata).
 
 The state directory and database must belong to honk's service user and exclude group and other permissions. A symlink or the wrong file type is also refused. Correct only the named path's ownership, permissions or type, then restart honk. Do not apply recursive permission changes to the configuration directory.
 
@@ -192,7 +192,7 @@ Check the minimum kernel version and BPF/BTF support in [Requirements](requireme
 
 ## LAN traffic is not routed as expected
 
-Check `lan_interface` against [Minimal configuration](minimal-configuration.md). On OpenWrt, LAN clients normally enter through `br-lan`; change it if your bridge differs. When using a side router, set clients' gateway to that router's LAN address so their traffic reaches honk.
+Check `lan_interface` in the [configuration reference](configuration.md#config). On OpenWrt, LAN clients normally enter through `br-lan`; change it if your bridge differs. When using a side router, set clients’ gateway to that router’s LAN address so their traffic reaches honk.
 
 ## Connections or Rules stay empty
 

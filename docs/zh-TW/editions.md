@@ -57,11 +57,7 @@ lite 重用標準版的 `src/api/client.ts`，以及基於產生的 `src/api/typ
 
 ## 安裝與切換
 
-兩個版本在[同一發布版本](https://github.com/Zakkaus/doona/releases)中提供。[標準版](install.md#doona)使用 `doona-<version>.tar.gz`，安裝到 `/usr/share/doona`；[doona lite](lite.md#lite-install) 使用 `doona-lite-<version>.tar.gz`，安裝到 `/usr/share/doona-lite`。壓縮檔名稱與安裝目錄不重疊，安裝其中一個不會覆蓋另一個。lite 暫無發行版套件。
-
-honk 的 `/ui/` 一次只提供一個版本。將 `experimental` → `native_api` → `ui` 指向所需版本的目錄，然後[重新啟動 honk](service-management.md)。每個 `native_api` 欄位都需要重新啟動，重載不足以生效。`ui: embedded` 僅提供 honk-core 發布建置內嵌的標準版，見[最小組態](minimal-configuration.md)。
-
-要同時使用兩個版本，讓 honk 在 `/ui/` 提供其中一個，再用任意靜態伺服器提供另一個目錄。按[透過主機名稱或其他來源存取](install.md#other-origin)允許第二個來源。
+內嵌標準版請見[快速入門](quick-start.md)，切換至 lite 請見 [doona lite](lite.md#lite-install)，使用獨立目錄請見[單獨安裝介面檔案](install.md)。
 
 ## 獨立的瀏覽器設定
 

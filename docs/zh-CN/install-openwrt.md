@@ -4,6 +4,10 @@
 
 在 OpenWrt 路由器上安装 doona v0.1.0-rc.2 和 honk。所有命令均在路由器的 root shell 中执行，安装期间保持同一 shell。
 
+## 从 daeuniverse 软件源快速安装
+
+支持的 64 位 OpenWrt 或 ImmortalWrt 25.12 路由器可从 [daeuniverse 软件源](https://openwrt.daeuniverse.org/zh-cn/)安装 honk，再按[快速入门](quick-start.md)配置内嵌的 doona。软件源包与下文的手动安装使用不同的服务名称和数据目录，请择一使用。
+
 ## 1. 检查路由器并准备工具
 
 下载前先检查[后端前提条件](install.md#install)，包括内核、BTF、cgroup 和 CPU 要求。有对应的 doona 软件包，不代表路由器可以运行 honk。检查安装文件与下载目录所需的空间：
@@ -91,7 +95,7 @@ apk add --allow-untrusted "/tmp/doona/$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-最后一条命令必须列出 `index.html`。使用[最小配置](minimal-configuration.md)中的 OpenWrt 示例时，将 UI 目录设为 `/usr/share/doona`。
+最后一条命令必须列出 `index.html`。请在[独立界面配置](install.md)中使用此目录。
 
 ### 可选软件包
 
@@ -114,7 +118,7 @@ ls -l /usr/share/doona/index.html
 
 ## 5. 准备数据目录
 
-采用[最小配置](minimal-configuration.md)中 OpenWrt 示例的持久化目录布局。`data_dir` 的含义见[配置参考](configuration.md#config)。
+此手动安装方式须在 [honk 配置](configuration.md#config)中将 `global.data_dir` 设为 `/etc/honk/data`，再创建持久化目录：
 
 ```sh
 mkdir -p /etc/honk/config.d /etc/honk/data
@@ -150,7 +154,7 @@ ln -s ../v2ray/geoip.dat /usr/share/dae/geoip.dat
 
 已配置的数据目录中若存在同名文件，honk 会优先使用这些文件。
 
-编写配置与按[服务管理](service-management.md)创建服务时，使用 OpenWrt 版本的步骤。
+请使用[服务管理](service-management.md)中的 OpenWrt 服务，而非软件源服务。
 
 ## 在 sysupgrade 后保留配置
 
@@ -163,14 +167,6 @@ sysupgrade -l
 
 确认清单包含 honk 配置、数据文件与 init 脚本。这份配置备份不会恢复已安装的内核模块、`/usr/bin/honk-core` 或 `/usr/share/doona`。
 
-升级后重复第 1–4 步，重新安装工具、内核模块、UI 软件包和 honk 可执行文件。若选用发行版的 geodata 软件包，再按第 5 步重装并重新创建链接。保留已恢复的配置与数据，然后重新启用并启动服务：
+升级后重复第 1–4 步，重新安装工具、内核模块、UI 软件包和 honk 可执行文件。若选用发行版的 geodata 软件包，再按第 5 步重装并重新创建链接。保留已恢复的配置与数据，再[启用并启动服务](service-management.md)。
 
-```sh
-/etc/init.d/honk-core enable
-/etc/init.d/honk-core start
-/etc/init.d/honk-core status
-```
-
-检查[服务日志](service-management.md)，再重复下方快速开始中的 API 检查。
-
-接着按[快速开始](quick-start.md)配置 honk 并登录。
+检查[服务日志](service-management.md)，再按[首次登录](first-sign-in.md)操作。

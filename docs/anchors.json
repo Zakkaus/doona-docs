@@ -1,4 +1,7 @@
 {
+  "theme-gallery": "features",
+  "appearance": "config-and-settings",
+  "doona-lite": "development",
   "requirements": "requirements",
   "honk-version": "requirements",
   "install": "install",

@@ -40,7 +40,7 @@ sudo apt install "./$FILE"
 ls -l /usr/share/doona-web/index.html
 ```
 
-最後一條命令必須列出 `/usr/share/doona-web/index.html`。依照[最小設定](minimal-configuration.md)操作時，將 UI 目錄設為 `/usr/share/doona-web`；對應的設定項目是 [`ui`](configuration.md#config)。
+最後一條命令必須列出 `index.html`。請在[獨立介面組態](install.md)中使用該目錄。
 
 Debian 套件名為 `doona-web`。不要改用 `apt install doona`，Debian 和 Ubuntu 中的這個名稱屬於另一個套件。
 
@@ -72,4 +72,4 @@ awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
 
 依照[安裝 honk](install.md#install)安裝後端後返回本頁。已有相容的 honk 時無需重複安裝。
 
-接著依照[快速開始](quick-start.md)設定 honk 並登入。
+套用[獨立介面組態](install.md)，[啟動 honk](service-management.md)，再按[首次登入](first-sign-in.md)操作。

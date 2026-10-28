@@ -2,120 +2,40 @@
 
 # Quick start
 
-Start the standard edition of doona with a direct-only honk configuration, sign in, and verify traffic from the gateway itself. Use a Debian or Ubuntu gateway with sudo access and a second way into the machine, such as a console.
+Use the doona interface embedded in honk without downloading separate UI files.
 
-## 1. Install doona and a compatible honk build
+## 1. Get honk
 
-Follow [Install on Debian or Ubuntu](install-debian.md) to install the `doona-web` package and honk-core. Check [honk version](requirements.md#honk-version) before choosing the backend: doona needs the native API.
+On 64-bit OpenWrt or ImmortalWrt 25.12, install honk from the [daeuniverse feed](https://openwrt.daeuniverse.org/en/).
 
-Other platforms:
+On other Linux systems, choose an archive whose name contains `full` from [honk releases](https://github.com/daeuniverse/honk/releases), then follow [Service management](service-management.md) after writing the configuration.
 
-- Fedora or RHEL: [installation](install-fedora.md).
-- Arch Linux: [installation](install-arch.md).
-- Gentoo: [installation](install-gentoo.md).
-- OpenWrt: [installation](install-openwrt.md).
-- Alpine or another distribution: [manual installation](install-manual.md).
+## 2. Configure honk
 
-On the Debian gateway, run:
+Add this block to the honk configuration, replacing any existing `native_api` block:
 
-```sh
-/usr/local/bin/honk-core --version
-ls -l /usr/share/doona-web/index.html
-```
-
-The first command prints the honk build. The second must list the installed UI's `index.html`.
-
-## 2. Write the minimal configuration
-
-Run the following commands in one terminal on the gateway. Use `ip -4 addr show` to find its LAN address, then replace the example address:
-
-```sh
-ip -4 addr show
-LAN_IP=192.168.1.1
-sudo install -d -m 0700 /etc/honk /etc/honk/config.d /var/lib/honk
-```
-
-Write `/etc/honk/config.dae`:
-
-```sh
-sudo tee /etc/honk/config.dae > /dev/null <<'EOF'
-include {
-    config.d/*.dae
-}
-
-global {
-    wan_interface: auto
-}
-
-routing {
-    fallback: direct
-}
-EOF
-```
-
-Write `/etc/honk/config.d/api.dae`:
-
-```sh
-sudo tee /etc/honk/config.d/api.dae > /dev/null <<EOF
+```dae
 experimental {
     native_api {
         enabled: true
-        listen: '${LAN_IP}:9527'
+        listen: '127.0.0.1:9527'
         password_auth: true
         config_write: true
-        ui: '/usr/share/doona-web'
+        ui: 'embedded'
     }
 }
-EOF
-sudo cat /etc/honk/config.dae /etc/honk/config.d/api.dae
 ```
 
-These are the complete sudo examples from [Minimal configuration](minimal-configuration.md), with its Debian UI path. The printed API file must contain your address on the `listen` line. The main file sends traffic directly and attaches honk to the default-route interface. It does not configure a LAN bridge; use the platform variants on the linked page for that setup.
+For every other option, see [Configuration](configuration.md). [Start or restart honk](service-management.md) to apply the change.
 
-Before starting the service, check the files with:
+## 3. Open doona
+
+On the machine running honk, open <http://127.0.0.1:9527/>. For a router, run this command on your computer, replacing `<router>` with its SSH address, and keep the connection open:
 
 ```sh
-sudo /usr/local/bin/honk-core --config /etc/honk/config.dae --mock-ebpf
+ssh -L 9527:127.0.0.1:9527 root@<router>
 ```
 
-Wait for `native API listener ready` and `honk-core is running`. In a second terminal, set `LAN_IP` again and query the API:
+Open the same URL on your computer. The first visit creates the administrator; see [First sign-in](first-sign-in.md).
 
-```sh
-LAN_IP=192.168.1.1
-curl "http://$LAN_IP:9527/api"
-```
-
-A native API response with `setup_required: true` confirms that the API is reachable and no administrator exists yet. Stop the foreground process with Ctrl+C.
-
-## 3. Start the service
-
-Create the systemd unit in [Service management](service-management.md), including its `daemon-reload` command. Then run on the gateway:
-
-```sh
-sudo systemctl enable --now honk-core
-sudo systemctl status honk-core
-```
-
-The status must show `active (running)`. Run the `curl` command again to confirm that the service serves the API. If it fails, use the service log instructions on the linked page.
-
-## 4. Sign in
-
-From the gateway or a device on its LAN, open `http://192.168.1.1:9527/ui/`, substituting your address. Follow [First sign-in](first-sign-in.md) to enter a username, password, and password confirmation, then select **Create and sign in**. If an administrator already exists, sign in with that account.
-
-Successful sign-in opens Activity. Open **System status** and check that it reports **Running**, identifies the engine as honk, and lists backend features.
-
-## 5. Verify routing
-
-On the gateway, check that a request goes out:
-
-```sh
-curl -I https://example.com
-```
-
-curl must receive an HTTP response.
-
-In doona, open **Rules**, then **Trace simulation**. Choose TCP, enter the domain `example.com` and the destination port `443`, and choose **Run trace**. The result must end at `direct`.
-
-Direct traffic is forwarded by the kernel, so it does not appear in **Connections**. Connections lists the traffic that honk handles in userspace, such as traffic sent through a proxy group after you add one.
-
-You now have a direct-only baseline. Continue with [adding a subscription](common-tasks.md#subscription), or check [feature requirements](feature-requirements.md) before enabling additional controls.
+To run doona lite instead, set `ui: 'embedded-lite'` (available from honk v0.1.0-beta.4); see [doona lite](lite.md).

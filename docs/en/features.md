@@ -55,7 +55,11 @@ At two thirds width, charts and wide metric lists show peak and average values. 
 
 Long names wrap, notices grow to fit their content, and DNS and network splits show every category. Narrow area charts omit overlapping time labels. Waiting sparklines show a baseline until a second sample arrives.
 
+<a name="theme-gallery"></a>
+
 ## Settings stored in the browser
+
+Compare the [palette gallery](../screenshots/palettes.webp), then change [appearance settings](config-and-settings.md#appearance).
 
 For language, appearance, date and time formats, startup page and probe preferences, use [Settings](config-and-settings.md#settings-page). To distinguish browser preferences from saved configuration and temporary backend changes, see [where changes are stored](what-doona-can-change.md).
 
