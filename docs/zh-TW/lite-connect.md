@@ -29,4 +29,4 @@
 
 ## 不連接後端體驗介面
 
-開啟 [doona lite 示範網站](https://demo.daeuniverse.org/lite/)，使用範例資料體驗介面，無需連接後端。重新載入頁面會重設範例資料中的修改。未啟用示範模式的 lite 建置不提供試用示範按鈕。
+開啟 [doona lite 示範網站](https://demo.daeuniverse.org/lite/)，使用範例資料體驗介面，無需連接後端。重新載入頁面會重設範例資料中的修改。lite 的發布版本只能連接 honk，不提供試用示範按鈕。

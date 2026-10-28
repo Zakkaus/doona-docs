@@ -29,4 +29,4 @@
 
 ## 不连接后端体验界面
 
-打开 [doona lite 演示站点](https://demo.daeuniverse.org/lite/)，使用示例数据体验界面，无需连接后端。重新加载页面会重置对示例数据的修改。未启用演示模式的 lite 构建不提供试用演示按钮。
+打开 [doona lite 演示站点](https://demo.daeuniverse.org/lite/)，使用示例数据体验界面，无需连接后端。重新加载页面会重置对示例数据的修改。lite 的发布版本只能连接 honk，不提供试用演示按钮。

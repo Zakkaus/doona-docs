@@ -29,4 +29,4 @@ After connecting, continue with [Common tasks in doona lite](lite-tasks.md). For
 
 ## Explore without a backend
 
-Open the [doona lite demo](https://demo.daeuniverse.org/lite/) to explore sample data without a backend. Changes to the sample data reset when the page reloads. Lite builds without demo mode do not offer a demo button.
+Open the [doona lite demo](https://demo.daeuniverse.org/lite/) to explore sample data without a backend. Changes to the sample data reset when the page reloads. Release builds of lite connect only to honk and do not offer a demo button.
