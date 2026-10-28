@@ -4,7 +4,7 @@
 
 使用 honk 內嵌的 doona，無需另行下載介面檔案。
 
-先檢查[閘道器需求](requirements.md)。已有 honk 組態時請保留；全新後端須先準備 honk 的[最小配置](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#最小配置)，再加入下方 API 區塊。
+先檢查[閘道器需求](requirements.md)。已有 honk 組態時請保留；全新後端須先準備 honk 的[最小組態](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#最小配置)，再加入下方 API 區塊。
 
 ## 1. 安裝 honk
 

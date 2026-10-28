@@ -8,7 +8,7 @@
 
 doona lite 用於設定節點、訂閱、策略群組、路由、DNS 與全域設定。需要任務專用表單、手動節點分享與組態草稿確認流程，且無需流量頁面時，可選擇 lite。
 
-honk 也提供 Clash 相容 API，供 zashboard 等 Clash 儀表板使用；doona 不使用此 API（見 honk 的[最小配置](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#最小配置)）。
+honk 也提供 Clash 相容 API，供 zashboard 等 Clash 儀表板使用；doona 不使用此 API（見 honk 的[最小組態](https://github.com/daeuniverse/honk/blob/main/doc/zh/how-to-start.md#最小配置)）。
 
 <a name="editions-compare"></a>
 
