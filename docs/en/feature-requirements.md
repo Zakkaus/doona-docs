@@ -319,7 +319,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 
 **Needs**
 
-- `probes.available` and a compatible combination of advertised target types, probe kinds, transports, and IP families.
+- `probes.available` and a compatible intersection of advertised target types, probe kinds, transports, and IP families.
 - Your group must support every requested transport. Each selected node's protocol must support the probe kind and transport, including in a mixed selection.
 
 **Check in doona**
@@ -339,7 +339,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 **Details**
 
 - If your saved choice no longer fits the target, doona selects HTTP if available, otherwise the first compatible choice.
-- doona cannot offer a probe if no combination is compatible.
+- doona cannot offer a probe when the intersection is empty.
 
 <a name="req-connections"></a>
 

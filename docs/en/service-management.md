@@ -88,7 +88,7 @@ sudo systemctl status honk-core
 
 For systemd, look for `active (running)`. On OpenWrt, the status should report `running`. Open doona as described in [Quick start](quick-start.md) to confirm that the listener is reachable.
 
-Check the current startup log for `native API listener ready` and `honk-core is running`. At the API listener's `/api` address, a JSON response containing `setup_required: true` means the API is reachable and no administrator exists yet. API access alone does not prove that the real eBPF backend can route traffic.
+Check the current startup log for `native API listener ready` and `honk-core is running`. At the API listener's `/api` address, a JSON response whose `auth` object has `setup_required` set to `true` means the API is reachable and no administrator exists yet. API access alone does not prove that the real eBPF backend can route traffic.
 
 Read startup diagnostics even when honk starts successfully: the parser warns about and ignores unknown scalar keys in `global`.
 

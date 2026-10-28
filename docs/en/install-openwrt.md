@@ -18,7 +18,7 @@ uname -m
 df -h / /tmp
 ```
 
-OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and ipk packages. Stock OpenWrt 24.10 uses [Linux 6.6](https://github.com/openwrt/openwrt/blob/openwrt-24.10/target/linux/x86/Makefile), below honk’s minimum kernel requirement linked above.
+OpenWrt 25.12 uses apk-tools 3; OpenWrt 24.10 and earlier use opkg and ipk packages. Stock OpenWrt 24.10 uses [Linux 6.6](https://github.com/openwrt/openwrt/blob/openwrt-24.10/target/linux/x86/Makefile), below honk’s minimum kernel requirement linked above. Installing a matching UI package does not resolve that incompatibility.
 
 Choose the commands for the router’s package manager. OpenWrt provides the [veth module](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netsupport.mk) and [NFQUEUE modules](https://github.com/openwrt/openwrt/blob/openwrt-25.12/package/kernel/linux/modules/netfilter.mk) as packages:
 
@@ -42,7 +42,7 @@ These packages install the standard edition. For lite, use the archive route in 
 
 Download into `/tmp/doona` and choose the package format used by the firmware. The OpenWrt apk packages are separate from Alpine’s packages.
 
-`/tmp` uses RAM and loses its contents at reboot. Allow space for both the downloaded honk archive and its extracted directory.
+`/tmp` uses RAM and loses its contents at reboot. Allow space for both the downloaded honk archive and its extracted directory at the same time.
 
 ```sh
 mkdir -p /tmp/doona

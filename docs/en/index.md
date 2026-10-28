@@ -10,7 +10,7 @@ doona is a web interface for managing honk and inspecting its traffic through th
 
 | Edition | Use it for | Next step |
 | --- | --- | --- |
-| Standard | Configuration editing, traffic monitoring and routing diagnostics | [Quick start](quick-start.md), then [First sign-in](first-sign-in.md) |
+| Standard | Configuration editing, traffic monitoring and routing diagnostics | [Quick start](quick-start.md) for embedded doona, or [install the separate package](install.md#doona); then [First sign-in](first-sign-in.md) |
 | doona lite | Configuration tasks through a smaller interface; a preview in testing | [Install lite](lite.md#lite-install), then [Connect](lite-connect.md) |
 
 See the [edition comparison](editions.md). To explore sample data, open the [standard demo](https://demo.daeuniverse.org/) or [lite demo](https://demo.daeuniverse.org/lite/).

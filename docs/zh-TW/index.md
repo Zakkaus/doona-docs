@@ -10,7 +10,7 @@ doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc
 
 | 版本 | 用途 | 下一步 |
 | --- | --- | --- |
-| 標準版 | 編輯組態、觀測流量、診斷路由 | [快速入門](quick-start.md)，然後[首次登入](first-sign-in.md) |
+| 標準版 | 編輯組態、觀測流量、診斷路由 | 依[快速入門](quick-start.md)使用內嵌的 doona，或[安裝獨立套件](install.md#doona)；然後[首次登入](first-sign-in.md) |
 | doona lite | 用較精簡的介面完成組態任務，目前為測試中的預覽版 | [安裝 lite](lite.md#lite-install)，然後[連線至後端](lite-connect.md) |
 
 版本差異見[版本比較](editions.md)。若要用範例資料體驗介面，開啟[標準版示範](https://demo.daeuniverse.org/)或 [lite 示範](https://demo.daeuniverse.org/lite/)。
