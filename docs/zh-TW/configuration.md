@@ -18,7 +18,7 @@ doona 使用下列 honk DAE 設定。各表列出預設值及生效方式。組�
 | `experimental.native_api.secret` | `''` | Token 登入。只接受不含空白或逗號的可見 ASCII。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
 | `experimental.native_api.allow_anonymous_loopback` | `false` | 允許無憑證的回環存取；不授予受保護的寫入權限。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
 | `experimental.native_api.config_write` | `false` | 配合憑證允許寫入組態來源及更新地理資料。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
-| `experimental.native_api.ui` | `''` | 在 `/ui/` 提供 doona：填寫含 `index.html` 的目錄，或在啟用 `native-ui` 的建置中使用 `embedded`。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
+| `experimental.native_api.ui` | `''` | 在 `/ui/` 提供 doona：填寫含 `index.html` 的目錄，或在啟用 `native-ui` 的建置中使用 `embedded`／`embedded-lite`。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
 | `experimental.native_api.allow_origins` | `[]` | 額外允許的瀏覽器來源，如 `https://panel.example`。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
 | `experimental.native_api.allowed_hosts` | `[]` | 額外允許的 HTTP 主機名稱及連接埠，如 `panel.example`。 | [重新啟動](what-doona-can-change.md#restart-native) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/experimental.md) |
 
