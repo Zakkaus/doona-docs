@@ -404,6 +404,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 
 - Lists: `rules.available` or `dns_rules.available`. Adding, editing, or holding a rule: source permission and a locatable rule or insertion position.
 - Routing templates: honk syntax, a complete writable target, routing confined to one source, valid referenced groups, and valid local geodata dependencies.
+- Service rules: `rules.available`, `config.available` and a writable fallback rule. The rules go into the fallback's file.
 
 **Check in doona**
 
