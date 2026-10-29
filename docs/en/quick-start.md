@@ -14,7 +14,7 @@ On other Linux systems, follow [Install honk](install.md#install) and choose an 
 
 ## 2. Configure honk
 
-Add this block to the honk configuration, replacing any existing `native_api` block:
+The daeuniverse OpenWrt feed already ships this block, listening on the LAN instead of `127.0.0.1`; skip to step 3. Elsewhere, add this block to the honk configuration, replacing any existing `native_api` block:
 
 ```dae
 experimental {
@@ -34,7 +34,11 @@ For other options, see [Configuration](configuration.md). [Start or restart honk
 
 ## 3. Open doona
 
-On the machine running honk, open <http://127.0.0.1:9527/>. For a router, run this command on your computer, replacing `<router>` with its SSH address, and keep the connection open:
+On the machine running honk, open <http://127.0.0.1:9527/>.
+
+With the OpenWrt feed's default configuration, open `http://<router LAN IP>:9527/` from a computer on the LAN, for example <http://192.168.1.1:9527/>. Use the IP address; honk refuses host names such as `openwrt.lan`.
+
+For another router that listens on `127.0.0.1`, run this command on your computer, replacing `<router>` with its SSH address, and keep the connection open:
 
 ```sh
 ssh -L 9527:127.0.0.1:9527 root@<router>
