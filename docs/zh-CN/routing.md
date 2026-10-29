@@ -14,6 +14,7 @@
 | 修改成员范围或组设置 | [策略](#policies) | [编辑组](feature-requirements.md#req-group-edit) |
 | 测试节点或组 | [节点或策略](#policies) | [延迟探测](feature-requirements.md#req-probes) |
 | 应用模板或编辑规则 | [规则](#rules) | [规则与模板](feature-requirements.md#req-rules) |
+| 为常用服务添加规则 | [服务规则](#service-rules) | [规则与模板](feature-requirements.md#req-rules) |
 | 模拟路由结果 | [追踪模拟](#trace) | [路由追踪](feature-requirements.md#req-routing-trace) |
 
 更改何时生效，见 [doona 能修改什么](what-doona-can-change.md)。控件不可用时，打开其旁的帮助查看具体原因。
@@ -147,11 +148,34 @@ honk 支持 Trojan、VMess 和 VLESS 链接使用 XHTTP over H2。`xhttp` 和 `s
 | **屏蔽 QUIC** | 默认开启，拦截 UDP 443 端口。honk 在路由前标记自身套接字，因此不会拦截其与 QUIC 节点的连接。 |
 | **NetworkManager 直连** | 默认开启，将 NetworkManager 流量直连。 |
 
+路由中没有任何规则时才使用上述默认值。其他情况下，各选项的初始状态取决于路由现有内容：匹配模板时沿用该模板的选择；自定义路由则按其是否已包含广告、QUIC 或 NetworkManager 规则决定。因此应用模板会保留这些规则，除非关闭对应选项。
+
 所有已加载文件都没有 `dns` 块时，才会显示 **同时加入 DNS 路由**，且默认勾选。它将 `geosite:cn` 查询通过 UDP 发往 `223.5.5.5:53` 的 `alidns`，其余查询通过 DNS over TLS 发往 `1.1.1.1:853` 的 `cloudflare`。
 
 警告会指出只选择单个精确节点或使用 `fixed` 策略的现有组。若新组与节点同名，使用该名称的规则会指向组，而不是节点。
 
 目标为包含顶层 `routing` 的文件；若不存在，则使用主文件。缺少的组会在目标文件中创建。现有 DNS 路由、其他内容及其他文件保持不变。新组标签使用界面语言，地区标签带国旗。
+
+<a name="service-rules"></a>
+
+## 新建服务规则
+
+**规则** → **路由规则**工具栏中的**新建服务规则**会为每个服务添加一条规则，例如 `domain(geosite:netflix) -> proxy`，并保留现有规则。
+
+1. 点击**新建服务规则**，再选择所有选中服务共用的**出站**。
+2. 在**游戏**、**影音**、**社群与通讯**、**AI** 和**开发与平台**中选中服务。
+3. 点击**应用**写入规则并重载，或点击**暂存**加入[暂存规则](#held-rules)。
+
+路由规则或暂存规则已使用某服务的分类时，该服务无法选中，并显示**已有规则**；已加载的地理数据不含该分类时，则显示**当前的地理数据未包含此分类**。
+
+规则写入包含 fallback 的文件，位于 fallback 之前。因为第一条匹配的规则决定结果，若该文件已有 `geosite:category-games` 规则，**全部游戏**以外的游戏服务会改为插入该规则之前，避免游戏流量先由该规则处理。
+
+以下两个服务会添加多条规则：
+
+- **Steam**：出站不是 `direct` 或 `block` 时，开启 **Steam 下载直接连接** 会在 Steam 规则之前加入 `domain(geosite:steam@cn) -> direct`。
+- **Telegram**：同时以相同出站加入 `dip(geoip:telegram)`；尚无对应 DNS 规则时，再加入请求规则 `qname(geosite: telegram) && qtype(https, svcb) -> reject`，避免连接绕过代理。DNS 请求规则位于其他文件时，对话框会提示，且不修改 DNS。
+
+fallback 无法写入时，对话框会提示无法自动添加规则。此时请在配置文件中手动添加，或检查[规则条件](feature-requirements.md#req-rules)。
 
 <a name="add-rule"></a>
 

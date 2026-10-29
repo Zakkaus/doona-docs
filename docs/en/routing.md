@@ -14,6 +14,7 @@ Use the Routing hub to add node sources, choose how groups select nodes and deci
 | Change membership or group settings | [Policies](#policies) | [Group editing](feature-requirements.md#req-group-edit) |
 | Test a node or group | [Nodes or Policies](#policies) | [Latency probes](feature-requirements.md#req-probes) |
 | Apply a template or edit rules | [Rules](#rules) | [Rules and templates](feature-requirements.md#req-rules) |
+| Add rules for common services | [Service rules](#service-rules) | [Rules and templates](feature-requirements.md#req-rules) |
 | Simulate a route | [Trace simulation](#trace) | [Routing trace](feature-requirements.md#req-routing-trace) |
 
 See [what doona can change](what-doona-can-change.md) for when a change takes effect. Open the help beside an unavailable control to find its reason.
@@ -145,11 +146,34 @@ Existing groups retain their settings. Review warnings about reused groups or na
 | **Block QUIC** | On; blocks UDP port 443. honk marks its own sockets before routing, so this does not block its connections to QUIC-based nodes. |
 | **Keep NetworkManager direct** | On; sends NetworkManager traffic direct. |
 
+The defaults apply when the routing holds no rules. Otherwise each option starts from the routing. A detected template keeps its choices. For custom routing, an option starts on only when the routing already contains its rule, so applying a template keeps the ad, QUIC and NetworkManager rules unless you turn the option off.
+
 **Also add DNS routing** appears only when no loaded file has a `dns` block. The checkbox defaults to on. It sends `geosite:cn` queries to `alidns` at `223.5.5.5:53` over UDP, and other queries to `cloudflare` at `1.1.1.1:853` over DNS over TLS.
 
 Warnings identify reused groups that select one exact node or use a `fixed` policy. If a new group has the same name as a node, rules naming it reach the group instead of the node.
 
 The target is the file containing top-level `routing`, or the main file when none exists. doona adds missing groups there. Existing DNS routing, other content and other files stay unchanged. New group labels follow the interface language; region labels include country flags.
+
+<a name="service-rules"></a>
+
+## Add service rules
+
+**Add service rules** in the **Rules** → **Routing rules** toolbar adds one rule per service, such as `domain(geosite:netflix) -> proxy`, and keeps the existing rules.
+
+1. Choose **Add service rules**, then an **Outbound** for all selected services.
+2. Select services under **Games**, **Media**, **Social and messaging**, **AI** and **Development and platforms**.
+3. Choose **Apply** to write the rules and reload, or **Hold** to add them to [held rules](#held-rules).
+
+The dialog disables a service when a routing rule or held rule already uses its category (**A rule already exists**), or when the loaded geodata lacks it (**Not included in the current geodata**).
+
+The rules go into the file that holds the fallback, just before the fallback. The first matching rule decides, so a game service other than **All games** goes above an existing `geosite:category-games` rule in that file. Otherwise that rule would take the game's traffic.
+
+Two services add more than one rule:
+
+- **Steam**: with an outbound other than `direct` or `block`, **Connect Steam downloads directly** adds `domain(geosite:steam@cn) -> direct` before the Steam rule.
+- **Telegram**: adds `dip(geoip:telegram)` with the same outbound, and the DNS request rule `qname(geosite: telegram) && qtype(https, svcb) -> reject` unless one exists, so Telegram connections do not bypass the proxy. When the DNS request rules are in another file, the dialog says so and leaves DNS unchanged.
+
+If doona cannot write the fallback's file, the dialog reports that rules cannot be added automatically. Add them in the configuration file instead, or see [rule requirements](feature-requirements.md#req-rules).
 
 <a name="add-rule"></a>
 

@@ -404,6 +404,7 @@
 
 - 列表：`rules.available` 或 `dns_rules.available`。新增、編輯或暫存規則：組態來源權限，以及可定位的規則或插入位置。
 - 路由範本：honk 語法、完整可寫的目標、路由僅位於一個組態來源中、有效的參照群組和本機地理資料相依項目。
+- 服務規則：`rules.available`、`config.available`，以及可寫入的 fallback 規則。新規則寫入 fallback 所在的檔案。
 
 **在 doona 中檢查**
 

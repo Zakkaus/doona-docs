@@ -48,6 +48,7 @@
   "nodes": "routing",
   "rules": "routing",
   "dns-rules": "routing",
+  "service-rules": "routing",
   "add-rule": "routing",
   "held-rules": "routing",
   "trace": "routing",
