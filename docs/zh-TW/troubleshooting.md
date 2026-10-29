@@ -185,6 +185,10 @@ honk-core --data-dir /var/lib/honk admin reset
 
 如果停止防火牆時刪除了 honk 的 nftables 表，先重新啟動防火牆，再在閘道執行 `/etc/init.d/honk-core restart`。honk 運作期間，防火牆管理器不得修改 `inet honk_nfqueue` 及其 `udp_decision` 鏈。
 
+## 安裝其他套件時 apk 回報 `breaks: world[…]`
+
+從檔案安裝的套件（如下載的 doona 或 honk `.apk`）會在 `/etc/apk/world` 中鎖定為該檔案。軟體源出現其他版本後，任何 `apk add` 都會失敗，即使安裝的是無關工具，錯誤類似 `honk-0.1.0_beta2-r1: breaks: world[honk><Q1…]`。若要改為跟隨 [daeuniverse 軟體源](https://openwrt.daeuniverse.org/zh-tw/)，請執行 `apk add honk@daeuniverse`，其他套件可寫在同一行命令中。若要保留本機建置，請在同一行 `apk add` 命令中再次指定該檔案。
+
 ## 固定 BPF map 時出現 Invalid argument
 
 檢查 `/sys/fs/bpf` 是否掛載為 bpffs，具體步驟見[核心與檔案系統要求](requirements.md#requirements)。

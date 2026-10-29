@@ -185,6 +185,10 @@ The state directory and database must belong to honk's service user and exclude 
 
 If stopping the firewall removes honk's nftables table, start the firewall again, then run `/etc/init.d/honk-core restart` on the gateway. The firewall manager must leave `inet honk_nfqueue` and its `udp_decision` chain intact while honk runs.
 
+## apk reports `breaks: world[…]` when installing other packages
+
+apk pins a package installed from a file, such as doona or honk downloaded as an `.apk`, to that file in `/etc/apk/world`. Once a repository carries another version, every `apk add` fails, even for unrelated tools, with an error such as `honk-0.1.0_beta2-r1: breaks: world[honk><Q1…]`. To follow the [daeuniverse feed](https://openwrt.daeuniverse.org/en/), run `apk add honk@daeuniverse`, listing any other packages in the same command. To keep the local build, name its file again in the same `apk add` command.
+
 ## Pinning a map fails with Invalid argument
 
 Check the bpffs mount at `/sys/fs/bpf`; follow [kernel and filesystem requirements](requirements.md#requirements).
