@@ -49,6 +49,20 @@
 
 结果未知时，先检查当前来源内容，再决定是否重新写入。已受理的导入或恢复操作，可在**备份与修订**中重新打开该操作。若对话框仍提示结果未知，点击其中的**刷新**查询原操作。未收到响应不代表写入失败。
 
+<a name="nfqueue-restart"></a>
+
+## 应用时显示未写入，并列出 `global.nfqueue_enable` 需要重启
+
+内核不支持 NFQUEUE 时，honk 启动时会关闭 NFQUEUE，并在日志中记录 `NFQUEUE is unavailable at startup`。honk 0.1.0-beta.4 及更早版本随后会拿每次写入与默认值 `nfqueue_enable: true` 比较，因此应用时总是显示**未写入**，并把 `global.nfqueue_enable` 列为需要重启的设置，重启后也一样。在 `global` 段写入这个值，再[重启 honk](service-management.md)：
+
+```dae
+global {
+    nfqueue_enable: false
+}
+```
+
+之后即可正常应用。
+
 <a name="offline-dependency"></a>
 
 ## 应用时提示依赖文件不可用

@@ -20,6 +20,7 @@
   "widgets": "features",
   "troubleshooting": "troubleshooting",
   "unknown-setting": "troubleshooting",
+  "nfqueue-restart": "troubleshooting",
   "offline-dependency": "troubleshooting",
   "state-db": "troubleshooting",
   "geodata-sources": "troubleshooting",
