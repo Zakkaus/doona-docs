@@ -183,6 +183,10 @@ Custom wallpapers also appear behind sign-in. doona scales them to at most 2560 
 
 For browser support and storage requirements, see [browser settings](feature-requirements.md#req-browser-settings). The [storage overview](what-doona-can-change.md) explains which choices belong to this browser.
 
+#### Halloween
+
+**Halloween** is under **Other** in the palette list. **Daylight** puts pumpkin orange on parchment and **Midnight** puts it on deep purple. Running states read **Haunting**, and unavailable and degraded states read **Cursed**. Cards carry faint drawings of a jack-o'-lantern, bats, a black cat and a spider web, and the duck logo wears a witch's hat. Its styles load only when you choose it.
+
 ### Get help and error details
 
 In **About**, use **Guide** for documentation and **Keyboard shortcuts** for the shortcut list. **Copy recent errors** copies the recent API failures for a bug report; a failure notice's **Copy error** copies that request's details.
