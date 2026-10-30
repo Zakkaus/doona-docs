@@ -6,7 +6,7 @@
 
 ## 从 daeuniverse 软件源快速安装
 
-支持的 64 位 OpenWrt 或 ImmortalWrt 25.12 路由器可从 [daeuniverse 软件源](https://openwrt.daeuniverse.org/zh-cn/)安装 honk，再按[快速入门](quick-start.md)配置内嵌的 doona。软件源包与下文的手动安装使用不同的服务名称和数据目录，请择一使用。
+支持的 64 位 OpenWrt 或 ImmortalWrt 25.12 路由器可从 [daeuniverse 软件源](https://openwrt.daeuniverse.org/zh-cn/)安装 honk，再按[快速入门](quick-start.md)配置内嵌的 doona。下文是从压缩包手动安装的备选方式，适用于软件源不支持的路由器。软件源包与手动安装使用不同的服务名称和数据目录，请择一使用。
 
 ## 1. 检查路由器并准备工具
 

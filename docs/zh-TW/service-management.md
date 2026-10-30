@@ -71,7 +71,7 @@ EOF
 chmod 0755 /etc/init.d/honk-core
 ```
 
-`MIMALLOC_PURGE_DELAY=0` 要求 mimalloc 立即回收釋放的記憶體頁。說明見 [honk CLI 參考](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/cli.md)。
+`MIMALLOC_PURGE_DELAY=0` 要求 mimalloc 立即回收釋放的記憶體頁。說明見 [honk CLI 參考](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/cli.md)。
 
 ## 2. 啟用並啟動 honk
 

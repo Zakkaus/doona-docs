@@ -653,7 +653,7 @@
 
 - [下载阶段](troubleshooting.md#geodata-update)：[`download_timeout`](troubleshooting.md#geodata-update)、[`checksum_unavailable`](troubleshooting.md#geodata-update)、[`checksum_mismatch`](troubleshooting.md#geodata-update)、[`http_status_rejected`](troubleshooting.md#geodata-update)、[`http_not_found`](troubleshooting.md#geodata-update)、[`connection_failed`](troubleshooting.md#geodata-update)、[`tls_failed`](troubleshooting.md#geodata-update)、[`group_unavailable`](troubleshooting.md#geodata-update)、[`route_blocked`](troubleshooting.md#geodata-update)、[`asset_too_large`](troubleshooting.md#geodata-update)、[`invalid_source`](troubleshooting.md#geodata-update)。
 - [替换阶段](troubleshooting.md#geodata-update)：[`replacement_failed`](troubleshooting.md#geodata-update) 表示替换失败；[`directory_sync_failed`](troubleshooting.md#geodata-update) 表示尚未确认持久写入，此时文件可能已替换。
-- 重试前，检查操作中每个资源的 `written` 和 `durability_confirmed` 值，以及目标文件系统。
+- 重试前，在失败通知中点击**复制错误**。复制内容的 `details.assets` 列出每个资源的 `written` 和 `durability_confirmed` 值，设置中的资源详情不显示这两个值。请检查这些值及目标文件系统。
 
 **详细说明**
 

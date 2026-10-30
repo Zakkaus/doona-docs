@@ -653,7 +653,7 @@ Error codes identify API failures. The sections distinguish them from read-only 
 
 - [Download stages](troubleshooting.md#geodata-update): [`download_timeout`](troubleshooting.md#geodata-update), [`checksum_unavailable`](troubleshooting.md#geodata-update), [`checksum_mismatch`](troubleshooting.md#geodata-update), [`http_status_rejected`](troubleshooting.md#geodata-update), [`http_not_found`](troubleshooting.md#geodata-update), [`connection_failed`](troubleshooting.md#geodata-update), [`tls_failed`](troubleshooting.md#geodata-update), [`group_unavailable`](troubleshooting.md#geodata-update), [`route_blocked`](troubleshooting.md#geodata-update), [`asset_too_large`](troubleshooting.md#geodata-update), [`invalid_source`](troubleshooting.md#geodata-update).
 - [Replacement stages](troubleshooting.md#geodata-update): [`replacement_failed`](troubleshooting.md#geodata-update) means replacement failed; [`directory_sync_failed`](troubleshooting.md#geodata-update) means honk could not confirm durability and may already have replaced a file.
-- Before retrying, check the operation's per-asset `written` and `durability_confirmed` values and the destination filesystem.
+- Before retrying, select **Copy error** on the failure notice. The copied `details.assets` lists each asset's `written` and `durability_confirmed` values; the asset details in Settings do not show them. Check these values and the destination filesystem.
 
 **Details**
 

@@ -30,7 +30,7 @@ pnpm test                            # the site script and the heading ids
 
 `DOCS_OUT=/absolute/path pnpm docs:build` writes the site outside the repository instead of `dist-docs/`. The build replaces the output directory.
 
-doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under <https://doona.daeuniverse.org/screenshots/>, where doona's README links them. Without that directory, the checks skip links to screenshots.
+doona keeps no screenshots in git. Before the build, a push to `main` or a manual run renders them with doona's `tools/screenshots.mjs` into the checkout's `docs/screenshots/`, and the build publishes all of them under `https://doona.daeuniverse.org/screenshots/`, where doona's README links them. Without that directory, the checks skip links to screenshots.
 
 ## Layout
 
