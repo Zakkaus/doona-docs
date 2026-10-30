@@ -2,7 +2,7 @@
 
 # Install from archives or on Alpine
 
-Install doona v0.1.0-rc.3 from an archive when your system has no matching package. Alpine users can choose the [signed package route](#install-alpine) instead.
+Install doona v0.1.0-rc.4 from an archive when your system has no matching package. Alpine users can choose the [signed package route](#install-alpine) instead.
 
 Use a terminal on the gateway and a new download directory. Run the steps in the same shell; in a root shell, omit `sudo`. Check the [honk prerequisites](install.md#install) before installing the backend.
 
@@ -13,19 +13,19 @@ Prepare `curl`, CA certificates, `tar`, and `sha256sum`. On Alpine, run `apk add
 Choose one tab. The [edition comparison](editions.md) explains the differences.
 
 ```sh tab="Standard"
-FILE=doona-0.1.0-rc.3.tar.gz
+FILE=doona-0.1.0-rc.4.tar.gz
 UI_DIR=/usr/share/doona
 ```
 
 ```sh tab="Lite"
-FILE=doona-lite-0.1.0-rc.3.tar.gz
+FILE=doona-lite-0.1.0-rc.4.tar.gz
 UI_DIR=/usr/share/doona-lite
 ```
 
 ## 2. Download and verify
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.4
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -50,11 +50,11 @@ For the standard edition, choose an [optional asset](install.md#doona) below. Se
 
 | Asset | Filename |
 | --- | --- |
-| Fonts | `doona-fonts-0.1.0-rc.3.tar.gz` |
-| Precompressed files | `doona-precompressed-0.1.0-rc.3.tar.gz` |
+| Fonts | `doona-fonts-0.1.0-rc.4.tar.gz` |
+| Precompressed files | `doona-precompressed-0.1.0-rc.4.tar.gz` |
 
 ```sh
-FILE=doona-fonts-0.1.0-rc.3.tar.gz
+FILE=doona-fonts-0.1.0-rc.4.tar.gz
 curl -fL -O "$BASE/$FILE"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo tar -xzf "$FILE" -C /usr/share/doona
@@ -69,8 +69,8 @@ After installing the archive, skip to the backend section below.
 This route installs the standard edition. Run in a new download directory after installing the tools above. Use the Alpine assets, whose names end in `.alpine.apk`; OpenWrt’s apk files use a different format.
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
-FILE=doona-0.1.0-rc.3-r0.alpine.apk
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.4
+FILE=doona-0.1.0-rc.4-r0.alpine.apk
 curl -fL -O "$BASE/$FILE" -O "$BASE/doona-alpine.rsa.pub" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 awk '$2 == "doona-alpine.rsa.pub"' SHA256SUMS | sha256sum -c -
@@ -85,7 +85,7 @@ apk add "./$FILE"
 ls -l /usr/share/doona/index.html
 ```
 
-The last command must list `index.html`. Optional packages are `doona-fonts-0.1.0-rc.3-r0.alpine.apk` and `doona-precompressed-0.1.0-rc.3-r0.alpine.apk`. For either, change `FILE`, download and verify it as above, then run `apk add "./$FILE"` as root.
+The last command must list `index.html`. Optional packages are `doona-fonts-0.1.0-rc.4-r0.alpine.apk` and `doona-precompressed-0.1.0-rc.4-r0.alpine.apk`. For either, change `FILE`, download and verify it as above, then run `apk add "./$FILE"` as root.
 
 To install directly without adding the release key, first verify the downloaded package as above, then run as root:
 

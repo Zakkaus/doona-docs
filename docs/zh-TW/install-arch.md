@@ -2,7 +2,7 @@
 
 # 在 Arch Linux 上安裝
 
-使用系統套件管理員安裝 doona v0.1.0-rc.3 標準版。doona lite 請依照[壓縮檔安裝說明](install-manual.md)操作。
+使用系統套件管理員安裝 doona v0.1.0-rc.4 標準版。doona lite 請依照[壓縮檔安裝說明](install-manual.md)操作。
 
 在閘道器上開啟終端機，進入新建的下載目錄，並在同一 shell 中完成各步。使用 root shell 時省略 `sudo`。安裝後端前先檢查 [honk 的前提條件](install.md#install)。
 
@@ -18,11 +18,11 @@ pacman -Syu --needed curl ca-certificates
 
 ## 2. 下載並驗證套件
 
-從 [v0.1.0-rc.3 發行頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.3)下載：
+從 [v0.1.0-rc.4 發行頁](https://github.com/Zakkaus/doona/releases/tag/v0.1.0-rc.4)下載：
 
 ```sh
-BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.3
-FILE=doona-0.1.0rc3-1-any.pkg.tar.zst
+BASE=https://github.com/Zakkaus/doona/releases/download/v0.1.0-rc.4
+FILE=doona-0.1.0rc4-1-any.pkg.tar.zst
 curl -fL -O "$BASE/$FILE" -O "$BASE/SHA256SUMS"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c -
 ```
@@ -46,11 +46,11 @@ ls -l /usr/share/doona/index.html
 
 | 資源 | 檔名 |
 | --- | --- |
-| 字型 | `doona-fonts-0.1.0rc3-1-any.pkg.tar.zst` |
-| 預先壓縮的檔案 | `doona-precompressed-0.1.0rc3-1-any.pkg.tar.zst` |
+| 字型 | `doona-fonts-0.1.0rc4-1-any.pkg.tar.zst` |
+| 預先壓縮的檔案 | `doona-precompressed-0.1.0rc4-1-any.pkg.tar.zst` |
 
 ```sh
-FILE=doona-fonts-0.1.0rc3-1-any.pkg.tar.zst
+FILE=doona-fonts-0.1.0rc4-1-any.pkg.tar.zst
 curl -fL -O "$BASE/$FILE"
 awk -v file="$FILE" '$2 == file' SHA256SUMS | sha256sum -c - &&
   sudo pacman -U "./$FILE"
