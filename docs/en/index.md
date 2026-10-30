@@ -2,7 +2,7 @@
 
 # doona documentation
 
-doona is a web interface for managing honk and inspecting its traffic through the native API. These pages cover v0.1.0-rc.3.
+doona is a web interface for managing honk and inspecting its traffic through the native API. These pages cover v0.1.0-rc.4.
 
 <a name="choose-edition"></a>
 

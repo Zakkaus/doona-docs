@@ -2,7 +2,7 @@
 
 # Install on Gentoo
 
-Install doona v0.1.0-rc.3 with the repository’s ebuild in a local Portage repository. For doona lite, use [manual installation](install-manual.md).
+Install doona v0.1.0-rc.4 with the repository’s ebuild in a local Portage repository. For doona lite, use [manual installation](install-manual.md).
 
 Use a terminal on the gateway and a new download directory. Run the steps in the same shell; in a root shell, omit `sudo`. Check the [honk prerequisites](install.md#install) before installing the backend.
 
@@ -35,8 +35,8 @@ The repository name must appear in the final command’s output.
 ## 2. Add the ebuild
 
 ```sh
-VERSION=0.1.0-rc.3
-PV=0.1.0_rc3
+VERSION=0.1.0-rc.4
+PV=0.1.0_rc4
 RAW=https://raw.githubusercontent.com/Zakkaus/doona/v${VERSION}/install/gentoo/net-proxy/doona
 sudo mkdir -p "$REPO/net-proxy/doona"
 sudo curl -fL -o "$REPO/net-proxy/doona/doona-$PV.ebuild" "$RAW/doona-$PV.ebuild"
@@ -69,12 +69,12 @@ sudo ebuild "$REPO/net-proxy/doona/doona-$PV.ebuild" manifest
 
 ## 4. Accept the keyword and install
 
-Add `=net-proxy/doona-0.1.0_rc3 ~amd64` to your `package.accept_keywords` configuration, replacing `~amd64` with your architecture’s testing keyword, such as `~arm64`. If that configuration is a directory, use a file inside it.
+Add `=net-proxy/doona-0.1.0_rc4 ~amd64` to your `package.accept_keywords` configuration, replacing `~amd64` with your architecture’s testing keyword, such as `~arm64`. If that configuration is a directory, use a file inside it.
 
 To omit fonts, add `net-proxy/doona -fonts` to `package.use` before installing.
 
 ```sh
-sudo emerge --ask =net-proxy/doona-0.1.0_rc3
+sudo emerge --ask =net-proxy/doona-0.1.0_rc4
 ls -l /usr/share/doona/index.html
 ```
 

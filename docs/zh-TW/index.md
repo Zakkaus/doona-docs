@@ -2,7 +2,7 @@
 
 # doona 文件
 
-doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc.3。
+doona 透過原生 API 管理 honk、查看流量。本文件適用於 v0.1.0-rc.4。
 
 <a name="choose-edition"></a>
 
