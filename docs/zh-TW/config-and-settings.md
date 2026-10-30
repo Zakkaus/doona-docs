@@ -64,7 +64,7 @@
 
 選擇器包含主檔案及 include 檔案中的全域區段；沒有全域區段的主檔案可新增一個。**未設定** 使用引擎預設值。清空數值欄位會將其設為未設定；整數欄位不接受小數點，連接埠數字不分組，例如 `8080`。
 
-訂閱本文存入狀態資料庫的 `subscription_body` 表，資料庫位置見[設定參考](configuration.md#config)。獨立 `.sub` 檔案屬於舊儲存格式，啟動遷移說明見 [honk 訂閱參考](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/subscription.md#fetch-persistence-and-recovery)。
+訂閱本文存入狀態資料庫的 `subscription_body` 表，資料庫位置見[設定參考](configuration.md#config)。獨立 `.sub` 檔案屬於舊儲存格式，啟動遷移說明見 [honk 訂閱參考](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/subscription.md#拉取持久化与恢复)。
 
 ### 匯出或復原組態
 

@@ -46,7 +46,7 @@
 2. 只有一个链接时，填写**名称**和**节点链接**。有多个链接时，每行粘贴一个，再检查解析出的名称和错误。
 3. 确认添加并检查结果。部分链接失败时，对话框会保留这些链接供你修正。
 
-honk 支持 Trojan、VMess 和 VLESS 链接使用 XHTTP over H2。`xhttp` 和 `splithttp` 均选择此传输方式，支持 `auto`、`packet-up`、`stream-up` 和 `stream-one` 模式。可用选项与限制见 [honk XHTTP 参考](https://github.com/daeuniverse/honk/blob/main/doc/en/reference/nodes.md#xhttp-over-h2)。
+honk 支持 Trojan、VMess 和 VLESS 链接使用 XHTTP over H2。`xhttp` 和 `splithttp` 均选择此传输方式，支持 `auto`、`packet-up`、`stream-up` 和 `stream-one` 模式。可用选项与限制见 [honk XHTTP 参考](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/nodes.md#h2-上的-xhttp)。
 
 ### 更新或编辑订阅
 

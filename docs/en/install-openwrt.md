@@ -6,7 +6,7 @@ Install doona v0.1.0-rc.3 and honk on an OpenWrt router. Run every command in a 
 
 ## Quick install from the daeuniverse feed
 
-On supported 64-bit OpenWrt or ImmortalWrt 25.12 routers, install honk from the [daeuniverse feed](https://openwrt.daeuniverse.org/en/), then follow [Quick start](quick-start.md) to configure its embedded doona. The feed package and the manual route below use different service names and data directories; choose one route.
+On supported 64-bit OpenWrt or ImmortalWrt 25.12 routers, install honk from the [daeuniverse feed](https://openwrt.daeuniverse.org/en/), then follow [Quick start](quick-start.md) to configure its embedded doona. The steps below are the manual archive route, an alternative for routers the feed does not support. The feed package and the manual route use different service names and data directories; choose one route.
 
 ## 1. Check the router and prepare tools
 
