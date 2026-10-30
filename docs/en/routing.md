@@ -69,6 +69,8 @@ Use a source card's **More actions** menu to remove the source, then review the 
 
 For a node declared in configuration, use the row's edit or remove action when offered. If a declaration belongs to an include file and removal is unavailable, open that file in [Configuration](config-and-settings.md#edit-source).
 
+Select rows with their checkboxes to work on several nodes at once. Every row can be selected, including subscription and include-file nodes. With a selection, **Test all** becomes **Test selected (N)** and tests only those nodes. **Remove selected (N)** counts only the manual nodes in the main configuration that you can remove; subscription and include-file nodes are never removed. One confirmation removes them one at a time and shows progress. Closing the dialog stops the remaining removals, and nodes that fail stay selected. `Ctrl A` or `⌘A` selects every listed row, `Shift` with `↑` or `↓` extends the selection, and `Esc` clears it. Changing the source, search or filters clears the selection.
+
 Renaming an inline node updates exact node filters, default and final members, and DNS upstream detours in its declaring source. References from another source prevent renaming.
 
 **Add to group** opens the group editor with the node staged; **Apply** confirms. It lists groups in writable main or include files and supports search. Group editing can use readable configuration even when the runtime groups API is unavailable.
@@ -113,6 +115,8 @@ Expand **Regions** to choose regions; selected tags stay visible. **Add filter**
 ### Test members or change background checks
 
 Use a group’s **More actions** → **Test all**, or a node’s test button, to use your [manual probe preferences](config-and-settings.md#settings-page). Choose **Probe with options…** to adjust one test. Check [probe requirements](feature-requirements.md#req-probes) if the action is unavailable.
+
+On **Nodes**, **Test all** in the toolbar tests the listed nodes.
 
 A timed-out or cancelled measurement, an unavailable address or a local refusal can leave a result `unknown`. This does not prove that the node is unavailable. Trojan, AnyTLS and VLESS retain DNS UDP probe choices whose support depends on node configuration. doona reports backend admission refusals instead of silently falling back to HTTP.
 
