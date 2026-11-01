@@ -4,9 +4,9 @@
 
 在 OpenWrt 路由器上安裝 doona v0.1.0-rc.4 和 honk。所有命令均在路由器的 root shell 中執行，安裝期間保持同一 shell。
 
-## 從 daeuniverse 軟體源快速安裝
+## 從 daeuniverse 套件來源快速安裝
 
-支援的 64 位元 OpenWrt 或 ImmortalWrt 25.12 路由器可從 [daeuniverse 軟體源](https://openwrt.daeuniverse.org/zh-tw/)安裝 honk，再按[快速入門](quick-start.md)設定內嵌的 doona。下文是從壓縮檔手動安裝的備選方式，適用於軟體源不支援的路由器。軟體源套件與手動安裝使用不同的服務名稱和資料目錄，請擇一使用。
+支援的 64 位元 OpenWrt 或 ImmortalWrt 25.12 路由器可從 [daeuniverse 套件來源](https://openwrt.daeuniverse.org/zh-tw/)安裝 honk，再按[快速入門](quick-start.md)設定內嵌的 doona。下文是從壓縮檔手動安裝的備選方式，適用於套件來源不支援的路由器。從套件來源安裝的套件與手動安裝使用不同的服務名稱和資料目錄，請擇一使用。
 
 ## 1. 檢查路由器並準備工具
 
@@ -154,7 +154,7 @@ ln -s ../v2ray/geoip.dat /usr/share/dae/geoip.dat
 
 已設定的資料目錄中若存在同名檔案，honk 會優先使用這些檔案。
 
-請使用[服務管理](service-management.md)中的 OpenWrt 服務，而非軟體源服務。
+請使用[服務管理](service-management.md)中的 OpenWrt 服務，而非套件來源服務。
 
 ## 在 sysupgrade 後保留設定
 

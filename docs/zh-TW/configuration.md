@@ -28,7 +28,7 @@ doona 使用下列 honk DAE 設定。各表列出預設值及生效方式。組�
 | --- | --- | --- | --- | --- |
 | `global.data_dir` | `/var/lib/honk` | 執行資料根目錄；狀態資料庫位於其下的 `state/honk.db`。 | [重新啟動](what-doona-can-change.md#restart-global) | [global](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/global.md) |
 | `global.store_subscribe` | `true` | 儲存訂閱內容供離線啟動使用；訂閱項目的 `cache` 也須允許快取。 | [重新啟動](what-doona-can-change.md#restart-global) | [subscription](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/subscription.md) |
-| `experimental.cache_file.enabled` | 未設定 | 未設定時保留 Selector 選擇和延遲樣本；`false` 關閉此快取；`true` 還儲存 Clash 模式並允許持久儲存 DNS。 | [重新啟動](what-doona-can-change.md#restart-cache) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/experimental.md) |
+| `experimental.cache_file.enabled` | 未設定 | 未設定時保留 Selector 選擇和延遲樣本；`false` 關閉此快取；`true` 還允許持久儲存 DNS；設定了 `experimental.clash_api.external_controller` 且未啟用 native API 時，同時儲存 Clash 模式。 | [重新啟動](what-doona-can-change.md#restart-cache) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/experimental.md) |
 | `experimental.cache_file.store_dns` | `false` | 在 `enabled: true` 時儲存 DNS 回答。 | [重新啟動](what-doona-can-change.md#restart-cache) | [experimental](https://github.com/daeuniverse/honk/blob/main/doc/zh/reference/experimental.md) |
 
 狀態資料庫還儲存管理員憑證和地理資料設定。`--store db` 選擇資料庫組態修訂儲存；這是啟動選項，不是 DAE 鍵。見[修訂功能條件](feature-requirements.md#req-revisions)。

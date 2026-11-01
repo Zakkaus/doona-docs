@@ -14,15 +14,12 @@ doona lite 透過表單編輯 honk 組態，目前是測試中的預覽版。為
 
 ## 安裝 doona lite
 
-自 honk v0.1.0-beta.4 起，honk 內嵌 doona lite。按[快速入門](quick-start.md)安裝 honk，再將以下區塊加入 honk 組態，取代原有的 `native_api` 區塊：
+自 honk v0.1.0-beta.4 起，honk 內嵌 doona lite。按[快速入門](quick-start.md)安裝 honk，再把 honk 組態中 `experimental.native_api` 區塊的 `ui` 改為 `'embedded-lite'`。`listen` 等其他行保持不變，doona lite 仍從原位址開啟：
 
 ```dae
 experimental {
     native_api {
-        enabled: true
-        listen: '127.0.0.1:9527'
-        password_auth: true
-        config_write: true
+        # 保留原有的 enabled、listen、password_auth 和 config_write
         ui: 'embedded-lite'
     }
 }
