@@ -14,15 +14,12 @@ Use **Nodes**, **Subscriptions**, **Groups**, **Routing** and **DNS** to manage 
 
 ## Install doona lite
 
-honk embeds doona lite starting with v0.1.0-beta.4. Install honk as described in [Quick start](quick-start.md), then add this block to its configuration, replacing any existing `native_api` block:
+honk embeds doona lite starting with v0.1.0-beta.4. Install honk as described in [Quick start](quick-start.md), then set `ui` to `'embedded-lite'` in the `experimental.native_api` block of its configuration. Keep the other lines, such as `listen`, as they are, so doona lite opens at the same address:
 
 ```dae
 experimental {
     native_api {
-        enabled: true
-        listen: '127.0.0.1:9527'
-        password_auth: true
-        config_write: true
+        # keep the existing enabled, listen, password_auth and config_write lines
         ui: 'embedded-lite'
     }
 }

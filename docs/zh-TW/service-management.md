@@ -2,7 +2,7 @@
 
 # 服務管理
 
-按[快速入門](quick-start.md)或[獨立介面設定](install.md)設定 honk，再依本頁管理手動安裝的服務及查看日誌。若從軟體源安裝，請改用[軟體源的服務說明](https://openwrt.daeuniverse.org/zh-tw/)，不要建立第二個服務。
+按[快速入門](quick-start.md)或[獨立介面設定](install.md)設定 honk，再依本頁管理手動安裝的服務及查看日誌。若從套件來源安裝，請改用[套件來源的服務說明](https://openwrt.daeuniverse.org/zh-tw/)，不要建立第二個服務。
 
 ## 1. 建立服務
 

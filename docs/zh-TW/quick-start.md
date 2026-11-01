@@ -8,13 +8,13 @@
 
 ## 1. 安裝 honk
 
-在 64 位元 OpenWrt 或 ImmortalWrt 25.12 上，從 [daeuniverse 軟體源](https://openwrt.daeuniverse.org/zh-tw/)安裝 honk。
+在 64 位元 OpenWrt 或 ImmortalWrt 25.12 上，從 [daeuniverse 套件來源](https://openwrt.daeuniverse.org/zh-tw/)安裝 honk。
 
 其他 Linux 系統請按[安裝 honk](install.md#install)操作，從 [honk 發行頁](https://github.com/daeuniverse/honk/releases)選擇名稱含 `full` 的壓縮檔。
 
 ## 2. 設定 honk
 
-daeuniverse OpenWrt 軟體源的預設組態已包含此區塊，且監聽區域網路而非 `127.0.0.1`，可直接跳到第 3 步。其他情況請將以下區塊寫入 honk 組態，取代原有的 `native_api` 區塊：
+daeuniverse OpenWrt 套件來源的預設組態已包含此區塊，且監聽區域網路而非 `127.0.0.1`，可直接跳到第 3 步。其他情況請將以下區塊寫入 honk 組態，取代原有的 `native_api` 區塊：
 
 ```dae
 experimental {
@@ -36,7 +36,7 @@ experimental {
 
 在執行 honk 的機器上開啟 <http://127.0.0.1:9527/>。
 
-使用 OpenWrt 軟體源的預設組態時，在區域網路內的電腦上開啟 `http://<路由器 LAN IP>:9527/`，例如 <http://192.168.1.1:9527/>。請使用 IP 位址，honk 會拒絕 `openwrt.lan` 等主機名稱。
+使用 OpenWrt 套件來源的預設組態時，在區域網路內的電腦上開啟 `http://<路由器 LAN IP>:9527/`，例如 <http://192.168.1.1:9527/>。請使用 IP 位址，honk 會拒絕 `openwrt.lan` 等主機名稱。
 
 其他監聽 `127.0.0.1` 的路由器，請在電腦執行以下命令。將 `<router>` 替換為路由器的 SSH 位址，並保持連線：
 
