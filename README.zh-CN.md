@@ -4,47 +4,8 @@
 
 # doona 文档
 
-**[doona](https://github.com/Zakkaus/doona)（daeuniverse 引擎的 Web 界面）的文档，以及由此构建的文档站点。**
-
 [繁體中文](README.md) / 简体中文 / [English](README.en.md)
-
-[阅读文档](https://doona.daeuniverse.org/zh-CN/) / [构建](#构建) / [目录结构](#目录结构) / [贡献指南](.github/CONTRIBUTING.md)
 
 </div>
 
-页面是 `docs/<locale>/` 下的 Markdown，有英文、简体中文与繁体中文三种语言，在 GitHub 与站点上都可阅读。`main` 发布于 https://doona.daeuniverse.org/。
-
-## 构建
-
-构建时从 doona 的 checkout 读取配色、尺寸、图标、标志与截图，因此站点与应用保持一致。`DOONA_DIR` 指定该 checkout，默认为 `../doona`。需要 Node `^22.18.0 || ^24.0.0 || >=26.0.0` 与 pnpm 11。
-
-```sh
-git clone https://github.com/Zakkaus/doona ../doona
-pnpm install --frozen-lockfile
-DOONA_DIR=../doona pnpm docs:build   # 站点输出到 dist-docs/，路径前缀为 DOCS_BASE（默认 /doona-docs/）
-pnpm docs:check                      # 检查 docs/ 与构建结果中的链接、锚点与 id
-pnpm test                            # 站点脚本与标题 id 的测试
-```
-
-`DOCS_BASE=/ pnpm docs:build` 为独立域名构建。CI 以 doona 的 `main` 构建；设置仓库变量 `DOONA_REF` 可改为固定的 tag。
-
-doona 不在 git 中保存截图。推送到 `main` 或手动运行工作流时，CI 在构建前用 doona 的 `tools/screenshots.mjs` 将截图生成到该 checkout 的 `docs/screenshots/`，构建再把全部截图发布到 `https://doona.daeuniverse.org/screenshots/`，doona 的 README 从这里引用。没有该目录时，检查会跳过指向截图的链接。
-
-## 目录结构
-
-| 路径                | 用途                                                 |
-| ------------------- | ---------------------------------------------------- |
-| `docs/<locale>/`    | 页面，各语言的页面集合相同                           |
-| `docs/anchors.json` | 各固定锚点及其所在页面；doona 应用内的链接须与之一致 |
-| `site/`             | 站点的构建脚本、样式表与前端脚本                     |
-| `tools/`            | 文档检查与测试                                       |
-
-页面沿用在 doona 时的路径：指向 `../screenshots/` 或 `../../src/` 的链接代表 doona 的文件，站点会复制该文件或链接到 GitHub 上的文件。
-
-## 致谢
-
-站点设计参照 Adobe 的 React Spectrum 与 Spectrum 2 文档。Spectrum 图标版权归 Adobe 所有，采用 Apache License 2.0。Source Sans 3 与 Source Code Pro 字体版权归 Adobe 所有，采用 SIL Open Font License 1.1。完整声明见 [NOTICE](NOTICE)。
-
-## 许可证
-
-`docs/` 中的页面采用 [CC BY 4.0](LICENSES/CC-BY-4.0.txt)；站点构建与检查工具与 doona 相同，采用 GPL-3.0-only。发布的站点另附 doona 的 `NOTICE`，涵盖其图标；见 [NOTICE](NOTICE)。
+本仓库已归档。doona 文档已移至 [daeuniverse/repo-for-linux](https://github.com/daeuniverse/repo-for-linux) 的 `docs/doona/`，发布于 [daeuniverse.org/zh-CN/doona](https://daeuniverse.org/zh-CN/doona/)。文档修改请提交到该仓库。
