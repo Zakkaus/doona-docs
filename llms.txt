@@ -1,0 +1,99 @@
+# doona 文件
+
+> doona 透過原生 API 管理 honk、查看流量。
+
+## 繁體中文
+
+- [doona 文件](https://doona.daeuniverse.org/zh-TW/index.md): doona 透過原生 API 管理 honk、查看流量。
+- [快速入門](https://doona.daeuniverse.org/zh-TW/quick-start.md): 使用 honk 內嵌的 doona，無需另行下載介面檔案。
+- [標準版與 doona lite](https://doona.daeuniverse.org/zh-TW/editions.md): 標準版用於管理組態與觀測流量。
+- [執行需求](https://doona.daeuniverse.org/zh-TW/requirements.md): 安裝 doona 與 honk 前，先檢查閘道器與瀏覽器。
+- [在 Debian 或 Ubuntu 上安裝](https://doona.daeuniverse.org/zh-TW/install-debian.md): 使用系統套件管理員安裝 doona v0.1.0-rc.4 標準版。
+- [在 Fedora 或 RHEL 上安裝](https://doona.daeuniverse.org/zh-TW/install-fedora.md): 使用系統套件管理員安裝 doona v0.1.0-rc.4 標準版。
+- [在 Arch Linux 上安裝](https://doona.daeuniverse.org/zh-TW/install-arch.md): 使用系統套件管理員安裝 doona v0.1.0-rc.4 標準版。
+- [在 Gentoo 上安裝](https://doona.daeuniverse.org/zh-TW/install-gentoo.md): 將儲存庫中的 ebuild 加入本機 Portage 儲存庫，安裝 doona v0.1.0-rc.4。
+- [在 OpenWrt 上安裝](https://doona.daeuniverse.org/zh-TW/install-openwrt.md): 在 OpenWrt 路由器上安裝 doona v0.1.0-rc.4 和 honk。
+- [透過壓縮檔或在 Alpine 上安裝](https://doona.daeuniverse.org/zh-TW/install-manual.md): 系統沒有對應套件時，可透過壓縮檔安裝 doona v0.1.0-rc.4。
+- [單獨安裝 doona](https://doona.daeuniverse.org/zh-TW/install.md): 不使用 honk 內嵌的 doona 時，可單獨安裝介面檔案。
+- [最小組態](https://doona.daeuniverse.org/zh-TW/minimal-configuration.md): 依要使用的介面選擇組態。
+- [服務管理](https://doona.daeuniverse.org/zh-TW/service-management.md): 按快速入門或獨立介面設定設定 honk，再依本頁管理手動安裝的服務及查看日誌。
+- [為第一條連線設定路由](https://doona.daeuniverse.org/zh-TW/tutorial.md): 完成快速入門後，保持 honk 運作並以管理員身分登入。
+- [首次登入](https://doona.daeuniverse.org/zh-TW/first-sign-in.md): 將標準版連接到已啟動的 honk，視需要建立管理員，並檢查後端狀態。
+- [介面導覽](https://doona.daeuniverse.org/zh-TW/tour.md): 登入後，依下表查找標準版頁面與操作。
+- [觀測流量](https://doona.daeuniverse.org/zh-TW/observe.md): 在標準版中依下表選擇監控頁面，並確認資料涵蓋範圍。
+- [管理節點、策略群組和規則](https://doona.daeuniverse.org/zh-TW/routing.md): 在標準版的路由分區中新增節點來源、設定群組的節點選擇方式，並決定哪些流量使用這些節點。
+- [修改組態與設定](https://doona.daeuniverse.org/zh-TW/config-and-settings.md): 在 doona 標準版中編輯設定檔或修改設定。
+- [常見操作](https://doona.daeuniverse.org/zh-TW/common-tasks.md): 在標準版中調整路由、管理訂閱或排查流量。
+- [按任務尋找頁面](https://doona.daeuniverse.org/zh-TW/features.md): 在下表查找 doona 標準版功能及使用條件。
+- [doona lite](https://doona.daeuniverse.org/zh-TW/lite.md): doona lite 透過表單編輯 honk 組態，目前是測試中的預覽版。
+- [連線至 doona lite](https://doona.daeuniverse.org/zh-TW/lite-connect.md): 將已安裝或獨立託管的 lite 頁面連接到 honk 原生 API。
+- [doona lite 常用任務](https://doona.daeuniverse.org/zh-TW/lite-tasks.md): 連線至 lite 後，可匯入節點與編輯 honk 組態。
+- [組態參考](https://doona.daeuniverse.org/zh-TW/configuration.md): doona 使用下列 honk DAE 設定。
+- [doona 可以修改什麼](https://doona.daeuniverse.org/zh-TW/what-doona-can-change.md): doona 透過不同的控制項修改組態來源、執行期狀態、持久儲存的地理資料設定和瀏覽器偏好。
+- [功能啟用條件](https://doona.daeuniverse.org/zh-TW/feature-requirements.md): 在表中找到要使用的標準版功能，按對應章節檢查條件並啟用。
+- [疑難排解](https://doona.daeuniverse.org/zh-TW/troubleshooting.md): 依症狀查找 doona 連接 honk 時的連線、編輯、記錄或地理資料故障，按對應步驟檢查。
+- [開發](https://doona.daeuniverse.org/zh-TW/development.md): 使用以下命令在本機建置與檢查 doona。
+
+## 简体中文
+
+- [doona 文档](https://doona.daeuniverse.org/zh-CN/index.md): doona 通过原生 API 管理 honk、查看流量。
+- [快速入门](https://doona.daeuniverse.org/zh-CN/quick-start.md): 使用 honk 内嵌的 doona，无需另行下载界面文件。
+- [标准版与 doona lite](https://doona.daeuniverse.org/zh-CN/editions.md): 标准版用于管理配置与观测流量。
+- [运行要求](https://doona.daeuniverse.org/zh-CN/requirements.md): 安装 doona 和 honk 前，先检查网关与浏览器。
+- [在 Debian 或 Ubuntu 上安装](https://doona.daeuniverse.org/zh-CN/install-debian.md): 使用系统包管理器安装 doona v0.1.0-rc.4 标准版。
+- [在 Fedora 或 RHEL 上安装](https://doona.daeuniverse.org/zh-CN/install-fedora.md): 使用系统包管理器安装 doona v0.1.0-rc.4 标准版。
+- [在 Arch Linux 上安装](https://doona.daeuniverse.org/zh-CN/install-arch.md): 使用系统包管理器安装 doona v0.1.0-rc.4 标准版。
+- [在 Gentoo 上安装](https://doona.daeuniverse.org/zh-CN/install-gentoo.md): 将仓库中的 ebuild 加入本地 Portage 仓库，安装 doona v0.1.0-rc.4。
+- [在 OpenWrt 上安装](https://doona.daeuniverse.org/zh-CN/install-openwrt.md): 在 OpenWrt 路由器上安装 doona v0.1.0-rc.4 和 honk。
+- [通过压缩包或在 Alpine 上安装](https://doona.daeuniverse.org/zh-CN/install-manual.md): 系统没有对应软件包时，可通过压缩包安装 doona v0.1.0-rc.4。
+- [单独安装 doona](https://doona.daeuniverse.org/zh-CN/install.md): 不使用 honk 内嵌的 doona 时，可单独安装界面文件。
+- [最小配置](https://doona.daeuniverse.org/zh-CN/minimal-configuration.md): 按要使用的界面选择配置。
+- [服务管理](https://doona.daeuniverse.org/zh-CN/service-management.md): 按快速入门或独立界面设置配置 honk，再按本页管理手动安装的服务及查看日志。
+- [为第一条连接设置路由](https://doona.daeuniverse.org/zh-CN/tutorial.md): 完成快速入门后，保持 honk 运行并以管理员身份登录。
+- [首次登录](https://doona.daeuniverse.org/zh-CN/first-sign-in.md): 将标准版连接到已启动的 honk，按需创建管理员，并检查后端状态。
+- [界面导览](https://doona.daeuniverse.org/zh-CN/tour.md): 登录后，按下表查找标准版页面与操作。
+- [观测流量](https://doona.daeuniverse.org/zh-CN/observe.md): 在标准版中按下表选择监控页面，并确认数据覆盖范围。
+- [管理节点、策略组和规则](https://doona.daeuniverse.org/zh-CN/routing.md): 在标准版的路由分区中添加节点来源、设置组的节点选择方式，并决定哪些流量使用这些节点。
+- [修改配置与设置](https://doona.daeuniverse.org/zh-CN/config-and-settings.md): 在 doona 标准版中编辑配置文件或修改设置。
+- [常见操作](https://doona.daeuniverse.org/zh-CN/common-tasks.md): 在标准版中调整路由、管理订阅或排查流量。
+- [按任务查找页面](https://doona.daeuniverse.org/zh-CN/features.md): 在下表查找 doona 标准版功能及使用条件。
+- [doona lite](https://doona.daeuniverse.org/zh-CN/lite.md): doona lite 通过表单编辑 honk 配置，目前是测试中的预览版。
+- [连接 doona lite](https://doona.daeuniverse.org/zh-CN/lite-connect.md): 将已安装或独立托管的 lite 页面连接到 honk 原生 API。
+- [doona lite 常用任务](https://doona.daeuniverse.org/zh-CN/lite-tasks.md): 连接 lite 后，可导入节点和编辑 honk 配置。
+- [配置参考](https://doona.daeuniverse.org/zh-CN/configuration.md): doona 使用下列 honk DAE 设置。
+- [doona 可以修改什么](https://doona.daeuniverse.org/zh-CN/what-doona-can-change.md): doona 通过不同的控制项修改配置源、运行时状态、持久保存的地理数据设置和浏览器偏好。
+- [功能启用条件](https://doona.daeuniverse.org/zh-CN/feature-requirements.md): 在表中找到要使用的标准版功能，按对应章节检查条件并启用。
+- [故障排除](https://doona.daeuniverse.org/zh-CN/troubleshooting.md): 按症状查找 doona 连接 honk 时的连接、编辑、记录或地理数据故障，按对应步骤检查。
+- [开发](https://doona.daeuniverse.org/zh-CN/development.md): 使用以下命令在本地构建和检查 doona。
+
+## English
+
+- [doona documentation](https://doona.daeuniverse.org/en/index.md): doona is a web interface for managing honk and inspecting its traffic through the native API.
+- [Quick start](https://doona.daeuniverse.org/en/quick-start.md): Use the doona interface embedded in honk without downloading separate UI files.
+- [Standard edition and doona lite](https://doona.daeuniverse.org/en/editions.md): The standard edition manages configuration and observes traffic.
+- [Requirements](https://doona.daeuniverse.org/en/requirements.md): Check the gateway and browser before installing doona and honk.
+- [Install on Debian or Ubuntu](https://doona.daeuniverse.org/en/install-debian.md): Install the standard edition of doona v0.1.0-rc.4 with your system package manager.
+- [Install on Fedora or RHEL](https://doona.daeuniverse.org/en/install-fedora.md): Install the standard edition of doona v0.1.0-rc.4 with your system package manager.
+- [Install on Arch Linux](https://doona.daeuniverse.org/en/install-arch.md): Install the standard edition of doona v0.1.0-rc.4 with your system package manager.
+- [Install on Gentoo](https://doona.daeuniverse.org/en/install-gentoo.md): Install doona v0.1.0-rc.4 with the repository’s ebuild in a local Portage repository.
+- [Install on OpenWrt](https://doona.daeuniverse.org/en/install-openwrt.md): Install doona v0.1.0-rc.4 and honk on an OpenWrt router.
+- [Install from archives or on Alpine](https://doona.daeuniverse.org/en/install-manual.md): Install doona v0.1.0-rc.4 from an archive when your system has no matching package.
+- [Install doona separately](https://doona.daeuniverse.org/en/install.md): Install separate UI files when you do not want honk's embedded doona.
+- [Minimal configuration](https://doona.daeuniverse.org/en/minimal-configuration.md): Choose the configuration for the interface you want.
+- [Service management](https://doona.daeuniverse.org/en/service-management.md): Configure honk with Quick start or the separate UI setup, then use this page to manage a manually installed service and read its logs.
+- [Route your first connection](https://doona.daeuniverse.org/en/tutorial.md): Continue from Quick start, with honk running and your administrator signed in.
+- [First sign-in](https://doona.daeuniverse.org/en/first-sign-in.md): Connect the standard edition to a running honk, create its administrator if needed, and check the backend status.
+- [Interface tour](https://doona.daeuniverse.org/en/tour.md): Find pages and controls in the standard edition after signing in.
+- [Watching traffic](https://doona.daeuniverse.org/en/observe.md): Choose a monitoring view and check what its data covers in the standard edition.
+- [Manage nodes, groups and rules](https://doona.daeuniverse.org/en/routing.md): Use the Routing hub to add node sources, choose how groups select nodes and decide which traffic uses them.
+- [Change configuration and settings](https://doona.daeuniverse.org/en/config-and-settings.md): Edit configuration files or change settings through the standard edition of doona.
+- [Common tasks](https://doona.daeuniverse.org/en/common-tasks.md): Change routing, manage subscriptions, and diagnose traffic in the standard edition.
+- [Find the right page](https://doona.daeuniverse.org/en/features.md): Find a task in the standard edition of doona.
+- [doona lite](https://doona.daeuniverse.org/en/lite.md): doona lite provides forms for common honk configuration tasks.
+- [Connect doona lite](https://doona.daeuniverse.org/en/lite-connect.md): Connect an installed or separately hosted lite page to honk's native API.
+- [Common tasks in doona lite](https://doona.daeuniverse.org/en/lite-tasks.md): Import nodes and edit honk configuration after connecting lite.
+- [Configuration](https://doona.daeuniverse.org/en/configuration.md): Look up honk's DAE settings exposed by doona, their defaults, and how they take effect.
+- [What doona can change](https://doona.daeuniverse.org/en/what-doona-can-change.md): doona changes configuration sources, runtime state, persistent geodata settings, and browser preferences through different controls.
+- [Feature requirements](https://doona.daeuniverse.org/en/feature-requirements.md): Find your standard-edition feature in the table, then use its section to check prerequisites and enable it.
+- [Troubleshooting](https://doona.daeuniverse.org/en/troubleshooting.md): Find your symptom, then follow its checks and fix.
+- [Development](https://doona.daeuniverse.org/en/development.md): Build and check doona locally.
